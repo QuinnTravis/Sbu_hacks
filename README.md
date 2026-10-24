@@ -31,6 +31,11 @@ src/
 
 ## Design notes
 
+- Visual concept: a technical drawing on a workshop bench. The engine is a drafting sheet with lettered callouts (A–E) that print your real readings and match the instrument column; daily maintenance is a parchment logbook. Brass is reserved for selection and primary actions.
+- Fonts (Old Standard TT, Instrument Sans, IBM Plex Mono) are bundled via @fontsource, so the app needs no network at all.
+- Motion counts exercise minutes *or* steps, whichever is further along its target.
+- Steam is released once per exhaust stroke, so a still engine makes no steam.
+
 - XP is computed from what's logged, with per-day caps, so repeat clicking can't farm it and undo removes XP.
 - Missed days cost nothing. A welcome-back bonus and the "Back at the Throttle" achievement reward recovery.
 - Today's sample readings are a visual preview only: they earn no XP and are cleared on your first real entry.

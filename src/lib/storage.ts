@@ -5,7 +5,7 @@ import { isValidKey } from './date';
 export const STORAGE_KEY = 'human-engine:v1';
 
 export function emptyDay(date: string): DayLog {
-  return { date, sleepHours: null, water: 0, moveMinutes: 0, meals: 0, breaths: 0, customDone: [] };
+  return { date, sleepHours: null, water: 0, moveMinutes: 0, steps: 0, meals: 0, breaths: 0, customDone: [] };
 }
 
 export function freshState(): AppState {
@@ -63,12 +63,21 @@ function sanitizeDay(key: string, v: unknown, habitIds: Set<string>): DayLog | n
     sleepHours: sleepRaw === null || sleepRaw === undefined ? null : num(sleepRaw, 0, 16, 0, 0.25),
     water: num(v.water, 0, 40, 0, 1),
     moveMinutes: num(v.moveMinutes, 0, 600, 0, 1),
+    steps: num(v.steps, 0, 100000, 0, 1),
     meals: num(v.meals, 0, 8, 0, 1),
     breaths: num(v.breaths, 0, 12, 0, 1),
     customDone: Array.isArray(v.customDone)
       ? Array.from(new Set(v.customDone.filter((x): x is string => typeof x === 'string' && habitIds.has(x))))
       : [],
   };
+  if (isObj(v.stamps)) {
+    const stamps: DayLog['stamps'] = {};
+    for (const k of ['water', 'sleep', 'move', 'steps', 'meals', 'breaths', 'custom'] as const) {
+      const t = v.stamps[k];
+      if (typeof t === 'number' && Number.isFinite(t) && t > 0) stamps[k] = t;
+    }
+    day.stamps = stamps;
+  }
   if (v.demo === true) day.demo = true;
   return day;
 }

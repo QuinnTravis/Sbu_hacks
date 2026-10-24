@@ -1,10 +1,10 @@
 import { useMemo, useState, type FormEvent } from 'react';
-import { Check, Database, RotateCcw, Trash2 } from 'lucide-react';
-import { Bar, INDICATOR_ICONS, Switch } from '../components/ui';
+import { Switch } from '../components/ui';
+import { REFS } from '../components/engine/Engine';
 import { DEFAULT_TARGETS, INDICATORS, TARGET_LIMITS } from '../data/catalog';
 import { hasDemo } from '../data/demo';
 import { formatShort, lastNDays, weekdayLetter } from '../lib/date';
-import { entriesFor, readings } from '../lib/metrics';
+import { entriesFor, latestEntry, readings } from '../lib/metrics';
 import { XP_RULES } from '../lib/progression';
 import { useStore } from '../state/store';
 import type { IndicatorId, MotionPref, Targets } from '../types';
@@ -13,66 +13,30 @@ const TARGET_FOR: Record<keyof Targets, IndicatorId> = {
   sleepHours: 'rest',
   waterGlasses: 'cooling',
   moveMinutes: 'motion',
+  steps: 'motion',
   meals: 'fuel',
   breaths: 'equilibrium',
 };
 
 export default function Habits() {
-  const { state, today } = useStore();
-  const rs = readings(state, today);
+  const { state } = useStore();
   return (
-    <div className="stack">
-      <div className="two-col">
-        <div className="stack">
-          <section className="plate rivets" aria-labelledby="today-h">
-            <div className="plate-head">
-              <div>
-                <div className="eyebrow">Today</div>
-                <h2 id="today-h">Today’s habits</h2>
-              </div>
-              <a className="small muted" href="#/engine">Log entries in the Engine Room →</a>
-            </div>
-            <div className="indicators">
-              {rs.map((r) => {
-                const I = INDICATOR_ICONS[r.id];
-                const done = (r.value ?? 0) >= 0.999;
-                return (
-                  <div key={r.id} className={`ind${r.ignored ? ' ignored' : ''}`} style={{ cursor: 'default' }}>
-                    <span className="ico"><I aria-hidden="true" /></span>
-                    <span>
-                      <span className="name">
-                        {INDICATORS[r.id].habit} <span className="sub">{r.label}</span>
-                      </span>
-                      <Bar value={r.value ?? 0} ind={r.id} label={`${r.label} progress`} />
-                    </span>
-                    <span className="val">
-                      {r.ignored ? 'Not tracked' : r.current}
-                      <br />
-                      <small>{r.ignored ? '' : done ? 'complete' : r.value === null ? 'awaiting entry' : 'in progress'}</small>
-                    </span>
-                  </div>
-                );
-              })}
-              {state.customHabits.map((h) => {
-                const on = state.days[today]?.customDone.includes(h.id) ?? false;
-                return (
-                  <div key={h.id} className="ind" style={{ cursor: 'default' }}>
-                    <span className="ico">{on ? <Check aria-hidden="true" /> : <span aria-hidden="true">·</span>}</span>
-                    <span className="name">{h.label} <span className="sub">your habit</span></span>
-                    <span className="val">{on ? 'done' : 'not yet'}</span>
-                  </div>
-                );
-              })}
-            </div>
-          </section>
-
+    <div className="pair">
+      <div>
+        <Today />
+        <div className="block">
           <Ledger />
+        </div>
+        <div className="block">
           <Rules />
         </div>
-
-        <div className="stack">
-          <TargetsForm key={JSON.stringify(state.settings.targets)} />
+      </div>
+      <div>
+        <TargetsForm key={JSON.stringify(state.settings.targets)} />
+        <div className="block">
           <Preferences />
+        </div>
+        <div className="block">
           <DataControls />
         </div>
       </div>
@@ -80,38 +44,85 @@ export default function Habits() {
   );
 }
 
+function Today() {
+  const { state, today } = useStore();
+  const rs = readings(state, today);
+  const day = state.days[today];
+  return (
+    <section aria-labelledby="today-h">
+      <div className="sec-head">
+        <h2 id="today-h">Today</h2>
+        <a className="aside push" href="#/engine">
+          Record entries in the Engine Room
+        </a>
+      </div>
+      <div className="table-wrap">
+        <table className="tbl">
+          <thead>
+            <tr>
+              <th scope="col">Ref</th>
+              <th scope="col">Habit</th>
+              <th scope="col">Recorded</th>
+              <th scope="col" className="r">
+                Status
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {rs.map((r) => {
+              const done = r.id === 'equilibrium' ? !!latestEntry(state.journal, today) && (day?.breaths ?? 0) >= state.settings.targets.breaths : (r.value ?? 0) >= 0.999;
+              return (
+                <tr key={r.id} className={r.ignored ? 'off' : ''}>
+                  <td className="num muted">{REFS[r.id]}</td>
+                  <td>{INDICATORS[r.id].habit}</td>
+                  <td className="num">{r.ignored ? '—' : r.current}</td>
+                  <td className="r muted">{r.ignored ? 'not tracked' : done ? 'complete' : r.value === null || r.value === 0 ? 'not yet' : 'under way'}</td>
+                </tr>
+              );
+            })}
+            {state.customHabits.map((h) => (
+              <tr key={h.id}>
+                <td className="num muted">·</td>
+                <td>{h.label}</td>
+                <td className="num">{day?.customDone.includes(h.id) ? 'done' : '—'}</td>
+                <td className="r muted">{day?.customDone.includes(h.id) ? 'complete' : 'not yet'}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  );
+}
+
 function Ledger() {
   const { state, today } = useStore();
   const days = lastNDays(7, today);
   const t = state.settings.targets;
-  const rows: { label: string; cell: (d: string) => number | null }[] = [
+  const f = (v: number | undefined, tg: number) => (v ? Math.min(1, v / tg) : null);
+  const rows: { label: string; cell: (k: string) => number | null }[] = [
     { label: 'Sleep', cell: (k) => (state.days[k]?.sleepHours != null ? Math.min(1, (state.days[k]!.sleepHours ?? 0) / t.sleepHours) : null) },
-    { label: 'Water', cell: (k) => frac(state.days[k]?.water, t.waterGlasses) },
-    { label: 'Movement', cell: (k) => frac(state.days[k]?.moveMinutes, t.moveMinutes) },
-    { label: 'Meals', cell: (k) => frac(state.days[k]?.meals, t.meals) },
-    { label: 'Breathing', cell: (k) => frac(state.days[k]?.breaths, t.breaths) },
+    { label: 'Water', cell: (k) => f(state.days[k]?.water, t.waterGlasses) },
+    { label: 'Exercise or steps', cell: (k) => { const d = state.days[k]; return d && (d.moveMinutes || d.steps) ? Math.min(1, Math.max(d.moveMinutes / t.moveMinutes, d.steps / t.steps)) : null; } },
+    { label: 'Meals', cell: (k) => f(state.days[k]?.meals, t.meals) },
+    { label: 'Breathing', cell: (k) => f(state.days[k]?.breaths, t.breaths) },
     { label: 'Check-in', cell: (k) => (entriesFor(state.journal, k).length ? 1 : null) },
     ...state.customHabits.map((h) => ({ label: h.label, cell: (k: string) => (state.days[k]?.customDone.includes(h.id) ? 1 : null) })),
   ];
   return (
-    <section className="plate rivets" aria-labelledby="ledger-h">
-      <div className="plate-head">
-        <div>
-          <div className="eyebrow">Recent progress</div>
-          <h3 id="ledger-h">Maintenance log, last 7 days</h3>
-        </div>
-        <span className="small muted">Gaps are just quiet days.</span>
+    <section aria-labelledby="ledger-h">
+      <div className="sec-head">
+        <h3 id="ledger-h">The last seven days</h3>
+        <span className="aside">Blank days are just quiet days.</span>
       </div>
       <div className="table-wrap">
-        <table className="ledger">
+        <table className="tbl ledger">
           <thead>
             <tr>
               <th scope="col">Habit</th>
               {days.map((d) => (
-                <th key={d} scope="col" className={d === today ? 'today' : ''} title={formatShort(d)}>
-                  {weekdayLetter(d)}
-                  <br />
-                  <span className="mono" style={{ fontSize: 10 }}>{d.slice(8)}</span>
+                <th key={d} scope="col" className={`d${d === today ? ' today' : ''}`} title={formatShort(d)}>
+                  {weekdayLetter(d)} <span className="num">{d.slice(8)}</span>
                 </th>
               ))}
             </tr>
@@ -122,11 +133,12 @@ function Ledger() {
                 <td>{r.label}</td>
                 {days.map((d) => {
                   const v = r.cell(d);
-                  const demo = state.days[d]?.demo || entriesFor(state.journal, d).some((e) => e.demo);
-                  const cls = v === null || v === 0 ? '' : v >= 0.999 ? 'full' : 'part';
+                  const sample = state.days[d]?.demo || entriesFor(state.journal, d).some((e) => e.demo);
+                  const cls = v === null || v === 0 ? '' : v >= 0.999 ? 'full' : 'half';
+                  const what = v === null || v === 0 ? 'nothing recorded' : v >= 0.999 ? 'target met' : 'part way';
                   return (
-                    <td key={d}>
-                      <span className={`cell ${cls}${demo && v ? ' demo' : ''}`} title={`${r.label}, ${formatShort(d)}: ${v === null || v === 0 ? 'nothing logged' : v >= 0.999 ? 'target met' : 'partly'}${demo ? ' (sample data)' : ''}`} />
+                    <td key={d} className="c">
+                      <span className={`mark ${cls}${sample && v ? ' smp' : ''}`} role="img" aria-label={`${r.label}, ${formatShort(d)}: ${what}${sample && v ? ', sample entry' : ''}`} />
                     </td>
                   );
                 })}
@@ -135,16 +147,14 @@ function Ledger() {
           </tbody>
         </table>
       </div>
-      <div className="legend" style={{ marginTop: 10 }}>
-        <span><span className="ledger"><span className="cell full" style={{ width: 12, height: 12, verticalAlign: -1 }} /></span>&nbsp; target met</span>
-        <span><span className="ledger"><span className="cell part" style={{ width: 12, height: 12, verticalAlign: -1 }} /></span>&nbsp; partly</span>
-        <span><span className="ledger"><span className="cell demo" style={{ width: 12, height: 12, verticalAlign: -1 }} /></span>&nbsp; sample data</span>
+      <div className="key">
+        <span><span className="mark full" /> target met</span>
+        <span><span className="mark half" /> part way</span>
+        <span><span className="mark full smp" /> sample entry</span>
       </div>
     </section>
   );
 }
-
-const frac = (v: number | undefined, t: number) => (v ? Math.min(1, v / t) : null);
 
 function TargetsForm() {
   const { state, act, notify } = useStore();
@@ -153,95 +163,109 @@ function TargetsForm() {
   const [errs, setErrs] = useState<Partial<Record<keyof Targets, string>>>({});
   const dirty = keys.some((k) => Number(vals[k]) !== state.settings.targets[k]);
 
-  const validate = (k: keyof Targets, raw: string): string | null => {
+  const validate = (k: keyof Targets, raw: string): string | undefined => {
     const lim = TARGET_LIMITS[k];
-    if (raw.trim() === '') return 'Required';
-    const n = Number(raw);
+    const clean = raw.replace(/,/g, '').trim();
+    if (clean === '') return 'Required';
+    const n = Number(clean);
     if (!Number.isFinite(n)) return 'Enter a number';
-    if (n < lim.min || n > lim.max) return `Between ${lim.min} and ${lim.max}`;
-    if (Math.abs(n / lim.step - Math.round(n / lim.step)) > 1e-9) return lim.step === 1 ? 'Whole numbers only' : `Steps of ${lim.step}`;
-    return null;
+    if (n < lim.min || n > lim.max) return `Between ${lim.min.toLocaleString()} and ${lim.max.toLocaleString()}`;
+    if (Math.abs(n / lim.step - Math.round(n / lim.step)) > 1e-9) return lim.step === 1 ? 'Whole numbers only' : `In steps of ${lim.step}`;
+    return undefined;
   };
 
   const save = (e: FormEvent) => {
     e.preventDefault();
     const next: Partial<Record<keyof Targets, string>> = {};
-    for (const k of keys) {
-      const err = validate(k, vals[k]);
-      if (err) next[k] = err;
-    }
+    keys.forEach((k) => {
+      const m = validate(k, vals[k]);
+      if (m) next[k] = m;
+    });
     setErrs(next);
     if (Object.keys(next).length) return;
-    act({ type: 'targets', targets: Object.fromEntries(keys.map((k) => [k, Number(vals[k])])) as unknown as Targets }, { silent: true });
-    notify({ kind: 'info', title: 'Targets saved', body: 'The engine has been recalibrated to your new targets.' });
+    act({ type: 'targets', targets: Object.fromEntries(keys.map((k) => [k, Number(vals[k].replace(/,/g, ''))])) as unknown as Targets }, { silent: true });
+    notify({ kind: 'info', title: 'Targets saved', body: 'The engine is recalibrated.' });
   };
 
+  const tracked = (id: IndicatorId) => !state.settings.ignored.includes(id);
+  const toggle = (id: IndicatorId) => act({ type: 'toggleIgnore', id }, { silent: true });
+
   return (
-    <form className="plate rivets" onSubmit={save} noValidate aria-labelledby="targets-h">
-      <div className="plate-head">
-        <div>
-          <div className="eyebrow">Calibration</div>
-          <h3 id="targets-h">Daily targets</h3>
-        </div>
+    <form onSubmit={save} noValidate aria-labelledby="targets-h">
+      <div className="sec-head">
+        <h2 id="targets-h">Calibration</h2>
       </div>
-      <p className="small muted" style={{ marginBottom: 14 }}>
-        These defaults are general starting points, not recommendations for you specifically. Set what suits your body, schedule and advice from your own clinician, or switch an indicator off entirely.
+      <p className="lede">
+        The defaults are general starting points, not advice for you in particular. Set what suits your body and schedule, and any guidance you’ve had from your own clinician. You can also switch an instrument off. An instrument that’s off idles
+        neutrally and never counts against the engine.
       </p>
-      <div className="targets-grid">
-        {keys.map((k) => {
-          const lim = TARGET_LIMITS[k];
-          const ind = TARGET_FOR[k];
-          const off = state.settings.ignored.includes(ind);
-          return (
-            <div key={k} className={`target-card${off ? ' off' : ''}`}>
-              <div className="field">
-                <label htmlFor={`t-${k}`}>
-                  {lim.label} <span className="muted">({lim.unit})</span>
-                </label>
-                <input
-                  id={`t-${k}`}
-                  className="input"
-                  inputMode="decimal"
-                  value={vals[k]}
-                  onChange={(e) => setVals((v) => ({ ...v, [k]: e.target.value }))}
-                  onBlur={(e) => setErrs((x) => ({ ...x, [k]: validate(k, e.target.value) ?? undefined }))}
-                  aria-invalid={!!errs[k]}
-                  aria-describedby={`t-${k}-h`}
-                />
-                <span id={`t-${k}-h`} className={errs[k] ? 'error' : 'hint'}>
-                  {errs[k] ?? `${lim.min}–${lim.max} · default ${DEFAULT_TARGETS[k]}`}
-                </span>
-              </div>
-              {k !== 'breaths' && <Switch checked={!off} onChange={() => act({ type: 'toggleIgnore', id: ind }, { silent: true })} label={off ? `${INDICATORS[ind].name} not tracked` : `Track ${INDICATORS[ind].name}`} />}
-            </div>
-          );
-        })}
-        <div className="target-card">
-          <div className="field">
-            <span className="label">Mood &amp; stress</span>
-            <span className="hint">Self-reported check-ins. No target, just a reading.</span>
-          </div>
-          <Switch
-            checked={!state.settings.ignored.includes('equilibrium')}
-            onChange={() => act({ type: 'toggleIgnore', id: 'equilibrium' }, { silent: true })}
-            label={state.settings.ignored.includes('equilibrium') ? 'Equilibrium not tracked' : 'Track Equilibrium'}
-          />
-        </div>
+      <div className="table-wrap">
+        <table className="tbl">
+          <thead>
+            <tr>
+              <th scope="col">Habit</th>
+              <th scope="col">Daily target</th>
+              <th scope="col">Default</th>
+            </tr>
+          </thead>
+          <tbody>
+            {keys.map((k) => {
+              const lim = TARGET_LIMITS[k];
+              const ind = TARGET_FOR[k];
+              return (
+                <tr key={k} className={tracked(ind) ? '' : 'off'}>
+                  <td>
+                    <label htmlFor={`t-${k}`}>{lim.label}</label>
+                    {k === 'steps' && <div className="hint">either one fills Motion</div>}
+                  </td>
+                  <td>
+                    <span className="inline" style={{ flexWrap: 'nowrap' }}>
+                      <input
+                        id={`t-${k}`}
+                        className="input num"
+                        inputMode="decimal"
+                        value={vals[k]}
+                        onChange={(e) => setVals((v) => ({ ...v, [k]: e.target.value }))}
+                        onBlur={(e) => setErrs((x) => ({ ...x, [k]: validate(k, e.target.value) }))}
+                        aria-invalid={!!errs[k]}
+                        aria-describedby={errs[k] ? `t-${k}-e` : undefined}
+                      />
+                      <span className="muted small">{lim.unit}</span>
+                    </span>
+                    {errs[k] && (
+                      <div className="error" id={`t-${k}-e`}>
+                        {errs[k]}
+                      </div>
+                    )}
+                  </td>
+                  <td className="num muted">{DEFAULT_TARGETS[k].toLocaleString()}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
       </div>
-      <div className="row" style={{ marginTop: 16 }}>
+      <div className="inline" style={{ marginTop: 14, gap: 10 }}>
         <button className="btn primary" type="submit" disabled={!dirty}>
           Save targets
         </button>
         <button
-          className="btn ghost"
+          className="btn quiet"
           type="button"
           onClick={() => {
             setVals(Object.fromEntries(keys.map((k) => [k, String(DEFAULT_TARGETS[k])])) as Record<keyof Targets, string>);
             setErrs({});
           }}
         >
-          <RotateCcw /> Defaults
+          Restore defaults
         </button>
+      </div>
+
+      <h3 style={{ fontSize: 18, margin: '28px 0 10px' }}>Instruments in use</h3>
+      <div style={{ display: 'grid', gap: 10 }}>
+        {(['rest', 'cooling', 'motion', 'fuel', 'equilibrium'] as IndicatorId[]).map((id) => (
+          <Switch key={id} checked={tracked(id)} onChange={() => toggle(id)} label={`${REFS[id]} · ${INDICATORS[id].name}, ${INDICATORS[id].habit.toLowerCase()}`} />
+        ))}
       </div>
     </form>
   );
@@ -251,26 +275,23 @@ function Preferences() {
   const { state, act } = useStore();
   const opts: { v: MotionPref; l: string }[] = [
     { v: 'system', l: 'Match system' },
-    { v: 'reduced', l: 'Reduced' },
-    { v: 'full', l: 'Full' },
+    { v: 'reduced', l: 'Still' },
+    { v: 'full', l: 'Running' },
   ];
   return (
-    <section className="plate rivets" aria-labelledby="pref-h">
-      <div className="plate-head">
-        <div>
-          <div className="eyebrow">Preferences</div>
-          <h3 id="pref-h">Animation</h3>
-        </div>
+    <section aria-labelledby="pref-h">
+      <div className="sec-head">
+        <h3 id="pref-h">Animation</h3>
       </div>
-      <div className="chip-row" role="radiogroup" aria-label="Animation level">
+      <div className="seg three" role="radiogroup" aria-label="Animation">
         {opts.map((o) => (
-          <button key={o.v} className="chip" role="radio" aria-checked={state.settings.motion === o.v} aria-pressed={state.settings.motion === o.v} onClick={() => act({ type: 'motion', pref: o.v }, { silent: true })}>
+          <button key={o.v} type="button" role="radio" aria-checked={state.settings.motion === o.v} onClick={() => act({ type: 'motion', pref: o.v }, { silent: true })} style={{ padding: '8px 4px' }}>
             {o.l}
           </button>
         ))}
       </div>
-      <p className="small muted" style={{ marginTop: 8 }}>
-        Reduced stills the pistons, steam and gauges, and shows the engine as a technical drawing at rest.
+      <p className="hint" style={{ marginTop: 8 }}>
+        Still shows the engine as a drawing at rest: no moving parts, steam or needle tremor.
       </p>
     </section>
   );
@@ -278,23 +299,22 @@ function Preferences() {
 
 function Rules() {
   return (
-    <section className="plate rivets" aria-labelledby="rules-h">
-      <div className="plate-head">
-        <div>
-          <div className="eyebrow">Transparent rules</div>
-          <h3 id="rules-h">How experience is earned</h3>
-        </div>
+    <section aria-labelledby="rules-h">
+      <div className="sec-head">
+        <h3 id="rules-h">How experience is earned</h3>
       </div>
-      <div className="rules">
-        {XP_RULES.map((r) => (
-          <div key={r.key}>
-            <b>{r.label}</b>
-            <span>{r.note}</span>
-          </div>
-        ))}
-      </div>
-      <p className="small muted" style={{ marginTop: 10 }}>
-        XP is worked out from what is logged, with daily caps, so repeated clicking can’t inflate it. Undoing an entry removes its XP. Missed days never cost you anything.
+      <table className="rules">
+        <tbody>
+          {XP_RULES.map((r) => (
+            <tr key={r.key}>
+              <td>{r.label}</td>
+              <td>{r.note}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <p className="hint" style={{ marginTop: 10, maxWidth: '64ch' }}>
+        Experience is worked out from what is recorded, with daily caps, so repeated clicking can’t inflate it. Undoing an entry takes its experience back. Missed days never cost anything.
       </p>
     </section>
   );
@@ -305,56 +325,49 @@ function DataControls() {
   const [confirm, setConfirm] = useState(false);
   const demo = hasDemo(state);
   const counts = useMemo(
-    () => ({
-      days: Object.values(state.days).filter((d) => !d.demo).length,
-      entries: state.journal.filter((e) => !e.demo).length,
-    }),
+    () => ({ days: Object.values(state.days).filter((d) => !d.demo).length, entries: state.journal.filter((e) => !e.demo).length }),
     [state],
   );
   return (
-    <section className="plate rivets" aria-labelledby="data-h">
-      <div className="plate-head">
-        <div>
-          <div className="eyebrow">Data &amp; demo</div>
-          <h3 id="data-h">Your data stays in this browser</h3>
-        </div>
+    <section aria-labelledby="data-h">
+      <div className="sec-head">
+        <h3 id="data-h">Your records</h3>
       </div>
-      <p className="small muted">
-        Everything, journal reflections included, is stored only in this browser’s local storage. Nothing is sent anywhere. You have {counts.days} {counts.days === 1 ? 'day' : 'days'} of your own entries and {counts.entries} journal{' '}
-        {counts.entries === 1 ? 'entry' : 'entries'}.
+      <p className="lede" style={{ marginBottom: 12 }}>
+        Everything, reflections included, is kept in this browser’s local storage and nowhere else. You have <span className="num">{counts.days}</span> {counts.days === 1 ? 'day' : 'days'} of your own entries and{' '}
+        <span className="num">{counts.entries}</span> journal {counts.entries === 1 ? 'entry' : 'entries'}.
       </p>
-      <div className="row" style={{ marginTop: 12 }}>
+      <div className="inline" style={{ gap: 10 }}>
         {demo ? (
-          <button className="btn" onClick={() => { act({ type: 'clearDemo' }); notify({ kind: 'info', title: 'Sample data cleared', body: 'Only your own entries remain.' }); }}>
-            <Database /> Clear sample data
+          <button className="btn" onClick={() => { act({ type: 'clearDemo' }); notify({ kind: 'info', title: 'Sample entries removed' }); }}>
+            Remove sample entries
           </button>
         ) : (
-          <button className="btn" onClick={() => { act({ type: 'loadDemo', today }); notify({ kind: 'info', title: 'Sample data loaded', body: 'Sample days are marked DEMO and never overwrite your own entries.' }); }}>
-            <Database /> Load sample data
+          <button className="btn" onClick={() => { act({ type: 'loadDemo', today }); notify({ kind: 'info', title: 'Sample entries added', body: 'They never overwrite your own.' }); }}>
+            Add sample entries
           </button>
         )}
         <button className="btn danger" onClick={() => setConfirm(true)}>
-          <Trash2 /> Reset everything
+          Erase everything
         </button>
       </div>
       {confirm && (
-        <div className="confirm" role="alertdialog" aria-labelledby="reset-q" style={{ marginTop: 12 }}>
-          <b id="reset-q">Erase all entries, journal reflections, targets and workshop choices?</b>
-          <span className="small muted">This can’t be undone.</span>
-          <div className="row">
+        <div className="confirm" role="alertdialog" aria-labelledby="reset-q">
+          <span id="reset-q">Erase every entry, reflection, target and workshop choice? This can’t be undone.</span>
+          <div className="inline" style={{ gap: 10 }}>
             <button
               className="btn danger"
               autoFocus
               onClick={() => {
                 act({ type: 'reset' });
                 setConfirm(false);
-                notify({ kind: 'info', title: 'Engine reset', body: 'A clean, cold engine. Light it whenever you’re ready.' });
+                notify({ kind: 'info', title: 'Records erased', body: 'A clean, cold engine.' });
               }}
             >
-              Yes, reset
+              Erase
             </button>
-            <button className="btn ghost" onClick={() => setConfirm(false)}>
-              Keep my data
+            <button className="btn quiet" onClick={() => setConfirm(false)}>
+              Keep my records
             </button>
           </div>
         </div>
@@ -362,4 +375,3 @@ function DataControls() {
     </section>
   );
 }
-

@@ -9,8 +9,10 @@ export interface Targets {
   sleepHours: number;
   /** glasses of water */
   waterGlasses: number;
-  /** minutes of movement */
+  /** minutes of exercise */
   moveMinutes: number;
+  /** steps walked (either this or exercise minutes can fill the Motion indicator) */
+  steps: number;
   /** nourishing meals */
   meals: number;
   /** short breathing breaks */
@@ -30,11 +32,16 @@ export interface DayLog {
   sleepHours: number | null;
   water: number;
   moveMinutes: number;
+  steps: number;
   meals: number;
   breaths: number;
   customDone: string[]; // ids of custom habits completed
+  /** when each habit was last recorded (epoch ms) — only real entries get stamps */
+  stamps?: Partial<Record<StampKey, number>>;
   demo?: boolean;
 }
+
+export type StampKey = 'water' | 'sleep' | 'move' | 'steps' | 'meals' | 'breaths' | 'custom';
 
 export interface CustomHabit {
   id: string;

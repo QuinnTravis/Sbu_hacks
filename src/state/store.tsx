@@ -77,7 +77,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   const notify = useCallback((t: Omit<Toast, 'id'>) => {
     const id = toastId.current++;
-    setToasts((ts) => [...ts.slice(-3), { ...t, id }]);
+    setToasts((ts) => [...ts.slice(-1), { ...t, id }]);
     window.setTimeout(() => setToasts((ts) => ts.filter((x) => x.id !== id)), t.kind === 'xp' ? 2600 : 5200);
   }, []);
   const dismiss = useCallback((id: number) => setToasts((ts) => ts.filter((x) => x.id !== id)), []);

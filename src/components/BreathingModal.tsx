@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import { Wind, X } from 'lucide-react';
+import { createPortal } from 'react-dom';
+import { X } from 'lucide-react';
 
 const INHALE = 4;
 const EXHALE = 6;
@@ -63,39 +64,36 @@ export default function BreathingModal({ onClose, onComplete, reducedMotion }: {
   const scale = !running && elapsed === 0 ? 0.6 : inhaling ? 1 : 0.55;
   const left = Math.max(0, Math.ceil(TOTAL - elapsed));
 
-  return (
+  return createPortal(
     <div className="modal-back" onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
-      <div className="modal plate rivets" role="dialog" aria-modal="true" aria-labelledby="breath-title" ref={dialogRef}>
-        <div className="plate-head">
-          <div>
-            <div className="eyebrow">Release valve</div>
-            <h2 id="breath-title">One-minute breathing break</h2>
-          </div>
-          <button className="btn ghost sm icon" onClick={onClose} aria-label="Close" ref={firstBtn}>
+      <div className="modal" role="dialog" aria-modal="true" aria-labelledby="breath-title" ref={dialogRef}>
+        <div className="sec-head">
+          <h2 id="breath-title" style={{ fontSize: 24 }}>A one-minute breathing break</h2>
+          <button className="btn quiet sm icon push" onClick={onClose} aria-label="Close" ref={firstBtn}>
             <X />
           </button>
         </div>
-        <p className="muted small">In for {INHALE}, out for {EXHALE}. Follow the ring, or just breathe at your own pace. There’s no wrong way to do this.</p>
+        <p className="muted small" style={{ maxWidth: "52ch" }}>In for {INHALE}, out for {EXHALE}. Follow the ring, or just breathe at your own pace. There’s no wrong way to do this.</p>
         <div className="breath-stage">
-          <svg className="breath-ring" viewBox="0 0 210 210" aria-hidden="true">
-            <circle cx={105} cy={105} r={98} fill="none" stroke="rgba(201,154,75,0.25)" strokeWidth={2} />
+          <svg className="breath-ring" viewBox="5 5 200 200" aria-hidden="true">
+            <circle cx={105} cy={105} r={98} fill="none" stroke="rgba(228,217,196,0.18)" strokeWidth={2} />
             <circle
               cx={105}
               cy={105}
               r={98}
               fill="none"
-              stroke="#e8a33d"
+              stroke="#b59a61"
               strokeWidth={3}
               strokeDasharray={`${(elapsed / TOTAL) * 615.75} 615.75`}
               transform="rotate(-90 105 105)"
               strokeLinecap="round"
             />
             <g className="orb" style={{ transform: `scale(${reducedMotion ? 0.8 : scale})`, transitionDuration: reducedMotion ? '0s' : inhaling ? `${INHALE}s` : `${EXHALE}s` }}>
-              <circle cx={105} cy={105} r={78} fill="rgba(232,163,61,0.12)" />
-              <circle cx={105} cy={105} r={60} fill="rgba(232,163,61,0.18)" />
-              <circle cx={105} cy={105} r={42} fill="rgba(255,210,122,0.35)" />
+              <circle cx={105} cy={105} r={78} fill="rgba(228,217,196,0.05)" />
+              <circle cx={105} cy={105} r={60} fill="rgba(228,217,196,0.07)" />
+              <circle cx={105} cy={105} r={42} fill="rgba(228,217,196,0.12)" />
             </g>
-            <text x={105} y={112} textAnchor="middle" fontFamily="IBM Plex Mono, monospace" fontSize={20} fill="#efe3c8">
+            <text x={105} y={112} textAnchor="middle" fontFamily="var(--mono)" fontSize={20} fill="#e4d9c4">
               {left}s
             </text>
           </svg>
@@ -103,16 +101,15 @@ export default function BreathingModal({ onClose, onComplete, reducedMotion }: {
             {phase}
           </div>
         </div>
-        <div className="row" style={{ marginTop: 12 }}>
+        <div className="inline" style={{ marginTop: 16, gap: 10 }}>
           {elapsed < TOTAL && (
             <button className="btn primary" onClick={() => setRunning((r) => !r)}>
-              <Wind />
-              {running ? 'Pause' : elapsed > 0 ? 'Resume' : 'Begin'}
+                            {running ? 'Pause' : elapsed > 0 ? 'Resume' : 'Begin'}
             </button>
           )}
-          <span className="spacer" />
+          <span style={{ flex: 1 }} />
           {elapsed < TOTAL ? (
-            <button className="btn ghost" onClick={() => onComplete()}>
+            <button className="btn quiet" onClick={() => onComplete()}>
               I took my break
             </button>
           ) : (
@@ -122,6 +119,7 @@ export default function BreathingModal({ onClose, onComplete, reducedMotion }: {
           )}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

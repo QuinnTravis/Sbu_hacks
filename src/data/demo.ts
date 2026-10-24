@@ -4,14 +4,14 @@ import { addDays, dateKey, parseKey } from '../lib/date';
 // Sample entries so the first launch has some history. Every record carries `demo: true`
 // so it can be labelled in the UI and removed in one action without touching real entries.
 
-type DemoDay = Omit<DayLog, 'date' | 'customDone' | 'demo'> & { offset: number };
+type DemoDay = Omit<DayLog, 'date' | 'customDone' | 'demo' | 'stamps'> & { offset: number };
 
 const DAYS: DemoDay[] = [
-  { offset: -6, sleepHours: 6.5, water: 3, moveMinutes: 0, meals: 1, breaths: 0 },
+  { offset: -6, sleepHours: 6.5, water: 3, moveMinutes: 0, steps: 4200, meals: 1, breaths: 0 },
   // a few quiet days — the engine simply waits
-  { offset: -2, sleepHours: 7.5, water: 4, moveMinutes: 0, meals: 2, breaths: 0 },
+  { offset: -2, sleepHours: 7.5, water: 4, moveMinutes: 0, steps: 0, meals: 2, breaths: 0 },
   // today's sample readings are a visual preview only: they earn no XP and vanish on your first entry
-  { offset: 0, sleepHours: 7, water: 3, moveMinutes: 0, meals: 1, breaths: 0 },
+  { offset: 0, sleepHours: 7, water: 3, moveMinutes: 0, steps: 2600, meals: 1, breaths: 0 },
 ];
 
 const ENTRIES: { offset: number; hour: number; mood: number; stress: number; note: string }[] = [
@@ -28,6 +28,7 @@ export function demoData(today: string = dateKey()): Pick<AppState, 'days' | 'jo
       sleepHours: d.sleepHours,
       water: d.water,
       moveMinutes: d.moveMinutes,
+      steps: d.steps,
       meals: d.meals,
       breaths: d.breaths,
       customDone: [],

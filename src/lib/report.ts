@@ -40,10 +40,18 @@ function nudge(id: IndicatorId, s: AppState, date: string, part: DayPart, seed: 
         ? 'Rest reserves are a little light today. An unhurried wind-down tonight counts as maintenance, too.'
         : 'Rest reserves are a little light today. Running at a gentler pace is a perfectly good setting.';
     case 'motion': {
+      if (part === 'night') return 'The pistons are resting for the night. Tomorrow’s first steps will start them up again.';
+      if (d.moveMinutes === 0 && d.steps === 0)
+        return pick([`The pistons are still. A 10-minute walk, or about 1,000 steps, would set the flywheel turning.`, `No exercise or steps logged yet. Ten easy minutes of any kind will start the pistons.`], seed);
+      // describe whichever route is closer to its target
+      const minFrac = d.moveMinutes / t.moveMinutes;
+      const stepFrac = d.steps / t.steps;
+      if (stepFrac >= minFrac) {
+        const left = Math.max(0, Math.ceil((t.steps - d.steps) / 100) * 100);
+        return `The flywheel is turning. About ${left.toLocaleString()} more steps would bring it up to your target speed.`;
+      }
       const left = Math.max(0, t.moveMinutes - d.moveMinutes);
-      if (part === 'night') return 'The pistons are resting for the night. Tomorrow’s first few minutes of movement will start them up again.';
-      if (d.moveMinutes === 0) return pick([`The pistons are still. Even a 10-minute walk would set the flywheel turning.`, `No movement logged yet. Ten easy minutes of any kind will start the pistons.`], seed);
-      return `The flywheel is turning. About ${left} more ${left === 1 ? 'minute' : 'minutes'} of movement would bring it up to your target speed.`;
+      return `The flywheel is turning. About ${left} more ${left === 1 ? 'minute' : 'minutes'} of exercise would bring it up to your target speed.`;
     }
     case 'fuel':
       if (d.meals === 0) return pick(['The firebox is waiting for coal. Mark a nourishing meal when you have one.', 'No fuel logged yet. When you sit down to a proper meal, mark it here.'], seed);
@@ -93,11 +101,15 @@ export function buildReport(state: AppState, date: string, now: Date = new Date(
   // the indicator most in need — skip motion late at night
   const candidates = tracked
     .filter((r) => !(r.id === 'motion' && part === 'night'))
+    .filter((r) => !(r.id === 'equilibrium' && !!latestEntry(state.journal, date) && getDay(state, date).breaths >= state.settings.targets.breaths))
     .map((r) => ({ r, v: r.value ?? -0.01 }))
     .sort((a, b) => a.v - b.v);
   const weakest = candidates[0]?.r;
   const strongest = [...logged].sort((a, b) => (b.value ?? 0) - (a.value ?? 0))[0];
-  const complete = tracked.filter((r) => (r.value ?? 0) >= 0.999);
+  // Equilibrium has no "target" — a check-in plus the day's breathing breaks counts as done.
+  const dd = getDay(state, date);
+  const eqDone = !!latestEntry(state.journal, date) && dd.breaths >= state.settings.targets.breaths;
+  const complete = tracked.filter((r) => (r.id === 'equilibrium' ? eqDone : (r.value ?? 0) >= 0.999));
 
   const headlines: Record<typeof cond.state, string[]> = {
     cold: ['The engine is warming up.', 'First coals are in. The boiler is warming.'],

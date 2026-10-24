@@ -6,6 +6,7 @@ export const DEFAULT_TARGETS: Targets = {
   sleepHours: 8,
   waterGlasses: 8,
   moveMinutes: 30,
+  steps: 7000,
   meals: 3,
   breaths: 2,
 };
@@ -13,7 +14,8 @@ export const DEFAULT_TARGETS: Targets = {
 export const TARGET_LIMITS: Record<keyof Targets, { min: number; max: number; step: number; unit: string; label: string }> = {
   sleepHours: { min: 4, max: 12, step: 0.5, unit: 'hours', label: 'Sleep' },
   waterGlasses: { min: 1, max: 20, step: 1, unit: 'glasses', label: 'Water' },
-  moveMinutes: { min: 5, max: 240, step: 5, unit: 'minutes', label: 'Movement' },
+  moveMinutes: { min: 5, max: 240, step: 5, unit: 'minutes', label: 'Exercise' },
+  steps: { min: 1000, max: 30000, step: 500, unit: 'steps', label: 'Steps' },
   meals: { min: 1, max: 6, step: 1, unit: 'meals', label: 'Nourishing meals' },
   breaths: { min: 1, max: 6, step: 1, unit: 'breaks', label: 'Breathing breaks' },
 };
@@ -43,8 +45,8 @@ export const INDICATORS: Record<IndicatorId, { name: string; system: string; hab
   motion: {
     name: 'Motion',
     system: 'Piston & Flywheel',
-    habit: 'Movement',
-    blurb: 'Minutes of movement drive the pistons. The more you move, the faster the flywheel turns.',
+    habit: 'Exercise or steps',
+    blurb: 'Exercise minutes or steps drive the pistons, whichever is further along. The more you move, the faster the flywheel turns.',
   },
   fuel: {
     name: 'Fuel',

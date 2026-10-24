@@ -1,230 +1,173 @@
 import { useMemo, useState } from 'react';
-import { ArrowRight, Database, Flame, Plus, Sparkles, Wind } from 'lucide-react';
-import Engine from '../components/engine/Engine';
-import Checklist from '../components/Checklist';
-import { Bar, INDICATOR_ICONS } from '../components/ui';
-import { INDICATORS } from '../data/catalog';
-import { hasDemo } from '../data/demo';
-import { readings } from '../lib/metrics';
+import Engine, { REFS } from '../components/engine/Engine';
+import Logbook from '../components/Checklist';
+import { Scale } from '../components/ui';
+import { COSMETICS, INDICATORS } from '../data/catalog';
+import { formatTime } from '../lib/date';
+import { fmtNum, getDay, latestEntry, readings, MOOD_LABELS, STRESS_LABELS } from '../lib/metrics';
+import { activeDates } from '../lib/progression';
 import { buildReport } from '../lib/report';
 import { useStore } from '../state/store';
-import type { IndicatorId } from '../types';
+import type { AppState, IndicatorId } from '../types';
+
+/** The short reading printed beside each part on the drawing. */
+function callouts(state: AppState, today: string): Record<IndicatorId, string> {
+  const d = getDay(state, today);
+  const t = state.settings.targets;
+  const ign = new Set(state.settings.ignored);
+  const e = latestEntry(state.journal, today);
+  const motion =
+    d.steps === 0 && d.moveMinutes === 0
+      ? 'no movement yet'
+      : d.steps / t.steps >= d.moveMinutes / t.moveMinutes
+        ? `${d.steps.toLocaleString()} of ${t.steps.toLocaleString()} steps`
+        : `${d.moveMinutes} of ${t.moveMinutes} min`;
+  const out: Record<IndicatorId, string> = {
+    rest: d.sleepHours === null ? 'sleep not recorded' : `${fmtNum(d.sleepHours)} of ${fmtNum(t.sleepHours)} h`,
+    cooling: `${d.water} of ${t.waterGlasses} glasses`,
+    motion,
+    fuel: `${d.meals} of ${t.meals} meals`,
+    equilibrium: e ? `${MOOD_LABELS[e.mood - 1]}, ${STRESS_LABELS[e.stress - 1].toLowerCase()}` : 'no check-in',
+  };
+  (Object.keys(out) as IndicatorId[]).forEach((k) => ign.has(k) && (out[k] = 'not tracked'));
+  return out;
+}
 
 export default function EngineRoom() {
   const { state, today, condition, progress, reducedMotion, pulse, act } = useStore();
   const rs = useMemo(() => readings(state, today), [state, today]);
   const report = useMemo(() => buildReport(state, today), [state, today]);
+  const labels = useMemo(() => callouts(state, today), [state, today]);
   const [picked, setPicked] = useState<IndicatorId | null>(null);
   const selected = picked ?? report.focus ?? 'cooling';
-  const demo = hasDemo(state);
+
+  const day = state.days[today];
+  const stamps = day && !day.demo ? Object.values(day.stamps ?? {}) : [];
+  const lastStamp = stamps.length ? Math.max(...stamps) : null;
+  const daysOnRecord = activeDates(state).filter((k) => !state.days[k]?.demo || state.journal.some((j) => j.date === k && !j.demo)).length;
+  const finish = COSMETICS.find((c) => c.id === state.equipped.finish)?.name ?? '';
+
+  const quick: Partial<Record<IndicatorId, { label: string; run: () => void }>> = {
+    cooling: { label: 'Add a glass', run: () => act({ type: 'water', date: today, delta: 1 }, { pulse: 'cooling', label: 'Glass of water' }) },
+    fuel: { label: 'Mark a meal', run: () => act({ type: 'meal', date: today, delta: 1 }, { pulse: 'fuel', label: 'Nourishing meal' }) },
+    motion: { label: 'Add 10 min exercise', run: () => act({ type: 'move', date: today, delta: 10 }, { pulse: 'motion', label: '10 minutes of exercise' }) },
+    equilibrium: { label: 'Log a breathing break', run: () => act({ type: 'breath', date: today, delta: 1 }, { pulse: 'vent', label: 'Breathing break' }) },
+  };
+  const jump = (id: string) => {
+    const el = document.getElementById(id);
+    el?.scrollIntoView({ block: 'center', behavior: reducedMotion ? 'auto' : 'smooth' });
+    el?.focus({ preventScroll: true });
+  };
 
   return (
-    <div className="stack">
-      {demo && (
-        <div className="demo-banner" role="note">
-          <Database size={18} color="var(--verdigris)" aria-hidden="true" />
-          <span className="grow">
-            <span className="tag demo">Demo</span>&nbsp; Some history here is sample data so you can see the engine in motion. Your own entries replace today’s sample readings automatically.
-          </span>
-          <button className="btn sm ghost" onClick={() => act({ type: 'clearDemo' })}>
-            Clear sample data
-          </button>
-        </div>
-      )}
-
+    <>
       <div className="room">
-        <div className="stack">
-          <section className="plate engine-stage" aria-labelledby="engine-title">
-            <div className="stage-head">
-              <div>
-                <div className="eyebrow">Engine Room</div>
-                <h2 id="engine-title">Today’s engine</h2>
-                <div className="stage-state">
-                  {condition.label} · {Math.round(condition.overall * 100)}% output
-                </div>
-              </div>
-            </div>
-            <Engine condition={condition} equipped={state.equipped} reducedMotion={reducedMotion} pulse={pulse} selected={selected} onSelect={setPicked} />
-            <div className="engine-hint" aria-hidden="true">
-              Select any part of the machine to inspect it.
-            </div>
-          </section>
-
-          <section className="plate rivets" aria-labelledby="report-title">
-            <div className="plate-head">
-              <div>
-                <div className="eyebrow">Daily engine report</div>
-                <h3 id="report-title" className="sr-only">Daily engine report</h3>
-              </div>
-              <span className="tag self">From your entries</span>
-            </div>
-            <div className="report" aria-live="polite">
-              <div className="headline">{report.headline}</div>
-              {report.lines.map((l) => (
-                <p key={l}>{l}</p>
-              ))}
-              {report.suggestion && (
-                <div className="next">
-                  <ArrowRight aria-hidden="true" />
-                  <span>{report.suggestion}</span>
-                </div>
-              )}
-            </div>
-          </section>
-        </div>
-
-        <aside className="stack" aria-label="Engine readings">
-          <Inspector id={selected} />
-
-          <section className="plate rivets" aria-labelledby="ind-title">
-            <div className="plate-head">
-              <div>
-                <div className="eyebrow">Five indicators</div>
-                <h3 id="ind-title">Today’s readings</h3>
-              </div>
-              <a className="small muted" href="#/habits">Targets are yours to change →</a>
-            </div>
-            <div className="indicators">
-              {rs.map((r) => {
-                const I = INDICATOR_ICONS[r.id];
-                return (
-                  <button key={r.id} className={`ind${r.ignored ? ' ignored' : ''}`} aria-pressed={selected === r.id} onClick={() => setPicked(r.id)}>
-                    <span className="ico">
-                      <I aria-hidden="true" />
+        <section aria-labelledby="sheet-title">
+          <h1 id="sheet-title" className="sr-only">
+            Engine Room
+          </h1>
+          <div className="sheet">
+            <Engine condition={condition} equipped={state.equipped} reducedMotion={reducedMotion} pulse={pulse} selected={selected} onSelect={setPicked} labels={labels} />
+            <div className="sheet-foot">
+              <div className="notes" aria-live="polite">
+                <h3>Notes</h3>
+                <ol>
+                  <li>{report.headline}</li>
+                  {report.lines.map((l) => (
+                    <li key={l}>{l}</li>
+                  ))}
+                </ol>
+                {report.suggestion && report.focus && (
+                  <p className="next-up">
+                    <span className="k">
+                      Next maintenance · {REFS[report.focus]} {INDICATORS[report.focus].name.toLowerCase()}
                     </span>
-                    <span>
-                      <span className="name">
-                        {r.label} <span className="sub">{INDICATORS[r.id].habit}</span>
+                    <span>{report.suggestion}</span>
+                  </p>
+                )}
+              </div>
+              <div className="title-block" aria-label="Drawing details">
+                <div className="name">Human Engine, Mk I</div>
+                <div>Finish</div>
+                <div className="val">{finish}</div>
+                <div>Last entry</div>
+                <div className="val">{lastStamp ? formatTime(lastStamp) : 'none today'}</div>
+                <div>Days on record</div>
+                <div className="val">{daysOnRecord || 'none yet'}</div>
+                <div>Scale</div>
+                <div className="val">1 : 1 person</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <aside className="instruments" aria-labelledby="inst-title">
+          <div className="sec-head">
+            <h2 id="inst-title">Instruments</h2>
+            <a className="aside push" href="#/habits">
+              Adjust targets
+            </a>
+          </div>
+          {rs.map((r) => {
+            const on = selected === r.id;
+            const q = quick[r.id];
+            return (
+              <div key={r.id}>
+                <button className={`inst${r.ignored ? ' off' : ''}`} aria-pressed={on} aria-expanded={on} onClick={() => setPicked(r.id)}>
+                  <span className="ref">{REFS[r.id]}</span>
+                  <span className="inst-name">{r.label}</span>
+                  <span className="inst-val">
+                    {r.ignored ? 'off' : r.value === null ? '—' : `${Math.round(r.value * 100)}%`}
+                  </span>
+                  {!r.ignored && <Scale value={r.value ?? 0} active={on} label={`${r.label}, ${r.value === null ? 'not logged' : `${Math.round((r.value ?? 0) * 100)} percent of target`}`} />}
+                  {on && (
+                    <span className="inst-detail">
+                      <span>{INDICATORS[r.id].blurb}</span>
+                      <span className="num" style={{ color: 'var(--parchment)' }}>
+                        {r.ignored ? 'Not tracked' : r.current}
+                        {r.target && !r.ignored ? ` · target ${r.target}` : ''}
                       </span>
-                      <Bar value={r.value ?? 0} ind={r.id} label={`${r.label} progress`} />
                     </span>
-                    <span className="val">
-                      {r.ignored ? 'Not tracked' : r.current}
-                      {!r.ignored && r.target && (
-                        <>
-                          <br />
-                          <small>target {r.target}</small>
-                        </>
-                      )}
-                      {!r.ignored && !r.target && (
-                        <>
-                          <br />
-                          <small>self-reported</small>
-                        </>
-                      )}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-          </section>
+                  )}
+                </button>
+                {on && !r.ignored && (
+                  <div style={{ padding: '0 0 14px 34px', display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                    {q ? (
+                      <button className="btn sm" onClick={q.run}>
+                        {q.label}
+                      </button>
+                    ) : null}
+                    <button className="btn sm quiet" onClick={() => jump(r.id === 'rest' ? 'sleep-in' : r.id === 'motion' ? 'steps-in' : `row-${r.id}`)}>
+                      {r.id === 'rest' ? 'Record sleep' : r.id === 'motion' ? 'Enter steps' : 'Open in logbook'}
+                    </button>
+                  </div>
+                )}
+              </div>
+            );
+          })}
 
-          <section className="plate rivets level" aria-labelledby="lvl-title">
-            <div className="level-row">
-              <div className="level-badge" aria-hidden="true">
-                {progress.level}
-              </div>
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <div className="eyebrow">Level {progress.level}</div>
-                <div className="level-title" id="lvl-title">
-                  {progress.title}
-                </div>
-              </div>
-              <div className="mono small muted" style={{ textAlign: 'right' }}>
-                {progress.into}/{progress.span}
-                <br />
-                XP
-              </div>
+          <div className="progress-note">
+            <div className="lv">
+              Level {progress.level} <span>· {progress.title}</span>
             </div>
-            <Bar className="xpbar" value={progress.into / progress.span} label="Experience toward next level" />
-            <div className="stats">
-              <div className="stat">
-                <b>{progress.todayTotal}</b>
-                <span>XP today</span>
-              </div>
-              <div className="stat">
-                <b>{progress.streak.current}</b>
-                <span>day rhythm</span>
-              </div>
-              <div className="stat">
-                <b>{progress.streak.last7}/7</b>
-                <span>days tended</span>
-              </div>
-            </div>
-            <p className="small muted">
+            <Scale value={progress.into / progress.span} label="Experience toward the next level" />
+            <span>
+              <span className="num">{progress.into}</span> of <span className="num">{progress.span}</span> XP toward level {progress.level + 1}
+              {progress.todayTotal > 0 ? `, ${progress.todayTotal} earned today` : ''}.
+            </span>
+            <span>
               {progress.streak.current === 0
-                ? 'Every engine starts cold. One task today starts a new rhythm.'
-                : progress.streak.todayActive
-                  ? `Tended today. Your best rhythm so far is ${progress.streak.best} ${progress.streak.best === 1 ? 'day' : 'days'}.`
-                  : 'Your rhythm carries through today. Whenever you’re ready, any single task keeps it going.'}
-            </p>
-          </section>
+                ? 'A cold engine starts with any single entry.'
+                : `Tended ${progress.streak.last7} of the last 7 days. Current run: ${progress.streak.current} ${progress.streak.current === 1 ? 'day' : 'days'}.`}
+            </span>
+            <a href="#/workshop" className="small">
+              Workshop and commendations
+            </a>
+          </div>
         </aside>
       </div>
 
-      <Checklist />
-    </div>
-  );
-}
-
-function Inspector({ id }: { id: IndicatorId }) {
-  const { state, today, act } = useStore();
-  const r = readings(state, today).find((x) => x.id === id)!;
-  const info = INDICATORS[id];
-  const I = INDICATOR_ICONS[id];
-  const quick: Record<IndicatorId, { label: string; run: () => void; icon: typeof Plus } | null> = {
-    cooling: { label: 'Add a glass of water', icon: Plus, run: () => act({ type: 'water', date: today, delta: 1 }, { pulse: 'cooling', label: 'Glass of water' }) },
-    fuel: { label: 'Mark a nourishing meal', icon: Flame, run: () => act({ type: 'meal', date: today, delta: 1 }, { pulse: 'fuel', label: 'Nourishing meal' }) },
-    motion: { label: 'Add 10 minutes of movement', icon: Plus, run: () => act({ type: 'move', date: today, delta: 10 }, { pulse: 'motion', label: '10 minutes of movement' }) },
-    equilibrium: { label: 'Log a breathing break', icon: Wind, run: () => act({ type: 'breath', date: today, delta: 1 }, { pulse: 'vent', label: 'Breathing break' }) },
-    rest: null,
-  };
-  const q = quick[id];
-  const pct = r.value === null ? null : Math.round(r.value * 100);
-  return (
-    <section className="plate rivets" aria-labelledby="insp-title" aria-live="polite">
-      <div className="subsys">
-        <svg className="meter-big" viewBox="0 0 64 64" aria-hidden="true">
-          <circle cx={32} cy={32} r={28} fill="#120e0b" stroke="rgba(201,154,75,0.35)" />
-          <circle cx={32} cy={32} r={24} fill="none" stroke="rgba(201,154,75,0.12)" strokeWidth={5} />
-          <circle cx={32} cy={32} r={24} fill="none" stroke="var(--amber)" strokeWidth={5} strokeLinecap="round" strokeDasharray={`${((pct ?? 0) / 100) * 150.8} 150.8`} transform="rotate(-90 32 32)" style={{ transition: 'stroke-dasharray .6s' }} />
-          <foreignObject x={20} y={20} width={24} height={24}>
-            <I color="#ecc777" width={24} height={24} />
-          </foreignObject>
-        </svg>
-        <div>
-          <div className="sys-name">{info.system}</div>
-          <h3 id="insp-title">
-            {info.name} {r.ignored ? <span className="tag self">Not tracked</span> : <span className="mono small muted">{pct === null ? 'awaiting entry' : `${pct}%`}</span>}
-          </h3>
-          <p className="small" style={{ color: 'var(--cream)', marginTop: 4 }}>
-            {info.blurb}
-          </p>
-          <p className="small muted" style={{ marginTop: 6 }}>
-            Logged: {r.ignored ? '—' : r.current}
-            {r.target && !r.ignored ? ` · target ${r.target}` : ''}
-          </p>
-          <div className="row" style={{ marginTop: 10 }}>
-            {q && (
-              <button className="btn sm" onClick={q.run}>
-                <q.icon /> {q.label}
-              </button>
-            )}
-            {id === 'rest' && (
-              <button
-                className="btn sm"
-                onClick={() => {
-                  const el = document.getElementById('sleep-in');
-                  el?.scrollIntoView({ block: 'center' });
-                  el?.focus({ preventScroll: true });
-                }}
-              >
-                <Sparkles /> Record sleep below
-              </button>
-            )}
-          </div>
-        </div>
-      </div>
-    </section>
+      <Logbook />
+    </>
   );
 }

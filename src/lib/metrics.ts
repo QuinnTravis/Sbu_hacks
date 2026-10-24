@@ -46,9 +46,9 @@ export function readings(state: AppState, date: string): IndicatorReading[] {
       target: `${t.waterGlasses}`,
     },
     motion: {
-      value: clamp01(d.moveMinutes / t.moveMinutes),
-      current: `${d.moveMinutes} min`,
-      target: `${t.moveMinutes} min`,
+      value: motionValue(d, t),
+      current: motionText(d),
+      target: `${t.moveMinutes} min / ${t.steps.toLocaleString()} steps`,
     },
     fuel: {
       value: clamp01(d.meals / t.meals),
@@ -109,6 +109,18 @@ export function engineCondition(state: AppState, date: string): EngineCondition 
   const st: EngineCondition['state'] = overall < 0.25 ? 'cold' : overall < 0.55 ? 'idle' : overall < 0.85 ? 'steady' : 'full';
   const entry = latestEntry(state.journal, date);
   return { overall, state: st, label: STATE_LABELS[st], values, logged, ignored, stress: entry ? entry.stress : null };
+}
+
+/** Exercise minutes and steps both fill Motion; whichever is further along counts. */
+export function motionValue(d: DayLog, t: Targets): number {
+  return clamp01(Math.max(d.moveMinutes / t.moveMinutes, d.steps / t.steps));
+}
+
+export function motionText(d: DayLog): string {
+  const parts: string[] = [];
+  if (d.steps > 0) parts.push(`${d.steps.toLocaleString()} steps`);
+  if (d.moveMinutes > 0 || parts.length === 0) parts.push(`${d.moveMinutes} min`);
+  return parts.join(' · ');
 }
 
 export function fmtNum(n: number): string {

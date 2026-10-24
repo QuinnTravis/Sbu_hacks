@@ -9,7 +9,7 @@ import { entriesFor } from './metrics';
 export const XP_RULES = [
   { key: 'water', label: 'Glass of water', each: 5, cap: 50, note: '5 XP per glass, up to 10 glasses a day' },
   { key: 'sleep', label: 'Sleep recorded', each: 20, cap: 20, note: '20 XP once per day — any amount of rest counts' },
-  { key: 'move', label: 'Movement', each: 1, cap: 40, note: '1 XP per minute, up to 40 a day' },
+  { key: 'move', label: 'Exercise or steps', each: 1, cap: 40, note: '1 XP per exercise minute or per 200 steps, whichever is higher, up to 40 a day' },
   { key: 'meals', label: 'Nourishing meal', each: 10, cap: 30, note: '10 XP per meal, up to 3 a day' },
   { key: 'breaths', label: 'Breathing break', each: 10, cap: 30, note: '10 XP per break, up to 3 a day' },
   { key: 'checkin', label: 'Mood & stress check-in', each: 15, cap: 15, note: '15 XP once per day' },
@@ -29,6 +29,7 @@ export function isActive(day: DayLog | undefined, journalCount: number): boolean
     day.water > 0 ||
     day.sleepHours !== null ||
     day.moveMinutes > 0 ||
+    day.steps > 0 ||
     day.meals > 0 ||
     day.breaths > 0 ||
     day.customDone.length > 0
@@ -55,7 +56,7 @@ export function dayXp(state: AppState, date: string, prevActive: string | null, 
   if (d) {
     out.water = Math.min(50, d.water * 5);
     out.sleep = d.sleepHours !== null ? 20 : 0;
-    out.move = Math.min(40, d.moveMinutes);
+    out.move = Math.min(40, Math.max(d.moveMinutes, Math.floor(d.steps / 200)));
     out.meals = Math.min(30, d.meals * 10);
     out.breaths = Math.min(30, d.breaths * 10);
     out.custom = Math.min(80, d.customDone.length * 10);
@@ -65,7 +66,7 @@ export function dayXp(state: AppState, date: string, prevActive: string | null, 
   const touched = {
     cooling: ign.has('cooling') || (d?.water ?? 0) > 0,
     rest: ign.has('rest') || (d?.sleepHours ?? null) !== null,
-    motion: ign.has('motion') || (d?.moveMinutes ?? 0) > 0,
+    motion: ign.has('motion') || (d?.moveMinutes ?? 0) > 0 || (d?.steps ?? 0) > 0,
     fuel: ign.has('fuel') || (d?.meals ?? 0) > 0,
     eq: ign.has('equilibrium') || ((d?.breaths ?? 0) > 0 && entries.length > 0),
   };
@@ -162,9 +163,9 @@ export const ACHIEVEMENTS: AchievementDef[] = [
   {
     id: 'piston_power',
     name: 'Piston Power',
-    description: 'Meet your movement target on 3 days.',
+    description: 'Meet your exercise or step target on 3 days.',
     goal: 3,
-    progress: (c) => daysWhere(c.state, (d) => d.moveMinutes >= c.state.settings.targets.moveMinutes),
+    progress: (c) => daysWhere(c.state, (d) => d.moveMinutes >= c.state.settings.targets.moveMinutes || d.steps >= c.state.settings.targets.steps),
   },
   { id: 'steady_hand', name: 'Steady Hand', description: 'Complete 3 mood & stress check-ins.', goal: 3, progress: (c) => c.state.journal.length },
   { id: 'release_valve', name: 'Release Valve', description: 'Take 5 breathing breaks in total.', goal: 5, progress: (c) => Object.values(c.state.days).reduce((a, d) => a + d.breaths, 0) },

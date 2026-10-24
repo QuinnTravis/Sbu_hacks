@@ -1,11 +1,12 @@
 import { demoData } from '../data/demo';
 import { emptyDay, freshState, uid } from '../lib/storage';
-import type { AppState, CosmeticSlot, DayLog, IndicatorId, MotionPref, Targets } from '../types';
+import type { AppState, CosmeticSlot, DayLog, IndicatorId, MotionPref, StampKey, Targets } from '../types';
 
 export type Action =
   | { type: 'water'; date: string; delta: number }
   | { type: 'sleep'; date: string; hours: number | null }
   | { type: 'move'; date: string; delta: number }
+  | { type: 'steps'; date: string; steps: number }
   | { type: 'meal'; date: string; delta: number }
   | { type: 'breath'; date: string; delta: number }
   | { type: 'toggleCustom'; date: string; id: string }
@@ -32,6 +33,14 @@ function withDay(state: AppState, date: string, fn: (d: DayLog) => DayLog): AppS
   return { ...state, days: { ...state.days, [date]: next } };
 }
 
+/** Record when a habit was last logged. Clearing an entry removes its stamp. */
+function stamp(d: DayLog, key: StampKey, clear = false): DayLog {
+  const stamps = { ...(d.stamps ?? {}) };
+  if (clear) delete stamps[key];
+  else stamps[key] = Date.now();
+  return { ...d, stamps };
+}
+
 export function isDemoDay(state: AppState, date: string): boolean {
   return state.days[date]?.demo === true;
 }
@@ -39,21 +48,22 @@ export function isDemoDay(state: AppState, date: string): boolean {
 export function reducer(state: AppState, a: Action): AppState {
   switch (a.type) {
     case 'water':
-      return withDay(state, a.date, (d) => ({ ...d, water: clamp(d.water + a.delta, 0, 40) }));
+      return withDay(state, a.date, (d) => stamp({ ...d, water: clamp(d.water + a.delta, 0, 40) }, 'water'));
     case 'sleep':
-      return withDay(state, a.date, (d) => ({ ...d, sleepHours: a.hours === null ? null : clamp(Math.round(a.hours * 4) / 4, 0, 16) }));
+      return withDay(state, a.date, (d) => stamp({ ...d, sleepHours: a.hours === null ? null : clamp(Math.round(a.hours * 4) / 4, 0, 16) }, 'sleep', a.hours === null));
     case 'move':
-      return withDay(state, a.date, (d) => ({ ...d, moveMinutes: clamp(Math.round(d.moveMinutes + a.delta), 0, 600) }));
+      return withDay(state, a.date, (d) => stamp({ ...d, moveMinutes: clamp(Math.round(d.moveMinutes + a.delta), 0, 600) }, 'move'));
+    case 'steps':
+      return withDay(state, a.date, (d) => stamp({ ...d, steps: clamp(Math.round(a.steps), 0, 100000) }, 'steps', a.steps <= 0));
     case 'meal':
-      return withDay(state, a.date, (d) => ({ ...d, meals: clamp(d.meals + a.delta, 0, 8) }));
+      return withDay(state, a.date, (d) => stamp({ ...d, meals: clamp(d.meals + a.delta, 0, 8) }, 'meals'));
     case 'breath':
-      return withDay(state, a.date, (d) => ({ ...d, breaths: clamp(d.breaths + a.delta, 0, 12) }));
+      return withDay(state, a.date, (d) => stamp({ ...d, breaths: clamp(d.breaths + a.delta, 0, 12) }, 'breaths'));
     case 'toggleCustom':
       if (!state.customHabits.some((h) => h.id === a.id)) return state;
-      return withDay(state, a.date, (d) => ({
-        ...d,
-        customDone: d.customDone.includes(a.id) ? d.customDone.filter((x) => x !== a.id) : [...d.customDone, a.id],
-      }));
+      return withDay(state, a.date, (d) =>
+        stamp({ ...d, customDone: d.customDone.includes(a.id) ? d.customDone.filter((x) => x !== a.id) : [...d.customDone, a.id] }, 'custom'),
+      );
     case 'addHabit': {
       const label = a.label.trim().slice(0, 40);
       if (!label || state.customHabits.length >= 8) return state;
@@ -94,7 +104,7 @@ export function reducer(state: AppState, a: Action): AppState {
       // never overwrite a day that already holds real entries
       for (const [k, d] of Object.entries(demo.days)) {
         const existing = days[k];
-        const hasReal = existing && !existing.demo && (existing.water || existing.meals || existing.moveMinutes || existing.breaths || existing.sleepHours !== null || existing.customDone.length);
+        const hasReal = existing && !existing.demo && (existing.water || existing.meals || existing.moveMinutes || existing.steps || existing.breaths || existing.sleepHours !== null || existing.customDone.length);
         if (!hasReal) days[k] = d;
       }
       const journal = [...state.journal.filter((e) => !e.demo), ...demo.journal].sort((x, y) => x.ts - y.ts);
