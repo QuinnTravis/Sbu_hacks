@@ -1,11 +1,12 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { demoWorld } from '../data/world';
-import { places, realtimeScenarios, type EventPreset, type RealtimeScenario } from '../data/models';
+import { places, realtimeScenarios, type RealtimeScenario } from '../data/models';
 import { plan, type Place, type PlanResult, type RouteOption } from '../engine/planner';
 import { realtimeStatus } from '../engine/delays';
 import { mtaProxyProvider, type ProviderState } from '../engine/realtime';
 import type { JourneyEval } from '../engine/evaluate';
-import { buildContext, type InsightsFocus, type Settings, type StationFocus } from '../app/settings';
+import type { EventWindow } from '../engine/types';
+import { buildContext, type EventDetection, type InsightsFocus, type Settings, type StationFocus } from '../app/settings';
 import { NetworkMap } from './NetworkMap';
 import { JourneyDetail, flowFor } from './JourneyDetail';
 import {
@@ -68,15 +69,23 @@ function PlaceCombo({ id, label, value, onChange, dest }: { id: string; label: s
   );
 }
 
-type Status = { kind: 'loading' } | { kind: 'ready'; result: PlanResult } | { kind: 'error'; message: string };
+/** Human names for the stations an event crowds, busiest first. */
+function crowdedStops(ev: EventWindow) {
+  const stops = Object.values(world.tt.stops);
+  const names = Object.entries(ev.stationImpact)
+    .sort((a, b) => b[1] - a[1])
+    .map(([k]) => (stops.find((s) => s.stationId === k || s.id === k)?.name ?? k).replace(' (LIRR)', ''));
+  return names.length > 1 ? `${names.slice(0, -1).join(', ')} and ${names[names.length - 1]}` : names[0];
+}
 
-const SCENARIOS: { label: string; apply: () => { from: string; to: string; time: number; mode: 'depart' | 'arrive'; s: Partial<Settings> } }[] = [
-  { label: 'Morning to Stony Brook', apply: () => ({ from: 'flushing', to: 'stony-brook', time: 7 * 3600 + 45 * 60, mode: 'depart', s: { event: 'none', feed: 'none', nowSec: 7 * 3600 + 40 * 60, accessible: false } }) },
-  { label: '7 trains delayed', apply: () => ({ from: 'flushing', to: 'stony-brook', time: 7 * 3600 + 45 * 60, mode: 'depart', s: { event: 'none', feed: 'seven-delays', nowSec: 7 * 3600 + 40 * 60, accessible: false } }) },
-  { label: 'After a Citi Field game', apply: () => ({ from: 'flushing', to: 'stony-brook', time: 16 * 3600 + 40 * 60, mode: 'depart', s: { event: 'afternoon', feed: 'none', nowSec: 16 * 3600 + 35 * 60, accessible: false } }) },
-  { label: 'Step-free trip', apply: () => ({ from: 'flushing', to: 'stony-brook', time: 7 * 3600 + 45 * 60, mode: 'depart', s: { event: 'none', feed: 'none', nowSec: 7 * 3600 + 40 * 60, accessible: true } }) },
-  { label: 'Be at Jamaica by 9:00', apply: () => ({ from: 'flushing', to: 'jamaica', time: 9 * 3600, mode: 'arrive', s: { event: 'none', feed: 'none', nowSec: 7 * 3600 + 40 * 60, accessible: false } }) },
-];
+function EventStatus({ d }: { d: EventDetection }) {
+  if (d.kind === 'loading') return <span className="small muted">Checking for games, concerts and events near the network…</span>;
+  if (d.kind === 'error') return <div className="banner warn">{Icon.alert(16)}<span>Couldn’t check for events today ({d.message}). Crowding from games or concerts isn’t included.</span></div>;
+  if (d.events.length) return d.failed.length ? <span className="small muted">Some event sources didn’t answer: {d.failed.join('; ')}.</span> : null;
+  return <span className="small muted">No games or concerts near the network today. Checked {d.sources.join(' and ')}.{d.failed.length ? ` Unavailable: ${d.failed.join('; ')}.` : ''}</span>;
+}
+
+type Status = { kind: 'loading' } | { kind: 'ready'; result: PlanResult } | { kind: 'error'; message: string };
 
 export function lateBy(sec: number) {
   return sec <= 60 ? 'same arrival' : `+${fmtMin(sec)} vs plan`;
@@ -236,7 +245,6 @@ export function PlanPage({
           <div className="titlebar">
             <h1>Plan a trip</h1>
             <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
-              <Prov>Synthetic timetable</Prov>
               {rt.kind === 'fresh' && (rt.source === 'demo' ? <Prov>Demo feed</Prov> : <Prov kind="live">Live feed</Prov>)}
               {rt.kind === 'stale' && <Prov kind="stale">Feed stale</Prov>}
             </div>
@@ -261,14 +269,6 @@ export function PlanPage({
               </div>
               <div className="row">
                 <div className="field" style={{ flex: '1 1 160px' }}>
-                  <label htmlFor="event">Event crowding</label>
-                  <select id="event" className="input" value={settings.event} onChange={(e) => set({ event: e.target.value as EventPreset })}>
-                    <option value="none">No event</option>
-                    <option value="afternoon">Sample Citi Field game · 1:10 PM</option>
-                    <option value="evening">Sample Citi Field game · 7:10 PM</option>
-                  </select>
-                </div>
-                <div className="field" style={{ flex: '1 1 160px' }}>
                   <label htmlFor="feed">Service data</label>
                   <select id="feed" className="input" value={settings.feed} onChange={(e) => set({ feed: e.target.value as RealtimeScenario })}>
                     {Object.entries(realtimeScenarios).map(([k, v]) => <option key={k} value={k}>{v.label}</option>)}
@@ -288,15 +288,7 @@ export function PlanPage({
               {live && liveState.kind === 'ok' && <span className="small muted">Live feed loaded. Trip updates only apply to trips in the loaded timetable; the demo timetable is synthetic, so expect alerts but few matching trips.</span>}
             </div>
           )}
-          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }} aria-label="Demo scenarios">
-            {SCENARIOS.map((s) => (
-              <button key={s.label} className="chip" onClick={() => {
-                const a = s.apply();
-                setFrom(byId(a.from)); setTo(byId(a.to)); setTime(a.time); setMode(a.mode);
-                setSettings({ ...settings, ...a.s });
-              }}>{s.label}</button>
-            ))}
-          </div>
+          <EventStatus d={settings.detected} />
           {ctx.realtime?.alerts.map((a) => (
             <div key={a.id} className="banner warn">{Icon.alert(16)}<span><strong>{a.header}.</strong> {a.description}</span></div>
           ))}
@@ -304,7 +296,7 @@ export function PlanPage({
             <div className="banner warn">{Icon.alert(16)}<span><strong>Real-time data is {Math.round(rt.ageSec / 60)} minutes old</strong> and is being ignored. Estimates use the schedule and the delay model.</span></div>
           )}
           {ctx.events.map((ev) => (
-            <div key={ev.id} className="banner">{Icon.info(16)}<span>{ev.label}. Crowding at Mets–Willets Point, Woodside and Jackson Heights is modelled before the start and after the end. <Prov>Synthetic</Prov></span></div>
+            <div key={ev.id} className="banner">{Icon.info(16)}<span><strong>Detected: {ev.label}.</strong> Expect heavier crowds at {crowdedStops(ev)} before the start and after the end; routes below account for it. <Prov>{ev.provenance === 'published' ? 'MLB schedule' : 'AI estimate'}</Prov></span></div>
           ))}
         </div>
 

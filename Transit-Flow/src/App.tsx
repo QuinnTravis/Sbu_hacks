@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { DEFAULT_SETTINGS, type InsightsFocus, type Settings, type StationFocus, type Tab } from './app/settings';
 import { Icon } from './ui/kit';
+import { detectEvents } from './engine/events';
 import { PlanPage } from './plan/PlanPage';
 import { StationsPage } from './stations/StationsPage';
 import { InsightsPage } from './insights/InsightsPage';
@@ -21,6 +22,14 @@ export default function App() {
   const [settings, setSettings] = useState<Settings>(DEFAULT_SETTINGS);
   const [stationFocus, setStationFocus] = useState<StationFocus | null>(null);
   const [insightsFocus, setInsightsFocus] = useState<InsightsFocus | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    detectEvents()
+      .then((d) => !cancelled && setSettings((s) => ({ ...s, detected: { kind: 'ok', ...d } })))
+      .catch((e: Error) => !cancelled && setSettings((s) => ({ ...s, detected: { kind: 'error', message: e.message } })));
+    return () => { cancelled = true; };
+  }, []);
 
   useEffect(() => {
     const onHash = () => setTab(initialTab());

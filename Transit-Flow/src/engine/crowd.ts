@@ -38,8 +38,9 @@ export function eventDelayScale(trip: Trip, tt: Timetable, events: EventWindow[]
     const impact = ev.routeDelayImpact[trip.routeId];
     if (impact === undefined) continue;
     for (const st of trip.stopTimes) {
-      const stationId = tt.stops[st.stopId]?.stationId;
-      if (!stationId || ev.stationImpact[stationId] === undefined) continue;
+      // Impacts are keyed by station id, or by stop id where no station model exists.
+      const key = tt.stops[st.stopId]?.stationId ?? st.stopId;
+      if (ev.stationImpact[key] === undefined) continue;
       scale = Math.max(scale, 1 + (impact - 1) * eventShape(ev, st.dep));
     }
   }

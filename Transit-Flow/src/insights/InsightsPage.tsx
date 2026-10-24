@@ -4,7 +4,7 @@ import { demandFlows, hourProfile, onboardLoad, sampleEvent } from '../data/mode
 import { compare, enumerateCohorts, simulate, totals, TIMED_WINDOW_SEC, type CohortStats, type Comparison, type Intervention, type SimResult } from '../engine/analytics';
 import { connectionProbability } from '../engine/transfer';
 import { stationGraphs } from '../data/stations';
-import { bindingKey, type InsightsFocus, type Settings, type StationFocus } from '../app/settings';
+import { activeEvents, bindingKey, type InsightsFocus, type Settings, type StationFocus } from '../app/settings';
 import { Icon, NeedVsWindow, Prov, RiskPill, Seg, assessP, fmtClock, fmtMin, fmtRange, pct } from '../ui/kit';
 
 const world = demoWorld;
@@ -262,7 +262,7 @@ function Simulator({ selected, dayType }: { selected: CohortStats | null; dayTyp
 }
 
 export function InsightsPage({ settings, focus, onOpenStation }: { settings: Settings; focus: InsightsFocus | null; onOpenStation: (f: StationFocus) => void }) {
-  const [dayType, setDayType] = useState<DayType>(settings.event !== 'none' ? 'event' : 'normal');
+  const [dayType, setDayType] = useState<DayType>(activeEvents(settings).length ? 'event' : 'normal');
   const [station, setStation] = useState<string>('all');
   const [hours, setHours] = useState<Hours>('all');
   const [fragileOnly, setFragileOnly] = useState(true);

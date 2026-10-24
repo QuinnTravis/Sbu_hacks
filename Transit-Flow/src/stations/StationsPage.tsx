@@ -4,10 +4,9 @@ import { outagesFrom } from '../engine/network';
 import { crowdAt } from '../engine/crowd';
 import { findPath, instructions, positionHint, sampleTraversal, sampleWalkerFactor, edgeCostSec, edgeUsable, type StationPath } from '../engine/station';
 import { mulberry32, summarize } from '../engine/random';
-import { bindingKey, buildContext, type Settings, type StationFocus } from '../app/settings';
-import { sampleEvent } from '../data/models';
+import { activeEvents, bindingKey, buildContext, type Settings, type StationFocus } from '../app/settings';
 import type { StationEdge, StationGraph } from '../engine/types';
-import { Icon, Prov, Seg, fmtRange, fmtMin, hhmm } from '../ui/kit';
+import { Icon, Prov, fmtRange, fmtMin, hhmm } from '../ui/kit';
 
 const ORDER = ['woodside', 'jackson-heights', 'jamaica', 'flushing', 'huntington'];
 
@@ -21,7 +20,6 @@ const EDGE_STYLE: Record<StationEdge['kind'], { dash?: string; width: number }> 
   fare: { width: 2 },
 };
 
-type Crowd = 'normal' | 'event';
 
 function Diagram({
   g, path, alt, accessible, outages, crowd, fromNodes, toNodes,
@@ -140,7 +138,6 @@ export function StationsPage({ settings, setSettings, focus }: { settings: Setti
   const defaults: Record<string, [number, number]> = { woodside: [0, 2], 'jackson-heights': [0, 2], jamaica: [0, 2], flushing: [0, 2], huntington: [0, 1] };
   const [fromKey, setFromKey] = useState(focus?.fromKey ?? keys[defaults[stationId][0]]);
   const [toKey, setToKey] = useState(focus?.toKey ?? keys[defaults[stationId][1]]);
-  const [crowdMode, setCrowdMode] = useState<Crowd>(settings.event !== 'none' ? 'event' : 'normal');
   const [useBestCar, setUseBestCar] = useState(true);
 
   useEffect(() => {
@@ -161,9 +158,11 @@ export function StationsPage({ settings, setSettings, focus }: { settings: Setti
   const outages = useMemo(() => outagesFrom(ctx), [ctx]);
   const fromB = g.bindings.find((b) => bindingKey(b) === fromKey) ?? g.bindings[0];
   const toB = g.bindings.find((b) => bindingKey(b) === toKey) ?? g.bindings[1];
-  // Event crowding is evaluated 15 min after the sample event ends (peak egress).
-  const evts = crowdMode === 'event' ? sampleEvent(settings.event === 'evening' ? 'evening' : 'afternoon') : [];
-  const crowd = crowdMode === 'event' ? crowdAt(stationId, evts[0].endSec + 900, evts) : 1;
+  // Crowding from today's detected events, evaluated 15 min after the event
+  // that hits this station hardest ends (peak egress).
+  const evts = activeEvents(settings).filter((e) => e.stationImpact[stationId] !== undefined);
+  const peakEv = evts.reduce<(typeof evts)[number] | null>((a, b) => (!a || b.stationImpact[stationId] > a.stationImpact[stationId] ? b : a), null);
+  const crowd = peakEv ? crowdAt(stationId, peakEv.endSec + 900, evts) : 1;
 
   const analysis = useMemo(() => {
     const opts = { accessible: settings.accessible, outages, crowd };
@@ -224,13 +223,12 @@ export function StationsPage({ settings, setSettings, focus }: { settings: Setti
           </select>
         </div>
         <div style={{ display: 'grid', gap: 10 }}>
-          <Seg label="Crowding" light value={crowdMode} onChange={setCrowdMode} options={[{ value: 'normal', label: 'Normal' }, { value: 'event', label: 'After a game' }]} />
           <label className="check"><input id="s-acc" type="checkbox" checked={settings.accessible} onChange={(e) => setSettings({ ...settings, accessible: e.target.checked })} /> Step-free only</label>
           <label className="check"><input id="s-fam" type="checkbox" checked={settings.familiarity === 'first-time'} onChange={(e) => setSettings({ ...settings, familiarity: e.target.checked ? 'first-time' : 'regular' })} /> First time at this station</label>
           <label className="check"><input id="s-car" type="checkbox" checked={useBestCar} onChange={(e) => setUseBestCar(e.target.checked)} /> Ride in the recommended car</label>
         </div>
-        {crowdMode === 'event' && (
-          <div className="banner">{Icon.info(16)}<span>Sample event crowding, 15 minutes after a game ends at {hhmm(evts[0].endSec)}: crowd factor {crowd.toFixed(2)}× at this station. <Prov>Synthetic</Prov></span></div>
+        {peakEv && (
+          <div className="banner">{Icon.info(16)}<span>Detected: {peakEv.label}. 15 minutes after it ends at {hhmm(peakEv.endSec)}: crowd factor {crowd.toFixed(2)}× at this station. <Prov>{peakEv.provenance === 'published' ? 'MLB schedule' : 'AI estimate'}</Prov></span></div>
         )}
         {ctx.realtime?.alerts.filter((a) => a.stationId === stationId).map((a) => (
           <div key={a.id} className="banner warn">{Icon.alert(16)}<span><strong>{a.header}.</strong> {a.description}</span></div>

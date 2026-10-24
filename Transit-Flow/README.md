@@ -20,11 +20,12 @@ No account, API key or network connection is needed. Fonts load from Google Font
 
 ## What to try
 
-1. **Plan → Morning to Stony Brook** (leave after 7:45 AM). The planner recommends a reliable route. Open the 7 train via Woodside card: leaving at 7:54 AM connects *on paper* (4‑minute window, 3‑minute published minimum), but the Woodside station model puts the walk at 3–5 minutes before train delays, so about a third of riders make it. Missing it costs about 20 minutes even after re-planning.
+1. **Plan**, Flushing → Stony Brook, leave after 7:45 AM (the default). The planner recommends a reliable route. Open the 7 train via Woodside card: leaving at 7:54 AM connects *on paper* (4‑minute window, 3‑minute published minimum), but the Woodside station model puts the walk at 3–5 minutes before train delays, so about a third of riders make it. Missing it costs about 20 minutes even after re-planning.
 2. Click the Woodside transfer on the map or in the timeline → **Station layout** shows the path from the elevated 7 platform, out of fare control, across Roosevelt Av and down to the LIRR, with the car to ride in.
 3. **Network view** opens Insights on the same connection as a reliability problem (a "phantom connection"). Under **Test a change**, hold the LIRR up to 90 s and compare before/after, including the cost to riders already on board.
 4. **Stations → Jackson Heights**, tick *First time at this station*: walking directions from the elevated 7 to the E/F platforms for an unfamiliar rider.
-5. Other scenarios: *7 trains delayed* (demo real-time feed), *After a Citi Field game* (event crowding), *Step-free trip* (elevator-only paths), *Be at Jamaica by 9:00* (arrive-by mode).
+5. Under **Conditions**: the demo real-time feeds (7 delays, stale feed, elevator outage), *Step-free only*, and **Arrive by** mode.
+6. **Event crowding is automatic.** On load, the app checks today's events near the network: the public MLB schedule for Citi Field, plus an AI search (Gemini with Google Search, run by the Vite server at `/api/events`) for games, concerts and festivals at Citi Field, the USTA tennis center, Forest Hills Stadium, Madison Square Garden and Flushing Meadows. Detected events raise crowding and delays on the affected stations and lines. Set `GEMINI_API_KEY` in `.env` (see `.env.example`) to turn on the AI search; venues and their impacts are in `engine/venues.ts`.
 
 ## How it works
 
@@ -35,6 +36,8 @@ src/
     graph.ts         Dijkstra (binary heap, multi-source/multi-target)
     station.ts       indoor graph pathfinding, traversal-time sampling, instructions
     crowd.ts         event model: crowding and delay multipliers over time
+    events.ts        detects today's events (MLB schedule + AI search) and turns them into crowding windows
+    venues.ts        venues near the network and how their events affect stations and lines
     delays.ts        delay mixture model; real-time handling and staleness
     transfer.ts      transfer-time distributions and connection probability
     raptor.ts        RAPTOR multi-criteria routing (arrival × number of trips)

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState, type PointerEvent as RPE } from 'react';
 import type { World } from '../engine/network';
 import type { JourneyEval } from '../engine/evaluate';
-import { Icon, Prov, riskColor } from '../ui/kit';
+import { Icon, riskColor } from '../ui/kit';
 
 const LAT0 = 40.8;
 const K = Math.cos((LAT0 * Math.PI) / 180);
@@ -224,9 +224,6 @@ export function NetworkMap({
           );
         })}
       </svg>
-      <div className="tl">
-        <Prov>Schematic · positions approximate</Prov>
-      </div>
       <div className="tools">
         <button className="icon-btn" aria-label="Zoom in" onClick={() => zoom(1 / 1.4)}>{Icon.plus(18)}</button>
         <button className="icon-btn" aria-label="Zoom out" onClick={() => zoom(1.4)}>{Icon.minus(18)}</button>
