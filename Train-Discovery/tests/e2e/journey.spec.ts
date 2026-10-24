@@ -214,6 +214,47 @@ test("audio tour narrates nearby places without pointing, then saves, pauses, sk
   await expect(page.getByRole("button", { name: "Start audio tour" })).toBeVisible();
 });
 
+test("an attributed source excerpt is visibly distinguished from a verified story", async ({ page }) => {
+  const unverified = {
+    ...place,
+    id: "example-house",
+    name: "Example House Museum",
+    story: undefined,
+    evidence: [{
+      ...place.evidence[0],
+      title: "Example House",
+      url: "https://en.wikipedia.org/wiki/Example_House",
+      text: "Example House is a preserved building used for education. It is near a railway line.",
+    }],
+  };
+  await page.route("**/api/journeys/10", (route) => route.fulfill({ json: { places: [unverified] } }));
+  await page.addInitScript(() => {
+    const spoken: string[] = [];
+    Object.assign(window, { __spoken: spoken });
+    class FakeSpeech { lang = ""; rate = 1; onend: (() => void) | null = null; onerror: (() => void) | null = null; constructor(public text: string) {} }
+    Object.defineProperty(window, "SpeechSynthesisUtterance", { configurable: true, value: FakeSpeech });
+    Object.defineProperty(window, "speechSynthesis", {
+      configurable: true,
+      value: { speak: (voice: FakeSpeech) => spoken.push(voice.text), cancel() {}, pause() {}, resume() {} },
+    });
+  });
+  await page.goto("/");
+  await page.getByRole("button", { name: "Find routes near me" }).click();
+  await page.getByRole("button", { name: /Port Jefferson/ }).last().click();
+  await page.getByRole("button", { name: "Start ride", exact: true }).click();
+  await page.getByRole("button", { name: "Start audio tour" }).click();
+  await expect(page.getByText("Example House Museum · source excerpt")).toBeVisible();
+  await expect.poll(() => page.evaluate(() => (window as unknown as { __spoken: string[] }).__spoken[0])).toBe(
+    "Example House Museum. From Wikipedia: Example House is a preserved building used for education. It is near a railway line.",
+  );
+  await page.getByRole("button", { name: "Save Example House Museum to discoveries" }).click();
+  if (await page.getByRole("button", { name: /My discoveries/ }).isVisible())
+    await page.getByRole("button", { name: /My discoveries/ }).click();
+  await expect(page.getByText("History hasn’t been verified yet.")).toBeVisible();
+  await page.getByRole("button", { name: "Listen to source for Example House Museum" }).click();
+  await expect.poll(() => page.evaluate(() => (window as unknown as { __spoken: string[] }).__spoken.length)).toBe(2);
+});
+
 test("all branches are searchable and no left/right selector is present", async ({
   page,
 }) => {

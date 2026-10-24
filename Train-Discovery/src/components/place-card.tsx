@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import type { Photo, QueueEntry } from "@/lib/types";
 import { formatDistance } from "@/lib/geo";
-import { narrationText } from "@/lib/narration";
+import { audioNarration, narrationText } from "@/lib/narration";
 
 export function PlaceCard({
   entry,
@@ -163,6 +163,12 @@ export function PlaceCard({
             >
               Read the source <ArrowUpRight size={14} />
             </a>
+            {audioNarration(place)?.kind === "source" && (
+              <button className="story-listen" onClick={onNarrate} aria-label={`Listen to source for ${place.name}`}>
+                <Volume2 size={16} />
+                Listen to source
+              </button>
+            )}
           </div>
         )}
         {Object.entries(place.tags).filter(([key]) =>

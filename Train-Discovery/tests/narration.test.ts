@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { narrationText } from "../src/lib/narration";
+import { audioNarration, narrationText } from "../src/lib/narration";
 import type { Place } from "../src/lib/types";
 
 const source = {
@@ -57,5 +57,42 @@ describe("audio narration", () => {
       },
     };
     expect(narrationText(mixed)).toBe("Old station. The building opened in 1901.");
+  });
+
+  it("reads a matched Wikipedia introduction as an explicitly unverified source excerpt", () => {
+    const unverified: Place = {
+      ...place,
+      name: "King Manor Museum",
+      story: undefined,
+      evidence: [{
+        ...source,
+        title: "King Manor",
+        url: "https://en.wikipedia.org/wiki/King_Manor",
+        text: "King Manor is a historic house in Queens. It was preserved as a museum in the twentieth century. A third sentence is intentionally excluded.",
+      }],
+    };
+    expect(audioNarration(unverified)).toEqual({
+      kind: "source",
+      text: "King Manor Museum. From Wikipedia: King Manor is a historic house in Queens. It was preserved as a museum in the twentieth century.",
+    });
+  });
+
+  it("rejects misleading matches, untrusted URLs and stale verified stories", () => {
+    const matched: Place = {
+      ...place,
+      story: undefined,
+      name: "Bank of Manhattan Company Building",
+      evidence: [{ ...source, title: "Sven (building)", url: "https://en.wikipedia.org/wiki/Sven_(building)" }],
+    };
+    expect(audioNarration(matched)).toBeNull();
+    expect(audioNarration({ ...matched, name: "Sven", evidence: [{ ...matched.evidence[0], url: "https://malicious.example/wiki/Sven" }] })).toBeNull();
+    expect(audioNarration({ ...matched, name: "Sven", story: place.story, evidence: [{ ...matched.evidence[0], text: "This unrelated source has no valid citation." }] })).toBeNull();
+  });
+
+  it("prefers verified narration whenever a matching story exists", () => {
+    expect(audioNarration(place)).toEqual({
+      kind: "verified",
+      text: "Old station. The building opened in 1901.",
+    });
   });
 });

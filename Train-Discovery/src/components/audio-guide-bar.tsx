@@ -25,7 +25,7 @@ export function AudioGuideBar({ guide, onSave, saved }: {
         <>
           <span className="audio-indicator" aria-hidden="true"><span /><span /><span /></span>
           <span className="audio-title" role="status">
-            {guide.status === "paused" ? "Paused" : guide.currentName ?? "Waiting for a nearby story"}
+            {guide.status === "paused" ? "Paused" : guide.currentName ? `${guide.currentName}${guide.currentKind === "source" ? " · source excerpt" : ""}` : "Waiting for a nearby story"}
           </span>
           {guide.currentPlace && !saved && (
             <button className="audio-control" onClick={onSave} aria-label={`Save ${guide.currentPlace.name} to discoveries`}>

@@ -1,6 +1,6 @@
 # Train Discovery
 
-A Next.js 16 PWA for all LIRR branches. Choose a branch, start a ride, and point the back of your phone toward a nearby place. Discoveries enter a persistent queue and remain until discarded. An optional audio tour reads verified stories as you approach places, without requiring you to point the phone. There is no left/right window selector and no camera recognition in this scope.
+A Next.js 16 PWA for all LIRR branches. Choose a branch, start a ride, and point the back of your phone toward a nearby place. Discoveries enter a persistent queue and remain until discarded. An optional audio tour reads verified stories or clearly marked source excerpts as you approach places, without requiring you to point the phone. There is no left/right window selector and no camera recognition in this scope.
 
 ## Run
 
@@ -59,9 +59,11 @@ The queue is stored locally, separately from online content and photo requests. 
 
 ### Audio tour
 
-Press **Start audio tour** after starting a ride. This activates the browser's speech synthesizer with a user gesture. It reads available verified claims from the saved queue, then verified places within 1.1 km of a fresh, on-route location. Narration never uses unverified OpenStreetMap tags, free-form generated summaries, or claims whose quoted passage no longer matches the supplied evidence. Each place is spoken at most once per listening session unless you press **Play story** on its card. You can pause, resume, skip, stop, or save the currently narrated place into your queue. Discarding the place silences it, and ending or changing the ride cancels speech.
+Press **Start audio tour** after starting a ride. This activates the browser's speech synthesizer with a user gesture. It reads the saved queue, then nearby places within 1.1 km of a fresh, on-route location; verified stories are prioritized ahead of source excerpts. For a verified story, it reads only approved claims with matching supporting quotes. If a place has no verified story, it may read the first two sentences verbatim from a Wikipedia article whose title matches the place. The player labels this **source excerpt** and the spoken introduction identifies Wikipedia. Name matching is a conservative safeguard against obviously unrelated articles; the excerpt has not undergone the LangChain verification step. A place with an invalidated story fails closed until reverified.
 
-The audio feature needs a browser with `speechSynthesis`. A narration source with no approved claims is intentionally silent; at the time of this snapshot only one of 138 candidate places has a verified story. Complete and publish the LangChain verification pipeline before expecting broad route coverage. Mobile browsers may stop speech while the screen is locked or in the background; sustained background playback is not guaranteed. The audio tour requests no microphone permission and streams no location to an audio service.
+Narration never invents historical claims from OpenStreetMap tags or free-form generated summaries. Each place is spoken at most once per listening session unless you press **Play story** or **Listen to source** on its card. You can pause, resume, skip, stop, or save the currently narrated place into your queue. Discarding the place silences it, and ending or changing the ride cancels speech.
+
+The audio feature needs a browser with `speechSynthesis`. Places without verified claims or a matching source excerpt remain silent. At the time of this snapshot only one of 138 candidate places has a verified story; direct readings let the tour demonstrate more stops while keeping their verification status visible. Complete and publish the LangChain verification pipeline before expecting broad verified coverage. Mobile browsers may stop speech while the screen is locked or in the background; sustained background playback is not guaranteed. The audio tour requests no microphone permission and streams no location to an audio service.
 
 The PWA precaches its app shell, fonts, and JS/CSS, and saves a branch package after it is loaded. Reopening a downloaded branch works offline; Google photos require connectivity. Service workers are registered only in production. Updates use a versioned cache and normal service-worker lifecycle; do not force a new worker into an active ride.
 

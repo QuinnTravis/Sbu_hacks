@@ -1,7 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { narrationText } from "@/lib/narration";
+import { audioNarration } from "@/lib/narration";
+import type { Narration } from "@/lib/narration";
 import type { Place, QueueEntry } from "@/lib/types";
 
 type GuideStatus =
@@ -21,6 +22,7 @@ export function useAudioGuide(
   const [status, setStatus] = useState<GuideStatus>("off");
   const [currentName, setCurrentName] = useState<string | null>(null);
   const [currentPlace, setCurrentPlace] = useState<Place | null>(null);
+  const [currentKind, setCurrentKind] = useState<Narration["kind"] | null>(null);
   const enabled = useRef(false);
   const paused = useRef(false);
   const spoken = useRef(new Set<string>());
@@ -42,6 +44,7 @@ export function useAudioGuide(
     if (available()) window.speechSynthesis.cancel();
     setCurrentName(null);
     setCurrentPlace(null);
+    setCurrentKind(null);
   }, [available]);
 
   const playNext = useCallback(function speakNext() {
@@ -57,7 +60,7 @@ export function useAudioGuide(
       ...(queue.current ?? []),
       ...around.current.map((place) => ({ place })),
     ].filter((entry) =>
-      !dismissedIds.has(entry.place.id) && Boolean(narrationText(entry.place)),
+      !dismissedIds.has(entry.place.id) && Boolean(audioNarration(entry.place)),
     );
     const chosen =
       candidates.find((entry) => entry.place.id === preferred.current) ??
@@ -66,25 +69,28 @@ export function useAudioGuide(
     if (!chosen) {
       setCurrentName(null);
       setCurrentPlace(null);
+      setCurrentKind(null);
       setStatus("waiting");
       return;
     }
 
-    const content = narrationText(chosen.place);
-    if (!content) return;
-    const utterance = new SpeechSynthesisUtterance(content);
+    const narration = audioNarration(chosen.place);
+    if (!narration) return;
+    const utterance = new SpeechSynthesisUtterance(narration.text);
     utterance.lang = "en-US";
     utterance.rate = 0.95;
     active.current = utterance;
     spoken.current.add(chosen.place.id);
     setCurrentName(chosen.place.name);
     setCurrentPlace(chosen.place);
+    setCurrentKind(narration.kind);
     setStatus("speaking");
     utterance.onend = () => {
       if (active.current !== utterance) return;
       active.current = null;
       setCurrentName(null);
       setCurrentPlace(null);
+      setCurrentKind(null);
       speakNext();
     };
     utterance.onerror = () => {
@@ -93,6 +99,7 @@ export function useAudioGuide(
       enabled.current = false;
       setCurrentName(null);
       setCurrentPlace(null);
+      setCurrentKind(null);
       setStatus("error");
     };
     try {
@@ -102,6 +109,7 @@ export function useAudioGuide(
       enabled.current = false;
       setCurrentName(null);
       setCurrentPlace(null);
+      setCurrentKind(null);
       setStatus("error");
     }
   }, [available]);
@@ -149,7 +157,7 @@ export function useAudioGuide(
 
   const replay = useCallback((placeId: string) => {
     const exists = [...(queue.current ?? []).map((entry) => entry.place), ...around.current].some(
-      (place) => place.id === placeId && narrationText(place) && !hidden.current?.includes(placeId),
+      (place) => place.id === placeId && audioNarration(place) && !hidden.current?.includes(placeId),
     );
     if (!exists) return;
     if (!available()) {
@@ -176,6 +184,7 @@ export function useAudioGuide(
       queueMicrotask(() => {
         setCurrentName(null);
         setCurrentPlace(null);
+        setCurrentKind(null);
         playNext();
       });
       return;
@@ -196,6 +205,7 @@ export function useAudioGuide(
     queueMicrotask(() => {
       setCurrentName(null);
       setCurrentPlace(null);
+      setCurrentKind(null);
       setStatus("off");
     });
   }, [rideId, available]);
@@ -205,5 +215,5 @@ export function useAudioGuide(
     if (available()) window.speechSynthesis.cancel();
   }, [available]);
 
-  return { status, currentName, currentPlace, start, stop, togglePause, skip, replay };
+  return { status, currentName, currentPlace, currentKind, start, stop, togglePause, skip, replay };
 }

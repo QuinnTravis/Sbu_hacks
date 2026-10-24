@@ -24,7 +24,7 @@ import {
 } from "lucide-react";
 import { useSensors } from "@/hooks/use-sensors";
 import { useAudioGuide } from "@/hooks/use-audio-guide";
-import { narrationText } from "@/lib/narration";
+import { audioNarration } from "@/lib/narration";
 import {
   bearing,
   distance,
@@ -263,9 +263,11 @@ export function DiscoveryApp({ rail }: { rail: RailData }) {
             .filter((place) =>
               !ride.dismissed.includes(place.id) &&
               distance(position, place) <= 1100 &&
-              Boolean(narrationText(place)),
+              Boolean(audioNarration(place)),
             )
             .sort((a, b) =>
+              Number(audioNarration(b)?.kind === "verified") -
+                Number(audioNarration(a)?.kind === "verified") ||
               distance(position, a) - distance(position, b),
             )
         : [],
