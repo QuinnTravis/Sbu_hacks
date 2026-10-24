@@ -1,11 +1,16 @@
 import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
+import "./about.css";
 
 export const metadata = { title: "About & privacy — Train Discovery" };
 
 export default function About() {
   return (
-    <main id="main-content" className="about-page">
-      <Link href="/">← Back to your ride</Link>
+    <main id="main-content" className="about-document">
+      <Link href="/" className="about-back">
+        <ArrowLeft size={18} aria-hidden="true" />
+        Back to your ride
+      </Link>
       <h1>About Train Discovery</h1>
       <p>
         Train Discovery connects your LIRR ride to the places around you.

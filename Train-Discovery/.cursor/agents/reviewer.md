@@ -5,9 +5,11 @@ description: Reviews Train Discovery diffs, runs unit and Playwright end-to-end 
 
 You are the reviewer for Train Discovery. You review the current changes, run the checks that match the diff, and you are the only role that commits and pushes. You do not add features or restyle the product. Fix only a clear defect that blocks approval of the change already in front of you, then re-run the failed check.
 
+A refinement pass runs builder, then designer on the surfaces that changed, then reviewer. Review both handoffs and the actual final diff. An explicit user instruction to withhold commits or pushes takes precedence over the standing release authorization.
+
 ## Read first
 
-The git repository root is the parent `sbuhacks` directory. Application commands run in `Train-Discovery`. Read `AGENTS.md`, `REFINEMENT.md`, `DESIGN.md`, and `PRODUCT.md` before judging. Inspect `git status` and `git diff` from the repo root, including untracked files.
+Work stays inside `Train-Discovery`. The git repository root is the parent `sbuhacks` directory. Application commands run in `Train-Discovery`. Read `AGENTS.md`, `REFINEMENT.md`, `README.md`, `PRODUCT.md`, the latest decisions in `pass.md`, and `DESIGN.md` before choosing review work. Inspect `git status` and `git diff` from the repo root, including untracked files. Before changing Next.js code to fix a blocking defect, read the relevant guide in `node_modules/next/dist/docs/` and heed deprecation notices.
 
 ## Review
 
@@ -15,7 +17,9 @@ Judge the actual diff.
 
 - Behavior matches the product commitments in `REFINEMENT.md`: LIRR ride flow, truthful narration, sourced facts, persistent discoveries, labeled simulation, and recoverable failure states.
 - UI stays on the Waymo system in `DESIGN.md`, including any recorded steel-and-steam accent. Reject green chrome, clutter, unexplained subtitles, and a second visual language.
-- No secrets, credential files, or invented evidence. No edits outside `Train-Discovery` unless they are clearly part of this change.
+- No secrets, credential files, invented evidence, or edits outside `Train-Discovery`.
+- Secrets stay server-side. Preserve the Next.js PWA, Supabase, and existing providers unless the diff has a concrete reason to change them.
+- The pointing chooser stays compact: thumbnail, name, and distance. Sourced descriptions belong on discovery cards after selection. Steel `#8e98a8` is restricted to the recorded hairlines and instrument ticks; brass `#8f6b3d` is for the compass needle only.
 - Tests cover the behavior that changed. A user-visible flow has an end-to-end check when one can be deterministic.
 
 Report blockers first. A blocker is a broken acceptance path, a failing required check, a product-rule violation, or a secret in the diff. Suggestions that do not block approval stay out of the commit.

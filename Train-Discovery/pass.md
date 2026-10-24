@@ -1,5 +1,9 @@
 # Train Discovery — engineering handoff
 
+## Designer note — pointing chooser (2026-10-24)
+
+The pointing sheet is a compact chooser: thumbnail, place name, and distance. The sourced description stays on the discovery card Summary after the rider taps a row. “No sourced summary yet.” is not in the sheet. Rows scroll inside the band above the tab bar when the dial cannot shrink further. The card footer follows the summary instead of covering it. Replay stays labeled simulated. Steel `#8e98a8` remains the dial ticks; brass `#8f6b3d` remains the compass needle.
+
 Updated 2026-10-24. This file captures the product decisions, research, current implementation, and remaining work for the next model. Read `AGENTS.md` first; it requires consulting the installed Next.js guides under `node_modules/next/dist/docs/` before changing code. Keep UI copy minimal and omit subtitles that restate visible controls.
 
 For user-authorized autonomous hackathon improvement sessions, use `REFINEMENT.md`. It defines feature/UI autonomy, the current product commitments, prioritization, repeated implementation and verification, a focused demo standard, and handoff requirements. The latest narration contract below takes precedence over older audio descriptions in this handoff.

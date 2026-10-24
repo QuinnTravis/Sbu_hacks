@@ -53,11 +53,15 @@ test("Jamaica replay lists aimed candidates and saves only the selected place", 
   const jamaica = page.getByRole("button", { name: /^Jamaica,/ });
   await expect(jamaica).toBeVisible({ timeout: 10000 });
   await expect(jamaica.locator("img")).toHaveAttribute("src", /^data:image\/gif/);
-  await expect(jamaica.locator(".candidate-summary")).toContainText("major rail transit hub");
+  await expect(jamaica.locator(".candidate-summary")).toHaveCount(0);
+  await expect(jamaica).not.toContainText("major rail transit hub");
+  await expect(jamaica).not.toContainText("No sourced summary yet");
   const manor = page.getByRole("button", { name: /King Manor Museum,/ });
   await expect(manor).toBeVisible();
   await expect(manor.locator("img")).toHaveAttribute("src", /^data:image\/gif/);
-  await expect(manor.locator(".candidate-summary")).toContainText("historic house");
+  await expect(manor.locator(".candidate-summary")).toHaveCount(0);
+  await expect(manor).not.toContainText("historic house");
+  await expect(manor).not.toContainText("No sourced summary yet");
   await expect(jamaica).toHaveCount(1);
   await expect(page.locator(".nav-count")).toHaveText("0");
   await jamaica.click();

@@ -1,7 +1,6 @@
 "use client";
 
 import { ChevronRight } from "lucide-react";
-import { cardSummary } from "@/lib/card-face";
 import { formatDistance } from "@/lib/geo";
 import type { PointingCandidate } from "@/lib/discovery-targets";
 import { PlaceThumb } from "./place-thumb";
@@ -35,7 +34,6 @@ export function CandidateSheet({
         <ul>
           {candidates.map((candidate) => {
             const distanceLabel = formatDistance(candidate.meters);
-            const summary = cardSummary(candidate.place);
             return (
               <li key={candidate.place.id}>
                 <button
@@ -45,12 +43,7 @@ export function CandidateSheet({
                   onClick={() => onSelect(candidate)}
                 >
                   <PlaceThumb id={candidate.place.id} commonsOnly />
-                  <span className="candidate-copy">
-                    <span className="candidate-name">{candidate.place.name}</span>
-                    <span className="candidate-summary">
-                      {summary?.text ?? "No sourced summary yet."}
-                    </span>
-                  </span>
+                  <span className="candidate-name">{candidate.place.name}</span>
                   <span className="candidate-distance">{distanceLabel}</span>
                   <ChevronRight size={16} aria-hidden="true" />
                 </button>
