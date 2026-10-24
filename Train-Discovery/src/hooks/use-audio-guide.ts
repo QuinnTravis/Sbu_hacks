@@ -11,6 +11,8 @@ import {
   reachedStation,
   stationAnnouncement,
   pointingContext,
+  deviceSpeechResume,
+  sentenceGapElapsed,
 } from "@/lib/audio-journey";
 import type { AudioMoment, AudioScript, PendingStation, PlaceAudioContext, RailStop, SelectedStory } from "@/lib/audio-journey";
 import { distance } from "@/lib/geo";
@@ -25,6 +27,8 @@ type Playback = {
   token: number;
   utterance?: SpeechSynthesisUtterance;
   segmentTimer?: ReturnType<typeof setTimeout>;
+  heldSentence?: number;
+  continueSentence?: (index: number) => void;
 };
 type JourneyContext = { routeId: string; stops: RailStop[]; position: Position | null; onNarrated?: (place: Place) => void };
 
@@ -235,6 +239,7 @@ export function useAudioGuide(
       const segments = playbackSegments(text, pendingStations().some((station) => !spoken.current.has(station.key)));
       const speakAt = (index: number) => {
         if (!isCurrent()) return;
+        playback.heldSentence = undefined;
         if (index > 0) {
           const inserted = nextNarration({
             now: Date.now(), position: context.current.position,
@@ -262,8 +267,10 @@ export function useAudioGuide(
           if (!isCurrent()) return;
           if (index + 1 >= segments.length) { finish(); return; }
           playback.segmentTimer = setTimeout(() => {
-            if (!isCurrent() || paused.current) return;
-            speakAt(index + 1);
+            playback.segmentTimer = undefined;
+            const gap = sentenceGapElapsed({ canceled: !isCurrent(), paused: paused.current, nextIndex: index + 1 });
+            if (gap.action === "speak") speakAt(gap.index);
+            else if (gap.action === "hold") playback.heldSentence = gap.index;
           }, 350);
         };
         utterance.onerror = () => {
@@ -277,6 +284,7 @@ export function useAudioGuide(
           else setStatus("speaking");
         } catch { if (isCurrent()) { spoken.current.delete(chosen.key); enabled.current = false; clearPlayback(); setStatus("error"); } }
       };
+      playback.continueSentence = speakAt;
       speakAt(0);
     };
     const playCloud = async (result: { audioUrl: string; script: AudioScript }) => {
@@ -360,7 +368,19 @@ export function useAudioGuide(
     if (paused.current) {
       paused.current = false; setNotice(active.current?.device ? "Using device voice" : null);
       const playback = active.current;
-      if (playback?.device) { window.speechSynthesis.resume(); setStatus("speaking"); }
+      if (playback?.device) {
+        const next = deviceSpeechResume(playback.heldSentence ?? null, Boolean(window.speechSynthesis.speaking));
+        if (next.action === "speak") {
+          playback.heldSentence = undefined;
+          if (playback.utterance) { playback.utterance.onend = null; playback.utterance.onerror = null; }
+          window.speechSynthesis.resume();
+          setStatus("speaking");
+          playback.continueSentence?.(next.index);
+        } else {
+          if (next.dropHeld) playback.heldSentence = undefined;
+          window.speechSynthesis.resume(); setStatus("speaking");
+        }
+      }
       else if (playback?.ready && player.current) void player.current.play().catch(() => {
         if (active.current !== playback) return;
         paused.current = true; setStatus("paused"); setNotice("Tap play to continue");

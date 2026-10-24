@@ -130,6 +130,29 @@ export function isActivePlayback(generation: number, activeGeneration: number | 
   return activeGeneration !== null && generation === activeGeneration;
 }
 
+/** A pause during the gap between device-speech sentences keeps the next sentence. */
+export function sentenceGapElapsed(input: {
+  canceled: boolean;
+  paused: boolean;
+  nextIndex: number;
+}): { action: "stop" } | { action: "hold"; index: number } | { action: "speak"; index: number } {
+  if (input.canceled) return { action: "stop" };
+  if (input.paused) return { action: "hold", index: input.nextIndex };
+  return { action: "speak", index: input.nextIndex };
+}
+
+/**
+ * Speak a sentence held across a pause only when the engine is idle.
+ * A clip that is still in progress resumes alone so speech does not overlap.
+ */
+export function deviceSpeechResume(
+  heldIndex: number | null,
+  engineSpeaking: boolean,
+): { action: "speak"; index: number } | { action: "resume"; dropHeld: boolean } {
+  if (heldIndex !== null && !engineSpeaking) return { action: "speak", index: heldIndex };
+  return { action: "resume", dropHeld: heldIndex !== null && engineSpeaking };
+}
+
 export type SelectedStory = { place: Place; selectedAt: number; replay?: boolean };
 export type PendingStation = { key: string; station: RailStop; routeId: string; expiresAt: number };
 export type PlaybackCursor = { key: string; kind: "story" | "station"; sentencesRemaining: number };

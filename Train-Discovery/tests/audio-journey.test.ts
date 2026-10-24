@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
-  chooseAudioMoment, isActivePlayback, narrationFact, nextNarration, placeAnnouncement, playbackSegments,
-  playNowSelection, pointingContext, preparationOrder, reachedStation, stationAnnouncement,
+  chooseAudioMoment, deviceSpeechResume, isActivePlayback, narrationFact, nextNarration, placeAnnouncement, playbackSegments,
+  playNowSelection, pointingContext, preparationOrder, reachedStation, sentenceGapElapsed, stationAnnouncement,
 } from "../src/lib/audio-journey";
 import type { AudioMoment, PendingStation } from "../src/lib/audio-journey";
 import type { Place } from "../src/lib/types";
@@ -42,6 +42,28 @@ describe("journey audio scheduling", () => {
   it("announces the known station identity without inventing stop predictions or history", () => {
     expect(stationAnnouncement(stop).text).toBe("Station approaching: Jamaica.");
     expect(stationAnnouncement({ ...stop, name: "Atlantic Terminal" }).text).toBe("Station approaching: Atlantic Terminal.");
+  });
+});
+
+describe("device speech pause", () => {
+  it("holds the next sentence when the gap elapses while paused", () => {
+    expect(sentenceGapElapsed({ canceled: false, paused: true, nextIndex: 2 })).toEqual({ action: "hold", index: 2 });
+  });
+
+  it("continues that sentence when the gap elapses while playing", () => {
+    expect(sentenceGapElapsed({ canceled: false, paused: false, nextIndex: 2 })).toEqual({ action: "speak", index: 2 });
+  });
+
+  it("does not restart a sentence after the clip is canceled", () => {
+    expect(sentenceGapElapsed({ canceled: true, paused: true, nextIndex: 2 })).toEqual({ action: "stop" });
+    expect(sentenceGapElapsed({ canceled: true, paused: false, nextIndex: 1 })).toEqual({ action: "stop" });
+  });
+
+  it("speaks a held sentence on resume and does not start a second clip over speech", () => {
+    expect(deviceSpeechResume(2, false)).toEqual({ action: "speak", index: 2 });
+    expect(deviceSpeechResume(2, true)).toEqual({ action: "resume", dropHeld: true });
+    expect(deviceSpeechResume(null, false)).toEqual({ action: "resume", dropHeld: false });
+    expect(deviceSpeechResume(null, true)).toEqual({ action: "resume", dropHeld: false });
   });
 });
 

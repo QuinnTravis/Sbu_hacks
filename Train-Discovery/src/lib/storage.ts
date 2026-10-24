@@ -1,6 +1,13 @@
 import { z } from "zod";
 import type { Ride } from "./types";
 
+const dismissedSite = z.object({
+  id: z.string(),
+  name: z.string().max(500),
+  lat: z.number().min(-90).max(90),
+  lon: z.number().min(-180).max(180),
+});
+
 const evidence = z.object({
   id: z.string(),
   title: z.string(),
@@ -53,6 +60,7 @@ const rideSchema = z.object({
   startedAt: z.number(),
   replay: z.boolean(),
   dismissed: z.array(z.string()).max(10000),
+  dismissedSites: z.array(dismissedSite).max(10000).optional(),
   queue: z
     .array(z.object({ place: placeSchema, foundAt: z.number(), distance: z.number() }))
     .max(2000),
