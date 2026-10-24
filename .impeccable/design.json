@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-24T07:40:58.450767+00:00",
+  "title": "Train Discovery \u2014 user-pinned Waymo iOS theme",
+  "extensions": {
+    "breakpoints": [
+      {
+        "name": "phone",
+        "value": "600px"
+      },
+      {
+        "name": "desktop",
+        "value": "1000px"
+      }
+    ],
+    "shadows": [
+      {
+        "name": "floating-navigation",
+        "value": "0 12px 32px #26324d12",
+        "purpose": "Match the supplied Waymo floating navigation."
+      }
+    ],
+    "motion": [
+      {
+        "name": "control-state",
+        "value": "180ms ease",
+        "purpose": "Control state changes, respecting reduced motion."
+      }
+    ]
+  },
+  "components": [],
+  "narrative": {
+    "northStar": "User-supplied Waymo iOS reference",
+    "overview": "Cool gray canvas, Google Sans, tappable LIRR route map, white floating bottom sheet, black outline icons, blue primary action, floating navigation.",
+    "keyCharacteristics": [
+      "Exact sampled reference palette",
+      "Google Sans",
+      "Map-led route selection",
+      "Floating route sheet",
+      "Single app surface for the ride"
+    ],
+    "rules": [],
+    "dos": [
+      "Follow the user-pinned reference.",
+      "Lead route selection with tappable MTA geometry and a collapsible bottom sheet.",
+      "Keep the discovery queue persistent."
+    ],
+    "donts": [
+      "Do not reintroduce the green design.",
+      "Do not add redundant subtitles."
+    ]
+  }
+}

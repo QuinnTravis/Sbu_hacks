@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "layout-transition",
+        "value": "*",
+        "files": [
+          "src/app/globals.css"
+        ],
+        "createdAt": "2026-10-24T07:40:54.981Z",
+        "reason": "The remaining detector match is the SVG stroke-width hover/focus affordance, a paint-only change that cannot cause layout. The max-height sheet animation was removed."
+      }
+    ]
+  }
+}

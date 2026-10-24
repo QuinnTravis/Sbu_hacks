@@ -1,0 +1,59 @@
+export type Coordinate = { lat: number; lon: number };
+export type Position = Coordinate & { accuracy: number; timestamp: number };
+export type RailRoute = {
+  id: string;
+  name: string;
+  color: string;
+  paths: [number, number][][];
+  stops: (Coordinate & { id: string; name: string })[];
+  geometrySource?: string;
+  serviceNote?: string;
+};
+export type RailData = {
+  source: string;
+  importedAt: string;
+  version: string;
+  routes: RailRoute[];
+};
+export type Evidence = {
+  id: string;
+  title: string;
+  url: string;
+  text: string;
+  retrievedAt: string;
+  license: string;
+};
+export type Claim = { text: string; evidenceId: string; quote: string };
+export type Story = {
+  summary: string;
+  claims: Claim[];
+  verifiedAt: string;
+  generator: string;
+  verifier: string;
+  evidenceHash: string;
+};
+export type Place = Coordinate & {
+  id: string;
+  name: string;
+  category: string;
+  routeIds: string[];
+  wikipedia?: string;
+  wikidata?: string;
+  sourceUrl: string;
+  tags: Record<string, string>;
+  evidence: Evidence[];
+  story?: Story;
+};
+export type QueueEntry = { place: Place; foundAt: number; distance: number };
+export type Ride = {
+  routeId: string;
+  startedAt: number;
+  replay: boolean;
+  queue: QueueEntry[];
+  dismissed: string[];
+};
+export type Photo = {
+  url: string;
+  googleMapsUri: string;
+  authors: { displayName: string; uri: string }[];
+};
