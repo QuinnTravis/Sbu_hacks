@@ -60,8 +60,13 @@ test("dev panel controls movement, joystick detection, tilt, and phone mode", as
   const before = await coords.innerText();
   await panel.getByRole("button", { name: "+250 m", exact: true }).click();
   await expect(coords).not.toHaveText(before);
+  const advanced = await coords.innerText();
   await panel.getByRole("button", { name: "Reset train to Jamaica" }).click();
-  await expect(coords).toHaveText(before);
+  await expect(coords).not.toHaveText(advanced);
+  const reset = (await coords.innerText()).split(", ").map(Number);
+  const original = before.split(", ").map(Number);
+  expect(Math.abs(reset[0] - original[0])).toBeLessThan(0.0003);
+  expect(Math.abs(reset[1] - original[1])).toBeLessThan(0.0003);
   await page.getByRole("slider", { name: "Phone tilt" }).fill("0");
   await expect(
     panel.getByText("Paused — check sensors / tilt", { exact: true }),

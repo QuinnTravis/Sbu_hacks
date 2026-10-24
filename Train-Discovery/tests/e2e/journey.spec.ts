@@ -99,9 +99,12 @@ test("Jamaica is the default demo location and starts without GPS", async ({
     route.fulfill({ json: { places: [] } }),
   );
   await page.goto("/");
-  await expect(page.getByText("Demo · Jamaica", { exact: true })).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Jamaica demo", exact: true }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "Expand route list" }).click();
   expect(await page.locator(".route-row").count()).toBeGreaterThan(5);
-  await page.getByRole("button", { name: /Babylon/ }).click();
+  await page.locator(".route-row").filter({ hasText: "Babylon" }).click();
   await page.getByRole("button", { name: "Start ride", exact: true }).click();
   await expect(
     page.getByText("Simulated location & heading", { exact: true }),
@@ -170,6 +173,8 @@ test("all branches are searchable and no left/right selector is present", async 
   page,
 }) => {
   await page.goto("/");
+  await page.getByRole("button", { name: "Expand route list" }).click();
+  await page.getByRole("button", { name: "All routes" }).click();
   await page
     .getByRole("searchbox", { name: "Search LIRR routes" })
     .fill("Greenport");
