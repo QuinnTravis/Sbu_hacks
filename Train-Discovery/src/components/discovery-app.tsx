@@ -47,7 +47,9 @@ import { DevPanel, type HeadingMode } from "./dev-panel";
 import type { Place, Position, RailData, Ride } from "@/lib/types";
 import { Network } from "./network";
 import { Compass } from "./compass";
+import { cardSummary } from "@/lib/card-face";
 import { PlaceCard } from "./place-card";
+import { PlaceThumb } from "./place-thumb";
 import { AudioGuideBar } from "./audio-guide-bar";
 import { CandidateSheet } from "./candidate-sheet";
 
@@ -967,8 +969,14 @@ export function DiscoveryApp({ rail }: { rail: RailData }) {
                             className={currentIndex === i ? "selected" : ""}
                             aria-pressed={currentIndex === i}
                           >
-                            <span>{String(i + 1).padStart(2, "0")}</span>
-                            {entry.place.name}
+                            <PlaceThumb id={entry.place.id} commonsOnly />
+                            <span className="queue-index">{String(i + 1).padStart(2, "0")}</span>
+                            <span className="queue-strip-copy">
+                              <span className="queue-strip-name">{entry.place.name}</span>
+                              <span className="queue-strip-summary">
+                                {cardSummary(entry.place)?.text ?? "No sourced summary yet."}
+                              </span>
+                            </span>
                             <ChevronRight size={13} />
                           </button>
                         ))}

@@ -13,7 +13,6 @@ import {
   pointingContext,
 } from "@/lib/audio-journey";
 import type { AudioMoment, AudioScript, PendingStation, PlaceAudioContext, RailStop, SelectedStory } from "@/lib/audio-journey";
-import { audioEvidence } from "@/lib/narration";
 import { distance } from "@/lib/geo";
 import type { Place, Position, QueueEntry } from "@/lib/types";
 
@@ -402,7 +401,7 @@ export function useAudioGuide(
     clearPlayback(); unlock(); enabled.current = true; paused.current = false;
     interrupt.current = `place:${placeId}`;
     nextDue.current = 0; playNext();
-  }, [playNext, unlock]);
+  }, [clearPlayback, playNext, unlock]);
   const schedule = useCallback((place: Place, selectedAt = Date.now()) => {
     explicit.current = explicit.current.filter((item) => item.place.id !== place.id);
     explicit.current.push({ place, selectedAt });

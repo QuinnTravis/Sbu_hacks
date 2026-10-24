@@ -80,7 +80,7 @@ Locally hosted, Latin-subset Google Sans variable font under OFL, with its licen
 
 ## Layout
 
-The ride surface is capped at 660px on desktop, with 18px phone gutters. On a ride, the shell ends above the floating tab bar, and that column scrolls inside the gap: the compass readout, nearby line, candidate rows, and the lower lines of a discovery card stay readable there. The dial yields vertical space so those rows can sit with it. Route selection expands to a map-centered canvas: actual MTA route geometry is tappable, GPS location requests/filtering are available from the map, and a floating rounded bottom sheet contains route search/list and the blue Start ride action. The sheet can collapse to expose more map. Keep floating navigation below the sheet. The ride surface switches between its compass and persistent discovery queue via the same bottom navigation.
+The ride surface is capped at 660px on desktop, with 18px phone gutters. On the audio follow line, the word Next stays fully visible; the upcoming place name may ellipsize. On a ride, the shell ends above the floating tab bar, and that column scrolls inside the gap: the compass readout, nearby line, candidate rows, and the lower lines of a discovery card stay readable there. The dial yields vertical space so those rows can sit with it. Route selection expands to a map-centered canvas: actual MTA route geometry is tappable, GPS location requests/filtering are available from the map, and a floating rounded bottom sheet contains route search/list and the blue Start ride action. The sheet can collapse to expose more map. Keep floating navigation below the sheet. The ride surface switches between its compass and persistent discovery queue via the same bottom navigation.
 
 ## Elevation & Depth
 

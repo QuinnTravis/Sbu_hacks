@@ -53,7 +53,10 @@ export function AudioGuideBar({ guide, onSave, saved }: {
                 <p className="audio-queued" role="status">{guide.queuedName} queued</p>
               )}
               {guide.nextName && guide.currentName && guide.nextName !== guide.currentName && (
-                <p className="audio-next">Next · {guide.nextName}</p>
+                <p className="audio-next">
+                  <span className="audio-next-label">Next ·</span>
+                  <span className="audio-next-name">{guide.nextName}</span>
+                </p>
               )}
               {guide.queuedName && guide.currentName && guide.queuedName !== guide.currentName && (
                 <button className="audio-control audio-play-now" onClick={guide.playNow} aria-label="Play now">

@@ -17,7 +17,14 @@ test("Jamaica replay lists aimed candidates and saves only the selected place", 
     route.fulfill({ status: 503, json: { error: "test_device_fallback" } }),
   );
   await page.route("**/api/photos/**", (route) =>
-    route.fulfill({ status: 503, json: { error: "test_no_photo" } }),
+    route.fulfill({
+      json: {
+        url: "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7",
+        source: "Wikimedia Commons",
+        sourceUrl: "https://commons.wikimedia.org/wiki/File:Jamaica.jpg",
+        authors: [],
+      },
+    }),
   );
   await page.route("**/api/journeys/10", (route) =>
     route.fulfill({ json: { places: [
@@ -45,11 +52,17 @@ test("Jamaica replay lists aimed candidates and saves only the selected place", 
   await page.getByRole("button", { name: "Pause replay" }).click();
   const jamaica = page.getByRole("button", { name: /^Jamaica,/ });
   await expect(jamaica).toBeVisible({ timeout: 10000 });
-  await expect(page.getByRole("button", { name: /King Manor Museum,/ })).toBeVisible();
+  await expect(jamaica.locator("img")).toHaveAttribute("src", /^data:image\/gif/);
+  await expect(jamaica.locator(".candidate-summary")).toContainText("major rail transit hub");
+  const manor = page.getByRole("button", { name: /King Manor Museum,/ });
+  await expect(manor).toBeVisible();
+  await expect(manor.locator("img")).toHaveAttribute("src", /^data:image\/gif/);
+  await expect(manor.locator(".candidate-summary")).toContainText("historic house");
   await expect(jamaica).toHaveCount(1);
   await expect(page.locator(".nav-count")).toHaveText("0");
   await jamaica.click();
   await expect(page.getByRole("heading", { name: "Jamaica", exact: true })).toBeVisible();
+  await expect(page.locator(".place-photo img")).toHaveAttribute("src", /^data:image\/gif/);
   await expect(page.locator(".story-summary")).toContainText("major rail transit hub");
   await expect(page.locator(".story-interesting")).toContainText("Thousands of commuters");
   await expect(page.locator(".nav-count")).toHaveText("1");

@@ -4,6 +4,10 @@ Updated 2026-10-24. This file captures the product decisions, research, current 
 
 For user-authorized autonomous hackathon improvement sessions, use `REFINEMENT.md`. It defines feature/UI autonomy, the current product commitments, prioritization, repeated implementation and verification, a focused demo standard, and handoff requirements. The latest narration contract below takes precedence over older audio descriptions in this handoff.
 
+## Designer note — audio next line (2026-10-24)
+
+On the phone and at the 660px ride, the audio line keeps the word Next intact. The upcoming place name may ellipsize. “King Manor Museum queued” and Play now stay on that line, above the tab bar.
+
 ## Designer note — point, choose, hear (2026-10-24)
 
 On a phone and at the 660px ride, the compass, nearby line, and discovery card sit in the space above the tab bar. Aiming lists up to four single-line rows — name, distance, chevron — including “Nothing in this direction.” The guide keeps the current story beside pause, skip, and stop. A selection made while something else plays stays visible as “queued,” with a short Next line and Play now. A delayed story says building for a heritage place, landmark or station when that is the category, and place otherwise. Replay stays labeled simulated.
