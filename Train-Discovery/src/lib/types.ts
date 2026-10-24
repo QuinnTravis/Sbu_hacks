@@ -22,11 +22,13 @@ export type Evidence = {
   text: string;
   retrievedAt: string;
   license: string;
+  sourceType?: "search-snippet";
 };
 export type Claim = { text: string; evidenceId: string; quote: string };
 export type Story = {
   summary: string;
   claims: Claim[];
+  funFact?: Claim;
   verifiedAt: string;
   generator: string;
   verifier: string;
@@ -54,6 +56,8 @@ export type Ride = {
 };
 export type Photo = {
   url: string;
-  googleMapsUri: string;
+  source: "Google Maps" | "Wikimedia Commons";
+  sourceUrl: string;
   authors: { displayName: string; uri: string }[];
+  license?: { name: string; url: string };
 };

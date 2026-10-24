@@ -638,6 +638,15 @@ h3 {
   background: transparent;
 }
 .audio-control:disabled { opacity: 0.35; }
+.audio-companion { margin-bottom: 25px; }
+.audio-companion .audio-guide { margin-bottom: 0; }
+.audio-notice { margin: 8px 16px 0; color: var(--muted); font-size: 12px; }
+.audio-transcript { margin: 10px 16px 0; font-size: 13px; line-height: 1.6; }
+.audio-transcript summary { cursor: pointer; color: var(--muted); }
+.audio-transcript p { margin-top: 12px; }
+.audio-transcript a { display: block; margin-top: 6px; color: var(--accent); overflow-wrap: anywhere; }
+.audio-guide[data-status="preparing"] .audio-indicator > span,
+.audio-guide[data-status="waiting"] .audio-indicator > span { animation-play-state: paused; }
 .ride-running {
   display: flex;
   align-items: center;
@@ -954,10 +963,24 @@ h3 {
   font-weight: 600;
 }
 .story-listen:hover { background: #d9e9ff; }
+.story-facts {
+  display: grid;
+  gap: 14px;
+}
+.story-block + .story-block {
+  border-top: 1px solid #e4e6ed;
+  padding-top: 12px;
+}
+.story-block h3 {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
 .story-facts p {
   font-size: 16px;
   line-height: 1.7;
-  margin-top: 16px;
+  margin: 0;
   color: #343945;
 }
 .story-facts a {
@@ -967,6 +990,20 @@ h3 {
 .unverified-story p {
   font-size: 15px;
   color: var(--muted);
+}
+.source-excerpt {
+  margin-top: 12px;
+}
+.source-excerpt-label {
+  color: var(--muted);
+  font-size: 16px;
+  font-weight: 500;
+}
+.unverified-story .source-excerpt-text {
+  margin-top: 4px;
+  color: var(--ink);
+  font-size: 16px;
+  line-height: 1.5;
 }
 .unverified-story > a {
   display: inline-flex;

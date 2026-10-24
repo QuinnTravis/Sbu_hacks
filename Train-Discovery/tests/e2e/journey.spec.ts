@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import type { Place } from "../../src/lib/types";
 
 const place = {
   id: "osm-node-1234",
@@ -14,7 +15,7 @@ const place = {
       id: "wikipedia-1",
       title: "Test landmark",
       url: "https://en.wikipedia.org/wiki/Test",
-      text: "The landmark was built in 1901.",
+      text: "The landmark was built in 1901. It was later used as a library.",
       retrievedAt: "2026-10-24T00:00:00.000Z",
       license: "CC BY-SA 4.0",
     },
@@ -28,6 +29,11 @@ const place = {
         quote: "The landmark was built in 1901.",
       },
     ],
+    funFact: {
+      text: "It was later used as a library.",
+      evidenceId: "wikipedia-1",
+      quote: "It was later used as a library.",
+    },
     verifiedAt: "2026-10-24T00:00:00.000Z",
     generator: "gemini-2.5-flash",
     verifier: "gemini-2.5-flash-lite",
@@ -36,6 +42,8 @@ const place = {
 };
 
 test.beforeEach(async ({ page, context }) => {
+  // Provider-independent checks must never consume live synthesis credit.
+  await page.route("**/api/audio", (route) => route.fulfill({ status: 503, json: { error: "test_device_fallback" } }));
   await page.addInitScript(() => {
     // Model a supported phone whose motion/compass permission was granted.
     Object.defineProperty(DeviceOrientationEvent, "requestPermission", {
@@ -112,6 +120,39 @@ test("Jamaica is the default demo location and starts without GPS", async ({
   await expect(page.getByText("Near Jamaica", { exact: true })).toBeVisible();
 });
 
+test("Jamaica verified facts render in the demo journey", async ({ page, request }) => {
+  test.skip(process.env.TEST_LIVE_DATABASE !== "1", "Requires the configured live catalog.");
+  const response = await request.get("/api/journeys/10");
+  expect(response.ok()).toBeTruthy();
+  const data = (await response.json()) as { places: Place[] };
+  const jamaica = data.places.find((place) => place.id === "osm-node-7087272768");
+  if (!jamaica?.story?.claims.length) throw new Error("Jamaica has no verified story in the live catalog.");
+  expect(jamaica.evidence.some((item) => item.sourceType === "search-snippet")).toBe(true);
+  if (!jamaica.story.funFact) throw new Error("Jamaica has no verified interesting fact in the live catalog.");
+  const claim = jamaica.story.claims[0];
+  if (!claim) throw new Error("Jamaica's verified story has no claims.");
+  const source = jamaica.evidence.find((item) => item.id === claim.evidenceId);
+  if (!source) throw new Error("Jamaica's claim has no matching evidence.");
+  expect(source.url).toMatch(/^https:\/\//);
+  const funFact = jamaica.story.funFact;
+  const funFactSource = jamaica.evidence.find((item) => item.id === funFact.evidenceId);
+  if (!funFactSource) throw new Error("Jamaica's interesting fact has no matching evidence.");
+
+  await page.route("**/api/journeys/10", (route) =>
+    route.fulfill({ json: { places: [jamaica] } }),
+  );
+  await page.goto("/");
+  await page.getByRole("button", { name: "Start Jamaica demo ride" }).click();
+  await expect(page.getByRole("heading", { name: "Jamaica", exact: true })).toBeVisible({ timeout: 10000 });
+  await expect(page.getByText("Evidence checked")).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Summary" })).toBeVisible();
+  await expect(page.locator(".story-summary")).toContainText(claim.text);
+  await expect(page.getByRole("link", { name: "Source for summary claim 1" })).toHaveAttribute("href", source.url);
+  await expect(page.getByRole("heading", { name: "Interesting fact" })).toBeVisible();
+  await expect(page.locator(".story-interesting")).toContainText(funFact.text);
+  await expect(page.getByRole("link", { name: "Source for interesting fact" })).toHaveAttribute("href", funFactSource.url);
+});
+
 test("select a nearby route and retain pointed discoveries until discarded", async ({
   page,
   context,
@@ -138,6 +179,9 @@ test("select a nearby route and retain pointed discoveries until discarded", asy
   await expect(
     page.locator(".story-facts").getByText("The landmark was built in 1901."),
   ).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Summary" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Interesting fact" })).toBeVisible();
+  await expect(page.locator(".story-interesting")).toContainText("It was later used as a library.");
   await aim(page, 180);
   await context.setGeolocation({
     latitude: 40.93,
@@ -169,7 +213,32 @@ test("select a nearby route and retain pointed discoveries until discarded", asy
   expect(overflow).toBe(false);
 });
 
-test("audio tour narrates nearby places without pointing, then saves, pauses, skips and replays", async ({ page }) => {
+test("Wikimedia fallback photos show the image's source, author and license", async ({ page }) => {
+  await page.route("https://thumb.wikimedia.org/**", (route) => route.fulfill({
+    contentType: "image/png",
+    body: Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIHWP4z8DwHwAFgAI/ScL/nwAAAABJRU5ErkJggg==", "base64"),
+  }));
+  await page.route("**/api/photos/**", (route) => route.fulfill({ json: {
+    url: "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bd/AdamDerbyMansions.jpg/330px-AdamDerbyMansions.jpg",
+    source: "Wikimedia Commons",
+    sourceUrl: "https://commons.wikimedia.org/wiki/File:AdamDerbyMansions.jpg",
+    authors: [{ displayName: "Example photographer", uri: "https://commons.wikimedia.org/wiki/File:AdamDerbyMansions.jpg" }],
+    license: { name: "CC BY-SA 4.0", url: "https://creativecommons.org/licenses/by-sa/4.0/" },
+  } }));
+  await page.goto("/");
+  await page.getByRole("button", { name: "Find routes near me" }).click();
+  await page.getByRole("button", { name: /Port Jefferson/ }).last().click();
+  await page.getByRole("button", { name: "Start ride", exact: true }).click();
+  await aim(page, 0);
+  await expect(page.getByRole("heading", { name: "Test landmark" })).toBeVisible({ timeout: 10000 });
+  await expect(page.getByRole("link", { name: "Wikimedia Commons" })).toHaveAttribute("href", /commons\.wikimedia\.org/);
+  await expect(page.getByRole("link", { name: "Example photographer" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "CC BY-SA 4.0" })).toHaveAttribute("href", /creativecommons\.org/);
+});
+
+test("audio tour narrates nearby places without pointing, then saves, pauses, skips and replays", async ({ page, context }) => {
+  // Keep this POI control test outside the station trigger; station audio has its own coverage.
+  await context.setGeolocation({ latitude: 40.923, longitude: -73.1285, accuracy: 5 });
   await page.addInitScript(() => {
     const spoken: string[] = [];
     Object.assign(window, { __spoken: spoken, __paused: false });
@@ -214,7 +283,8 @@ test("audio tour narrates nearby places without pointing, then saves, pauses, sk
   await expect(page.getByRole("button", { name: "Start audio tour" })).toBeVisible();
 });
 
-test("an attributed source excerpt is visibly distinguished from a verified story", async ({ page }) => {
+test("an attributed source excerpt is visibly distinguished from a verified story", async ({ page, context }) => {
+  await context.setGeolocation({ latitude: 40.923, longitude: -73.1285, accuracy: 5 });
   const unverified = {
     ...place,
     id: "example-house",
@@ -250,7 +320,7 @@ test("an attributed source excerpt is visibly distinguished from a verified stor
   await page.getByRole("button", { name: "Save Example House Museum to discoveries" }).click();
   if (await page.getByRole("button", { name: /My discoveries/ }).isVisible())
     await page.getByRole("button", { name: /My discoveries/ }).click();
-  await expect(page.getByText("History hasn’t been verified yet.")).toBeVisible();
+  await expect(page.getByText("Wikipedia excerpt · not verified")).toBeVisible();
   await page.getByRole("button", { name: "Listen to source for Example House Museum" }).click();
   await expect.poll(() => page.evaluate(() => (window as unknown as { __spoken: string[] }).__spoken.length)).toBe(2);
 });

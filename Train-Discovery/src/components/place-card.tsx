@@ -10,9 +10,9 @@ import {
   Volume2,
   X,
 } from "lucide-react";
-import type { Photo, QueueEntry } from "@/lib/types";
+import type { Claim, Photo, QueueEntry } from "@/lib/types";
 import { formatDistance } from "@/lib/geo";
-import { audioNarration, narrationText } from "@/lib/narration";
+import { audioNarration, narrationText, sourceExcerpt } from "@/lib/narration";
 
 export function PlaceCard({
   entry,
@@ -55,15 +55,19 @@ export function PlaceCard({
     return () => controller.abort();
   }, [place.id, attempt]);
   const story = place.story;
+  const excerpt = story ? null : sourceExcerpt(place);
+  const storyClaims: Claim[] = story
+    ? [...story.claims, ...(story.funFact ? [story.funFact] : [])]
+    : [];
   const sources = place.evidence.filter(
-    (e) => !story || story.claims.some((claim) => claim.evidenceId === e.id),
+    (e) => !story || storyClaims.some((claim) => claim.evidenceId === e.id),
   );
   return (
     <article className="place-card">
       <div className="place-photo">
         {photo && photoState === "ready" ? (
           <>
-            {/* Google photo URLs are short lived and must bypass image optimization and caches. */}
+            {/* Google photo URLs are short lived; Wikimedia photos carry their own credits. */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={photo.url}
@@ -72,14 +76,19 @@ export function PlaceCard({
               referrerPolicy="no-referrer"
             />
             <div className="photo-credit">
-              <a href={photo.googleMapsUri} target="_blank" rel="noreferrer">
-                Google Maps
+              <a href={photo.sourceUrl} target="_blank" rel="noreferrer">
+                {photo.source}
               </a>
               {photo.authors.map((author, i) => (
                 <a key={i} href={author.uri} target="_blank" rel="noreferrer">
                   {author.displayName}
                 </a>
               ))}
+              {photo.license && (
+                <a href={photo.license.url} target="_blank" rel="noreferrer">
+                  {photo.license.name}
+                </a>
+              )}
             </div>
           </>
         ) : (
@@ -133,31 +142,55 @@ export function PlaceCard({
               )}
             </div>
             <div className="story-facts">
-              <p>
-                {story.claims.map((claim, i) => (
-                  <span key={i}>
-                    {claim.text}{" "}
+              <section className="story-block story-summary">
+                <h3>Summary</h3>
+                <p>
+                  {story.claims.map((claim, i) => (
+                    <span key={i}>
+                      {claim.text}{" "}
+                      <a
+                        href={place.evidence.find((e) => e.id === claim.evidenceId)?.url}
+                        target="_blank"
+                        rel="noreferrer"
+                        aria-label={`Source for summary claim ${i + 1}`}
+                      >
+                        <sup>[{i + 1}]</sup>
+                      </a>{" "}
+                    </span>
+                  ))}
+                </p>
+              </section>
+              {story.funFact && (
+                <section className="story-block story-interesting">
+                  <h3>Interesting fact</h3>
+                  <p>
+                    {story.funFact.text}{" "}
                     <a
-                      href={
-                        place.evidence.find((e) => e.id === claim.evidenceId)
-                          ?.url
-                      }
+                      href={place.evidence.find((e) => e.id === story.funFact?.evidenceId)?.url}
                       target="_blank"
                       rel="noreferrer"
-                      aria-label={`Source for fact ${i + 1}`}
+                      aria-label="Source for interesting fact"
                     >
-                      <sup>[{i + 1}]</sup>
-                    </a>{" "}
-                  </span>
-                ))}
-              </p>
+                      <sup>[{story.claims.length + 1}]</sup>
+                    </a>
+                  </p>
+                </section>
+              )}
             </div>
           </>
         ) : (
           <div className="unverified-story">
-            <p>History hasn’t been verified yet.</p>
+            {excerpt && (
+              <div className="source-excerpt">
+                <p className="source-excerpt-label">
+                  Wikipedia excerpt · not verified
+                </p>
+                <p className="source-excerpt-text">{excerpt.text}</p>
+              </div>
+            )}
+            {!excerpt && <p>History hasn’t been verified yet.</p>}
             <a
-              href={sources[0]?.url || place.sourceUrl}
+              href={excerpt?.evidence.url || sources[0]?.url || place.sourceUrl}
               target="_blank"
               rel="noreferrer"
             >
@@ -206,9 +239,11 @@ export function PlaceCard({
                 <ArrowUpRight size={13} />
               </a>
               <small>
-                {source.license} · retrieved {source.retrievedAt.slice(0, 10)}
+                {source.sourceType === "search-snippet"
+                  ? "Google search excerpt · source page linked"
+                  : `${source.license} · retrieved ${source.retrievedAt.slice(0, 10)}`}
               </small>
-              {story?.claims
+              {storyClaims
                 .filter((c) => c.evidenceId === source.id)
                 .map((claim, i) => (
                   <blockquote key={i}>{claim.quote}</blockquote>

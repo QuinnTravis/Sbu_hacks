@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "layout-transition",
+        "value": "*",
+        "files": [
+          "Train-Discovery/src/app/globals.css"
+        ],
+        "createdAt": "2026-10-24T18:03:04.617Z",
+        "reason": "Agent: reviewed line 1475; it transitions SVG stroke-width for route hover and keyboard focus, not CSS width or document layout. Preserve the intentional route highlight."
+      }
+    ]
+  }
+}

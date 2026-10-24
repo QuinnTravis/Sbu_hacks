@@ -8,10 +8,11 @@ export function AudioGuideBar({ guide, onSave, saved }: {
   onSave: () => void;
   saved: boolean;
 }) {
-  const active = ["waiting", "speaking", "paused"].includes(guide.status);
+  const active = ["waiting", "preparing", "speaking", "paused"].includes(guide.status);
 
   return (
-    <div className={`audio-guide ${active ? "audio-guide-active" : ""}`} role="group" aria-label="Audio guide">
+    <div className="audio-companion">
+    <div className={`audio-guide ${active ? "audio-guide-active" : ""}`} role="group" aria-label="Audio guide" data-status={guide.status}>
       {!active ? (
         <>
           <button className="audio-activate" onClick={guide.start}>
@@ -25,7 +26,7 @@ export function AudioGuideBar({ guide, onSave, saved }: {
         <>
           <span className="audio-indicator" aria-hidden="true"><span /><span /><span /></span>
           <span className="audio-title" role="status">
-            {guide.status === "paused" ? "Paused" : guide.currentName ? `${guide.currentName}${guide.currentKind === "source" ? " · source excerpt" : ""}` : "Waiting for a nearby story"}
+            {guide.status === "paused" ? "Paused" : guide.status === "preparing" ? `Preparing ${guide.currentName}` : guide.currentName ? `${guide.currentName}${guide.currentKind === "source" ? " · source excerpt" : ""}` : "Waiting for a nearby story"}
           </span>
           {guide.currentPlace && !saved && (
             <button className="audio-control" onClick={onSave} aria-label={`Save ${guide.currentPlace.name} to discoveries`}>
@@ -43,6 +44,17 @@ export function AudioGuideBar({ guide, onSave, saved }: {
           </button>
         </>
       )}
+    </div>
+    {active && guide.notice && <p className="audio-notice" role="status">{guide.notice}</p>}
+    {active && guide.script && guide.status !== "preparing" && (
+      <details className="audio-transcript" key={guide.currentName}>
+        <summary>Transcript & sources</summary>
+        <p>{guide.script.text}</p>
+        {guide.script.sources.map((source) => (
+          <a key={source.url} href={source.url} target="_blank" rel="noreferrer">{source.title} · {source.license}</a>
+        ))}
+      </details>
+    )}
     </div>
   );
 }

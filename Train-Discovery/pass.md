@@ -10,7 +10,7 @@ Train Discovery is a mobile-first Next.js PWA for LIRR riders. The active flow i
 2. Start the ride.
 3. Use train location plus the phone's absolute compass/gyroscope orientation to detect a nearby POI the rider points toward.
 4. Add the POI to a queue. It stays there across movement, turning, and reload until the rider explicitly discards it.
-5. Show a Google Places photo (with required attribution when available), concise historical context, and trustworthy sources.
+5. Show a Google Places photo or a freely sourced Wikimedia Commons fallback with photographer/license attribution, concise historical context, and trustworthy sources.
 6. Optionally listen to verified history or an explicitly labeled direct Wikipedia source excerpt without pointing at a place, and save a discovery from the audio controls.
 
 All LIRR branches are in scope. No left/right selector. Camera recognition and accounts are out of scope. The adjacent `../sbuhacks-demo` was used for flow context only; do not treat its UI as a visual reference or modify it.
@@ -18,6 +18,16 @@ All LIRR branches are in scope. No left/right selector. Camera recognition and a
 The user explicitly pinned the [Waymo iOS screens on Mobbin](https://mobbin.com/apps/waymo-ios-028a65c1-23a8-4fe1-bcf0-aab15ced5842/dc7cedc4-3442-452c-a4ac-e0181cdac9fd/screens) as the visual theme. Use cool-gray canvas, white sheets, near-black text, vivid blue actions, Google Sans, rounded pill controls, and minimal copy. Exact sampled colors and design notes are in `DESIGN.md` and `.impeccable/design.json`. Do not revive the rejected green UI or add Waymo branding.
 
 ## Current state
+
+Latest narration contract: stations say “Station approaching: [name].” Station historical research is no longer part of playback. Pointed POIs acknowledge the gesture with a varied opener and must include a supported fact/story; identity-only POI clips are rejected server-side and in device fallback. The request carries pointed/nearby/replay context so automatic narration never falsely claims pointing. Missing stories leave the discovery queued and show a brief notice. Audio revision 3 invalidates older clips with the previous wording. These decisions supersede the station-history and identity-only fallback descriptions below.
+
+Audio upgrade (2026-10-24): `src/lib/audio-prompts.ts` contains the whimsical, evidence-bound story prompt and voice direction. `POST /api/audio` resolves actual place/station IDs server-side, runs the existing LangChain claim/quote/verdict pipeline for matched source passages when no published story exists, and synthesizes the approved transcript through ElevenLabs (George, Multilingual v2; configurable). Station source summaries require a geographic match to the MTA stop. If evidence is absent, only station/place identity is spoken. On rejected generation, matched direct excerpts remain explicitly labeled. The shared private `journey-audio` bucket and service-only `audio_jobs`/`audio_budget` tables cache clips and lease generation, with a configurable default 9,000-character monthly application ceiling. Migration `20261024174514_journey_audio.sql` is applied to project `abwsqgpufuuxnzptikgk`.
+
+`use-audio-guide.ts` now runs a single opt-in playback queue: recent pointed discoveries, station encounters (250 m proximity or a fresh GPS segment passing within 180 m), then nearby narrated POIs. It deduplicates by ID per mounted ride, ignores stale GPS/replay jumps, drops stale station announcements, leaves 4.5 seconds between clips, supports pause/resume/skip/stop/replay and Media Session controls, aborts late results, and falls back to device speech with a visible notice. `AudioGuideBar` includes expandable transcript and attribution. GPS remains local; only place/stop IDs go to the narration endpoint. Background GPS/lock-screen playback still require real device validation. Earlier native-only audio notes below are superseded by this section. Existing uncommitted photo/source-card work was preserved.
+
+Audio validation completed: production build, ESLint, 36 unit checks, and 12 targeted desktop/mobile audio browser checks pass. The broader journey checks also passed after adapting the existing source-excerpt assertion to the current card. Live station and POI requests returned evidence-checked transcripts and playable MP3s; repeated station requests reused the same cached object. Transactional database assertions covered exclusive leases, character allowance exhaustion, token ownership, duplicate settlement/refund prevention, and ready-clip reuse; all test writes were rolled back. Public clients cannot read the audio cache table or invoke its generation RPC. Security advisors report only the intentional absence of public RLS policies on service-only tables. Mobile/desktop visual inspection found no horizontal overflow. The detector found no blocking design issues; existing type-ramp advisories from the stale design sidecar were left standing, with no new suppressions.
+
+Provider setup: the user corrected the Supabase secret in the app `.env`; its older `.env.local` override was synchronized. ElevenLabs is configured in the app `.env.local`; speech permission works, voice-library browsing permission is absent and is not needed. No secrets were printed or committed. Station research now includes the matched Wikipedia article's History section, not just the introductory classification/ridership paragraph. Newly verified POI narration is merged back into the persistent discovery card with its supporting passages.
 
 The app is implemented in this repository and builds/runs locally. The home screen was redesigned around the MTA route map: route paths can be tapped to select a branch and open the bottom route sheet; the location control requests GPS and filters the sheet to nearby routes. The sheet starts collapsed so the map leads; tap its handle to expand route search/list. Jamaica is the default demo context because ten LIRR routes are near it; it makes route selection and replay easy without location permissions. “Use Jamaica demo” restores that context. The route sheet has route search, nearby/all filtering, and Start ride.
 
@@ -31,7 +41,7 @@ The production build, ESLint, 18 unit tests, and 12 provider-independent Playwri
 - Supabase Postgres/PostGIS for route and POI catalog. Public browser access is read-only; privileged publishing and photo quotas stay server-side.
 - Official MTA GTFS static data for LIRR routes/stations/shapes; OpenStreetMap for nearby candidates; Wikipedia passages as freely accessible evidence where available.
 - Gemini via LangChain for bounded claim generation and a separate verification pass. Content fails closed when source passages or verification are missing.
-- Google Places API (New) for on-demand place photos and attribution. Photos are not persisted/cached.
+- Google Places API (New) for on-demand place photos and attribution. Wikipedia page summaries plus Commons imageinfo for free, fully credited fallback photographs. External image content is not persisted/cached.
 - Location remains on device; browser downloads a branch package and computes proximity/bearing locally. No location history or passenger account.
 
 Key files:
@@ -70,11 +80,11 @@ Current source coverage is uneven across branches. All 13 route records have nea
 
 The user authorized a new Supabase project. It is `train-discovery`, ref `abwsqgpufuuxnzptikgk`, organization `zhwenpdrkgnraxyrxpiy`, region `us-east-1`; dashboard: https://supabase.com/dashboard/project/abwsqgpufuuxnzptikgk. The project has PostGIS in `extensions`, seeded public catalog, and four migrations applied. Do not expose or commit `.env.local`.
 
-`NEXT_PUBLIC_SUPABASE_URL` and the publishable key are configured locally. A random `RATE_LIMIT_SECRET` was generated locally. Provider/server credentials were not supplied in the handoff and may still be blank: `GEMINI_API_KEY`, `GOOGLE_PLACES_API_KEY`, and `SUPABASE_SECRET_KEY`. The user said they have Gemini and a free Google Places key and was told to configure them in `.env.local`; never ask them to paste secrets into chat. Check environment presence without printing secret values.
+`NEXT_PUBLIC_SUPABASE_URL` and the publishable key are configured locally. A random `RATE_LIMIT_SECRET` was generated locally. Provider/server credentials were not supplied in the handoff and may still be blank: `GEMINI_API_KEY`, `GOOGLE_PLACES_API_KEY`, and `SUPABASE_SECRET_KEY`. The user said they have Gemini and a free Google Places key and was told to configure them in `.env.local`; never ask them to paste secrets into chat. Check environment presence without printing secret values. The Wikimedia photo fallback works without those paid-provider credentials as long as the public catalog is reachable.
 
 `.env.example` documents the expected variables. The Google key should be server-restricted, with Places API (New) enabled and cloud quotas/billing constraints understood. A free key does not guarantee photo requests have no cost. `TRUST_PROXY=true` is safe only when the hosting proxy overwrites forwarding headers.
 
-Supabase catalog reads are public/read-only; nearby lookup is invoker-rights. `refresh_catalog` and photo-budget consumption require service role. Photo-budget storage lives in a private schema with no public policies. Limits: 30 lookups per hashed client per UTC hour and 300 globally per UTC day. Raw IPs are not stored in the application DB. Advisor INFO about RLS with no policies on the private budget table is intentional fail-closed behavior.
+Supabase catalog reads are public/read-only; nearby lookup is invoker-rights. `refresh_catalog` and Google photo-budget consumption require service role. Photo-budget storage lives in a private schema with no public policies. Limits: 30 Google lookups per hashed client per UTC hour and 300 globally per UTC day. Raw IPs are not stored in the application DB. The Wikimedia fallback is free, uses a one-day upstream metadata revalidation cache, and requires actual Commons image author/license metadata. Advisor INFO about RLS with no policies on the private budget table is intentional fail-closed behavior.
 
 ## Historical-content pipeline
 
@@ -99,7 +109,7 @@ Opt-in audio tour uses native browser `speechSynthesis`. Verified claims are che
 
 Queue items are deduplicated and persist per ride in validated local storage. Turning away, moving, scrubbing the developer replay, or reload does not discard them. Dismissal is explicit. Ending a nonempty ride confirms before clearing. Live sensors require a fresh gesture after reload. Private browsing/site-data clearing can erase the queue.
 
-PWA caches app shell/assets and branch package, network-first with offline fallback. Google images and other external/API responses are not persisted. Service worker is production-only; use trusted HTTPS for phone location/orientation access. Don't force-update a worker during an active ride.
+PWA caches app shell/assets and branch package, network-first with offline fallback. Google and Wikimedia images and other external/API responses are not persisted in the service worker. Service worker is production-only; use trusted HTTPS for phone location/orientation access. Don't force-update a worker during an active ride.
 
 ## Developer panel details
 

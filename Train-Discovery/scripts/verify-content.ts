@@ -22,7 +22,7 @@ async function main() {
   const pending = catalog.places
     .filter(
       (p) =>
-        p.evidence.length &&
+        (p.evidence.length > 0 || Boolean(process.env.SERPER_API_KEY)) &&
         (!p.story || p.story.evidenceHash !== evidenceHash(p.evidence)),
     )
     .slice(0, limit);
@@ -35,7 +35,7 @@ async function main() {
         );
         return [];
       });
-      place.evidence = mergeEvidence(place.evidence, found);
+      place.evidence = mergeEvidence(found, place.evidence);
       if (!place.evidence.length)
         throw new Error("No evidence after search; refusing generation.");
       place.story = await verifyPlace(place);

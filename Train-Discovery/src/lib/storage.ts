@@ -8,8 +8,9 @@ const evidence = z.object({
   text: z.string().max(16000),
   retrievedAt: z.string(),
   license: z.string(),
+  sourceType: z.enum(["search-snippet"]).optional(),
 });
-const place = z.object({
+export const placeSchema = z.object({
   id: z.string(),
   name: z.string().max(500),
   lat: z.number().min(-90).max(90),
@@ -33,6 +34,13 @@ const place = z.object({
           }),
         )
         .max(4),
+      funFact: z
+        .object({
+          text: z.string(),
+          evidenceId: z.string(),
+          quote: z.string(),
+        })
+        .optional(),
       verifiedAt: z.string(),
       generator: z.string(),
       verifier: z.string(),
@@ -46,7 +54,7 @@ const rideSchema = z.object({
   replay: z.boolean(),
   dismissed: z.array(z.string()).max(10000),
   queue: z
-    .array(z.object({ place, foundAt: z.number(), distance: z.number() }))
+    .array(z.object({ place: placeSchema, foundAt: z.number(), distance: z.number() }))
     .max(2000),
 });
 export const STORAGE_KEY = "train-discovery:ride:v1";

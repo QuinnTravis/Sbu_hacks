@@ -14,6 +14,7 @@ export async function GET() {
           process.env.GOOGLE_PLACES_API_KEY && process.env.SUPABASE_SECRET_KEY,
         ),
         verification: Boolean(process.env.GEMINI_API_KEY),
+        audio: Boolean(process.env.ELEVENLABS_API_KEY && process.env.SUPABASE_SECRET_KEY),
       },
       { headers: { "Cache-Control": "no-store" } },
     );

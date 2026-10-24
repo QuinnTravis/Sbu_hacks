@@ -1,6 +1,6 @@
 # Train Discovery
 
-A Next.js 16 PWA for all LIRR branches. Choose a branch, start a ride, and point the back of your phone toward a nearby place. Discoveries enter a persistent queue and remain until discarded. An optional audio tour reads verified stories or clearly marked source excerpts as you approach places, without requiring you to point the phone. There is no left/right window selector and no camera recognition in this scope.
+A Next.js 16 PWA for all LIRR branches. Choose a branch, start a ride, and point the back of your phone toward a nearby place. Discoveries enter a persistent queue and remain until discarded. An optional ElevenLabs audio companion narrates station encounters, pointed discoveries, and nearby stories throughout the ride, with source checks and transcripts. There is no left/right window selector and no camera recognition in this scope.
 
 ## Run
 
@@ -20,11 +20,14 @@ Copy `.env.example` to `.env.local` only when starting a fresh checkout; preserv
 - `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`: public catalog read access.
 - `SUPABASE_SECRET_KEY`: backend-only Supabase secret key, required for photo rate limiting and catalog publishing. Find it in the project API Keys settings. Never prefix this key with NEXT_PUBLIC.
 - `GEMINI_API_KEY`: Google AI Studio key. The structured LangChain pipeline defaults to `gemini-2.5-flash` for the summary and `gemini-2.5-flash-lite` for the evidence check. Both model IDs are configurable. Thinking is disabled so the structured summary is not consumed by reasoning tokens.
+- `SERPER_API_KEY`: Serper search key used by a LangChain tool-calling planner. Each place uses at most two searches; Google snippets are labeled as excerpts and linked to their source pages.
+- `ELEVENLABS_API_KEY`: server-only speech generation key with Text to Speech permission. The default is George (`JBFqnCBsd6RMkjVDRZzb`) with Multilingual v2. Override `ELEVENLABS_VOICE_ID` and `ELEVENLABS_MODEL` to use another voice/model. Voice browsing permission is not required.
+- `ELEVENLABS_MONTHLY_CHARACTER_LIMIT`: shared application ceiling for newly generated speech per UTC month (default 9,000 characters). Replays use the private Supabase audio cache. This cap is independent of your provider plan; the app reserves 1,200 characters per pending generation and refunds the unused portion on completion.
 - `GOOGLE_PLACES_API_KEY`: server-restricted key with Places API (New) enabled. A key alone does not ensure photo requests are free. Set billing/quota restrictions in Google Cloud. The application does not scrape Google Images.
 - `RATE_LIMIT_SECRET`: random secret of at least 32 characters. Already generated locally.
 - `TRUST_PROXY=true` only behind a proxy that overwrites `X-Forwarded-For`. Otherwise all photo users share one conservative hourly bucket.
 
-Without provider keys the route selector, sensors, database lookups, queue, and replay work. Photographs show an unavailable state; historical copy stays unpublished. No placeholder text is labeled verified.
+Without paid provider keys the route selector, sensors, database lookups, queue, and replay work. Places with Wikipedia articles may show freely available Wikimedia Commons photographs with the photographer, source link, and license credited in the card. Other photographs show an unavailable state; historical copy stays unpublished. No placeholder text is labeled verified.
 
 ## Data and verification
 
@@ -32,6 +35,7 @@ Without provider keys the route selector, sensors, database lookups, queue, and 
 npm run data:routes
 npm run data:places
 npm run content:verify -- --limit=20
+npm run content:verify:place -- --id=osm-node-7087272768
 npm run content:publish
 ```
 
@@ -39,15 +43,15 @@ Run these commands in order to refresh the catalog. Route imports download offic
 
 The catalog includes metadata-only places. Only places with retrieved source passages enter verification. Coverage is incomplete; missing historical narratives are not invented. Wikipedia and archive expansion can add evidence later. Imported OSM tags are displayed as source metadata, separate from generated history.
 
-Verification searches Wikipedia for up to two passages, asks the writer for a short extractive summary whose quotes must appear in those passages, stitches the surviving sentences into one paragraph, and checks each sentence with `gemini-2.5-flash-lite`. A sentence with a missing or rejected citation is dropped. The place fails closed when nothing remains. Evidence hashes invalidate stale story verification. Jobs checkpoint locally after each successful place. Publishing uses one database transaction, including removal of retired records. Keep the original feed and license metadata when redistributing data.
+Verification lets a LangChain search planner use Serper up to twice per place, then falls back to Wikipedia for more source text. It asks the writer for a short extractive summary and, when the evidence supports one, a distinct interesting fact. Each displayed block has exact source quotes and a separate `gemini-2.5-flash-lite` support check. Google snippets remain labeled as search excerpts and link to their source pages. A sentence with a missing or rejected citation is dropped; the place fails closed when no summary claim remains. Evidence hashes invalidate stale story verification. Batch jobs checkpoint locally after each successful place. `content:verify:place` reads and updates only the requested Supabase row after verification succeeds. The full catalog publisher uses one database transaction, including removal of retired records. Keep the original feed and license metadata when redistributing data.
 
-MTA currently supplies no scheduled geometry for Belmont Park, so its track is supplemented from the attributed OSM snapshot in `public/data/belmont-osm.json`. This does not imply operating service. Google photo metadata and image URLs are fetched on demand, attributed, and excluded from persistent caches. The diagram uses MTA geometry; the ride screen uses a directional instrument, without third-party basemap tiles.
+MTA currently supplies no scheduled geometry for Belmont Park, so its track is supplemented from the attributed OSM snapshot in `public/data/belmont-osm.json`. This does not imply operating service. Google photo metadata and image URLs are fetched on demand, attributed, and excluded from persistent caches. When Google is unconfigured, limited, or cannot match the place, the photo endpoint can use its OSM Wikipedia link to retrieve a Commons thumbnail and its actual license/author metadata. Images without a Commons credit page are rejected. Wikimedia metadata fetches use a one-day upstream revalidation cache; displayed external images are never saved offline. The diagram uses MTA geometry; the ride screen uses a directional instrument, without third-party basemap tiles.
 
 ## Supabase
 
 Four migrations in `supabase/migrations` are applied to the provisioned project. PostGIS is installed in `extensions`. Public clients have read-only access to catalog rows, plus an invoker-rights nearby query. Catalog publication and photo-budget consumption require the server role. The private photo-budget table has RLS with no public policies by design.
 
-Photo access is bounded in Postgres to 30 lookups per hashed client per UTC hour and 300 globally per UTC day. Every lookup can issue a paid Places text-search and photo request. Bounds are conservative safeguards, not a replacement for provider quotas or hosting-layer abuse protection. Raw IP addresses are not stored in the application database.
+Google photo access is bounded in Postgres to 30 lookups per hashed client per UTC hour and 300 globally per UTC day. Every authorized Google lookup can issue a paid Places text-search and photo request. Bounds are conservative safeguards, not a replacement for provider quotas or hosting-layer abuse protection. Wikimedia fallback does not require Google billing and is subject to Wikimedia availability, license terms, and service usage policies. Raw IP addresses are not stored in the application database.
 
 ## Sensors and persistence
 
@@ -59,13 +63,15 @@ The queue is stored locally, separately from online content and photo requests. 
 
 ### Audio tour
 
-Press **Start audio tour** after starting a ride. This activates the browser's speech synthesizer with a user gesture. It reads the saved queue, then nearby places within 1.1 km of a fresh, on-route location; verified stories are prioritized ahead of source excerpts. For a verified story, it reads only approved claims with matching supporting quotes. If a place has no verified story, it may read the first two sentences verbatim from a Wikipedia article whose title matches the place. The player labels this **source excerpt** and the spoken introduction identifies Wikipedia. Name matching is a conservative safeguard against obviously unrelated articles; the excerpt has not undergone the LangChain verification step. A place with an invalidated story fails closed until reverified.
+Press **Start audio tour** once after starting a ride. The guide reacts to pointed discoveries, station encounters, and nearby places within 1.1 km of a fresh, on-route location. A station triggers within 250 m, or when two fresh GPS fixes show that you passed within 180 m; stale GPS and large replay jumps do not announce every intervening station. This is geographic discovery, not an announcement of your train's scheduled stops. New pointed discoveries get the next turn, then station encounters, then nearby stories. Pointed narration opens with “You just pointed at [name]” or a variation; nearby and replay clips do not claim the rider just pointed. Narrations never overlap and leave a 4.5-second breathing space between stories.
 
-Narration never invents historical claims from OpenStreetMap tags or free-form generated summaries. Each place is spoken at most once per listening session unless you press **Play story** or **Listen to source** on its card. You can pause, resume, skip, stop, or save the currently narrated place into your queue. Discarding the place silences it, and ending or changing the ride cancels speech.
+The server accepts known catalog place IDs or station/branch IDs, never arbitrary speech text or GPS coordinates. For new source-backed places it drafts a 35–65-word story and separately checks every claim through LangChain. The prompt in `src/lib/audio-prompts.ts` asks for a warm, curious, quietly whimsical reveal; every historical assertion still needs a copied supporting quote and a passing verifier verdict. A failed check falls back to an attributed Wikipedia reading; POI narration always requires a sourced fact or story; without one, the place stays queued and a notice explains that a sourced story is not yet available. Station audio is the concise announcement “Station approaching: [name].” An invalidated published story never yields historical narration.
 
-The audio feature needs a browser with `speechSynthesis`. Places without verified claims or a matching source excerpt remain silent. At the time of this snapshot only one of 138 candidate places has a verified story; direct readings let the tour demonstrate more stops while keeping their verification status visible. Complete and publish the LangChain verification pipeline before expecting broad verified coverage. Mobile browsers may stop speech while the screen is locked or in the background; sustained background playback is not guaranteed. The audio tour requests no microphone permission and streams no location to an audio service.
+ElevenLabs voices the approved transcript; MP3s and transcripts are cached in private Supabase storage and service-only tables. Apply `supabase/migrations/20261024174514_journey_audio.sql` to a fresh project; it is applied to the configured project. Shared generation leases prevent duplicate provider calls across server instances and a durable character ledger bounds spending. Provider or network failures use the device voice with an explicit notice. First-time story generation may take several seconds; subsequent listens reuse the clip. Browser speech fallback requires `speechSynthesis`. Cached cloud clips currently require connectivity to obtain their signed playback URL.
 
-The PWA precaches its app shell, fonts, and JS/CSS, and saves a branch package after it is loaded. Reopening a downloaded branch works offline; Google photos require connectivity. Service workers are registered only in production. Updates use a versioned cache and normal service-worker lifecycle; do not force a new worker into an active ride.
+Pause/resume, skip, stop, explicit replay, save, and transcript/source links are available in the player. Places and stations are narrated once per mounted ride unless explicitly replayed; pause or toggling audio off/on does not reset that history. Discarding a place cancels it immediately, late provider responses cannot restart a skipped clip, and ending/changing the ride cancels playback. Supported browsers expose play/pause/skip through the Media Session API. Mobile lock-screen playback and background GPS still need physical iOS/Android checks; a PWA cannot guarantee continuous location updates with its screen locked. No microphone permission is requested.
+
+The PWA precaches its app shell, fonts, and JS/CSS, and saves a branch package after it is loaded. Reopening a downloaded branch works offline; Google and Wikimedia photos require connectivity. Service workers are registered only in production. Updates use a versioned cache and normal service-worker lifecycle; do not force a new worker into an active ride.
 
 ## Validation
 

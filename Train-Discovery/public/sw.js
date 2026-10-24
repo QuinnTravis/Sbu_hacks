@@ -1,4 +1,4 @@
-const VERSION = "train-discovery-v2";
+const VERSION = "train-discovery-v3";
 const SHELL = `${VERSION}-shell`;
 const JOURNEYS = `${VERSION}-journeys`;
 const ASSETS = `${VERSION}-assets`;
@@ -30,7 +30,7 @@ self.addEventListener("install", (event) => {
       ];
       await (
         await caches.open(ASSETS)
-      ).addAll([...assets, "/fonts/google-sans.woff2"]);
+      ).addAll([...assets, "/fonts/google-sans.woff2", "/audio/silence.wav"]);
       await shell.addAll(["/manifest.webmanifest", "/icon-192.png"]);
     })(),
   );
@@ -103,6 +103,7 @@ self.addEventListener("fetch", (event) => {
   } else if (
     url.pathname.startsWith("/_next/static/") ||
     url.pathname.startsWith("/fonts/") ||
+    url.pathname === "/audio/silence.wav" ||
     /^\/icon[-.]/.test(url.pathname)
   ) {
     event.respondWith(

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -24,7 +24,7 @@ import {
 } from "lucide-react";
 import { useSensors } from "@/hooks/use-sensors";
 import { useAudioGuide } from "@/hooks/use-audio-guide";
-import { audioNarration } from "@/lib/narration";
+import { audioEvidence, audioNarration } from "@/lib/narration";
 import {
   bearing,
   distance,
@@ -263,7 +263,7 @@ export function DiscoveryApp({ rail }: { rail: RailData }) {
             .filter((place) =>
               !ride.dismissed.includes(place.id) &&
               distance(position, place) <= 1100 &&
-              Boolean(audioNarration(place)),
+              (Boolean(audioNarration(place)) || audioEvidence(place).length > 0),
             )
             .sort((a, b) =>
               Number(audioNarration(b)?.kind === "verified") -
@@ -273,11 +273,27 @@ export function DiscoveryApp({ rail }: { rail: RailData }) {
         : [],
     [position, gpsFresh, offRoute, ride, places],
   );
+  const rememberNarration = useCallback((narratedPlace: Place) => {
+    if (!narratedPlace?.story) return;
+    // Keep the spoken, checked claims and their exact passages on the saved
+    // card as well. No second, uncited copy of the story is generated.
+    const merge = (place: Place) => place.id === narratedPlace.id &&
+      (place.story?.verifiedAt !== narratedPlace.story?.verifiedAt ||
+       place.story?.evidenceHash !== narratedPlace.story?.evidenceHash)
+      ? narratedPlace : place;
+    setRide((current) => {
+      if (!current || !current.queue.some((entry) => merge(entry.place) !== entry.place)) return current;
+      return { ...current, queue: current.queue.map((entry) => ({ ...entry, place: merge(entry.place) })) };
+    });
+    setPlaces((current) => current.some((place) => merge(place) !== place) ? current.map(merge) : current);
+  }, []);
   const audioGuide = useAudioGuide(
     ride?.queue,
     nearbyAudioPlaces,
     ride?.dismissed,
     ride?.startedAt ?? null,
+    { routeId: ride?.routeId ?? "", stops: route?.stops ?? [], position: gpsFresh && !offRoute ? position : null,
+      onNarrated: rememberNarration },
   );
   const canDetect = Boolean(
     ride &&

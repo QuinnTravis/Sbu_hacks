@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { audioNarration, narrationText } from "../src/lib/narration";
+import { audioEvidence, audioNarration, narrationText } from "../src/lib/narration";
 import type { Place } from "../src/lib/types";
 
 const source = {
@@ -31,6 +31,13 @@ const place: Place = {
 };
 
 describe("audio narration", () => {
+  it("keeps title-matched long passages available for checked generation without reading an oversized excerpt", () => {
+    const long = { ...place, story: undefined, name: "King Manor", evidence: [{ ...source,
+      title: "King Manor", url: "https://en.wikipedia.org/wiki/King_Manor", text: "A".repeat(450) + "." }] };
+    expect(audioEvidence(long)).toHaveLength(1);
+    expect(audioNarration(long)).toBeNull();
+    expect(audioEvidence({ ...long, name: "Unrelated Castle" })).toEqual([]);
+  });
   it("only speaks the individual sourced claims, without unsourced tags or summary", () => {
     expect(narrationText(place)).toBe("Old station. The building opened in 1901.");
   });
