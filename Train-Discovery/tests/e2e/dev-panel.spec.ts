@@ -53,9 +53,13 @@ test("dev panel controls movement, joystick detection, tilt, and phone mode", as
   await expect(joystick).toHaveAttribute("aria-valuenow", "90");
   await joystick.focus();
   await joystick.press("Home");
+  await panel.getByRole("button", { name: "Close dev panel", exact: true }).click();
+  await page.getByRole("button", { name: /Jamaica test landmark,/ }).click();
   await expect(
     page.getByRole("heading", { name: "Jamaica test landmark" }),
   ).toBeVisible({ timeout: 10000 });
+  await page.keyboard.press("Backquote");
+  await expect(panel).toBeVisible();
   const coords = panel.getByTestId("dev-coordinates");
   const before = await coords.innerText();
   await panel.getByRole("button", { name: "+250 m", exact: true }).click();

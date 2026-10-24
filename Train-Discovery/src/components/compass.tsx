@@ -8,10 +8,16 @@ export function Compass({
   heading,
   position,
   places,
+  idleLabel,
+  settling = false,
+  note,
 }: {
   heading: number | null;
   position: Coordinate | null;
   places: Place[];
+  idleLabel?: string;
+  settling?: boolean;
+  note?: string;
 }) {
   const near = position
     ? places
@@ -32,23 +38,29 @@ export function Compass({
         ];
   return (
     <div
-      className={`compass-instrument ${heading === null ? "compass-idle" : ""}`}
+      className={`compass-instrument ${heading === null ? "compass-idle" : "compass-aimed"}${settling ? " compass-settling" : ""}`}
     >
       <div className="compass-topline">
         <CompassIcon size={17} />
-        <span>
-          {heading === null ? "Compass waiting" : "Phone direction"}
+        <span className={heading === null && idleLabel ? "aim-label" : undefined}>
+          {heading === null ? idleLabel ?? "Compass waiting" : "Phone direction"}
           <strong>{heading === null ? "—" : `${Math.round(heading)}°`}</strong>
         </span>
         <span className="direction-letter">{direction}</span>
       </div>
+      {note ? (
+        <p className="aim-status" role="status">
+          {note}
+        </p>
+      ) : null}
+      <div className="compass-stage">
       <svg
         className="compass-dial"
         viewBox="0 0 360 340"
         role="img"
         aria-label={
           heading === null
-            ? "Waiting for phone compass"
+            ? idleLabel ?? "Waiting for phone compass"
             : `Phone pointing ${Math.round(heading)} degrees, ${near.length} places nearby`
         }
       >
@@ -61,7 +73,7 @@ export function Compass({
           return (
             <line
               key={i}
-              className="dial-tick"
+              className={major ? "dial-tick major" : "dial-tick"}
               x1={180 + Math.sin(a) * (major ? 139 : 143)}
               y1={170 - Math.cos(a) * (major ? 139 : 143)}
               x2={180 + Math.sin(a) * 148}
@@ -114,11 +126,14 @@ export function Compass({
           1.2 km range
         </text>
       </svg>
-      <p className="pointing-instruction">
-        {heading === null
-          ? "Hold your phone upright"
-          : "Point. Discover. Keep."}
-      </p>
+      </div>
+      {heading !== null || !idleLabel ? (
+        <p className="pointing-instruction">
+          {heading === null
+            ? "Hold your phone upright"
+            : "Point. Discover. Keep."}
+        </p>
+      ) : null}
     </div>
   );
 }

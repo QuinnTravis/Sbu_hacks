@@ -65,6 +65,13 @@ test.beforeEach(async ({ page, context }) => {
   );
 });
 
+async function choosePointed(page: import("@playwright/test").Page, name: string) {
+  await aim(page, 0);
+  const candidate = page.getByRole("button", { name: new RegExp(`^${name},`) });
+  await expect(candidate).toBeVisible({ timeout: 10000 });
+  await candidate.click();
+}
+
 async function aim(
   page: import("@playwright/test").Page,
   alpha: number,
@@ -143,6 +150,7 @@ test("Jamaica verified facts render in the demo journey", async ({ page, request
   );
   await page.goto("/");
   await page.getByRole("button", { name: "Start Jamaica demo ride" }).click();
+  await page.getByRole("button", { name: /^Jamaica,/ }).click();
   await expect(page.getByRole("heading", { name: "Jamaica", exact: true })).toBeVisible({ timeout: 10000 });
   await expect(page.getByText("Evidence checked")).toBeVisible();
   await expect(page.getByRole("heading", { name: "Summary" })).toBeVisible();
@@ -170,7 +178,7 @@ test("select a nearby route and retain pointed discoveries until discarded", asy
     .last()
     .click();
   await page.getByRole("button", { name: "Start ride", exact: true }).click();
-  await aim(page, 0);
+  await choosePointed(page, "Test landmark");
   if (info.project.name === "mobile")
     await page.getByRole("button", { name: /My discoveries/ }).click();
   await expect(
@@ -229,7 +237,7 @@ test("Wikimedia fallback photos show the image's source, author and license", as
   await page.getByRole("button", { name: "Find routes near me" }).click();
   await page.getByRole("button", { name: /Port Jefferson/ }).last().click();
   await page.getByRole("button", { name: "Start ride", exact: true }).click();
-  await aim(page, 0);
+  await choosePointed(page, "Test landmark");
   await expect(page.getByRole("heading", { name: "Test landmark" })).toBeVisible({ timeout: 10000 });
   await expect(page.getByRole("link", { name: "Wikimedia Commons" })).toHaveAttribute("href", /commons\.wikimedia\.org/);
   await expect(page.getByRole("link", { name: "Example photographer" })).toBeVisible();

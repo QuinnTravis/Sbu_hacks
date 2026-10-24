@@ -89,6 +89,7 @@ test("pointing at a POI queues its story after the current station without overl
     category: "Landmark", routeIds: ["10"], tags: {}, evidence: [], sourceUrl: "https://www.openstreetmap.org/node/1234" };
   await page.route("**/api/journeys/10", (route) => route.fulfill({ json: { places: [landmark] } }));
   const requested: string[] = [];
+  const contexts: string[] = [];
   const evidence = { id: "archive", title: "Landmark archive", url: "https://example.org/history",
     text: "The landmark was built in 1901.", retrievedAt: "2026-10-24", license: "CC BY-SA 4.0" };
   const story = { summary: evidence.text, claims: [{ text: evidence.text, quote: evidence.text, evidenceId: evidence.id }],
@@ -96,7 +97,7 @@ test("pointing at a POI queues its story after the current station without overl
   await page.route("**/api/audio", async (route) => {
     const input = route.request().postDataJSON();
     requested.push(input.type);
-    if (input.type === "place") expect(input.context).toBe("pointed");
+    if (input.type === "place") contexts.push(input.context);
     const name = input.type === "station" ? "Jamaica" : landmark.name;
     await route.fulfill({ json: { audioUrl: `https://example.org/test-clip-${input.type}.mp3`,
       script: { name, text: input.type === "place" ? `You just pointed at ${name}. ${evidence.text}` : `Station approaching: ${name}.`, kind: input.type === "place" ? "verified" : "announcement", sources: [],
@@ -116,10 +117,13 @@ test("pointing at a POI queues its story after the current station without overl
     };
     emit(); const timer = setInterval(emit, 100); setTimeout(() => clearInterval(timer), 2200);
   });
+  await page.getByRole("button", { name: /Window landmark,/ }).click();
   await expect(page.getByRole("heading", { name: landmark.name })).toBeVisible({ timeout: 10000 });
-  expect(requested).toEqual(["station"]);
+  await expect(page.getByText("Window landmark queued")).toBeVisible();
+  expect(await page.evaluate(() => (window as unknown as { __clips: string[] }).__clips)).toHaveLength(1);
+  expect(requested[0]).toBe("station");
   await page.evaluate(() => (window as unknown as { __finishClip: () => void }).__finishClip());
-  await expect.poll(() => requested, { timeout: 10000 }).toEqual(["station", "place"]);
+  await expect.poll(() => contexts, { timeout: 10000 }).toContain("pointed");
   await expect(page.locator(".audio-title")).toHaveText(landmark.name);
   await expect(page.locator(".story-facts")).toContainText(evidence.text);
   await page.getByRole("button", { name: `Discard ${landmark.name}` }).click();

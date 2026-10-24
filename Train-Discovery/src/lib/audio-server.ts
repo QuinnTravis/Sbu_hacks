@@ -38,8 +38,8 @@ async function resolve(input: AudioRequest) {
     const { data, error } = await database().from("places").select("data").eq("id", input.placeId).single();
     if (error || !data) throw new AudioError("place_not_found", 404);
     const place = data.data as Place;
-    return { revision: [place, input.context === "pointed" ? "pointed" : "nearby"],
-      script: () => placeScript(place, input.context ?? "nearby") };
+    const context = input.context ?? "nearby";
+    return { revision: [place, context], script: () => placeScript(place, context) };
   }
   const route = rail.routes.find((route) => route.id === input.routeId);
   const stop = route?.stops.find((stop) => stop.id === input.stationId);

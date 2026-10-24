@@ -29,32 +29,27 @@ import {
   bearing,
   distance,
   formatDistance,
-  isPointedAt,
   routeDistance,
   cameraHeading,
   normalize,
 } from "@/lib/geo";
 import { discard, enqueue } from "@/lib/queue";
+import {
+  chooseReplayTarget,
+  holdCandidateRows,
+  rankPointingCandidates,
+  replayCatalogStatus,
+} from "@/lib/discovery-targets";
+import type { PointingCandidate } from "@/lib/discovery-targets";
 import { readRide, writeRide } from "@/lib/storage";
 import { DEMO_LOCATION, demoPath, pathTimeline, pointAlong } from "@/lib/demo";
 import { DevPanel, type HeadingMode } from "./dev-panel";
 import type { Place, Position, RailData, Ride } from "@/lib/types";
 import { Network } from "./network";
-
-const WINDOW_RANK: Record<string, number> = {
-  "Former use": 0,
-  Heritage: 1,
-  Nature: 2,
-  Landmark: 3,
-  Station: 4,
-};
-
-function windowRank(category: string) {
-  return WINDOW_RANK[category] ?? 5;
-}
 import { Compass } from "./compass";
 import { PlaceCard } from "./place-card";
 import { AudioGuideBar } from "./audio-guide-bar";
+import { CandidateSheet } from "./candidate-sheet";
 
 export function DiscoveryApp({ rail }: { rail: RailData }) {
   const [demoLocation, setDemoLocation] = useState(true);
@@ -82,8 +77,9 @@ export function DiscoveryApp({ rail }: { rail: RailData }) {
   const [playing, setPlaying] = useState(true);
   const [endConfirm, setEndConfirm] = useState(false);
   const [view, setView] = useState<"point" | "queue">("point");
-  const candidates = useRef(new Map<string, number>());
-  const lastDetection = useRef(0);
+  const [sheetEngaged, setSheetEngaged] = useState(false);
+  const [frozenCandidates, setFrozenCandidates] = useState<PointingCandidate[] | null>(null);
+  const releaseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const sensors = useSensors();
   const selectionPosition = demoLocation ? DEMO_LOCATION : sensors.position;
   const route = rail.routes.find((r) => r.id === (ride?.routeId || selected));
@@ -226,16 +222,13 @@ export function DiscoveryApp({ rail }: { rail: RailData }) {
   }, []);
 
   const position = ride?.replay ? replayPosition : sensors.position;
+  const placesById = useMemo(
+    () => new Map(places.map((place) => [place.id, place])),
+    [places],
+  );
   const replayTarget =
     position && ride?.replay
-      ? places
-          .filter((p) => distance(position, p) < 1200)
-          .sort(
-            (a, b) =>
-              Number(Boolean(b.evidence.length)) -
-                Number(Boolean(a.evidence.length)) ||
-              distance(position, a) - distance(position, b),
-          )[0]
+      ? chooseReplayTarget(places, ride, position, placesById)
       : null;
   const activeHeadingMode =
     !ride?.replay && headingMode === "auto" ? "phone" : headingMode;
@@ -246,7 +239,7 @@ export function DiscoveryApp({ rail }: { rail: RailData }) {
         ? cameraHeading(normalize(360 - manualHeading), manualPitch, 0)
         : position && replayTarget
           ? bearing(position, replayTarget)
-          : 70;
+          : null;
   const gpsFresh = Boolean(
     position &&
     sensors.now - position.timestamp < 20000 &&
@@ -302,52 +295,49 @@ export function DiscoveryApp({ rail }: { rail: RailData }) {
     heading !== null &&
     (activeHeadingMode !== "phone" || sensors.compassStatus === "active"),
   );
+  const catalogPending = packageState === "idle" || packageState === "loading";
+  const replayStatus = replayCatalogStatus(
+    Boolean(ride?.replay),
+    activeHeadingMode === "auto",
+    replayTarget,
+    packageState,
+  );
+  const detectionPaused =
+    !canDetect && replayStatus === "loading"
+      ? "Paused — loading places…"
+      : !canDetect && replayStatus === "unavailable"
+        ? "Paused — places didn’t load"
+        : !canDetect && replayStatus === "empty"
+          ? "Paused — no sourced place in range."
+          : undefined;
+  const queueTone =
+    view === "queue" && packageState === "error"
+      ? "is-failed"
+      : view === "queue" && replayStatus === "empty"
+        ? "is-unsourced"
+        : view === "queue" && catalogPending
+          ? "is-waiting"
+          : "";
 
   useEffect(() => {
     if (ride?.queue.length === 1) queueMicrotask(() => setView("queue"));
   }, [ride?.queue.length]);
+  useEffect(() => () => {
+    if (releaseTimer.current) clearTimeout(releaseTimer.current);
+  }, []);
 
-  useEffect(() => {
-    if (!canDetect || !position || heading === null || document.hidden) {
-      candidates.current.clear();
-      return;
-    }
-    const now = Date.now();
-    const matched = places
-      .filter(
-        (place) =>
-          isPointedAt(position, heading, place) &&
-          !ride?.dismissed.includes(place.id) &&
-          !ride?.queue.some((entry) => entry.place.id === place.id),
-      )
-      .sort(
-        (a, b) =>
-          Number(Boolean(b.story)) - Number(Boolean(a.story)) ||
-          windowRank(a.category) - windowRank(b.category) ||
-          Number(Boolean(b.evidence.length)) -
-            Number(Boolean(a.evidence.length)) ||
-          distance(position, a) - distance(position, b),
-      );
-    const ids = new Set(matched.map((p) => p.id));
-    for (const id of candidates.current.keys())
-      if (!ids.has(id)) candidates.current.delete(id);
-    for (const place of matched) {
-      const since = candidates.current.get(place.id);
-      if (since === undefined) {
-        candidates.current.set(place.id, now);
-        continue;
-      }
-      if (now - since >= 900 && now - lastDetection.current >= 2500) {
-        lastDetection.current = now;
-        setRide((current) =>
-          current
-            ? enqueue(current, place, distance(position, place), now)
-            : current,
-        );
-        break;
-      }
-    }
-  }, [canDetect, position, heading, places, sensors.now, ride]);
+  const liveCandidates = useMemo(() => {
+    if (!canDetect || !position || heading === null || !ride) return [];
+    return rankPointingCandidates(places, position, heading, ride, placesById);
+  }, [canDetect, position, heading, ride, places, placesById]);
+  const pointingCandidates = holdCandidateRows(
+    liveCandidates,
+    frozenCandidates,
+    sheetEngaged,
+  );
+  const directionEmpty = Boolean(
+    canDetect && !catalogPending && packageState !== "error" && pointingCandidates.length === 0,
+  );
 
   const ranked = useMemo(
     () =>
@@ -393,7 +383,6 @@ export function DiscoveryApp({ rail }: { rail: RailData }) {
       void sensors.point();
       sensors.locate();
     } else sensors.stop();
-    candidates.current.clear();
     setReplayOffset(0);
     setDirection(1);
     setHeadingMode(replay ? "auto" : "phone");
@@ -413,17 +402,13 @@ export function DiscoveryApp({ rail }: { rail: RailData }) {
     setReplayOffset(
       Math.max(0, Math.min(timeline.total, meters)) - startMeters,
     );
-    candidates.current.clear();
-    lastDetection.current = 0;
   };
   const changeHeadingMode = (mode: HeadingMode) => {
     setHeadingMode(mode);
-    candidates.current.clear();
     if (mode === "phone") void sensors.point();
   };
   const changeLocationSource = (replay: boolean) => {
     sensors.stop();
-    candidates.current.clear();
     setHeadingMode(replay ? "auto" : "phone");
     setRide((current) => (current ? { ...current, replay } : current));
     if (!replay) {
@@ -460,7 +445,31 @@ export function DiscoveryApp({ rail }: { rail: RailData }) {
     setRide(null);
     setPlaces([]);
     setEndConfirm(false);
-    candidates.current.clear();
+    if (releaseTimer.current) clearTimeout(releaseTimer.current);
+    setFrozenCandidates(null);
+    setSheetEngaged(false);
+  };
+  const engageSheet = () => {
+    if (releaseTimer.current) clearTimeout(releaseTimer.current);
+    setFrozenCandidates((held) => held ?? liveCandidates);
+    setSheetEngaged(true);
+  };
+  const releaseSheet = () => {
+    if (releaseTimer.current) clearTimeout(releaseTimer.current);
+    releaseTimer.current = setTimeout(() => {
+      setFrozenCandidates(null);
+      setSheetEngaged(false);
+    }, 350);
+  };
+  const selectCandidate = (candidate: PointingCandidate) => {
+    const now = Date.now();
+    if (releaseTimer.current) clearTimeout(releaseTimer.current);
+    setFrozenCandidates(null);
+    setSheetEngaged(false);
+    setCardIndex(ride?.queue.length ?? 0);
+    setView("queue");
+    setRide((current) => current ? enqueue(current, candidate.place, candidate.meters, now) : current);
+    audioGuide.schedule(candidate.place, now);
   };
   const gpsMessage =
     sensors.gpsStatus === "denied"
@@ -778,6 +787,18 @@ export function DiscoveryApp({ rail }: { rail: RailData }) {
                 setRide((current) => current ? enqueue(current, place, distance(position, place)) : current);
               }}
             />
+            {packageState === "error" && (
+              <div className="catalog-alert" role="alert">
+                <p>Couldn’t load places.</p>
+                <button
+                  className="text-button"
+                  onClick={() => setRetry((v) => v + 1)}
+                >
+                  <RefreshCw size={13} />
+                  Retry
+                </button>
+              </div>
+            )}
             <div className="mobile-tabs floating-nav">
               <button
                 aria-pressed={view === "point"}
@@ -811,6 +832,19 @@ export function DiscoveryApp({ rail }: { rail: RailData }) {
                   heading={heading}
                   position={position}
                   places={places}
+                  idleLabel={
+                    ride.replay && activeHeadingMode === "auto" && !replayTarget
+                      ? "Simulated aim"
+                      : undefined
+                  }
+                  settling={Boolean(
+                    ride.replay && activeHeadingMode === "auto" && catalogPending,
+                  )}
+                  note={
+                    replayStatus === "empty"
+                      ? "No sourced place in range."
+                      : undefined
+                  }
                 />
                 {ride.replay ? (
                   <div className="replay-controls">
@@ -879,25 +913,24 @@ export function DiscoveryApp({ rail }: { rail: RailData }) {
                 <div className="nearby-status">
                   <MapPin size={15} />
                   <span>
-                    {packageState === "loading"
+                    {catalogPending
                       ? "Loading places…"
-                      : `${places.filter((p) => position && distance(position, p) < 1200).length} places nearby`}
+                      : packageState === "error"
+                        ? "Places unavailable"
+                        : `${places.filter((p) => position && distance(position, p) < 1200).length} places nearby`}
                   </span>
                   {packageState === "cached" && (
                     <span className="cached-label">Cached</span>
                   )}
                 </div>
-                {packageState === "error" && (
-                  <div className="inline-notice" role="alert">
-                    Couldn’t load places.{" "}
-                    <button
-                      className="text-button"
-                      onClick={() => setRetry((v) => v + 1)}
-                    >
-                      <RefreshCw size={13} />
-                      Retry
-                    </button>
-                  </div>
+                {(pointingCandidates.length > 0 || directionEmpty) && (
+                  <CandidateSheet
+                    candidates={pointingCandidates}
+                    empty={directionEmpty}
+                    onEngage={engageSheet}
+                    onRelease={releaseSheet}
+                    onSelect={selectCandidate}
+                  />
                 )}
               </section>
               <section
@@ -943,19 +976,46 @@ export function DiscoveryApp({ rail }: { rail: RailData }) {
                     )}
                   </>
                 ) : (
-                  <div className="queue-empty">
+                  <div className={`queue-empty${queueTone ? ` ${queueTone}` : ""}`}>
                     <div className="empty-window">
                       <CompassIcon size={31} strokeWidth={1.2} />
                     </div>
+                    {queueTone === "is-waiting" && (
+                      <span className="steel-meter" aria-hidden="true">
+                        <span />
+                        <span />
+                        <span />
+                        <span />
+                        <span />
+                      </span>
+                    )}
                     <h3>
-                      Your next discovery
-                      <br />
-                      is just outside.
+                      {view === "queue" && packageState === "error" ? (
+                        "Places didn’t load"
+                      ) : view === "queue" && replayStatus === "empty" ? (
+                        "No sourced place in range."
+                      ) : view === "queue" && catalogPending ? (
+                        "Loading places…"
+                      ) : (
+                        <>
+                          Your next discovery
+                          <br />
+                          is just outside.
+                        </>
+                      )}
                     </h3>
                     <p>
-                      Point your phone at a nearby place.
-                      <br />
-                      Its story stays here until you discard it.
+                      {catalogPending ||
+                      packageState === "error" ||
+                      replayStatus === "empty" ? (
+                        "Discoveries stay here until you discard them."
+                      ) : (
+                        <>
+                          Point your phone at a nearby place.
+                          <br />
+                          Its story stays here until you discard it.
+                        </>
+                      )}
                     </p>
                   </div>
                 )}
@@ -1008,6 +1068,7 @@ export function DiscoveryApp({ rail }: { rail: RailData }) {
         stations={devStations}
         onStation={seek}
         queueCount={ride?.queue.length ?? 0}
+        pausedReason={detectionPaused}
       />
       {!ride && (
         <nav className="floating-nav home-nav" aria-label="Main navigation">

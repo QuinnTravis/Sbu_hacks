@@ -39,15 +39,21 @@
       "Floating route sheet",
       "Single app surface for the ride"
     ],
-    "rules": [],
+    "rules": [
+      "Steel #8e98a8 is only for compass ticks, hairlines, and a 2px mark on the catalog retry alert.",
+      "Brass #8f6b3d is only the compass needle.",
+      "No gears, smoke, sepia, rivet frames, or ornate borders."
+    ],
     "dos": [
       "Follow the user-pinned reference.",
       "Lead route selection with tappable MTA geometry and a collapsible bottom sheet.",
-      "Keep the discovery queue persistent."
+      "Keep the discovery queue persistent.",
+      "Keep simulated aim labeled, and name a missing sourced target instead of blaming sensors."
     ],
     "donts": [
       "Do not reintroduce the green design.",
-      "Do not add redundant subtitles."
+      "Do not add redundant subtitles.",
+      "Do not use brass on buttons, navigation, sheets, text, or a second accent moment."
     ]
   }
 }

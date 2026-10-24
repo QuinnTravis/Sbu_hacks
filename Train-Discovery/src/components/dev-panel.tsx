@@ -51,6 +51,7 @@ export function DevPanel({
   stations,
   onStation,
   queueCount,
+  pausedReason,
 }: {
   open: boolean;
   onClose: () => void;
@@ -81,6 +82,7 @@ export function DevPanel({
   stations: { id: string; name: string; offset: number }[];
   onStation: (offset: number) => void;
   queueCount: number;
+  pausedReason?: string;
 }) {
   const [compact, setCompact] = useState(false);
   if (!open) return null;
@@ -145,8 +147,10 @@ export function DevPanel({
           {mode === "manual" ? (
             <HeadingJoystick value={manualHeading} onChange={onHeading} />
           ) : (
-            <p>
-              {heading === null ? "No heading" : `${Math.round(heading)}°`} ·{" "}
+            <p className="dev-aim-readout">
+              {pausedReason ??
+                (heading === null ? "No heading" : `${Math.round(heading)}°`)}
+              {" · "}
               {mode === "phone" ? "Phone" : "Auto aim"}
             </p>
           )}
@@ -297,6 +301,17 @@ export function DevPanel({
           )}
           <dl className="dev-readings">
             <div>
+              <dt>Detection</dt>
+              <dd
+                data-testid="dev-detection"
+                className={!active && pausedReason ? "dev-detection-reason" : undefined}
+              >
+                {active
+                  ? "Active"
+                  : pausedReason ?? "Paused — check sensors / tilt"}
+              </dd>
+            </div>
+            <div>
               <dt>Position source</dt>
               <dd>{replay ? "Simulated" : "GPS"}</dd>
             </div>
@@ -323,10 +338,6 @@ export function DevPanel({
               <dd>
                 {heading === null ? "Unavailable" : `${Math.round(heading)}°`}
               </dd>
-            </div>
-            <div>
-              <dt>Detection</dt>
-              <dd>{active ? "Active" : "Paused — check sensors / tilt"}</dd>
             </div>
             <div>
               <dt>Discoveries queued</dt>

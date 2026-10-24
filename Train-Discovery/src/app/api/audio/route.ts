@@ -6,7 +6,7 @@ export const maxDuration = 120;
 const headers = { "Cache-Control": "private, no-store" };
 const inputSchema = z.discriminatedUnion("type", [
   z.object({ type: z.literal("place"), placeId: placeIdSchema,
-    context: z.enum(["pointed", "nearby", "replay"]).default("nearby") }).strict(),
+    context: z.enum(["pointed", "pointed-earlier", "nearby", "replay"]).default("nearby") }).strict(),
   z.object({ type: z.literal("station"), routeId: z.string().regex(/^(?:[1-9]|1[0-3])$/), stationId: z.string().regex(/^\d{1,8}$/) }).strict(),
 ]);
 

@@ -6,7 +6,7 @@ Use this document as the working prompt when asked to run an autonomous improvem
 
 Make Train Discovery a compelling, useful, memorable hackathon contender: a location-aware companion that turns an ordinary LIRR ride into a narrated discovery of the world outside the window. Optimize for the chance of winning through a convincing working product and a strong demonstration. Treat winning as an aspiration, not an outcome you can guarantee or declare achieved through self-evaluation.
 
-Act as the product designer, engineer, editor, and critical demo reviewer. Find the highest-value work yourself, implement it, verify it, and reassess. Deliver working improvements rather than stopping at an audit, a feature list, or a proposal.
+Find the highest-value work yourself and deliver it through the specialist subagents below. Deliver working improvements rather than stopping at an audit, a feature list, or a proposal.
 
 ## Authorization
 
@@ -14,7 +14,9 @@ The user authorizes you to introduce features, change UI and interaction flows, 
 
 Make reasonable reversible decisions autonomously. Ask only when genuinely necessary information is unavailable, an action needs authorization beyond the session's existing permissions, or a change would override an explicit user requirement. Continue useful independent work while a question is pending. Existing system, workspace, security, spending, and external-action restrictions still apply.
 
-Work inside `Train-Discovery`. Preserve other projects in the enclosing repository and existing unrelated work. Inspect the worktree before editing. Follow the session's actual authorization for commits, pushes, deployments, paid services, and destructive actions; this brief does not grant blanket authorization for external publishing or extra spending.
+Work inside `Train-Discovery`. Preserve other projects in the enclosing repository and existing unrelated work. Inspect the worktree before editing.
+
+The reviewer subagent is authorized to commit and push completed refinement work to the configured repository after the relevant tests and required checks pass, without asking for routine confirmation. Include the applicable test results in the commit or handoff. Stage only the intended project changes, keep secrets out of commits, and use ordinary pushes to the working branch and its upstream. If no upstream exists, you may publish the working branch to the configured remote. Preserve collaborators' work when synchronizing with the remote; force pushes and destructive history rewrites require separate explicit authorization. Follow the session's actual authorization for deployments, paid services, and other external or destructive actions. Builder and designer do not commit or push.
 
 ## Establish the truth first
 
@@ -34,13 +36,23 @@ Documentation can be stale. Resolve conflicts using the latest user instructions
 
 - Keep a coherent phone experience: choose an LIRR branch, start a ride, encounter stations, point toward a POI, hear something worth knowing, and keep discoveries until discarded.
 - Support all LIRR branches. Jamaica replay and the developer controls must make movement and pointing easy to demonstrate, with simulation clearly labeled.
-- Follow the Waymo theme recorded in `DESIGN.md`. Improve hierarchy, layout, controls, feedback, and accessibility within that visual language. Keep visible copy purposeful and concise.
+- Follow the Waymo theme recorded in `DESIGN.md`. Improve hierarchy, layout, controls, feedback, and accessibility within that visual language. A restrained steel-and-steam accent may sit on that base once `DESIGN.md` records it. Keep visible copy purposeful and concise.
 - Use phone orientation for pointing. Geographic proximity and heading do not prove visibility or camera recognition.
 - Station narration says **“Station approaching: [station name].”** It is geographic discovery, not a prediction of scheduled service.
 - A pointed POI acknowledges the gesture, such as **“You just pointed at [name],”** and includes a sourced fact or story. A name-only POI clip is insufficient. Automatic nearby narration and explicit replay must use truthful introductions for their context.
 - Make audio warm, curious, quietly whimsical, and well paced. Let supported details create the wonder. Preserve source checks, attribution, distinct verification states, cancellation, deduplication, and a single playback queue.
 - Missing evidence needs a recoverable state. Do not invent facts, fabricate source support, label generated images as archival photographs, or present mocked provider results as live evidence.
 - Preserve the Next.js PWA, Supabase, and existing provider integrations unless there is a concrete reason to change them. Keep secrets server-side, respect configured quotas, and avoid unnecessary provider calls.
+
+## Specialist subagents
+
+Delegate each cycle to the project subagents in `.cursor/agents/`. The parent session chooses whether another cycle is worth starting and keeps the user informed.
+
+1. `builder` chooses and implements one product improvement: a feature, a bug fix, or a refinement. It does not commit.
+2. `designer` then improves the interface and interaction of what changed. The Waymo system in `DESIGN.md` stays the base. A restrained steel-and-steam accent is allowed; a second visual language is not. The designer does not commit.
+3. `reviewer` reviews the diff, runs the unit and end-to-end checks the change requires, and commits and pushes only after approval.
+
+Each subagent follows this brief and the product commitments above. Skip a role only when the cycle does not touch its work.
 
 ## Recursive improvement loop
 
@@ -85,6 +97,8 @@ Compare the result against its acceptance condition. Retain improvements that ea
 Update the next priorities using what you learned. Repeating a cycle must either solve a new demonstrated problem or materially improve a previous result. Avoid cosmetic churn, endless self-scoring, and accumulating features merely to stay busy.
 
 Record completed work, validation evidence, limitations, and the next best action in `pass.md`. Update `README.md`, `PRODUCT.md`, or `DESIGN.md` when their current descriptions need to change. Keep handoff notes concise and current rather than layering contradictory descriptions.
+
+Hand the completed cycle to the reviewer. The reviewer runs the relevant tests and required checks, then commits and pushes. Confirm the push succeeded and report the branch and commit. If a push is blocked, preserve the verified local commit, explain the concrete blocker, and continue independent work where possible. For documentation-only changes, use appropriate documentation and diff checks rather than running unrelated application tests.
 
 ## Demo standard
 

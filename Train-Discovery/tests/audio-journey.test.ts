@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { chooseAudioMoment, placeAnnouncement, reachedStation, stationAnnouncement } from "../src/lib/audio-journey";
-import type { AudioMoment } from "../src/lib/audio-journey";
+import {
+  chooseAudioMoment, isActivePlayback, narrationFact, nextNarration, placeAnnouncement, playbackSegments,
+  playNowSelection, pointingContext, preparationOrder, reachedStation, stationAnnouncement,
+} from "../src/lib/audio-journey";
+import type { AudioMoment, PendingStation } from "../src/lib/audio-journey";
 import type { Place } from "../src/lib/types";
 
 const stop = { id: "102", name: "Jamaica", lat: 40.6996, lon: -73.8085 };
@@ -51,17 +54,30 @@ describe("POI narration contract", () => {
     story: { summary: quote, claims: [{ text: quote, quote, evidenceId: "archive" }],
       verifiedAt: "2026-10-24", evidenceHash: "fixture", generator: "fixture", verifier: "fixture" } };
 
-  it("acknowledges pointing and always includes the supported fact", () => {
-    const script = placeAnnouncement(landmark, "pointed")!;
-    expect(script.text).toMatch(/^(You just pointed at|You're pointing at|That's) Old Library/);
-    expect(script.text).toContain(quote);
-    expect(script.kind).toBe("verified");
-  });
-  it("uses varied acknowledgments without adding them to nearby or replay stories", () => {
-    const variants = new Set(["p0", "p1", "p2"].map((id) => placeAnnouncement({ ...landmark, id }, "pointed")!.text));
-    expect(variants.size).toBe(3);
+  it("acknowledges a timely point and a delayed point without using that line for nearby or replay", () => {
+    const timely = placeAnnouncement(landmark, "pointed")!;
+    const delayed = placeAnnouncement(landmark, "pointed-earlier")!;
+    expect(timely.text).toMatch(/^You just pointed at Old Library\./);
+    expect(delayed.text).toMatch(/^That building you pointed at earlier, Old Library\./);
+    const delayedNoun = (category: string) =>
+      placeAnnouncement({ ...landmark, category }, "pointed-earlier")!.text;
+    expect(delayedNoun("Landmark")).toMatch(/^That landmark you pointed at earlier, Old Library\./);
+    expect(delayedNoun("Station")).toMatch(/^That station you pointed at earlier, Old Library\./);
+    expect(delayedNoun("Railway history")).toMatch(/^That station you pointed at earlier, Old Library\./);
+    expect(delayedNoun("Nature")).toMatch(/^That place you pointed at earlier, Old Library\./);
+    expect(delayedNoun("Former use")).toMatch(/^That place you pointed at earlier, Old Library\./);
+    expect(delayedNoun("Art & culture")).toMatch(/^That place you pointed at earlier, Old Library\./);
+    expect(placeAnnouncement({ ...landmark, category: "Nature" }, "pointed")!.text).toMatch(/^You just pointed at Old Library\./);
+    expect(delayed.text).not.toContain("You just pointed");
+    expect(timely.text).toContain(quote);
+    expect(delayed.text).toContain(quote);
+    expect(timely.kind).toBe("verified");
+    expect(pointingContext(1_000, 20_000)).toBe("pointed");
+    expect(pointingContext(1_000, 50_000)).toBe("pointed-earlier");
+    expect(placeAnnouncement(landmark, "nearby")!.text).toBe(`Old Library. ${quote}`);
+    expect(placeAnnouncement(landmark, "replay")!.text).toBe(`Once more, Old Library. ${quote}`);
     for (const context of ["nearby", "replay"] as const)
-      expect(placeAnnouncement(landmark, context)!.text).toBe(`Old Library. ${quote}`);
+      expect(placeAnnouncement(landmark, context)!.text).not.toContain("pointed");
   });
   it("refuses a name-only POI and stale citations, including device fallback", () => {
     expect(placeAnnouncement({ ...landmark, story: undefined, evidence: [] }, "pointed")).toBeNull();
@@ -74,5 +90,142 @@ describe("POI narration contract", () => {
     expect(script.kind).toBe("source");
     expect(script.text).toContain("From Wikipedia:");
     expect(script.text).toContain("It opened in 1901.");
+  });
+});
+
+describe("narration order and preparation", () => {
+  const quote = "The building opened in 1901.";
+  const sourced = (id: string, name: string): Place => ({
+    id, name, lat: 40.7, lon: -73.8, category: "Heritage", routeIds: ["10"],
+    sourceUrl: "https://example.org/history", tags: {},
+    evidence: [{ id: "archive", title: name, url: "https://example.org/history", text: quote,
+      retrievedAt: "2026-10-24", license: "CC BY-SA 4.0" }],
+    story: { summary: quote, claims: [{ text: quote, quote, evidenceId: "archive" }],
+      verifiedAt: "2026-10-24", evidenceHash: "fixture", generator: "fixture", verifier: "fixture" },
+  });
+  const selected = sourced("selected", "Selected hall");
+  const nearby = sourced("nearby", "Nearby hall");
+  const bare: Place = { ...sourced("bare", "Bare hall"), story: undefined, evidence: [] };
+  const pending = (expiresAt: number): PendingStation => ({
+    key: "station:102", station: stop, routeId: "10", expiresAt,
+  });
+  const base = {
+    now: 10_000,
+    position: { lat: stop.lat, lon: stop.lon },
+    stations: [] as PendingStation[],
+    spoken: new Set<string>(),
+    dismissed: new Set<string>(),
+    spokenFacts: new Set<string>(),
+  };
+
+  it("finishes the current story before a selection, and plays that selection before nearby narration", () => {
+    const during = nextNarration({
+      ...base, boundary: "sentence",
+      current: { key: "place:playing", kind: "story", sentencesRemaining: 2 },
+      selected: [{ place: selected, selectedAt: 9_000 }],
+      nearby: [nearby],
+    });
+    expect(during.resume).toBe(true);
+    expect(during.next).toBeNull();
+    const ready = nextNarration({
+      ...base, boundary: "story", current: null,
+      selected: [{ place: selected, selectedAt: 9_000 }],
+      nearby: [nearby],
+    });
+    expect(ready.next?.place?.id).toBe("selected");
+    expect(ready.next?.request).toMatchObject({ context: "pointed" });
+    const later = nextNarration({
+      ...base, now: 80_000, boundary: "story", current: null,
+      selected: [{ place: selected, selectedAt: 9_000 }],
+      nearby: [nearby],
+    });
+    expect(later.next?.request).toMatchObject({ context: "pointed-earlier" });
+  });
+
+  it("inserts a timely station at a sentence boundary and discards a stale or distant one", () => {
+    const inserted = nextNarration({
+      ...base, boundary: "sentence",
+      current: { key: "place:playing", kind: "story", sentencesRemaining: 1 },
+      selected: [{ place: selected, selectedAt: 9_000 }],
+      nearby: [],
+      stations: [pending(20_000)],
+    });
+    expect(inserted.next?.key).toBe("station:102");
+    expect(inserted.next?.fallback?.text).toBe("Station approaching: Jamaica.");
+    expect(inserted.resume).toBe(false);
+    const stale = nextNarration({
+      ...base, now: 21_000, boundary: "story", current: null,
+      selected: [], nearby: [], stations: [pending(20_000)],
+    });
+    expect(stale.discardedStationKeys).toContain("station:102");
+    expect(stale.next).toBeNull();
+    const distant = nextNarration({
+      ...base, boundary: "story", current: null, position: { lat: stop.lat + 0.03, lon: stop.lon },
+      selected: [], nearby: [], stations: [pending(20_000)],
+    });
+    expect(distant.discardedStationKeys).toContain("station:102");
+    expect(distant.next?.key).not.toBe("station:102");
+  });
+
+  it("prepares selected places before nearby ones and skips a name-only place", () => {
+    const order = preparationOrder([selected, bare], [nearby, selected], new Set(), null);
+    expect(order.map((item) => item.id)).toEqual(["selected", "nearby"]);
+    expect(preparationOrder([selected], [nearby], new Set(["place:selected"]), "nearby").map((item) => item.id)).toEqual([]);
+  });
+
+  it("interrupts toward the queued selection and ignores a canceled generation", () => {
+    const target = playNowSelection(
+      [{ place: selected, selectedAt: 9_000 }, { place: nearby, selectedAt: 9_500 }],
+      "station:102",
+      new Set(["place:nearby"]),
+    );
+    expect(target?.place.id).toBe("selected");
+    expect(playNowSelection([{ place: selected, selectedAt: 9_000 }], "place:selected", new Set())).toBeNull();
+    expect(isActivePlayback(3, null)).toBe(false);
+    expect(isActivePlayback(3, 4)).toBe(false);
+    expect(isActivePlayback(4, 4)).toBe(true);
+  });
+
+  it("does not repeat a place or the same fact", () => {
+    const repeat = nextNarration({
+      ...base, boundary: "story", current: null,
+      selected: [{ place: selected, selectedAt: 9_000 }],
+      nearby: [],
+      spoken: new Set(["place:selected"]),
+    });
+    expect(repeat.next).toBeNull();
+    const sameFact = nextNarration({
+      ...base, boundary: "story", current: null, selected: [], nearby: [nearby],
+      spokenFacts: new Set([narrationFact(selected)!]),
+    });
+    expect(sameFact.next).toBeNull();
+    expect(playbackSegments("One sentence.", true)).toEqual(["One sentence."]);
+    expect(playbackSegments("First sentence. Second sentence.", true)).toEqual(["First sentence.", "Second sentence."]);
+    expect(playbackSegments("First sentence. Second sentence.", false)).toEqual(["First sentence. Second sentence."]);
+  });
+
+  it("offers an unsourced story as recoverable silence, then continues", () => {
+    const blocked = nextNarration({
+      ...base, boundary: "story", current: null,
+      selected: [{ place: bare, selectedAt: 9_000 }],
+      nearby: [nearby],
+    });
+    expect(blocked.next?.place?.id).toBe("bare");
+    expect(blocked.next?.fallback).toBeNull();
+    const continued = nextNarration({
+      ...base, boundary: "story", current: null,
+      selected: [{ place: bare, selectedAt: 9_000 }],
+      nearby: [nearby],
+      spoken: new Set(["place:bare"]),
+    });
+    expect(continued.next?.place?.id).toBe("nearby");
+    const recovered = nextNarration({
+      ...base, boundary: "story", current: null,
+      selected: [{ place: bare, selectedAt: 9_000 }],
+      nearby: [],
+      spoken: new Set(),
+    });
+    expect(recovered.next?.place?.id).toBe("bare");
+    expect(recovered.next?.fallback).toBeNull();
   });
 });

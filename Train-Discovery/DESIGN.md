@@ -9,6 +9,8 @@ colors:
   line: "#cdd1db"
   primary: "#0071f2"
   selected: "#dfe3eb"
+  steel: "#8e98a8"
+  brass: "#8f6b3d"
 typography:
   display:
     fontFamily: "Google Sans, Arial, sans-serif"
@@ -53,13 +55,32 @@ The user rejected the previous green UI and explicitly pinned this reference: ht
 
 Cool gray canvas, near-black text, white search and sheets, bright blue primary action. Branch colors appear only as route data. No green UI chrome.
 
+## Steel and steam
+
+A restrained instrument accent on the Waymo base. It does not replace the palette, type, pills, sheets, blue actions, or the map-centered route screen.
+
+### Tokens
+
+- `steel` `#8e98a8` — cool hairline, close to `line` `#cdd1db` and the dial grays. Use for compass ticks, a 1px tick under the compass readout, and a 2px tick on the catalog failure alert.
+- `brass` `#8f6b3d` — aged brass. The compass needle only, including while simulated aim is idle.
+
+### Where it may appear
+
+- Steel tick marks and hairlines on the compass dial and on the loading, empty-aim, and failed-catalog queue states.
+- One 2px steel mark on the catalog retry alert.
+- Brass on the compass needle, with a short settle when a heading arrives. Loading ticks may breathe; they stay steel.
+
+### Forbidden
+
+No gears, smoke, sepia, rivet frames, or ornate borders. No green chrome. No Waymo branding. Do not use brass on buttons, navigation, sheets, text, or a second moment such as the active discovery card or a progress dot. Do not add a second warm accent.
+
 ## Typography
 
 Locally hosted, Latin-subset Google Sans variable font under OFL, with its license in public/fonts. The route-selection home is centered on the geographic LIRR map; a floating bottom sheet holds nearby/all route selection and the primary action. No marketing subtitle.
 
 ## Layout
 
-The ride surface is capped at 660px on desktop, with 18px phone gutters. Route selection expands to a map-centered canvas: actual MTA route geometry is tappable, GPS location requests/filtering are available from the map, and a floating rounded bottom sheet contains route search/list and the blue Start ride action. The sheet can collapse to expose more map. Keep floating navigation below the sheet. The ride surface switches between its compass and persistent discovery queue via the same bottom navigation.
+The ride surface is capped at 660px on desktop, with 18px phone gutters. On a ride, the shell ends above the floating tab bar, and that column scrolls inside the gap: the compass readout, nearby line, candidate rows, and the lower lines of a discovery card stay readable there. The dial yields vertical space so those rows can sit with it. Route selection expands to a map-centered canvas: actual MTA route geometry is tappable, GPS location requests/filtering are available from the map, and a floating rounded bottom sheet contains route search/list and the blue Start ride action. The sheet can collapse to expose more map. Keep floating navigation below the sheet. The ride surface switches between its compass and persistent discovery queue via the same bottom navigation.
 
 ## Elevation & Depth
 
@@ -75,4 +96,4 @@ Outlined black icons, white circular utility controls, blue primary actions, gra
 
 ## Do's and Don'ts
 
-Match the supplied reference rather than introducing another aesthetic direction. Preserve the LIRR flow and actual data. Do not add explanatory subtitles for obvious controls, left/right selectors, simulated live readings, or Waymo branding. Replay remains clearly labeled as simulated. Real phone sensors and provider integrations still need their release checks.
+Match the supplied reference rather than introducing another aesthetic direction. The steel-and-steam tokens above are the only accepted departure, and only as hairlines plus the compass needle. Preserve the LIRR flow and actual data. Do not add explanatory subtitles for obvious controls, left/right selectors, simulated live readings, or Waymo branding. Replay remains clearly labeled as simulated. Real phone sensors and provider integrations still need their release checks.
