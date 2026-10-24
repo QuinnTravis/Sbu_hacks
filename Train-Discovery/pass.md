@@ -2,6 +2,8 @@
 
 Updated 2026-10-24. This file captures the product decisions, research, current implementation, and remaining work for the next model. Read `AGENTS.md` first; it requires consulting the installed Next.js guides under `node_modules/next/dist/docs/` before changing code. Keep UI copy minimal and omit subtitles that restate visible controls.
 
+For user-authorized autonomous hackathon improvement sessions, use `REFINEMENT.md`. It defines feature/UI autonomy, the current product commitments, prioritization, repeated implementation and verification, a focused demo standard, and handoff requirements. The latest narration contract below takes precedence over older audio descriptions in this handoff.
+
 ## Product goal and accepted scope
 
 Train Discovery is a mobile-first Next.js PWA for LIRR riders. The active flow is:

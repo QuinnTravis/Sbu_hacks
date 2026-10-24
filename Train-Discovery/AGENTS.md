@@ -12,3 +12,7 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 - Before creating or changing any user interface, read `DESIGN.md` and follow the Waymo iOS visual reference and tokens recorded there. Treat it as the durable design authority for this product; do not substitute an unrelated visual style.
 - Keep the interface minimal. Omit subtitles and helper text that merely describe visible content or controls; include copy only when it clarifies purpose, action, or uncertainty.
+
+## Autonomous refinement
+
+- For an autonomous hackathon improvement session, read `REFINEMENT.md` as the operating brief. It records the user's authorization for fitting features and UI/interaction improvements, the current product commitments, and the implementation/verification/reassessment loop. Targeted requests retain their requested scope.
