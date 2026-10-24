@@ -567,6 +567,77 @@ h3 {
   color: var(--muted);
   margin-top: 8px;
 }
+.audio-guide {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 52px;
+  margin: -9px 0 25px;
+  padding: 5px 8px;
+  background: var(--paper);
+  border-radius: 28px;
+  font-size: 13px;
+}
+.audio-guide > [role="status"]:not(.audio-title) {
+  font-size: 12px;
+  color: var(--muted);
+}
+.audio-activate {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 42px;
+  border: 0;
+  border-radius: 23px;
+  background: transparent;
+  padding: 0 15px;
+  font-weight: 500;
+}
+.audio-activate:hover, .audio-control:hover:not(:disabled) {
+  background: var(--soft);
+}
+.audio-guide-active {
+  padding-left: 16px;
+}
+.audio-title {
+  min-width: 0;
+  flex: 1;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-weight: 500;
+}
+.audio-indicator {
+  display: flex;
+  gap: 3px;
+  align-items: center;
+  height: 20px;
+}
+.audio-indicator > span {
+  width: 3px;
+  height: 8px;
+  background: var(--accent);
+  border-radius: 5px;
+  animation: audio-wave 750ms ease-in-out infinite alternate;
+}
+.audio-indicator > span:nth-child(2) { animation-delay: 210ms; height: 16px; }
+.audio-indicator > span:nth-child(3) { animation-delay: 420ms; height: 11px; }
+.audio-guide:has([aria-label="Resume audio guide"]) .audio-indicator > span,
+.audio-guide:has([disabled]) .audio-indicator > span { animation-play-state: paused; }
+@keyframes audio-wave { to { transform: scaleY(0.42); } }
+.audio-control {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  height: 36px;
+  width: 36px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+}
+.audio-control:disabled { opacity: 0.35; }
 .ride-running {
   display: flex;
   align-items: center;
@@ -869,6 +940,20 @@ h3 {
   color: #155aab;
   margin-bottom: 15px;
 }
+.story-listen {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+  padding: 8px 12px;
+  border: 0;
+  background: #e9f2ff;
+  border-radius: 22px;
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 600;
+}
+.story-listen:hover { background: #d9e9ff; }
 .story-facts p {
   font-size: 16px;
   line-height: 1.7;

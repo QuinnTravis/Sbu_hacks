@@ -1,6 +1,6 @@
 # Train Discovery
 
-A Next.js 16 PWA for all LIRR branches. Choose a branch, start a ride, and point the back of your phone toward a nearby place. Discoveries enter a persistent queue and remain until discarded. There is no left/right window selector and no camera recognition in this scope.
+A Next.js 16 PWA for all LIRR branches. Choose a branch, start a ride, and point the back of your phone toward a nearby place. Discoveries enter a persistent queue and remain until discarded. An optional audio tour reads verified stories as you approach places, without requiring you to point the phone. There is no left/right window selector and no camera recognition in this scope.
 
 ## Run
 
@@ -45,7 +45,7 @@ MTA currently supplies no scheduled geometry for Belmont Park, so its track is s
 
 ## Supabase
 
-Five migrations in `supabase/migrations` are applied to the provisioned project. PostGIS is installed in `extensions`. Public clients have read-only access to catalog rows, plus an invoker-rights nearby query. Catalog publication and photo-budget consumption require the server role. The private photo-budget table has RLS with no public policies by design.
+Four migrations in `supabase/migrations` are applied to the provisioned project. PostGIS is installed in `extensions`. Public clients have read-only access to catalog rows, plus an invoker-rights nearby query. Catalog publication and photo-budget consumption require the server role. The private photo-budget table has RLS with no public policies by design.
 
 Photo access is bounded in Postgres to 30 lookups per hashed client per UTC hour and 300 globally per UTC day. Every lookup can issue a paid Places text-search and photo request. Bounds are conservative safeguards, not a replacement for provider quotas or hosting-layer abuse protection. Raw IP addresses are not stored in the application database.
 
@@ -56,6 +56,12 @@ For the current demo, the selector defaults to the official Jamaica station coor
 Location stays on the device: the app downloads a branch package and computes distances, route proximity, bearing, and pointing locally. The rear-camera axis is derived from absolute orientation, with iOS compass support. Relative alpha alone is never treated as a north bearing. A nearly horizontal phone, inaccurate/stale GPS, unreliable/stale heading, hidden page, or off-route location pauses detection. The user must point steadily for at least 900 ms; at most one discovery is added every 2.5 seconds. Existing cards are never automatically removed.
 
 The queue is stored locally, separately from online content and photo requests. Ending a nonempty ride explicitly confirms clearing the queue. Reloading restores the ride and queue, but live sensors require a fresh user gesture. Local storage failures are surfaced; private browsing and cleared site storage can remove saved data. There is no passenger account or location-history collection.
+
+### Audio tour
+
+Press **Start audio tour** after starting a ride. This activates the browser's speech synthesizer with a user gesture. It reads available verified claims from the saved queue, then verified places within 1.1 km of a fresh, on-route location. Narration never uses unverified OpenStreetMap tags, free-form generated summaries, or claims whose quoted passage no longer matches the supplied evidence. Each place is spoken at most once per listening session unless you press **Play story** on its card. You can pause, resume, skip, stop, or save the currently narrated place into your queue. Discarding the place silences it, and ending or changing the ride cancels speech.
+
+The audio feature needs a browser with `speechSynthesis`. A narration source with no approved claims is intentionally silent; at the time of this snapshot only one of 138 candidate places has a verified story. Complete and publish the LangChain verification pipeline before expecting broad route coverage. Mobile browsers may stop speech while the screen is locked or in the background; sustained background playback is not guaranteed. The audio tour requests no microphone permission and streams no location to an audio service.
 
 The PWA precaches its app shell, fonts, and JS/CSS, and saves a branch package after it is loaded. Reopening a downloaded branch works offline; Google photos require connectivity. Service workers are registered only in production. Updates use a versioned cache and normal service-worker lifecycle; do not force a new worker into an active ride.
 
@@ -70,7 +76,7 @@ npm run test:e2e
 TEST_LIVE_DATABASE=1 npm run test:e2e -- --grep "reopen offline"
 ```
 
-Unit checks cover geographic geometry, camera-axis heading, direction wrapping, persistent queue behavior, citation rejection, evidence changes, and all-branch place coverage. Browser checks cover mobile/desktop selection, mocked phone sensors, denial recovery, persistence across turns/movement/reload, dismissal, and overflow. The optional offline check uses the live Supabase catalog. CI runs the provider-independent checks.
+Unit checks cover geographic geometry, camera-axis heading, direction wrapping, persistent queue behavior, citation rejection, evidence changes, supported narration, and all-branch place coverage. Browser checks cover mobile/desktop selection, mocked phone sensors, denial recovery, persistence across turns/movement/reload, audio controls, dismissal, and overflow. The optional offline check uses the live Supabase catalog. CI runs the provider-independent checks.
 
 ## Release requirements
 

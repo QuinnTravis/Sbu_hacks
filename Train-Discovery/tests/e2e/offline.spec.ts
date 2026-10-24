@@ -18,7 +18,7 @@ test("installed shell and downloaded journey reopen offline", async ({
     await navigator.serviceWorker.ready;
   });
   await page.reload();
-  await page.getByRole("button", { name: "Try a replay" }).click();
+  await page.getByRole("button", { name: "Start Jamaica demo ride" }).click();
   await expect(page.locator(".nearby-status")).not.toContainText(
     "Loading places",
   );

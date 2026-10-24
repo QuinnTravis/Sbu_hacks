@@ -7,10 +7,12 @@ import {
   LoaderCircle,
   RefreshCw,
   ShieldCheck,
+  Volume2,
   X,
 } from "lucide-react";
 import type { Photo, QueueEntry } from "@/lib/types";
 import { formatDistance } from "@/lib/geo";
+import { narrationText } from "@/lib/narration";
 
 export function PlaceCard({
   entry,
@@ -18,12 +20,14 @@ export function PlaceCard({
   index,
   total,
   onNavigate,
+  onNarrate,
 }: {
   entry: QueueEntry;
   onDiscard: () => void;
   index: number;
   total: number;
   onNavigate: (n: number) => void;
+  onNarrate: () => void;
 }) {
   const { place } = entry;
   const [photo, setPhoto] = useState<Photo | null>(null);
@@ -121,6 +125,12 @@ export function PlaceCard({
             <div className="verified-label">
               <ShieldCheck size={14} />
               Evidence checked
+              {narrationText(place) && (
+                <button className="story-listen" onClick={onNarrate} aria-label={`Listen to ${place.name}`}>
+                  <Volume2 size={16} />
+                  Play story
+                </button>
+              )}
             </div>
             <div className="story-facts">
               <p>

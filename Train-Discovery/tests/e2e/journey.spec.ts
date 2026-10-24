@@ -169,6 +169,51 @@ test("select a nearby route and retain pointed discoveries until discarded", asy
   expect(overflow).toBe(false);
 });
 
+test("audio tour narrates nearby places without pointing, then saves, pauses, skips and replays", async ({ page }) => {
+  await page.addInitScript(() => {
+    const spoken: string[] = [];
+    Object.assign(window, { __spoken: spoken, __paused: false });
+    class FakeSpeech {
+      text: string;
+      lang = "";
+      rate = 1;
+      onend: (() => void) | null = null;
+      onerror: (() => void) | null = null;
+      constructor(text: string) { this.text = text; }
+    }
+    Object.defineProperty(window, "SpeechSynthesisUtterance", { configurable: true, value: FakeSpeech });
+    Object.defineProperty(window, "speechSynthesis", {
+      configurable: true,
+      value: {
+        speak: (utterance: FakeSpeech) => spoken.push(utterance.text),
+        cancel: () => {},
+        pause: () => { Object.assign(window, { __paused: true }); },
+        resume: () => { Object.assign(window, { __paused: false }); },
+      },
+    });
+  });
+  await page.goto("/");
+  await page.getByRole("button", { name: "Find routes near me" }).click();
+  await page.getByRole("button", { name: /Port Jefferson/ }).last().click();
+  await page.getByRole("button", { name: "Start ride", exact: true }).click();
+  await page.getByRole("button", { name: "Start audio tour" }).click();
+  await expect.poll(() => page.evaluate(() => (window as unknown as { __spoken: string[] }).__spoken.length)).toBe(1);
+  expect(await page.evaluate(() => (window as unknown as { __spoken: string[] }).__spoken[0])).toBe("Test landmark. The landmark was built in 1901.");
+  await page.getByRole("button", { name: "Save Test landmark to discoveries" }).click();
+  if (await page.getByRole("button", { name: /My discoveries/ }).isVisible())
+    await page.getByRole("button", { name: /My discoveries/ }).click();
+  await expect(page.getByRole("heading", { name: "Test landmark" })).toBeVisible();
+  await page.getByRole("button", { name: "Pause audio guide" }).click();
+  expect(await page.evaluate(() => (window as unknown as { __paused: boolean }).__paused)).toBe(true);
+  await page.getByRole("button", { name: "Resume audio guide" }).click();
+  await page.getByRole("button", { name: "Skip story" }).click();
+  await expect(page.getByText("Waiting for a nearby story")).toBeVisible();
+  await page.getByRole("button", { name: "Listen to Test landmark" }).click();
+  await expect.poll(() => page.evaluate(() => (window as unknown as { __spoken: string[] }).__spoken.length)).toBe(2);
+  await page.getByRole("button", { name: "Turn off audio guide" }).click();
+  await expect(page.getByRole("button", { name: "Start audio tour" })).toBeVisible();
+});
+
 test("all branches are searchable and no left/right selector is present", async ({
   page,
 }) => {

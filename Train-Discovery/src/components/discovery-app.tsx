@@ -23,6 +23,8 @@ import {
   X,
 } from "lucide-react";
 import { useSensors } from "@/hooks/use-sensors";
+import { useAudioGuide } from "@/hooks/use-audio-guide";
+import { narrationText } from "@/lib/narration";
 import {
   bearing,
   distance,
@@ -52,6 +54,7 @@ function windowRank(category: string) {
 }
 import { Compass } from "./compass";
 import { PlaceCard } from "./place-card";
+import { AudioGuideBar } from "./audio-guide-bar";
 
 export function DiscoveryApp({ rail }: { rail: RailData }) {
   const [demoLocation, setDemoLocation] = useState(true);
@@ -252,6 +255,27 @@ export function DiscoveryApp({ rail }: { rail: RailData }) {
   );
   const offRoute = Boolean(
     position && route && routeDistance(position, route) > 1500,
+  );
+  const nearbyAudioPlaces = useMemo(
+    () =>
+      position && gpsFresh && !offRoute && ride
+        ? places
+            .filter((place) =>
+              !ride.dismissed.includes(place.id) &&
+              distance(position, place) <= 1100 &&
+              Boolean(narrationText(place)),
+            )
+            .sort((a, b) =>
+              distance(position, a) - distance(position, b),
+            )
+        : [],
+    [position, gpsFresh, offRoute, ride, places],
+  );
+  const audioGuide = useAudioGuide(
+    ride?.queue,
+    nearbyAudioPlaces,
+    ride?.dismissed,
+    ride?.startedAt ?? null,
   );
   const canDetect = Boolean(
     ride &&
@@ -727,6 +751,15 @@ export function DiscoveryApp({ rail }: { rail: RailData }) {
                 </button>
               )}
             </div>
+            <AudioGuideBar
+              guide={audioGuide}
+              saved={Boolean(ride.queue.some((entry) => entry.place.id === audioGuide.currentPlace?.id))}
+              onSave={() => {
+                if (!audioGuide.currentPlace || !position) return;
+                const place = audioGuide.currentPlace;
+                setRide((current) => current ? enqueue(current, place, distance(position, place)) : current);
+              }}
+            />
             <div className="mobile-tabs floating-nav">
               <button
                 aria-pressed={view === "point"}
@@ -865,6 +898,7 @@ export function DiscoveryApp({ rail }: { rail: RailData }) {
                       index={currentIndex}
                       total={ride.queue.length}
                       onNavigate={setCardIndex}
+                      onNarrate={() => audioGuide.replay(currentEntry.place.id)}
                       onDiscard={() =>
                         setRide((current) =>
                           current

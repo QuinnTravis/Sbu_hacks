@@ -11,6 +11,7 @@ Train Discovery is a mobile-first Next.js PWA for LIRR riders. The active flow i
 3. Use train location plus the phone's absolute compass/gyroscope orientation to detect a nearby POI the rider points toward.
 4. Add the POI to a queue. It stays there across movement, turning, and reload until the rider explicitly discards it.
 5. Show a Google Places photo (with required attribution when available), concise historical context, and trustworthy sources.
+6. Optionally listen to a nearby verified historical narrative without pointing at a place, and save a discovery from the audio controls.
 
 All LIRR branches are in scope. No left/right selector. Camera recognition and accounts are out of scope. The adjacent `../sbuhacks-demo` was used for flow context only; do not treat its UI as a visual reference or modify it.
 
@@ -22,7 +23,7 @@ The app is implemented in this repository and builds/runs locally. The home scre
 
 A developer panel was added at the user's request to conveniently test train movement and sensors. Open it with the header sliders button, the backtick key, or `/?dev`. It supports a simulated train, play/pause, 0–240 km/h speed, reverse, route scrub/250m steps, reset to Jamaica, station jumps, auto-aim, a persistent joystick heading, tilt simulation, real phone compass with simulated train motion, and real GPS. Compact mode leaves the compass/feed visible. It uses the same POI detector and persistent queue as the real ride. See the detailed usage section in `README.md` and `src/components/dev-panel.tsx`.
 
-The production build, ESLint, 12 unit tests, and 12 Playwright tests passed after the dev panel work (24 tests total). Offline checks were run against the live catalog. These checks do not validate physical device sensors or certify release readiness. If continuing in a fresh environment, run the commands in README; the previous local production server was at `http://localhost:3000` but may no longer be running.
+The production build, ESLint, 18 unit tests, and 12 provider-independent Playwright cases passed after the audio tour work; the 2 optional live-database offline-reopen checks also pass. These checks do not validate physical device sensors or certify release readiness. If continuing in a fresh environment, run the commands in README; the previous local production server was at `http://localhost:3000` but may no longer be running.
 
 ## Stack and architecture
 
@@ -39,13 +40,14 @@ Key files:
 - `src/components/dev-panel.tsx`: replay and orientation test controls.
 - `src/components/compass.tsx`, `src/hooks/use-sensors.ts`, `src/lib/geo.ts`: heading, GPS, camera axis, geometry, detection.
 - `src/components/place-card.tsx`, `src/lib/queue.ts`, `src/lib/storage.ts`: POI presentation and persistent queue.
+- `src/hooks/use-audio-guide.ts`, `src/lib/narration.ts`, `src/components/audio-guide-bar.tsx`: opt-in browser narration of individually cited claims, playback controls, and saving narrated discoveries.
 - `src/lib/verification.ts`: LangChain claim/evidence pipeline and fail-closed checks.
 - `src/app/api/`: journey catalog, nearby lookup, photo proxy/rate limits, health.
 - `src/app/about/page.tsx`: privacy, sources/licenses, and terms.
 - `public/sw.js`: app shell and branch-package offline caching; excludes photo/API caching.
 - `public/data/lirr.json`, `public/data/belmont-osm.json`, `public/data/places.json`: checked-in route and candidate-place snapshots.
 - `scripts/import-lirr.py`, `scripts/import-places.py`, `scripts/verify-content.ts`, `scripts/publish.ts`: refresh and publishing workflow.
-- `supabase/migrations/`: four migrations currently present; README's “Five migrations” count is stale and should be corrected if editing that section.
+- `supabase/migrations/`: four migrations currently present.
 - `PRODUCT.md`, `DESIGN.md`, `.impeccable/design.json`: product and visual constraints.
 
 ## Data-source findings
@@ -93,6 +95,8 @@ Review sample output, sources, licensing, and cost/rate behavior before scaling 
 
 The real flow uses high-accuracy geolocation and absolute orientation. iOS `webkitCompassHeading` is handled; relative `alpha` alone is never treated as north. Rear-camera optical axis is calculated from device orientation. Heading and GPS have staleness/accuracy cutoffs; nearly flat phones, stale readings, hidden tabs, off-route location, and permission failures pause detection with recoverable UI. A user must point steadily for 900 ms, with at least 2.5 s between new additions. Orientation must be tested on actual hardware; train magnetic interference is a material risk.
 
+Opt-in audio tour uses native browser `speechSynthesis`, reading only claim sentences whose quoted source passages still match. It detects a fresh on-route position, prioritizes stored discoveries then nearby verified places within 1.1 km, and reads each at most once per session. Cards offer Play story; the compact player can pause, resume, skip, stop, or save the place currently being read. The app avoids claiming unverified metadata as spoken history. On-device voices and screen-lock/background playback require real mobile testing. At this snapshot only 1 of 138 places has published verified history; audio has no story for most branches until provider credentials are configured and verification is run.
+
 Queue items are deduplicated and persist per ride in validated local storage. Turning away, moving, scrubbing the developer replay, or reload does not discard them. Dismissal is explicit. Ending a nonempty ride confirms before clearing. Live sensors require a fresh gesture after reload. Private browsing/site-data clearing can erase the queue.
 
 PWA caches app shell/assets and branch package, network-first with offline fallback. Google images and other external/API responses are not persisted. Service worker is production-only; use trusted HTTPS for phone location/orientation access. Don't force-update a worker during an active ride.
@@ -129,7 +133,7 @@ The live-database offline test requires the configured Supabase catalog. Unit te
 3. Review route and POI quality on every branch, especially at speed and urban density. Bearing/proximity is not line-of-sight detection; be transparent in UI. Camera recognition is not implemented.
 4. Deploy with protected server keys, appropriate proxy handling, Places quotas, hosting-layer abuse/rate controls, and monitoring for `/api/health`, provider failures, and verified-story coverage.
 5. Provision scheduled GTFS/OSM refresh, evidence refresh, verification, and reviewed publishing. No scheduler currently exists.
-6. Correct the stale migration count in README when touching docs (there are four migration files in this checkout).
+6. Widen coverage of verified stories before the hackathon demo. Local provider keys for Gemini, Places, and the Supabase publishing role were absent when last checked; keep keys out of Git.
 
 ## Interaction and copy constraints
 
