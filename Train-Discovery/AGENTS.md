@@ -23,6 +23,6 @@ Project subagents live in `.cursor/agents/`. Delegate their jobs instead of doin
 
 - `builder` — features, bug fixes, and refinements. Use proactively for product behavior.
 - `designer` — UI, interaction, and a restrained steel-and-steam accent on the Waymo base. Use proactively when the interface changes or feels generic.
-- `reviewer` — review, unit tests, end-to-end tests, then commit and push. Use after builder or designer work, and before any commit.
+- `reviewer` — end-to-end tests via browser only, commit -> push -> merge if needed.
 
 A refinement pass runs builder, then designer on the surfaces that changed, then reviewer. Reviewer is the only role that commits or pushes.

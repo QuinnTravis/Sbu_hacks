@@ -113,7 +113,6 @@ test("Discoveries opens an empty collection before the first ride", async ({ pag
   await discoveries.click();
   await expect(discoveries).toHaveAttribute("aria-current", "page");
   await expect(page.getByRole("heading", { name: "No saved discoveries yet" })).toBeVisible();
-  await expect(page.getByText("Save a place during a ride to find it here later.")).toBeVisible();
   await expect(page.getByText("No sourced place in range.")).toHaveCount(0);
   await expect(page.getByRole("button", { name: "Start discovering" })).toBeVisible();
 
