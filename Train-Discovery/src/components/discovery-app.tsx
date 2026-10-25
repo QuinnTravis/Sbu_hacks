@@ -915,6 +915,7 @@ export function DiscoveryApp({ rail }: { rail: RailData }) {
                   heading={heading}
                   position={position}
                   paths={route?.paths}
+                  places={places}
                   color={route?.color}
                   liveHeading={activeHeadingMode === "phone"}
                   idleLabel={

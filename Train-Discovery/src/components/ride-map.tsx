@@ -4,8 +4,8 @@ import { Component, useEffect, useRef, useState, type ReactNode } from "react";
 import Map, { Layer, Marker, Source } from "react-map-gl/maplibre";
 import * as maplibregl from "maplibre-gl";
 import { setWorkerUrl, type Map as MapLibreMap, type StyleSpecification } from "maplibre-gl";
-import { pointingConeLngLats, pointingConeZoom } from "@/lib/geo";
-import type { Coordinate } from "@/lib/types";
+import { distance, isPointedAt, POINTING_RADIUS_M, pointingConeLngLats, pointingConeZoom } from "@/lib/geo";
+import type { Coordinate, Place } from "@/lib/types";
 import "maplibre-gl/dist/maplibre-gl.css";
 import "./ride-map.css";
 
@@ -272,12 +272,14 @@ function RideMapCanvas({
   position,
   heading,
   paths,
+  places,
   color,
   label,
 }: {
   position: Coordinate;
   heading: number | null;
   paths: [number, number][][];
+  places: Place[];
   color?: string;
   label: string;
 }) {
@@ -417,7 +419,22 @@ function RideMapCanvas({
                 />
               </Source>
             ) : null}
-            <Marker longitude={position.lon} latitude={position.lat} anchor="center">
+            {places.filter((place) => distance(position, place) <= POINTING_RADIUS_M).map((place) => {
+              const pointed = isPointedAt(position, heading, place);
+              return (
+                <Marker key={place.id} longitude={place.lon} latitude={place.lat} anchor="center">
+                  <span
+                    className={`ride-place-dot${pointed ? " ride-place-dot-pointed" : ""}`}
+                    data-place-id={place.id}
+                    data-pointed={pointed}
+                    role="img"
+                    aria-label={`${place.name}${pointed ? ", in pointing cone" : ""}`}
+                    title={place.name}
+                  />
+                </Marker>
+              );
+            })}
+            <Marker className="ride-rider-marker" longitude={position.lon} latitude={position.lat} anchor="center">
               <span className="rider-dot" />
             </Marker>
           </Map>
@@ -450,12 +467,14 @@ export function RideMap({
   position,
   heading,
   paths = [],
+  places = [],
   color,
   label,
 }: {
   position: Coordinate;
   heading: number | null;
   paths?: [number, number][][];
+  places?: Place[];
   color?: string;
   label: string;
 }) {
@@ -465,6 +484,7 @@ export function RideMap({
         position={position}
         heading={heading}
         paths={paths}
+        places={places}
         color={color}
         label={label}
       />

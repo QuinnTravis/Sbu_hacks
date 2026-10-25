@@ -127,7 +127,10 @@ export function pointingConeLngLats(
   origin: Coordinate,
   heading: number,
 ): [number, number][] {
-  return pointingConeRing(origin, heading).map((point) => [point.lon, point.lat]);
+  return pointingConeRing(origin, heading).map((point) => [
+    point.lon,
+    point.lat,
+  ]);
 }
 
 function localMeters(origin: Coordinate, point: Coordinate): [number, number] {
@@ -160,16 +163,27 @@ export function pointingConeContains(
   return inside;
 }
 
-/** Zoom so the 1200 m arc reaches the nearer edge of the ride map, with a small margin. */
+/** Fit the full radius in the smaller drawable map dimension, excluding attribution. */
 export function pointingConeZoom(latitude: number, viewportPx: number): number {
-  const half = Math.max(48, viewportPx / 2);
-  const metersPerPixel = POINTING_RADIUS_M / (half * 0.86);
-  const latitudeRad = rad(Math.min(80, Math.max(-80, latitude)));
-  const zoom = Math.log2(
-    (156543.03392 * Math.cos(latitudeRad)) / metersPerPixel,
+  if (
+    !Number.isFinite(latitude) ||
+    !Number.isFinite(viewportPx) ||
+    viewportPx <= 0
+  )
+    return 0;
+  const half = viewportPx / 2;
+  const radiusPx = Math.max(1, half - Math.max(16, half * 0.14));
+  // Use the poleward edge's scale: Mercator stretches more there than at the rider.
+  const latitudeRad = Math.min(
+    rad(85.051129),
+    rad(Math.abs(latitude)) + POINTING_RADIUS_M / R,
   );
-  if (!Number.isFinite(zoom)) return 13;
-  return Math.min(15.5, Math.max(10, zoom));
+  // MapLibre's world is 512 px at zoom 0 (a 256 px formula overzooms by 2×).
+  const zoom = Math.log2(
+    ((2 * Math.PI * R * Math.cos(latitudeRad)) / 512) *
+      (radiusPx / POINTING_RADIUS_M),
+  );
+  return Math.min(15.5, zoom);
 }
 
 // Heading of the rear camera's optical axis projected onto the earth plane.

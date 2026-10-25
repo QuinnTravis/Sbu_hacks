@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { MercatorCoordinate } from "maplibre-gl";
 import {
   POINTING_HALF_ANGLE_DEG,
   POINTING_RADIUS_M,
@@ -11,10 +12,70 @@ import {
   normalize,
   pointingConeContains,
   pointingConeRing,
+  pointingConeZoom,
   routeDistance,
 } from "../src/lib/geo";
 import rail from "../public/data/lirr.json";
 import type { RailData } from "../src/lib/types";
+
+describe("pointing map zoom", () => {
+  it.each([
+    { name: "portrait", width: 320, height: 480 },
+    { name: "landscape", width: 660, height: 240 },
+    { name: "short frame minus attribution", width: 320, height: 180 - 32 },
+  ])(
+    "fits the entire circle with marker padding in $name",
+    ({ width, height }) => {
+      for (const lat of [0, 40.7, -40.7, 70, -80, 84]) {
+        // Also exercise a wrapped circle at the antimeridian.
+        const origin = { lat, lon: 179.999 };
+        const span = Math.min(width, height);
+        const zoom = pointingConeZoom(lat, span);
+        const worldSize = 512 * 2 ** zoom;
+        const center = MercatorCoordinate.fromLngLat([origin.lon, origin.lat]);
+        const padding = Math.max(16, (span / 2) * 0.14);
+        let largestOffset = 0;
+        for (let heading = 0; heading < 360; heading += 1) {
+          const point = destination(origin, heading, POINTING_RADIUS_M);
+          const projected = MercatorCoordinate.fromLngLat([
+            point.lon,
+            point.lat,
+          ]);
+          const dx = projected.x - center.x;
+          const x = Math.abs(dx - Math.round(dx)) * worldSize;
+          const y = Math.abs(projected.y - center.y) * worldSize;
+          expect(
+            x + padding,
+            `lat ${lat}, heading ${heading}: horizontal`,
+          ).toBeLessThanOrEqual(width / 2);
+          expect(
+            y + padding,
+            `lat ${lat}, heading ${heading}: vertical`,
+          ).toBeLessThanOrEqual(height / 2);
+          largestOffset = Math.max(largestOffset, x, y);
+        }
+        // Catch an excessively distant view as well as a clipped one.
+        expect(largestOffset).toBeGreaterThan((span / 2 - padding) * 0.98);
+      }
+    },
+  );
+
+  it("zooms out as drawable space shrinks or absolute latitude grows", () => {
+    expect(pointingConeZoom(40.7, 148)).toBeLessThan(
+      pointingConeZoom(40.7, 320),
+    );
+    expect(pointingConeZoom(80, 148)).toBeLessThan(pointingConeZoom(40.7, 148));
+    expect(pointingConeZoom(80, 148)).toBeLessThan(10);
+    expect(pointingConeZoom(-80, 148)).toBe(pointingConeZoom(80, 148));
+  });
+
+  it("uses a finite wide fallback before valid dimensions are available", () => {
+    for (const span of [0, -1, NaN, Infinity]) {
+      expect(pointingConeZoom(40.7, span)).toBe(0);
+    }
+    expect(pointingConeZoom(NaN, 320)).toBe(0);
+  });
+});
 
 describe("geographic detection", () => {
   const here = { lat: 40.92, lon: -73.1285 };
@@ -45,10 +106,7 @@ describe("geographic detection", () => {
       for (const point of arc) {
         expect(distance(origin, point)).toBeCloseTo(1200, 1);
       }
-      expect(bearing(origin, arc[0]!)).toBeCloseTo(
-        normalize(heading - 22),
-        4,
-      );
+      expect(bearing(origin, arc[0]!)).toBeCloseTo(normalize(heading - 22), 4);
       expect(bearing(origin, arc.at(-1)!)).toBeCloseTo(
         normalize(heading + 22),
         4,
