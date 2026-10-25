@@ -10,7 +10,7 @@ const routeIdSchema = z.string().max(24).refine((id) => findRoute(id) !== null);
 const localeSchema = z.enum(LOCALES.map((locale) => locale.code) as [string, ...string[]]).optional();
 const inputSchema = z.discriminatedUnion("type", [
   z.object({ type: z.literal("place"), placeId: placeIdSchema,
-    context: z.enum(["pointed", "pointed-earlier", "nearby", "replay"]).default("nearby"), locale: localeSchema }).strict(),
+    context: z.enum(["pointed", "pointed-earlier", "nearby", "replay", "approaching", "area"]).default("nearby"), locale: localeSchema }).strict(),
   z.object({ type: z.literal("announcement"), locale: localeSchema,
     cue: z.object({ placeId: placeIdSchema, side: z.enum(["left", "right", "ahead", "both"]).nullable(),
       minutes: z.number().int().min(1).max(120), saved: z.boolean() }).strict() }).strict(),

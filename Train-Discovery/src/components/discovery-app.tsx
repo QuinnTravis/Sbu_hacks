@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import { useSensors } from "@/hooks/use-sensors";
 import { useAudioGuide } from "@/hooks/use-audio-guide";
-import { audioEvidence, audioNarration } from "@/lib/narration";
+import { narrationText } from "@/lib/narration";
 import { POINTING_RADIUS_M, bearing, distance, routeDistance, cameraHeading, normalize } from "@/lib/geo";
 import { discard, enqueue } from "@/lib/queue";
 import {
@@ -44,7 +44,7 @@ import { clipKey } from "@/lib/clip-key";
 import { composePlaceScript, cueLine, scriptText, INTRO_COUNT } from "@/lib/narration-script";
 import { kmAhead, projectOnRoute, sideOf, type Direction } from "@/lib/route-geometry";
 import type { JourneyPackage } from "@/lib/package-types";
-import type { PlaceComposer } from "@/lib/podcast-director";
+import { nearbyNarrationScore, type PlaceComposer } from "@/lib/podcast-director";
 import {
   DEFAULT_NETWORK_ID,
   NETWORKS,
@@ -406,18 +406,31 @@ export function DiscoveryApp({ rail: defaultRail }: { rail: RailData }) {
         })
         .sort((a, b) => kmAhead(entryKm(a, travel) ?? 0, tracking.km!, travel) - kmAhead(entryKm(b, travel) ?? 0, tracking.km!, travel));
     }
+    // Unprompted, pick the nearby place that is closest and most interesting.
     return places
-      .filter((place) =>
-        !ride.dismissed.includes(place.id) &&
-        distance(position, place) <= 1100 &&
-        (Boolean(audioNarration(place)) || audioEvidence(place).length > 0),
-      )
-      .sort((a, b) =>
-        Number(audioNarration(b)?.kind === "verified") -
-          Number(audioNarration(a)?.kind === "verified") ||
-        distance(position, a) - distance(position, b),
-      );
+      .flatMap((place) => {
+        if (ride.dismissed.includes(place.id)) return [];
+        const score = nearbyNarrationScore(place, distance(position, place));
+        return score === null ? [] : [{ place, score }];
+      })
+      .sort((a, b) => b.score - a.score)
+      .map(({ place }) => place);
   }, [position, gpsFresh, offRoute, ride, places, staticNetwork, tracking.km, tracking.direction, network.nearbyM]);
+  const areaAudioPlaces = useMemo(() => {
+    if (staticNetwork || !(position && gpsFresh && !offRoute && ride)) return [];
+    const nearbyIds = new Set(nearbyAudioPlaces.map((place) => place.id));
+    return places
+      .filter((place) => {
+        const meters = distance(position, place);
+        return !nearbyIds.has(place.id) &&
+          place.routeIds.includes(ride.routeId) &&
+          meters > 1100 && meters <= 5000 &&
+          Boolean(narrationText(place)) &&
+          !ride.dismissed.includes(place.id);
+      })
+      .sort((a, b) => distance(position, a) - distance(position, b))
+      .slice(0, 3);
+  }, [staticNetwork, position, gpsFresh, offRoute, ride, places, nearbyAudioPlaces]);
 
   // A story checked on the server replaces the place everywhere it is shown.
   const mergeStory = useCallback((narratedPlace: Place) => {
@@ -533,6 +546,7 @@ export function DiscoveryApp({ rail: defaultRail }: { rail: RailData }) {
       language: code,
       nearbyMeters: staticNetwork ? network.nearbyM + 1000 : undefined,
       compose,
+      area: areaAudioPlaces,
       clips: journey?.clips,
       liveAudio: staticNetwork ? features.liveNarration : true,
       ...(staticNetwork && route ? { segment: { network: network.name, segment: route.name } } : {}),

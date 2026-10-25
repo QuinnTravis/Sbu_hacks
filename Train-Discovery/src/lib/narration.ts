@@ -7,18 +7,20 @@ import type { Evidence, Place } from "./types";
 export function narrationText(place: Place): string | null {
   if (!place.story?.claims.length) return null;
 
-  const supported = place.story.claims.filter((claim) => {
-    const evidence = place.evidence.find((item) => item.id === claim.evidenceId);
-    return (
-      evidence?.text &&
-      claim.quote.length >= 12 &&
-      normalizeQuote(evidence.text).includes(normalizeQuote(claim.quote)) &&
-      claim.text.trim().length >= 12
-    );
-  });
+  const supported = place.story.claims.filter((claim) => narrationClaimSupported(place, claim));
 
   if (!supported.length) return null;
   return `${place.name}. ${supported.map((claim) => claim.text.trim()).join(" ")}`;
+}
+
+export function narrationClaimSupported(place: Place, claim: NonNullable<Place["story"]>["claims"][number]): boolean {
+  const evidence = place.evidence.find((item) => item.id === claim.evidenceId);
+  return Boolean(
+    evidence?.text &&
+    claim.quote.length >= 12 &&
+    normalizeQuote(evidence.text).includes(normalizeQuote(claim.quote)) &&
+    claim.text.trim().length >= 12
+  );
 }
 
 export type Narration = {

@@ -11,7 +11,7 @@ import type { Claim, Place } from "./types";
  * fields. Leads, sides, intros, and callbacks are templates, not claims.
  */
 
-export type PlaceContext = "pointed" | "pointed-earlier" | "nearby" | "replay";
+export type PlaceContext = "pointed" | "pointed-earlier" | "nearby" | "replay" | "approaching" | "area";
 export type ScriptPart = { text: string; part: "lead" | "callback" | "body" | "lookFor" };
 export type PlaceScript = {
   parts: ScriptPart[];

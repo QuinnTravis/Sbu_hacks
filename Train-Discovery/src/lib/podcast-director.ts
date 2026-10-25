@@ -22,14 +22,21 @@ import type { Place, Position } from "./types";
 export const PODCAST_INTRO_KEY = "podcast:intro";
 export const PODCAST_AUTO_GAP_MS = 7_000;
 export const PODCAST_BREATH_MS = 900;
+export const PODCAST_AREA_GAP_MS = 45_000;
 
 const MAX_NEARBY_METERS = 1_100;
+const MAX_AREA_METERS = 5_000;
+/** An unverified source excerpt is narrated unprompted only beside the line. */
+export const AUTO_EXCERPT_METERS = 300;
+/** Same-topic preference: less than one checked detail (50) or ~22 m of closeness. */
+const TOPIC_NUDGE = 10;
 const MAX_STATION_METERS = 1_200;
 const MAX_FIX_AGE_MS = 15_000;
 const MAX_FIX_ACCURACY_METERS = 150;
 
 export type PodcastCandidate = {
   moment: AudioMoment;
+  mode?: "area";
   /** A script composed for a static-network place (verified, source, or basic tier). */
   script?: AudioScript | null;
   /** Optional editorial theme; otherwise the catalog category is used. */
@@ -56,6 +63,7 @@ export type PodcastDirectorInput = {
   };
   /** Language for station lines. English when absent. */
   language?: string;
+  approachingPlaceIds?: ReadonlySet<string>;
   playedKeys: ReadonlySet<string>;
   /** Values from narrationFact(place), for different places telling the same fact. */
   playedFacts?: ReadonlySet<string>;
@@ -79,7 +87,7 @@ export type PodcastDirectorInput = {
 
 export type RankedPodcastItem = {
   moment: AudioMoment;
-  priority: "station" | "announcement" | "pointed" | "nearby";
+  priority: "station" | "announcement" | "pointed" | "nearby" | "area";
   reason: string;
   score: number;
   topic: string | null;
@@ -138,6 +146,38 @@ function sameSite(a: Place, b: Place): boolean {
     distance(a, b) <= 180;
 }
 
+function supportedDetailsOf(place: Place, kind: AudioScript["kind"]): number {
+  const published = place.story;
+  if (kind === "verified" && published) {
+    return published.claims.filter((claim) => narrationText({ ...place, story: { ...published, claims: [claim] } })).length;
+  }
+  return kind === "source" ? 1 : 0;
+}
+
+/** Unprompted narration needs a verified story, or a source excerpt right beside the line. */
+function meetsAutomaticFloor(place: Place, kind: AudioScript["kind"], meters: number): boolean {
+  if (kind === "verified") return true;
+  return kind === "source" && meters <= AUTO_EXCERPT_METERS && place.category !== "Infrastructure";
+}
+
+/**
+ * Closeness and interest weigh equally (0–500 each). A verified story is worth
+ * ~550 m over an excerpt; each extra checked detail is worth ~110 m.
+ */
+function closeAndInteresting(meters: number, kind: AudioScript["kind"], supportedDetails: number): number {
+  const closeness = Math.max(0, 1 - meters / MAX_NEARBY_METERS);
+  const interest = kind === "verified" ? 0.7 + 0.1 * (Math.min(3, Math.max(1, supportedDetails)) - 1) : 0.2;
+  return 500 * closeness + 500 * interest;
+}
+
+/** Score for unprompted narration of a nearby catalog place, or null below the quality floor. */
+export function nearbyNarrationScore(place: Place, meters: number): number | null {
+  if (!Number.isFinite(meters) || meters < 0 || meters > MAX_NEARBY_METERS) return null;
+  const script = placeAnnouncement(place, "nearby");
+  if (!script || script.kind === "announcement" || !meetsAutomaticFloor(place, script.kind, meters)) return null;
+  return closeAndInteresting(meters, script.kind, supportedDetailsOf(place, script.kind));
+}
+
 function candidateItem(input: PodcastDirectorInput, entry: PodcastCandidate, positioned: Position | null): RankedPodcastItem | null {
   const { moment } = entry;
   const { routeId } = input.geography;
@@ -174,10 +214,17 @@ function candidateItem(input: PodcastDirectorInput, entry: PodcastCandidate, pos
 
   const explicit = input.pointedPlaceId === place.id || Number.isFinite(entry.selectedAt);
   const replay = input.replayPlaceId === place.id;
+  // Static networks set their own corridor radius and keep their editorial
+  // scoring; the live catalog uses the line-side quality floor and area context.
+  const lineside = input.geography.nearbyMeters === undefined;
   const nearbyMeters = input.geography.nearbyMeters ?? MAX_NEARBY_METERS;
-  if (!explicit && !replay && (!positioned ||
+  const area = lineside && entry.mode === "area";
+  const meters = positioned ? distance(positioned, place) : Infinity;
+  if (entry.mode === "area" && (!area || !positioned || !routeId || !place.routeIds.includes(routeId) ||
+      meters <= MAX_NEARBY_METERS || meters > MAX_AREA_METERS || !placeAnnouncement(place, "area"))) return null;
+  if (!explicit && !replay && !area && (!positioned ||
       (routeId !== null && !place.routeIds.includes(routeId)) ||
-      distance(positioned, place) > nearbyMeters)) return null;
+      meters > nearbyMeters)) return null;
 
   const fact = narrationFact(place);
   const siteKey = podcastSiteKey(place);
@@ -186,7 +233,9 @@ function candidateItem(input: PodcastDirectorInput, entry: PodcastCandidate, pos
     (fact && input.playedFacts?.has(fact)))) return null;
 
   const selectedAt = Number.isFinite(entry.selectedAt) ? entry.selectedAt : input.pointedAt;
-  const context = replay ? "replay" : explicit
+  const approaching = lineside && !explicit && !replay && !area &&
+    moment.request.context === "approaching" && Boolean(input.approachingPlaceIds?.has(place.id));
+  const context = area ? "area" : approaching ? "approaching" : replay ? "replay" : explicit
     ? typeof selectedAt === "number" && Number.isFinite(selectedAt) &&
       selectedAt <= input.now && selectedAt >= 0
       ? pointingContext(selectedAt, input.now) : "pointed-earlier"
@@ -199,23 +248,33 @@ function candidateItem(input: PodcastDirectorInput, entry: PodcastCandidate, pos
     !script.sources.every((source) => source.title.trim() && source.license.trim() && validLink(source.url))) return null;
 
   const topic = cleanTopic(entry.topic ?? place.category);
-  const nearbyDistance = positioned ? Math.min(nearbyMeters, distance(positioned, place)) : nearbyMeters;
   const pointed = explicit || replay;
-  const published = place.story;
-  const supportedDetails = script.kind === "verified" && published
-    ? published.claims.filter((claim) => narrationText({ ...place, story: { ...published, claims: [claim] } })).length
-    : script.kind === "source" ? 1 : 0;
+  // Excerpts the rider did not ask for stay quiet unless the place is right there.
+  if (lineside && !pointed && !area && !meetsAutomaticFloor(place, script.kind, meters)) return null;
+  const supportedDetails = supportedDetailsOf(place, script.kind);
   const depth = supportedDetails >= 2 ? "deep" : "brief";
-  const score = (pointed ? 5_000 : 1_000) +
-    (script.kind === "verified" ? 240 : script.kind === "basic" ? -200 : 0) +
-    Math.min(3, supportedDetails) * 20 +
-    (topic && topic === cleanTopic(input.previousTopic) ? 130 : 0) +
-    Math.max(0, ((nearbyMeters - nearbyDistance) / nearbyMeters) * 55);
+  const sameTopic = Boolean(topic && topic === cleanTopic(input.previousTopic));
+  let score: number;
+  if (area) {
+    score = 100 + 100 * (1 - Math.min(meters, MAX_AREA_METERS) / MAX_AREA_METERS);
+  } else if (lineside) {
+    score = (pointed ? 5_000 : 1_000) +
+      closeAndInteresting(Math.min(meters, MAX_NEARBY_METERS), script.kind, supportedDetails) +
+      (sameTopic ? TOPIC_NUDGE : 0);
+  } else {
+    const nearbyDistance = Math.min(nearbyMeters, meters);
+    score = (pointed ? 5_000 : 1_000) +
+      (script.kind === "verified" ? 240 : script.kind === "basic" ? -200 : 0) +
+      Math.min(3, supportedDetails) * 20 +
+      (sameTopic ? 130 : 0) +
+      Math.max(0, ((nearbyMeters - nearbyDistance) / nearbyMeters) * 55);
+  }
   return {
     moment: { ...moment, name: place.name, fallback: script,
       request: { type: "place", placeId: place.id, context, ...(script.language && script.language !== "en" ? { locale: script.language } : {}) } },
-    priority: pointed ? "pointed" : "nearby",
-    reason: pointed ? replay ? "explicit replay" : depth === "deep" ? "user chose a multi-fact deep dive" : "user chose this place" :
+    priority: pointed ? "pointed" : area ? "area" : "nearby",
+    reason: area ? "broader area context" : pointed ? replay ? "explicit replay" : depth === "deep" ? "user chose a multi-fact deep dive" : "user chose this place" :
+      approaching ? "approaching verified story" :
       script.kind === "verified" ? "nearby verified story" : script.kind === "basic" ? "nearby basic geography" : "nearby attributed source excerpt",
     score, topic, depth, supportedDetails, siteKey, factKey: fact,
   };
@@ -250,6 +309,9 @@ export function podcastCandidatesFromJourney(input: {
   now: number;
   selected: readonly SelectedStory[];
   nearby: readonly Place[];
+  /** Live catalog only: verified places 1.1–5 km away, for occasional broader context. */
+  area?: readonly Place[];
+  approachingPlaceIds?: ReadonlySet<string>;
   stations: readonly PendingStation[];
   announcements?: readonly AudioMoment[];
   compose?: PlaceComposer | null;
@@ -272,7 +334,14 @@ export function podcastCandidatesFromJourney(input: {
     const context = item.replay ? "replay" : pointingContext(item.selectedAt, input.now);
     candidates.push(placeCandidate(item.place, context, item.selectedAt));
   }
-  for (const place of input.nearby) candidates.push(placeCandidate(place, "nearby"));
+  for (const place of input.nearby) {
+    const approaching = !input.compose && Boolean(input.approachingPlaceIds?.has(place.id) &&
+      place.story?.funFact && placeAnnouncement(place, "approaching"));
+    candidates.push(placeCandidate(place, approaching ? "approaching" : "nearby"));
+  }
+  if (!input.compose) {
+    for (const place of input.area ?? []) candidates.push({ ...placeCandidate(place, "area"), mode: "area" });
+  }
   for (const station of input.stations) candidates.push({
     moment: { key: station.key, name: station.station.name, station: station.station,
       request: { type: "station", routeId: station.routeId, stationId: station.station.id,
@@ -316,7 +385,9 @@ export function planPodcast(input: PodcastDirectorInput): PodcastPlan {
   const endedAt = input.lastPlayback?.endedAt;
   const elapsed = typeof endedAt === "number" && Number.isFinite(endedAt)
     ? input.now - endedAt : Infinity;
-  const pauseMs = input.lastPlayback?.kind === "story" ? PODCAST_AUTO_GAP_MS : PODCAST_BREATH_MS;
+  const pauseMs = next.priority === "area"
+    ? PODCAST_AREA_GAP_MS
+    : input.lastPlayback?.kind === "story" ? PODCAST_AUTO_GAP_MS : PODCAST_BREATH_MS;
   if (!explicit && elapsed >= 0 && elapsed < pauseMs) {
     return { action: "quiet", reason: "breathing-room", ranked,
       until: endedAt! + pauseMs };

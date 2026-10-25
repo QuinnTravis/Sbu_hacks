@@ -67,6 +67,8 @@ type JourneyContext = {
   resolveClip?: (url: string) => Promise<string>;
   /** Segment rides open with the network and stretch instead of a branch name. */
   segment?: { network: string; segment: string };
+  /** Live catalog only: verified places 1.1–5 km away, for occasional broader context. */
+  area?: Place[];
 };
 
 const BREATH_MS = PODCAST_BREATH_MS;
@@ -133,6 +135,7 @@ export function useAudioGuide(
   const context = useRef(journey);
   const stations = useRef(new Map<string, AudioMoment>());
   const announcements = useRef(new Map<string, AudioMoment>());
+  const approaching = useRef(new Map<string, number>());
   const prepared = useRef(new Map<string, { audioUrl: string; script: AudioScript }>());
   const inflight = useRef(new Map<string, AbortController>());
   const previousPosition = useRef<Position | null>(null);
@@ -190,7 +193,28 @@ export function useAudioGuide(
 
   const collectStations = useCallback(() => {
     const { routeId, position, stops, language } = context.current;
-    if (!enabled.current || !position) { previousPosition.current = null; return; }
+    if (!enabled.current || !position) {
+      previousPosition.current = null;
+      approaching.current.clear();
+      return;
+    }
+    const previous = previousPosition.current;
+    if (previous && position.timestamp > previous.timestamp) {
+      const elapsed = position.timestamp - previous.timestamp;
+      if (elapsed > 15_000) approaching.current.clear();
+      else {
+        const activeIds = new Set(around.current.map((place) => place.id));
+        for (const place of around.current) {
+          const closing = distance(previous, place) - distance(position, place);
+          const threshold = Math.max(30, (previous.accuracy + position.accuracy) * 0.45);
+          if (closing >= threshold) approaching.current.set(place.id, position.timestamp + 15_000);
+          else if (closing < -threshold) approaching.current.delete(place.id);
+        }
+        for (const [id, expiresAt] of approaching.current) {
+          if (!activeIds.has(id) || expiresAt < position.timestamp) approaching.current.delete(id);
+        }
+      }
+    }
     for (const stop of stops ?? []) {
       if (!stop) continue;
       const key = `station:${stop.id}`;
@@ -212,7 +236,8 @@ export function useAudioGuide(
     const forcedId = forcedKey?.startsWith("place:") ? forcedKey.slice("place:".length) : null;
     const selectedAt = selected.find((item) => item.place.id === forcedId)?.selectedAt;
     const candidates = podcastCandidatesFromJourney({
-      now, selected, nearby: around.current, stations: pendingStations(),
+      now, selected, nearby: around.current, area: context.current.area,
+      approachingPlaceIds: new Set(approaching.current.keys()), stations: pendingStations(),
       announcements: forcedId ? [] : pendingAnnouncements(),
       compose: context.current.compose ?? null,
       language: context.current.language,
@@ -225,6 +250,7 @@ export function useAudioGuide(
         nearbyMeters: context.current.nearbyMeters,
       },
       language: context.current.language,
+      approachingPlaceIds: new Set(approaching.current.keys()),
       // The route-specific journey opening replaces the director's generic welcome.
       playedKeys: new Set([...spoken.current, ...skipped.current, PODCAST_INTRO_KEY]),
       playedFacts: facts.current, playedSiteKeys: sites.current,
@@ -272,11 +298,15 @@ export function useAudioGuide(
 
   const prepareUpcoming = useCallback((activeId: string | null) => {
     const selected = selectedStories().filter((item) => !item.replay).map((item) => item.place);
-    const order = preparationOrder(selected, around.current,
-      new Set([...spoken.current, ...skipped.current]), activeId);
+    const alreadyHeard = new Set([...spoken.current, ...skipped.current]);
+    const regional = context.current.compose ? [] : context.current.area ?? [];
+    const nearbyUnheard = around.current.some((place) => !alreadyHeard.has(`place:${place.id}`));
+    const order = preparationOrder(selected, nearbyUnheard ? around.current : regional, alreadyHeard, activeId);
     prefetch(order.map((place) => {
       const item = selectedStories().find((entry) => entry.place.id === place.id && !entry.replay);
-      const placeContext: PlaceAudioContext = item ? pointingContext(item.selectedAt, Date.now()) : "nearby";
+      const placeContext: PlaceAudioContext = item ? pointingContext(item.selectedAt, Date.now())
+        : !context.current.compose && approaching.current.has(place.id) && place.story?.funFact ? "approaching"
+          : regional.some((entry) => entry.id === place.id) ? "area" : "nearby";
       return { place, context: placeContext };
     }));
   }, [prefetch, selectedStories]);
@@ -726,7 +756,7 @@ export function useAudioGuide(
     spoken.current.clear(); facts.current.clear(); sites.current.clear(); skipped.current.clear();
     introductionStarted.current = false; lastPlayback.current = null; previousTopic.current = null;
     explicit.current = []; stations.current.clear(); announcements.current.clear();
-    previousPosition.current = null; nextDue.current = 0; dropPrefetch(); clearPlayback();
+    previousPosition.current = null; approaching.current.clear(); nextDue.current = 0; dropPrefetch(); clearPlayback();
     queueMicrotask(() => { clearCurrent(); setNextName(null); setQueued(null); setUnavailable(null); setStatus("off"); });
   }, [rideId, clearPlayback, clearCurrent, dropPrefetch]);
   useEffect(() => {
