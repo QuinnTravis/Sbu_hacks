@@ -16,3 +16,13 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 ## Autonomous refinement
 
 - For an autonomous hackathon improvement session, read `REFINEMENT.md` as the operating brief. It records the user's authorization for fitting features and UI/interaction improvements, the current product commitments, and the implementation/verification/reassessment loop. Targeted requests retain their requested scope.
+
+## Specialist subagents
+
+Project subagents live in `.cursor/agents/`. Delegate their jobs instead of doing the work in the parent session.
+
+- `builder` — features, bug fixes, and refinements. Use proactively for product behavior.
+- `designer` — UI, interaction, and a restrained steel-and-steam accent on the Waymo base. Use proactively when the interface changes or feels generic.
+- `reviewer` — review, unit tests, end-to-end tests, then commit and push. Use after builder or designer work, and before any commit.
+
+A refinement pass runs builder, then designer on the surfaces that changed, then reviewer. Reviewer is the only role that commits or pushes.

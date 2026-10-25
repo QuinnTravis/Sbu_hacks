@@ -65,6 +65,13 @@ test.beforeEach(async ({ page, context }) => {
   );
 });
 
+async function choosePointed(page: import("@playwright/test").Page, name: string) {
+  await aim(page, 0);
+  const candidate = page.getByRole("button", { name: new RegExp(`^${name},`) });
+  await expect(candidate).toBeVisible({ timeout: 10000 });
+  await candidate.click();
+}
+
 async function aim(
   page: import("@playwright/test").Page,
   alpha: number,
@@ -89,6 +96,58 @@ async function aim(
     { alpha, absolute },
   );
 }
+
+async function finishJourneyIntroduction(page: import("@playwright/test").Page) {
+  await expect.poll(() => page.evaluate(() =>
+    (window as unknown as { __spoken: string[] }).__spoken[0] ?? "",
+  )).toContain("The tracks set the rhythm.");
+  await page.evaluate(() => (window as unknown as { __finishSpeech: () => void }).__finishSpeech());
+}
+
+test("Discoveries opens an empty collection before the first ride", async ({ page }) => {
+  await page.goto("/");
+  const nav = page.getByRole("navigation", { name: "Main navigation" });
+  const discoveries = nav.getByRole("button", { name: "Discoveries" });
+  await expect(discoveries).toBeEnabled();
+
+  await discoveries.click();
+  await expect(discoveries).toHaveAttribute("aria-current", "page");
+  await expect(page.getByRole("heading", { name: "No saved discoveries yet" })).toBeVisible();
+  await expect(page.getByText("Save a place during a ride to find it here later.")).toBeVisible();
+  await expect(page.getByText("No sourced place in range.")).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "Start discovering" })).toBeVisible();
+
+  const myRide = nav.getByRole("button", { name: "My ride" });
+  await myRide.focus();
+  await myRide.press("Enter");
+  await expect(page.getByRole("heading", { name: "Explore LIRR" })).toBeVisible();
+  await discoveries.click();
+  await page.getByRole("button", { name: "Start discovering" }).click();
+  await expect(page.getByRole("heading", { name: "Explore LIRR" })).toBeVisible();
+});
+
+test("saved discoveries reopen as a collection even without an active ride", async ({ page }) => {
+  await page.goto("/");
+  await page.evaluate((savedPlace) => {
+    localStorage.setItem("train-discovery:saved:v1", JSON.stringify([{ savedAt: 1, place: savedPlace }]));
+  }, place);
+  await page.reload();
+  const discoveries = page.getByRole("navigation", { name: "Main navigation" })
+    .getByRole("button", { name: "Discoveries" });
+  await discoveries.click();
+  await expect(page.getByRole("heading", { name: "Test landmark" })).toBeVisible();
+  await expect(page.locator(".story-summary")).toContainText("The landmark was built in 1901.");
+  await expect(page.getByRole("heading", { name: "No saved discoveries yet" })).toHaveCount(0);
+
+  await page.reload();
+  await discoveries.click();
+  await expect(page.getByRole("heading", { name: "Test landmark" })).toBeVisible();
+  await page.getByRole("button", { name: "Remove Test landmark from saved discoveries" }).click();
+  await expect(page.getByRole("heading", { name: "No saved discoveries yet" })).toBeVisible();
+  await page.reload();
+  await discoveries.click();
+  await expect(page.getByRole("heading", { name: "No saved discoveries yet" })).toBeVisible();
+});
 
 test("Jamaica is the default demo location and starts without GPS", async ({
   page,
@@ -143,6 +202,7 @@ test("Jamaica verified facts render in the demo journey", async ({ page, request
   );
   await page.goto("/");
   await page.getByRole("button", { name: "Start Jamaica demo ride" }).click();
+  await page.getByRole("button", { name: /^Jamaica,/ }).click();
   await expect(page.getByRole("heading", { name: "Jamaica", exact: true })).toBeVisible({ timeout: 10000 });
   await expect(page.getByText("Evidence checked")).toBeVisible();
   await expect(page.getByRole("heading", { name: "Summary" })).toBeVisible();
@@ -170,7 +230,7 @@ test("select a nearby route and retain pointed discoveries until discarded", asy
     .last()
     .click();
   await page.getByRole("button", { name: "Start ride", exact: true }).click();
-  await aim(page, 0);
+  await choosePointed(page, "Test landmark");
   if (info.project.name === "mobile")
     await page.getByRole("button", { name: /My discoveries/ }).click();
   await expect(
@@ -229,7 +289,7 @@ test("Wikimedia fallback photos show the image's source, author and license", as
   await page.getByRole("button", { name: "Find routes near me" }).click();
   await page.getByRole("button", { name: /Port Jefferson/ }).last().click();
   await page.getByRole("button", { name: "Start ride", exact: true }).click();
-  await aim(page, 0);
+  await choosePointed(page, "Test landmark");
   await expect(page.getByRole("heading", { name: "Test landmark" })).toBeVisible({ timeout: 10000 });
   await expect(page.getByRole("link", { name: "Wikimedia Commons" })).toHaveAttribute("href", /commons\.wikimedia\.org/);
   await expect(page.getByRole("link", { name: "Example photographer" })).toBeVisible();
@@ -254,7 +314,10 @@ test("audio tour narrates nearby places without pointing, then saves, pauses, sk
     Object.defineProperty(window, "speechSynthesis", {
       configurable: true,
       value: {
-        speak: (utterance: FakeSpeech) => spoken.push(utterance.text),
+        speak: (utterance: FakeSpeech) => {
+          spoken.push(utterance.text);
+          Object.assign(window, { __finishSpeech: () => utterance.onend?.() });
+        },
         cancel: () => {},
         pause: () => { Object.assign(window, { __paused: true }); },
         resume: () => { Object.assign(window, { __paused: false }); },
@@ -266,8 +329,11 @@ test("audio tour narrates nearby places without pointing, then saves, pauses, sk
   await page.getByRole("button", { name: /Port Jefferson/ }).last().click();
   await page.getByRole("button", { name: "Start ride", exact: true }).click();
   await page.getByRole("button", { name: "Start audio tour" }).click();
-  await expect.poll(() => page.evaluate(() => (window as unknown as { __spoken: string[] }).__spoken.length)).toBe(1);
-  expect(await page.evaluate(() => (window as unknown as { __spoken: string[] }).__spoken[0])).toBe("Test landmark. The landmark was built in 1901.");
+  await finishJourneyIntroduction(page);
+  const poiSpeech = "Test landmark. The landmark was built in 1901.";
+  await expect.poll(() => page.evaluate((text) =>
+    (window as unknown as { __spoken: string[] }).__spoken.includes(text), poiSpeech,
+  )).toBe(true);
   await page.getByRole("button", { name: "Save Test landmark to discoveries" }).click();
   if (await page.getByRole("button", { name: /My discoveries/ }).isVisible())
     await page.getByRole("button", { name: /My discoveries/ }).click();
@@ -278,7 +344,10 @@ test("audio tour narrates nearby places without pointing, then saves, pauses, sk
   await page.getByRole("button", { name: "Skip story" }).click();
   await expect(page.getByText("Waiting for a nearby story")).toBeVisible();
   await page.getByRole("button", { name: "Listen to Test landmark" }).click();
-  await expect.poll(() => page.evaluate(() => (window as unknown as { __spoken: string[] }).__spoken.length)).toBe(2);
+  await expect.poll(() => page.evaluate(() =>
+    (window as unknown as { __spoken: string[] }).__spoken.filter((entry) =>
+      entry.includes("The landmark was built in 1901.")).length,
+  )).toBe(2);
   await page.getByRole("button", { name: "Turn off audio guide" }).click();
   await expect(page.getByRole("button", { name: "Start audio tour" })).toBeVisible();
 });
@@ -305,7 +374,10 @@ test("an attributed source excerpt is visibly distinguished from a verified stor
     Object.defineProperty(window, "SpeechSynthesisUtterance", { configurable: true, value: FakeSpeech });
     Object.defineProperty(window, "speechSynthesis", {
       configurable: true,
-      value: { speak: (voice: FakeSpeech) => spoken.push(voice.text), cancel() {}, pause() {}, resume() {} },
+      value: { speak: (voice: FakeSpeech) => {
+        spoken.push(voice.text);
+        Object.assign(window, { __finishSpeech: () => voice.onend?.() });
+      }, cancel() {}, pause() {}, resume() {} },
     });
   });
   await page.goto("/");
@@ -313,16 +385,21 @@ test("an attributed source excerpt is visibly distinguished from a verified stor
   await page.getByRole("button", { name: /Port Jefferson/ }).last().click();
   await page.getByRole("button", { name: "Start ride", exact: true }).click();
   await page.getByRole("button", { name: "Start audio tour" }).click();
+  await finishJourneyIntroduction(page);
   await expect(page.getByText("Example House Museum · source excerpt")).toBeVisible();
-  await expect.poll(() => page.evaluate(() => (window as unknown as { __spoken: string[] }).__spoken[0])).toBe(
-    "Example House Museum. From Wikipedia: Example House is a preserved building used for education. It is near a railway line.",
-  );
+  const excerptSpeech = "Example House Museum. From Wikipedia: Example House is a preserved building used for education. It is near a railway line.";
+  await expect.poll(() => page.evaluate((text) =>
+    (window as unknown as { __spoken: string[] }).__spoken.includes(text), excerptSpeech,
+  )).toBe(true);
   await page.getByRole("button", { name: "Save Example House Museum to discoveries" }).click();
   if (await page.getByRole("button", { name: /My discoveries/ }).isVisible())
     await page.getByRole("button", { name: /My discoveries/ }).click();
   await expect(page.getByText("Wikipedia excerpt · not verified")).toBeVisible();
   await page.getByRole("button", { name: "Listen to source for Example House Museum" }).click();
-  await expect.poll(() => page.evaluate(() => (window as unknown as { __spoken: string[] }).__spoken.length)).toBe(2);
+  await expect.poll(() => page.evaluate(() =>
+    (window as unknown as { __spoken: string[] }).__spoken.filter((entry) =>
+      entry.includes("Example House is a preserved building used for education.")).length,
+  )).toBe(2);
 });
 
 test("all branches are searchable and no left/right selector is present", async ({

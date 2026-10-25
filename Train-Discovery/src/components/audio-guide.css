@@ -1,0 +1,95 @@
+.train-audio-guide .audio-follow {
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 2px 4px;
+}
+
+.train-audio-guide .audio-follow-copy {
+  display: grid;
+  gap: 2px;
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.train-audio-guide .audio-queued {
+  display: flex;
+  align-items: baseline;
+  gap: 0.35em;
+  max-width: none;
+  overflow: visible;
+  white-space: normal;
+  line-height: 1.5;
+}
+
+.train-audio-guide .audio-queued-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.train-audio-guide .audio-queued-state {
+  flex: 0 0 auto;
+}
+
+.train-audio-guide .audio-next {
+  min-width: 0;
+  width: 100%;
+  overflow: visible;
+  line-height: 1.5;
+}
+
+.train-audio-guide .audio-control,
+.train-audio-guide .audio-activate {
+  min-width: 44px;
+  min-height: 44px;
+}
+
+.train-audio-guide .audio-play-now {
+  color: var(--ink);
+  background: var(--soft);
+}
+
+.train-audio-guide .audio-play-now:hover {
+  background: var(--canvas);
+}
+
+.train-audio-guide .audio-guide:not(.audio-guide-active) {
+  flex-wrap: wrap;
+}
+
+.train-audio-guide .audio-guide > [role="status"],
+.train-audio-guide .audio-notice,
+.train-audio-guide .audio-transcript {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.train-audio-guide .audio-notice {
+  line-height: 1.5;
+}
+
+.train-audio-guide .audio-notice .text-button {
+  min-width: 44px;
+  min-height: 44px;
+  color: var(--ink);
+  text-decoration: underline;
+}
+
+.train-audio-guide .audio-transcript summary {
+  min-height: 44px;
+  padding: 12px 0;
+  line-height: 20px;
+}
+
+.train-audio-guide .audio-transcript a {
+  color: var(--ink);
+  text-decoration: underline;
+}
+
+.train-audio-guide button:focus-visible,
+.train-audio-guide summary:focus-visible,
+.train-audio-guide a:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 2px;
+}

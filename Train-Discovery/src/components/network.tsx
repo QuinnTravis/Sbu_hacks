@@ -1,6 +1,7 @@
 "use client";
 
 import type { Coordinate, RailRoute } from "@/lib/types";
+import "./network.css";
 
 export function Network({
   routes,
@@ -39,23 +40,23 @@ export function Network({
     ).values(),
   ];
   return (
-    <div className="network-wrap">
+    <div className="network-wrap train-network-wrap">
       <svg
-        className="network"
-        viewBox="0 0 830 330"
+        className="network train-network-map"
+        viewBox="0 -55 830 385"
         role="group"
         aria-label="Interactive LIRR route map"
       >
-        <text className="water-label" x="450" y="26">
+        <text className="water-label train-network-waterLabel" x="450" y="26">
           LONG ISLAND SOUND
         </text>
-        <text className="water-label" x="375" y="303">
+        <text className="water-label train-network-waterLabel" x="375" y="303">
           ATLANTIC OCEAN
         </text>
         {routes.map((route) => (
           <g
             key={route.id}
-            className="network-route"
+            className="network-route train-network-route"
             role={onSelectRoute ? "button" : undefined}
             tabIndex={onSelectRoute ? 0 : undefined}
             aria-label={onSelectRoute ? `Select ${route.name}` : undefined}
@@ -69,7 +70,7 @@ export function Network({
             }}
             opacity={
               selected && selected !== route.id
-                ? 0.16
+                ? 0.32
                 : selected === route.id
                   ? 1
                   : 0.72
@@ -82,10 +83,18 @@ export function Network({
               return (
                 <g key={index}>
                   {onSelectRoute && (
-                    <polyline className="network-route-hit" points={points} />
+                    <polyline
+                      className="network-route-hit train-network-routeHit"
+                      points={points}
+                    />
                   )}
                   <polyline
-                    className="network-route-line"
+                    className="train-network-routeOutline"
+                    points={points}
+                    aria-hidden="true"
+                  />
+                  <polyline
+                    className="network-route-line train-network-routeLine"
                     points={points}
                     fill="none"
                     stroke={route.color}
@@ -101,11 +110,11 @@ export function Network({
         {stations.map((stop) => {
           const [x, y] = project(stop.lat, stop.lon);
           return (
-            <g key={stop.id} className="station-label">
+            <g key={stop.id} className="station-label train-network-station">
               <circle cx={x} cy={y} r="3.3" />
               <text
                 x={x + (stop.name === "Montauk" ? -7 : 7)}
-                y={y - 9}
+                y={y - (stop.name === "Port Washington" ? 18 : 9)}
                 textAnchor={stop.name === "Montauk" ? "end" : "start"}
               >
                 {stop.name.replace(" Station", "")}
@@ -116,9 +125,9 @@ export function Network({
         {position &&
           (() => {
             const [x, y] = project(position.lat, position.lon);
-            return x >= 0 && x <= 830 && y >= 0 && y <= 330 ? (
+            return x >= 0 && x <= 830 && y >= -55 && y <= 330 ? (
               <g
-                className={onLocate ? "network-user" : undefined}
+                className={`${onLocate ? "network-user" : ""} train-network-user`}
                 role={onLocate ? "button" : undefined}
                 tabIndex={onLocate ? 0 : undefined}
                 aria-label={onLocate ? "Show routes near me" : undefined}
@@ -130,7 +139,26 @@ export function Network({
                   }
                 }}
               >
-                <circle className="location-halo" cx={x} cy={y} r="15" />
+                {onLocate && (
+                  <circle
+                    className="train-network-locationHit"
+                    cx={x}
+                    cy={y}
+                    r="22"
+                  />
+                )}
+                <circle
+                  className="train-network-locationFocus"
+                  cx={x}
+                  cy={y}
+                  r="12"
+                />
+                <circle
+                  className="location-halo train-network-locationHalo"
+                  cx={x}
+                  cy={y}
+                  r="15"
+                />
                 <circle className="location-dot" cx={x} cy={y} r="6" />
               </g>
             ) : null;

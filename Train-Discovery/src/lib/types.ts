@@ -47,13 +47,18 @@ export type Place = Coordinate & {
   story?: Story;
 };
 export type QueueEntry = { place: Place; foundAt: number; distance: number };
+/** Enough of a discarded place to recognize another map node for the same site. */
+export type DismissedSite = { id: string; name: string; lat: number; lon: number };
 export type Ride = {
   routeId: string;
   startedAt: number;
   replay: boolean;
   queue: QueueEntry[];
   dismissed: string[];
+  dismissedSites?: DismissedSite[];
 };
+/** A place kept on the device after the ride. No rider location. */
+export type SavedEntry = { place: Place; savedAt: number };
 export type Photo = {
   url: string;
   source: "Google Maps" | "Wikimedia Commons";

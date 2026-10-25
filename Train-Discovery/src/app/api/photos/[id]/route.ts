@@ -99,8 +99,9 @@ export async function GET(
     if (error || !row)
       return Response.json({ error: "Place not found." }, { status: 404, headers });
     const place = row.data as Place;
+    const commonsOnly = new URL(request.url).searchParams.get("commons") === "1";
     const key = process.env.GOOGLE_PLACES_API_KEY;
-    if (key && process.env.SUPABASE_SECRET_KEY &&
+    if (!commonsOnly && key && process.env.SUPABASE_SECRET_KEY &&
       (process.env.NODE_ENV !== "production" || process.env.RATE_LIMIT_SECRET)) {
       try {
         const google = await googlePhoto(request, place, key);

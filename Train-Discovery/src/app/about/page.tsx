@@ -1,11 +1,16 @@
 import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
+import "./about.css";
 
 export const metadata = { title: "About & privacy — Train Discovery" };
 
 export default function About() {
   return (
-    <main id="main-content" className="about-page">
-      <Link href="/">← Back to your ride</Link>
+    <main id="main-content" className="about-document">
+      <Link href="/" className="about-back">
+        <ArrowLeft size={18} aria-hidden="true" />
+        Back to your ride
+      </Link>
       <h1>About Train Discovery</h1>
       <p>
         Train Discovery connects your LIRR ride to the places around you.
@@ -18,8 +23,11 @@ export default function About() {
         places for your selected branch; your precise location and movement
         history are not sent to our discovery server. Your selected branch,
         provider requests, and normal technical request information may be
-        visible to our hosting providers. Your ride and discovery queue are
-        stored in your browser until you end the ride or clear site data.
+        visible to our hosting providers. Your ride and its discovery queue stay
+        in this browser until you end the ride. Discoveries you save stay on this
+        device after the ride, until you remove them or clear site data. A saved
+        place keeps the story and sources already on the card, not your location
+        history, photos, or audio.
       </p>
       <p>
         With the app open, location and heading update as you travel. Locked

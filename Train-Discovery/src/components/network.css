@@ -1,0 +1,139 @@
+/* Keep public integration classes; prefix every component-specific selector. */
+.train-network-wrap .train-network-map {
+  overflow: visible;
+}
+
+.train-network-map .train-network-route {
+  outline: none;
+  filter: none;
+}
+
+.train-network-route .train-network-routeHit {
+  stroke-width: 24px;
+  vector-effect: non-scaling-stroke;
+  touch-action: manipulation;
+}
+
+.train-network-route .train-network-routeLine {
+  vector-effect: non-scaling-stroke;
+  stroke-width: 2px;
+}
+
+.train-network-route[aria-pressed="true"] .train-network-routeLine {
+  stroke-width: 4px;
+}
+
+.train-network-routeOutline {
+  fill: none;
+  stroke: var(--paper, #fefeff);
+  stroke-width: 8px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.train-network-map .train-network-route:focus-visible {
+  opacity: 1;
+}
+
+.train-network-route:focus-visible .train-network-routeOutline,
+.train-network-route[aria-pressed="true"] .train-network-routeOutline {
+  visibility: visible;
+}
+
+.train-network-map .train-network-route:focus-visible .train-network-routeLine {
+  stroke-width: 4px;
+  stroke-dasharray: 8 4;
+}
+
+@media (hover: hover) {
+  .train-network-map .train-network-route:hover {
+    opacity: 1;
+  }
+
+  .train-network-map .train-network-route:hover .train-network-routeLine {
+    stroke-width: 4px;
+  }
+}
+
+.train-network-station circle {
+  vector-effect: non-scaling-stroke;
+}
+
+.train-network-map .train-network-user {
+  outline: none;
+  filter: none;
+  cursor: default;
+}
+
+.train-network-map .train-network-user[role="button"] {
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.train-network-locationHit {
+  fill: transparent;
+  stroke: transparent;
+  stroke-width: 44px;
+  vector-effect: non-scaling-stroke;
+  pointer-events: all;
+}
+
+.train-network-locationFocus {
+  fill: none;
+  stroke: var(--accent, #0071f2);
+  stroke-width: 3px;
+  vector-effect: non-scaling-stroke;
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.train-network-user:focus-visible .train-network-locationFocus {
+  visibility: visible;
+}
+
+@media (max-width: 600px) {
+  .train-network-wrap.train-network-wrap.train-network-wrap {
+    /* The external map canvas bleeds beyond the phone. Its content must not. */
+    width: calc(100% / 1.2);
+    max-width: 100vw;
+    padding: 16px 12px;
+    /* Keep the western stations above the floating Jamaica demo control. */
+    transform: translateY(-48px);
+  }
+
+  .train-network-map .train-network-station text {
+    font-size: 25px;
+    stroke-width: 5px;
+  }
+
+  .train-network-map .train-network-waterLabel {
+    font-size: 17px;
+    letter-spacing: 0.08em;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .train-network-map .train-network-routeLine {
+    transition: none;
+  }
+
+  .train-network-user .train-network-locationHalo {
+    animation: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .train-network-routeOutline {
+    stroke: Canvas;
+  }
+
+  .train-network-map
+    .train-network-route:focus-visible
+    .train-network-routeLine,
+  .train-network-locationFocus {
+    stroke: Highlight;
+  }
+}

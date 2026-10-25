@@ -62,12 +62,16 @@ export function routeDistance(p: Coordinate, route: RailRoute): number {
   return best;
 }
 
+/** Shared with the ride-map cone so the drawn wedge cannot drift from detection. */
+export const POINTING_RADIUS_M = 1200;
+export const POINTING_HALF_ANGLE_DEG = 22;
+
 export function isPointedAt(
   position: Coordinate,
   heading: number | null,
   place: Coordinate,
-  radius = 1200,
-  halfAngle = 22,
+  radius = POINTING_RADIUS_M,
+  halfAngle = POINTING_HALF_ANGLE_DEG,
 ): boolean {
   return (
     heading !== null &&
@@ -75,6 +79,97 @@ export function isPointedAt(
     distance(position, place) <= radius &&
     Math.abs(angleDelta(bearing(position, place), heading)) <= halfAngle
   );
+}
+
+const CONE_ARC_STEPS = 24;
+
+export function destination(
+  origin: Coordinate,
+  bearingDeg: number,
+  meters: number,
+): Coordinate {
+  const angular = meters / R;
+  const theta = rad(bearingDeg);
+  const lat1 = rad(origin.lat);
+  const lon1 = rad(origin.lon);
+  const lat2 = Math.asin(
+    Math.sin(lat1) * Math.cos(angular) +
+      Math.cos(lat1) * Math.sin(angular) * Math.cos(theta),
+  );
+  const lon2 =
+    lon1 +
+    Math.atan2(
+      Math.sin(theta) * Math.sin(angular) * Math.cos(lat1),
+      Math.cos(angular) - Math.sin(lat1) * Math.sin(lat2),
+    );
+  const lon = (((lon2 * 180) / Math.PI + 540) % 360) - 180;
+  return { lat: (lat2 * 180) / Math.PI, lon };
+}
+
+/** Closed ring: rider, then the 1200 m arc from heading−22° to heading+22°. */
+export function pointingConeRing(
+  origin: Coordinate,
+  heading: number,
+): Coordinate[] {
+  const ring: Coordinate[] = [origin];
+  for (let step = 0; step <= CONE_ARC_STEPS; step += 1) {
+    const edge =
+      heading -
+      POINTING_HALF_ANGLE_DEG +
+      (2 * POINTING_HALF_ANGLE_DEG * step) / CONE_ARC_STEPS;
+    ring.push(destination(origin, edge, POINTING_RADIUS_M));
+  }
+  ring.push(origin);
+  return ring;
+}
+
+export function pointingConeLngLats(
+  origin: Coordinate,
+  heading: number,
+): [number, number][] {
+  return pointingConeRing(origin, heading).map((point) => [point.lon, point.lat]);
+}
+
+function localMeters(origin: Coordinate, point: Coordinate): [number, number] {
+  return [
+    rad(point.lon - origin.lon) * Math.cos(rad(origin.lat)) * R,
+    rad(point.lat - origin.lat) * R,
+  ];
+}
+
+/** Point-in-polygon on the drawn cone, not a second copy of the detection test. */
+export function pointingConeContains(
+  origin: Coordinate,
+  heading: number,
+  place: Coordinate,
+): boolean {
+  if (!Number.isFinite(heading)) return false;
+  const polygon = pointingConeRing(origin, heading).map((point) =>
+    localMeters(origin, point),
+  );
+  const [x, y] = localMeters(origin, place);
+  let inside = false;
+  for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i, i += 1) {
+    const [xi, yi] = polygon[i]!;
+    const [xj, yj] = polygon[j]!;
+    const crosses = yi > y !== yj > y;
+    if (crosses && x < ((xj - xi) * (y - yi)) / (yj - yi || 1) + xi) {
+      inside = !inside;
+    }
+  }
+  return inside;
+}
+
+/** Zoom so the 1200 m arc reaches the nearer edge of the ride map, with a small margin. */
+export function pointingConeZoom(latitude: number, viewportPx: number): number {
+  const half = Math.max(48, viewportPx / 2);
+  const metersPerPixel = POINTING_RADIUS_M / (half * 0.86);
+  const latitudeRad = rad(Math.min(80, Math.max(-80, latitude)));
+  const zoom = Math.log2(
+    (156543.03392 * Math.cos(latitudeRad)) / metersPerPixel,
+  );
+  if (!Number.isFinite(zoom)) return 13;
+  return Math.min(15.5, Math.max(10, zoom));
 }
 
 // Heading of the rear camera's optical axis projected onto the earth plane.

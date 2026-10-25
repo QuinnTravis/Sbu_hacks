@@ -11,6 +11,7 @@ import {
   X,
 } from "lucide-react";
 import type { Claim, Photo, QueueEntry } from "@/lib/types";
+import { cardSummary } from "@/lib/card-face";
 import { formatDistance } from "@/lib/geo";
 import { audioNarration, narrationText, sourceExcerpt } from "@/lib/narration";
 
@@ -21,13 +22,17 @@ export function PlaceCard({
   total,
   onNavigate,
   onNarrate,
+  onSave,
+  saved = false,
 }: {
   entry: QueueEntry;
-  onDiscard: () => void;
+  onDiscard?: () => void;
   index: number;
   total: number;
   onNavigate: (n: number) => void;
-  onNarrate: () => void;
+  onNarrate?: () => void;
+  onSave: () => void;
+  saved?: boolean;
 }) {
   const { place } = entry;
   const [photo, setPhoto] = useState<Photo | null>(null);
@@ -55,6 +60,7 @@ export function PlaceCard({
     return () => controller.abort();
   }, [place.id, attempt]);
   const story = place.story;
+  const summary = cardSummary(place);
   const excerpt = story ? null : sourceExcerpt(place);
   const storyClaims: Claim[] = story
     ? [...story.claims, ...(story.funFact ? [story.funFact] : [])]
@@ -115,18 +121,22 @@ export function PlaceCard({
             )}
           </div>
         )}
-        <button
-          className="icon-button discard-button"
-          onClick={onDiscard}
-          aria-label={`Discard ${place.name}`}
-        >
-          <X size={19} />
-        </button>
+        {onDiscard && (
+          <button
+            className="icon-button discard-button"
+            onClick={onDiscard}
+            aria-label={`Discard ${place.name}`}
+          >
+            <X size={19} />
+          </button>
+        )}
       </div>
       <div className="place-content">
         <div className="place-meta">
           <span>{place.category}</span>
-          <span>{formatDistance(entry.distance)} when found</span>
+          {Number.isFinite(entry.distance) && (
+            <span>{formatDistance(entry.distance)} when found</span>
+          )}
         </div>
         <h2>{place.name}</h2>
         {story ? (
@@ -134,7 +144,7 @@ export function PlaceCard({
             <div className="verified-label">
               <ShieldCheck size={14} />
               Evidence checked
-              {narrationText(place) && (
+              {onNarrate && narrationText(place) && (
                 <button className="story-listen" onClick={onNarrate} aria-label={`Listen to ${place.name}`}>
                   <Volume2 size={16} />
                   Play story
@@ -144,21 +154,25 @@ export function PlaceCard({
             <div className="story-facts">
               <section className="story-block story-summary">
                 <h3>Summary</h3>
-                <p>
-                  {story.claims.map((claim, i) => (
-                    <span key={i}>
-                      {claim.text}{" "}
-                      <a
-                        href={place.evidence.find((e) => e.id === claim.evidenceId)?.url}
-                        target="_blank"
-                        rel="noreferrer"
-                        aria-label={`Source for summary claim ${i + 1}`}
-                      >
-                        <sup>[{i + 1}]</sup>
-                      </a>{" "}
-                    </span>
-                  ))}
-                </p>
+                {story.claims.length ? (
+                  <p>
+                    {story.claims.map((claim, i) => (
+                      <span key={i}>
+                        {claim.text}{" "}
+                        <a
+                          href={place.evidence.find((e) => e.id === claim.evidenceId)?.url}
+                          target="_blank"
+                          rel="noreferrer"
+                          aria-label={`Source for summary claim ${i + 1}`}
+                        >
+                          <sup>[{i + 1}]</sup>
+                        </a>{" "}
+                      </span>
+                    ))}
+                  </p>
+                ) : (
+                  <p>{summary?.text ?? "No sourced summary yet."}</p>
+                )}
               </section>
               {story.funFact && (
                 <section className="story-block story-interesting">
@@ -179,30 +193,30 @@ export function PlaceCard({
             </div>
           </>
         ) : (
-          <div className="unverified-story">
-            {excerpt && (
-              <div className="source-excerpt">
-                <p className="source-excerpt-label">
-                  Wikipedia excerpt · not verified
-                </p>
-                <p className="source-excerpt-text">{excerpt.text}</p>
-              </div>
-            )}
-            {!excerpt && <p>History hasn’t been verified yet.</p>}
-            <a
-              href={excerpt?.evidence.url || sources[0]?.url || place.sourceUrl}
-              target="_blank"
-              rel="noreferrer"
-            >
-              Read the source <ArrowUpRight size={14} />
-            </a>
-            {audioNarration(place)?.kind === "source" && (
-              <button className="story-listen" onClick={onNarrate} aria-label={`Listen to source for ${place.name}`}>
-                <Volume2 size={16} />
-                Listen to source
-              </button>
-            )}
-          </div>
+          <>
+            <section className="story-block story-summary">
+              <h3>Summary</h3>
+              <p>{summary?.text ?? "No sourced summary yet."}</p>
+            </section>
+            <div className="unverified-story">
+              {summary?.kind === "source" && (
+                <p className="source-excerpt-label">Wikipedia excerpt · not verified</p>
+              )}
+              <a
+                href={excerpt?.evidence.url || sources[0]?.url || place.sourceUrl}
+                target="_blank"
+                rel="noreferrer"
+              >
+                Read the source <ArrowUpRight size={14} />
+              </a>
+              {onNarrate && audioNarration(place)?.kind === "source" && (
+                <button className="story-listen" onClick={onNarrate} aria-label={`Listen to source for ${place.name}`}>
+                  <Volume2 size={16} />
+                  Listen to source
+                </button>
+              )}
+            </div>
+          </>
         )}
         {Object.entries(place.tags).filter(([key]) =>
           ["start_date", "architect", "operator"].includes(key),
@@ -278,6 +292,14 @@ export function PlaceCard({
           onClick={() => onNavigate(index + 1)}
         >
           Next
+        </button>
+        <button
+          className="text-button"
+          onClick={onSave}
+          aria-pressed={saved}
+          aria-label={saved ? `Remove ${place.name} from saved discoveries` : `Save ${place.name}`}
+        >
+          {saved ? "Saved" : "Save"}
         </button>
       </div>
     </article>

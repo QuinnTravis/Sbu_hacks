@@ -1,0 +1,123 @@
+/* Keep the whole pointing flow in the existing ride-column scroller. Only
+   the active panel containing this instrument receives the sizing repair. */
+.app-shell:not(.route-select-shell) .ride-columns.mobile-point > .point-panel:has(> .train-compass) {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.train-compass.compass-instrument,
+.app-shell:not(.route-select-shell) .train-compass.compass-instrument {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  min-width: 0;
+}
+
+.train-compass > .compass-topline,
+.train-compass > .aim-status,
+.train-compass > .pointing-instruction {
+  flex: 0 0 auto;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.train-compass .compass-topline > svg,
+.train-compass .direction-letter {
+  flex-shrink: 0;
+}
+
+.train-compass .compass-topline > span:nth-child(2) {
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+/* The map fills the ride column, in the same frame as the heading and sheet. */
+.train-compass > .compass-stage {
+  display: flex;
+  flex: 1 1 auto;
+  position: relative;
+  width: 100%;
+  aspect-ratio: auto;
+  min-width: 0;
+  min-height: 180px;
+  margin: 0 0 8px;
+}
+
+.train-compass .ride-map {
+  position: relative;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 0;
+  min-height: 180px;
+  overflow: hidden;
+  border-radius: 22px;
+  background: var(--canvas);
+}
+
+.train-compass .ride-map::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1px var(--steel);
+  pointer-events: none;
+  z-index: 3;
+}
+
+.train-compass .compass-dial,
+.app-shell:not(.route-select-shell) .train-compass .compass-dial {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: none;
+  max-height: none;
+  aspect-ratio: 360 / 340;
+  margin: 0;
+}
+
+@media (max-width: 600px) {
+  /* A full-height map hides the chooser below the floating navigation. */
+  .train-compass > .compass-stage,
+  .train-compass .ride-map {
+    min-height: 240px;
+  }
+
+  .train-compass .ride-map-canvas {
+    flex: 1 1 auto;
+    height: auto;
+    min-height: 205px;
+  }
+}
+
+/* In short viewports the header and audio can consume the entire bounded
+   ride area. Let the document scroll instead; the shell's existing bottom
+   clearance still lets the final row or card footer move above the fixed
+   navigation. Compass stays mounted in the hidden panel during queue view,
+   so the marker scopes this repair to both views of the same ride. */
+@media (max-height: 540px) {
+  .app-shell:not(.route-select-shell):has(.ride-columns .train-compass) {
+    height: auto;
+    min-height: 100svh;
+  }
+
+  .app-shell:not(.route-select-shell):has(.ride-columns .train-compass) main {
+    flex: 0 0 auto;
+    min-height: min-content;
+  }
+
+  .app-shell:not(.route-select-shell) .ride-layout:has(.ride-columns .train-compass) {
+    flex: 0 0 auto;
+    min-height: min-content;
+    overflow: visible;
+  }
+
+  .app-shell:not(.route-select-shell) .ride-columns:has(.train-compass) {
+    flex: 0 0 auto;
+    min-height: min-content;
+    overflow: visible;
+  }
+}
