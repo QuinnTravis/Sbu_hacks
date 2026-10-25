@@ -12,7 +12,7 @@ const base = (id: string, name: string, lat: number, category: string) => ({
   sourceUrl: "https://www.openstreetmap.org/node/1", tags: {}, evidence: [],
 });
 
-test("Jamaica replay lists aimed candidates and saves only the selected place", async ({ page }) => {
+test("Jamaica replay lists aimed candidates and opens only the selected place without saving it", async ({ page }) => {
   await page.route("**/api/audio", (route) =>
     route.fulfill({ status: 503, json: { error: "test_device_fallback" } }),
   );
@@ -63,13 +63,14 @@ test("Jamaica replay lists aimed candidates and saves only the selected place", 
   await expect(manor).not.toContainText("historic house");
   await expect(manor).not.toContainText("No sourced summary yet");
   await expect(jamaica).toHaveCount(1);
-  await expect(page.locator(".nav-count")).toHaveText("0");
+  await expect(page.locator(".nav-count")).toHaveCount(0);
   await jamaica.click();
   await expect(page.getByRole("heading", { name: "Jamaica", exact: true })).toBeVisible();
   await expect(page.locator(".place-photo > img")).toHaveAttribute("src", /^data:image\/gif/);
   await expect(page.locator(".story-summary")).toContainText("major rail transit hub");
   await expect(page.locator(".story-interesting")).toContainText("Thousands of commuters");
-  await expect(page.locator(".nav-count")).toHaveText("1");
+  await expect(page.locator(".nav-count")).toHaveCount(0);
+  await expect(page.locator(".card-footer")).not.toContainText(" of ");
   await expect(page.getByRole("heading", { name: "King Manor Museum" })).toHaveCount(0);
   await expect(page.getByRole("heading", { name: "Johnson Yard" })).toHaveCount(0);
   expect(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth)).toBe(false);
@@ -107,12 +108,11 @@ test("replay shows loading, then stays empty when nothing nearby is sourced", as
   await expect(panel.getByText("Paused — check sensors / tilt")).toHaveCount(0);
   await panel.getByRole("button", { name: "Close dev panel", exact: true }).click();
   await page.waitForTimeout(2500);
-  await expect(page.locator(".nav-count")).toHaveText("0");
+  await expect(page.locator(".nav-count")).toHaveCount(0);
   await expect(page.getByRole("heading", { name: "Johnson Yard" })).toHaveCount(0);
 
-  await page.getByRole("button", { name: /My discoveries/ }).click();
-  await expect(page.getByRole("heading", { name: "No sourced place in range." })).toBeVisible();
-  await expect(page.locator(".nav-count")).toHaveText("0");
+  await page.locator(".mobile-tabs").getByRole("button", { name: /Saved/ }).click();
+  await expect(page.getByRole("heading", { name: "Nothing saved yet" })).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth)).toBe(false);
 });
 
@@ -164,9 +164,7 @@ test("a failed replay catalog retries into a sourced discovery", async ({ page }
   await expect(panel.getByTestId("dev-detection")).toHaveText("Paused — places didn’t load");
   await expect(panel.getByText("Paused — check sensors / tilt")).toHaveCount(0);
   await panel.getByRole("button", { name: "Close dev panel", exact: true }).click();
-  await expect(page.locator(".nav-count")).toHaveText("0");
-  await page.getByRole("button", { name: /My discoveries/ }).click();
-  await expect(page.getByRole("heading", { name: "Places didn’t load" })).toBeVisible();
+  await expect(page.locator(".nav-count")).toHaveCount(0);
   await failure.getByRole("button", { name: "Retry" }).click();
   await page.getByRole("button", { name: "Discover", exact: true }).click();
   await page.getByRole("button", { name: /^Jamaica,/ }).click();
@@ -177,7 +175,7 @@ test("a failed replay catalog retries into a sourced discovery", async ({ page }
   expect(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth)).toBe(false);
 });
 
-test("simulated ride selects one candidate and keeps it after skip", async ({ page }) => {
+test("simulated ride selects one candidate, and a saved place stays after skip", async ({ page }) => {
   await page.addInitScript(() => {
     const clips: string[] = [];
     Object.assign(window, { __clips: clips });
@@ -257,7 +255,7 @@ test("simulated ride selects one candidate and keeps it after skip", async ({ pa
   await page.getByRole("button", { name: "Start Jamaica demo ride" }).click();
   await page.getByRole("button", { name: "Pause replay" }).click();
   await expect(page.locator(".poi-sheet")).toHaveAttribute("aria-hidden", "false");
-  await page.getByRole("button", { name: /My discoveries/ }).click();
+  await page.locator(".mobile-tabs").getByRole("button", { name: /Saved/ }).click();
   await page.getByRole("button", { name: "Start audio tour" }).click();
   await expect.poll(() => page.evaluate(() =>
     (window as unknown as { __clips: string[] }).__clips,
@@ -270,6 +268,8 @@ test("simulated ride selects one candidate and keeps it after skip", async ({ pa
   await expect(page.getByRole("button", { name: /King Manor Museum,/ })).toBeVisible();
   await page.getByRole("button", { name: /King Manor Museum,/ }).click();
   await expect(page.getByRole("heading", { name: "King Manor Museum" })).toBeVisible();
+  await expect(page.locator(".nav-count")).toHaveCount(0);
+  await page.getByRole("button", { name: "Save King Manor Museum", exact: true }).click();
   await expect(page.locator(".nav-count")).toHaveText("1");
   await page.locator(".poi-sheet__close").click();
   await expect(page.locator(".poi-sheet")).toHaveAttribute("aria-hidden", "true");
@@ -279,7 +279,7 @@ test("simulated ride selects one candidate and keeps it after skip", async ({ pa
     "https://example.org/test-clip-station.mp3",
   ]);
   await page.getByRole("button", { name: "Skip story" }).click();
-  await page.getByRole("button", { name: /My discoveries/ }).click();
+  await page.locator(".mobile-tabs").getByRole("button", { name: /Saved/ }).click();
   await expect(page.getByRole("heading", { name: "King Manor Museum" })).toBeVisible();
   await expect(page.locator(".nav-count")).toHaveText("1");
   expect(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth)).toBe(false);

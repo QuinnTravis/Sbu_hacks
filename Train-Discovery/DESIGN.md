@@ -67,8 +67,10 @@ A restrained instrument accent on the Waymo base. It does not replace the palett
 ### Where it may appear
 
 - One 1px steel hairline on the ride map frame.
-- The 1px steel tick under the compass readout, and steel marks on the loading, empty-aim, and failed-catalog queue states. Loading ticks may breathe; they stay steel.
+- The 1px steel tick under the compass readout.
 - One 2px steel mark on the catalog retry alert.
+
+The Saved views, the discovery card, and the tab bar carry no steel.
 
 ### Forbidden
 
@@ -84,13 +86,15 @@ Locally hosted, Latin-subset Google Sans variable font under OFL, with its licen
 
 ## Layout
 
-The ride map fills the viewport on phone and desktop. Its camera stays north-up and centered; pointing changes the cone, not the camera. Header, route status, audio, and navigation float above this canvas. Respect safe areas and dynamic viewport height. Keep the discovery sheet and queue content capped at 660px on desktop; the map itself has no content-width cap.
+The ride map fills the viewport on phone and desktop. Its camera stays north-up and centered; pointing changes the cone, not the camera. Header, route status, audio, and navigation float above this canvas. Respect safe areas and dynamic viewport height. Keep the discovery sheet and Saved content capped at 660px on desktop, both during a ride and on the home Saved view; the map itself has no content-width cap.
 
-Holding an aim for 450ms reveals a compact nonmodal sheet with place names and distances. The sheet retains its candidate snapshot while it is open, so turning the phone cannot move a row under a finger. Selecting a candidate adds it to the ride queue and expands its photo/story in that same sheet, preserving the map behind it. A selected card remains while reading, even after heading changes. Drag the handle or use its accessible button to expand/collapse; close or drag down to dismiss. Closing never discards a discovery. Discard discovery is a separate labeled action within the full card.
+Holding an aim for 450ms reveals a compact nonmodal sheet with place names and distances. The sheet retains its candidate snapshot while it is open, so turning the phone cannot move a row under a finger. Selecting a candidate expands its photo/story in that same sheet, preserving the map behind it; selecting does not save. A selected card remains while reading, even after heading changes. Drag the handle or use its accessible button to expand/collapse; close or drag down to dismiss. Closing only closes. The card has no paging. Its footer is one row: “Not interested” as a muted text button on the left, which hides the place for the rest of the ride, and Save as a pill on the right.
 
 Use one continuous spring for entrance, dragging, snap, and exit; drag follows the pointer without a CSS transition or React render per frame. Clamp overshoot, preserve the current animation position when interrupted, and disable motion for reduced-motion preferences. The handle and close control have at least 44px targets. The sheet is a nonmodal region with no backdrop or focus trap; its content scrolls separately. Closed sheets are inert. Nested photo dialogs own Escape before the sheet. Keep the sheet above the floating navigation, including the collapsed geometry and short landscape; do not let its backing cover the tab bar. Expanded reading replaces the route/audio chrome with a concise route and simulation/status row below the app header, leaving clear space for attribution. Attribution disclosure temporarily uses that context row. In short landscape, the selected card puts its text before the photo while retaining every section in the scroller.
 
-The source summary, evidence state, photo details, and sources remain on the expanded discovery card. The chooser is text-only. Ride-queue and saved-discovery rows remain text-only. Map attribution remains a compact, keyboard-accessible expandable control with complete source links. Place it where neither the navigation nor the discovery sheet blocks it. Sensor failures, catalog retry, and simulated rides remain explicit. Route selection retains its geographic map, searchable route sheet, and Start ride action.
+The source summary, evidence state, photo details, and sources remain on the expanded discovery card. The chooser is text-only. Saved rows remain text-only. Map attribution remains a compact, keyboard-accessible expandable control with complete source links. Place it where neither the navigation nor the discovery sheet blocks it. Sensor failures, catalog retry, and simulated rides remain explicit. Route selection retains its geographic map, searchable route sheet, and Start ride action.
+
+There is no ride queue; Saved is the one list. The in-ride Saved tab and the home Saved tab render the same view: a plain “Saved” heading, the current card with its Save pill (plus Previous, count, and Next when more than one place is saved), and the text-only list below. The heading appears only when something is saved. The empty state is one paper card with the blue book window and “Nothing saved yet”; the home view adds a Start discovering primary button, and the ride view adds nothing because Discover is the adjacent tab. Short landscape drops the book window.
 
 ## Elevation & Depth
 
@@ -102,7 +106,7 @@ Match the supplied pill controls, round navigation selection, and large sheet ra
 
 ## Components
 
-Outlined black icons, white circular utility controls, blue primary actions, gray capsule selection. Every navigation control has a real action; discoveries are unavailable before starting a ride. Sensor errors, offline status, and unavailable providers remain explicit. Queue entries persist until discarded.
+Outlined black icons, white circular utility controls, blue primary actions, gray capsule selection. Every navigation control has a real action. The floating navigation is My ride / Saved / About before a ride and Discover / Saved / About during one; the active tab takes the gray capsule. The Saved tab’s blue count badge appears only when the count is above zero; it is a 20px pill that grows away from the icon, never over the label. Save on a card is a 44px pill: tinted blue `#e9f2ff` with blue text and a bookmark-plus icon, and once saved, the `soft` `#dfe3eb` gray capsule with ink text and a bookmark-check icon. Sensor errors, offline status, and unavailable providers remain explicit. Saved entries persist on the device until removed.
 
 ## Do's and Don'ts
 

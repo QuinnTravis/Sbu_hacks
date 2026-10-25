@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { alreadyDiscovered, chooseReplayTarget, holdCandidateRows, rankPointingCandidates, replayCatalogStatus, replayPriority, sameDiscoverySite } from "../src/lib/discovery-targets";
-import { enqueue } from "../src/lib/queue";
+import { chooseReplayTarget, holdCandidateRows, isDismissed, rankPointingCandidates, replayCatalogStatus, replayPriority, sameDiscoverySite } from "../src/lib/discovery-targets";
+import { dismiss } from "../src/lib/dismiss";
 import { bearing, distance } from "../src/lib/geo";
 import type { Place, Ride } from "../src/lib/types";
 
@@ -38,7 +38,7 @@ const manor = { ...place("manor-1", "King Manor Museum", 0.0049, "Art & culture"
 const subway = { ...place("subway-1", "King Manor station", 0.0005, "Railway history"), evidence: [source] };
 const plain = place("plain-1", "Johnson Yard", 0.0004, "Infrastructure");
 const duplicate = place("station-2", "Jamaica", 0.0007, "Railway history");
-const ride: Ride = { routeId: "10", startedAt: 1, replay: true, queue: [], dismissed: [] };
+const ride: Ride = { routeId: "10", startedAt: 1, replay: true, dismissed: [] };
 
 describe("demo discovery selection", () => {
   it("prefers verified stories, then a sourced landmark, ahead of closer station metadata", () => {
@@ -49,9 +49,9 @@ describe("demo discovery selection", () => {
     expect(replayPriority(subway)).toBe(1);
     expect(replayPriority(plain)).toBe(0);
     expect(chooseReplayTarget(candidates, ride, center, byId)?.id).toBe(jamaica.id);
-    const afterJamaica = { ...ride, queue: [{ place: jamaica, foundAt: 1, distance: 60 }] };
+    const afterJamaica = dismiss(ride, jamaica);
     expect(chooseReplayTarget(candidates, afterJamaica, center, byId)?.id).toBe(manor.id);
-    const afterManor = { ...afterJamaica, dismissed: [manor.id] };
+    const afterManor = dismiss(afterJamaica, manor);
     expect(chooseReplayTarget(candidates, afterManor, center, byId)?.id).toBe(subway.id);
   });
 
@@ -60,8 +60,10 @@ describe("demo discovery selection", () => {
     expect(sameDiscoverySite(jamaica, { ...duplicate, lat: 40.71 })).toBe(false);
     expect(sameDiscoverySite(jamaica, { ...duplicate, name: "Jamaica Avenue" })).toBe(false);
     const catalog = new Map<string, Place>([[jamaica.id, jamaica], [duplicate.id, duplicate]]);
-    expect(alreadyDiscovered(duplicate, { ...ride, dismissed: [jamaica.id] }, catalog)).toBe(true);
-    expect(alreadyDiscovered(duplicate, { ...ride, queue: [{ place: jamaica, foundAt: 1, distance: 50 }] }, catalog)).toBe(true);
+    expect(isDismissed(duplicate, { ...ride, dismissed: [jamaica.id] }, catalog)).toBe(true);
+    // A remembered site still hides a sibling node that is not in the loaded catalog.
+    expect(isDismissed(duplicate, dismiss(ride, jamaica), new Map())).toBe(true);
+    expect(isDismissed(manor, dismiss(ride, jamaica), new Map())).toBe(false);
   });
 
   it("does not aim at an unsupported place or unrelated Wikipedia article", () => {
@@ -115,19 +117,19 @@ describe("pointing candidates", () => {
     expect(ranked[0]!.alignment).toBeLessThan(ranked.find((item) => item.place.id === "closer")!.alignment);
     expect(ranked[0]!.meters).toBeGreaterThan(ranked.find((item) => item.place.id === "closer")!.meters);
     expect(rankPointingCandidates([aligned, ...extras], center, heading, ride, by([aligned, ...extras]))).toHaveLength(4);
-    expect(ride.queue).toHaveLength(0);
+    expect(ride.dismissed).toHaveLength(0);
   });
 
-  it("lists the sourced node for a duplicate site and does not save anything by aiming", () => {
+  it("lists the sourced node for a duplicate site and hides a place the rider is not interested in", () => {
     const candidates = [duplicate, jamaica, manor];
     const ranked = rankPointingCandidates(candidates, center, heading, ride, by(candidates));
     expect(ranked.map((item) => item.place.id)).toContain("station-1");
     expect(ranked.map((item) => item.place.id)).not.toContain("station-2");
     expect(ranked.every((item) => item.place.id !== "plain-1")).toBe(true);
     const chosen = ranked.find((item) => item.place.id === jamaica.id)!;
-    const saved = enqueue(ride, chosen.place, chosen.meters, 50);
-    expect(saved.queue.map((entry) => entry.place.id)).toEqual([jamaica.id]);
-    expect(rankPointingCandidates(candidates, center, heading, saved, by(candidates)).map((item) => item.place.id)).not.toContain(jamaica.id);
+    expect(rankPointingCandidates(candidates, center, heading, ride, by(candidates)).map((item) => item.place.id)).toContain(chosen.place.id);
+    const hidden = dismiss(ride, chosen.place);
+    expect(rankPointingCandidates(candidates, center, heading, hidden, by(candidates)).map((item) => item.place.id)).not.toContain(jamaica.id);
     expect(rankPointingCandidates(candidates, center, null, ride, by(candidates))).toEqual([]);
   });
 

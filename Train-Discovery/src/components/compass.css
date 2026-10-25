@@ -90,7 +90,7 @@
 /* In short viewports the header and audio can consume the entire bounded
    ride area. Let the document scroll instead; the shell's existing bottom
    clearance still lets the final row or card footer move above the fixed
-   navigation. Compass stays mounted in the hidden panel during queue view,
+   navigation. Compass stays mounted in the hidden panel during saved view,
    so the marker scopes this repair to both views of the same ride. */
 @media (max-height: 540px) {
   .app-shell:not(.route-select-shell):has(.ride-columns .train-compass) {

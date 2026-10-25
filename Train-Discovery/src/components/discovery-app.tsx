@@ -1,6 +1,13 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -9,7 +16,6 @@ import {
   Route as RouteIcon,
   Check,
   ChevronRight,
-  Compass as CompassIcon,
   LocateFixed,
   MapPin,
   Pause,
@@ -23,7 +29,7 @@ import {
 } from "lucide-react";
 import { useSensors } from "@/hooks/use-sensors";
 import { useAudioGuide } from "@/hooks/use-audio-guide";
-import { audioEvidence, audioNarration } from "@/lib/narration";
+import { nearbyNarrationScore } from "@/lib/podcast-director";
 import {
   POINTING_RADIUS_M,
   bearing,
@@ -33,18 +39,18 @@ import {
   cameraHeading,
   normalize,
 } from "@/lib/geo";
-import { discard, enqueue } from "@/lib/queue";
+import { dismiss } from "@/lib/dismiss";
 import {
   isSaved,
   mergeCatalogPlaces,
   mergeSavedNarration,
-  refreshQueuedPlaces,
   refreshSaved,
   savePlace,
   unsavePlace,
 } from "@/lib/saved";
 import {
   chooseReplayTarget,
+  isDismissed,
   rankPointingCandidates,
   replayCatalogStatus,
   sameDiscoverySite,
@@ -77,7 +83,6 @@ export function DiscoveryApp({ rail }: { rail: RailData }) {
   >("idle");
   const [retry, setRetry] = useState(0);
   const [online, setOnline] = useState(true);
-  const [cardIndex, setCardIndex] = useState(0);
   const [replayOffset, setReplayOffset] = useState(0);
   const [devOpen, setDevOpen] = useState(false);
   const [speed, setSpeed] = useState(60);
@@ -86,16 +91,14 @@ export function DiscoveryApp({ rail }: { rail: RailData }) {
   const [manualHeading, setManualHeading] = useState(0);
   const [manualPitch, setManualPitch] = useState(90);
   const [playing, setPlaying] = useState(true);
-  const [endConfirm, setEndConfirm] = useState(false);
-  const [view, setView] = useState<"point" | "queue">("point");
-  const [homeView, setHomeView] = useState<"map" | "discoveries">("map");
+  const [view, setView] = useState<"point" | "saved">("point");
+  const [homeView, setHomeView] = useState<"map" | "saved">("map");
   const [saved, setSaved] = useState<SavedEntry[]>([]);
   const [savedCursor, setSavedCursor] = useState(0);
-  const [discoveryList, setDiscoveryList] = useState<"ride" | "saved">("ride");
   const [poiOpen, setPoiOpen] = useState(false);
   const [poiExpanded, setPoiExpanded] = useState(false);
   const [poiSnapshot, setPoiSnapshot] = useState<PointingCandidate[]>([]);
-  const [activePoiId, setActivePoiId] = useState<string | null>(null);
+  const [activePoi, setActivePoi] = useState<{ place: Place; distance: number } | null>(null);
   const [dismissedPoiKey, setDismissedPoiKey] = useState("");
   const savedRef = useRef(saved);
   const storageBroken = useRef(false);
@@ -197,15 +200,6 @@ export function DiscoveryApp({ rail }: { rail: RailData }) {
               ? "cached"
               : "ready",
           );
-          setRide((current) => {
-            if (!current) return current;
-            const queue = refreshQueuedPlaces(
-              current.queue,
-              catalog,
-              savedRef.current,
-            );
-            return queue === current.queue ? current : { ...current, queue };
-          });
           setSaved((current) => refreshSaved(current, catalog));
         }
       })
@@ -309,26 +303,17 @@ export function DiscoveryApp({ rail }: { rail: RailData }) {
   const offRoute = Boolean(
     position && route && routeDistance(position, route) > 1500,
   );
-  const nearbyAudioPlaces = useMemo(
-    () =>
-      position && gpsFresh && !offRoute && ride
-        ? places
-            .filter(
-              (place) =>
-                !ride.dismissed.includes(place.id) &&
-                distance(position, place) <= 1100 &&
-                (Boolean(audioNarration(place)) ||
-                  audioEvidence(place).length > 0),
-            )
-            .sort(
-              (a, b) =>
-                Number(audioNarration(b)?.kind === "verified") -
-                  Number(audioNarration(a)?.kind === "verified") ||
-                distance(position, a) - distance(position, b),
-            )
-        : [],
-    [position, gpsFresh, offRoute, ride, places],
-  );
+  const nearbyAudioPlaces = useMemo(() => {
+    if (!position || !gpsFresh || offRoute || !ride) return [];
+    return places
+      .flatMap((place) => {
+        if (isDismissed(place, ride, placesById)) return [];
+        const score = nearbyNarrationScore(place, distance(position, place));
+        return score === null ? [] : [{ place, score }];
+      })
+      .sort((a, b) => b.score - a.score)
+      .map(({ place }) => place);
+  }, [position, gpsFresh, offRoute, ride, places, placesById]);
   const rememberNarration = useCallback((narratedPlace: Place) => {
     if (!narratedPlace?.story) return;
     // Keep the spoken, checked claims and their exact passages on the saved
@@ -339,20 +324,11 @@ export function DiscoveryApp({ rail }: { rail: RailData }) {
         place.story?.evidenceHash !== narratedPlace.story?.evidenceHash)
         ? narratedPlace
         : place;
-    setRide((current) => {
-      if (
-        !current ||
-        !current.queue.some((entry) => merge(entry.place) !== entry.place)
-      )
-        return current;
-      return {
-        ...current,
-        queue: current.queue.map((entry) => ({
-          ...entry,
-          place: merge(entry.place),
-        })),
-      };
-    });
+    setActivePoi((current) =>
+      current && merge(current.place) !== current.place
+        ? { ...current, place: narratedPlace }
+        : current,
+    );
     setPlaces((current) =>
       current.some((place) => merge(place) !== place)
         ? current.map(merge)
@@ -361,7 +337,6 @@ export function DiscoveryApp({ rail }: { rail: RailData }) {
     setSaved((current) => mergeSavedNarration(current, narratedPlace));
   }, []);
   const audioGuide = useAudioGuide(
-    ride?.queue,
     nearbyAudioPlaces,
     ride?.dismissed,
     ride?.startedAt ?? null,
@@ -404,14 +379,6 @@ export function DiscoveryApp({ rail }: { rail: RailData }) {
         : !canDetect && replayStatus === "empty"
           ? "Paused — no sourced place in range."
           : undefined;
-  const queueTone =
-    view === "queue" && packageState === "error"
-      ? "is-failed"
-      : view === "queue" && replayStatus === "empty"
-        ? "is-unsourced"
-        : view === "queue" && catalogPending
-          ? "is-waiting"
-          : "";
 
   const liveCandidates = useMemo(() => {
     if (!canDetect || !position || heading === null || !ride) return [];
@@ -443,7 +410,7 @@ export function DiscoveryApp({ rail }: { rail: RailData }) {
     // Hold the aim briefly, then retain these rows until the rider dismisses them.
     const timer = setTimeout(() => {
       setPoiSnapshot(liveCandidatesRef.current);
-      setActivePoiId(null);
+      setActivePoi(null);
       setPoiExpanded(false);
       setPoiOpen(true);
     }, 450);
@@ -452,10 +419,6 @@ export function DiscoveryApp({ rail }: { rail: RailData }) {
   useEffect(() => {
     if (!candidateKey) queueMicrotask(() => setDismissedPoiKey(""));
   }, [candidateKey]);
-  const activePoiIndex =
-    ride?.queue.findIndex((entry) => entry.place.id === activePoiId) ?? -1;
-  const activePoi =
-    activePoiIndex >= 0 ? ride?.queue[activePoiIndex] : undefined;
   const dismissPoi = () => {
     setDismissedPoiKey(candidateKey);
     setPoiOpen(false);
@@ -483,21 +446,9 @@ export function DiscoveryApp({ rail }: { rail: RailData }) {
       ? nearby
       : ranked
   ).filter((r) => r.route.name.toLowerCase().includes(search.toLowerCase()));
-  const currentIndex = Math.max(
-    0,
-    Math.min(cardIndex, (ride?.queue.length ?? 1) - 1),
-  );
-  const currentEntry = ride?.queue[currentIndex];
   const savedIndex = saved.length
     ? Math.max(0, Math.min(savedCursor, saved.length - 1))
     : 0;
-  const visibleSaved = saved[savedIndex];
-  const queuedSaved =
-    visibleSaved && ride
-      ? ride.queue.find((entry) =>
-          sameDiscoverySite(entry.place, visibleSaved.place),
-        )
-      : undefined;
   const toggleSaved = (place: Place) => {
     const removedIndex = saved.findIndex((entry) =>
       sameDiscoverySite(entry.place, place),
@@ -514,7 +465,7 @@ export function DiscoveryApp({ rail }: { rail: RailData }) {
   };
   const storageNotice = storageError ? (
     <p className="inline-notice" role="alert">
-      Device storage is full or blocked. Keep this tab open to retain your queue
+      Device storage is full or blocked. Keep this tab open to retain your ride
       and saved discoveries.
     </p>
   ) : null;
@@ -536,18 +487,15 @@ export function DiscoveryApp({ rail }: { rail: RailData }) {
     setDirection(1);
     setHeadingMode(replay ? "auto" : "phone");
     setPlaying(true);
-    setCardIndex(0);
     setPoiOpen(false);
-    setActivePoiId(null);
+    setActivePoi(null);
     setDismissedPoiKey("");
-    setDiscoveryList("ride");
     setView("point");
     setSelected(id);
     setRide({
       routeId: id,
       startedAt: Date.now(),
       replay,
-      queue: [],
       dismissed: [],
     });
   };
@@ -597,28 +545,20 @@ export function DiscoveryApp({ rail }: { rail: RailData }) {
     sensors.stop();
     setRide(null);
     setPlaces([]);
-    setEndConfirm(false);
+    setPoiOpen(false);
+    setActivePoi(null);
   };
   const selectCandidate = (candidate: PointingCandidate) => {
-    const now = Date.now();
-    const existing =
-      ride?.queue.findIndex((entry) =>
-        sameDiscoverySite(entry.place, candidate.place),
-      ) ?? -1;
-    setCardIndex(existing >= 0 ? existing : (ride?.queue.length ?? 0));
-    setActivePoiId(
-      existing >= 0 ? ride!.queue[existing].place.id : candidate.place.id,
-    );
+    setActivePoi({ place: candidate.place, distance: candidate.meters });
     setPoiExpanded(true);
     setPoiOpen(true);
-    setDiscoveryList("ride");
     setView("point");
-    setRide((current) =>
-      current
-        ? enqueue(current, candidate.place, candidate.meters, now)
-        : current,
-    );
-    audioGuide.schedule(candidate.place, now);
+    audioGuide.schedule(candidate.place, Date.now());
+  };
+  const notInterested = (place: Place) => {
+    setRide((current) => (current ? dismiss(current, place) : current));
+    setActivePoi(null);
+    dismissPoi();
   };
   const gpsMessage =
     sensors.gpsStatus === "denied"
@@ -677,21 +617,23 @@ export function DiscoveryApp({ rail }: { rail: RailData }) {
         </div>
       </header>
       <main id="main-content">
-        {!ride && homeView === "discoveries" ? (
+        {!ride && homeView === "saved" ? (
           <section
             className={`home-discoveries${saved.length ? " is-filled" : ""}`}
             aria-label="Saved discoveries"
           >
             {!hydrated ? (
-              <div className="home-discoveries-card" role="status">
+              <div className="saved-empty" role="status">
                 Loading saved discoveries…
               </div>
-            ) : saved.length === 0 ? (
-              <div className="home-discoveries-card">
-                <span className="empty-window" aria-hidden="true">
-                  <BookOpen size={31} strokeWidth={1.5} />
-                </span>
-                <h1>No saved discoveries yet</h1>
+            ) : (
+              <SavedPlaces
+                entries={saved}
+                index={savedIndex}
+                onIndex={setSavedCursor}
+                onToggle={toggleSaved}
+                position={position}
+              >
                 <button
                   className="primary-button"
                   onClick={() => setHomeView("map")}
@@ -699,21 +641,7 @@ export function DiscoveryApp({ rail }: { rail: RailData }) {
                   Start discovering
                   <ArrowRight size={18} />
                 </button>
-              </div>
-            ) : (
-              <>
-                <div className="queue-heading">
-                  <h2>Saved</h2>
-                  <span className="count-badge">{saved.length}</span>
-                </div>
-                <SavedPlaces
-                  entries={saved}
-                  index={savedIndex}
-                  onIndex={setSavedCursor}
-                  onToggle={toggleSaved}
-                  position={position}
-                />
-              </>
+              </SavedPlaces>
             )}
             {storageNotice}
           </section>
@@ -907,9 +835,7 @@ export function DiscoveryApp({ rail }: { rail: RailData }) {
               className="ride-top-controls"
               inert={poiOpen && poiExpanded && view === "point"}
             >
-              <div
-                className={`ride-heading${endConfirm ? " is-confirming" : ""}`}
-              >
+              <div className="ride-heading">
                 <div className="ride-heading-text">
                   <div className="ride-route-name">
                     <h1>{route?.name.replace(" Branch", "")}</h1>
@@ -925,34 +851,13 @@ export function DiscoveryApp({ rail }: { rail: RailData }) {
                     )}
                   </p>
                 </div>
-                {endConfirm ? (
-                  <div className="end-confirm">
-                    <span>End ride and clear the queue?</span>
-                    <button
-                      className="icon-button"
-                      onClick={() => setEndConfirm(false)}
-                      aria-label="Keep riding"
-                    >
-                      <X size={18} />
-                    </button>
-                    <button
-                      className="end-confirm-action"
-                      onClick={finish}
-                    >
-                      End ride
-                    </button>
-                  </div>
-                ) : (
-                  <button
-                    className="secondary-button"
-                    onClick={() =>
-                      ride.queue.length ? setEndConfirm(true) : finish()
-                    }
-                    aria-label="End ride"
-                  >
-                    End
-                  </button>
-                )}
+                <button
+                  className="secondary-button"
+                  onClick={finish}
+                  aria-label="End ride"
+                >
+                  End
+                </button>
               </div>
               <AudioGuideBar
                 guide={audioGuide}
@@ -964,12 +869,6 @@ export function DiscoveryApp({ rail }: { rail: RailData }) {
                   const place = audioGuide.currentPlace;
                   if (!place) return;
                   setSaved((current) => savePlace(current, place));
-                  if (!position) return;
-                  setRide((current) =>
-                    current
-                      ? enqueue(current, place, distance(position, place))
-                      : current,
-                  );
                 }}
               />
               {packageState === "error" && (
@@ -1021,14 +920,16 @@ export function DiscoveryApp({ rail }: { rail: RailData }) {
                 Discover
               </button>
               <button
-                aria-pressed={view === "queue"}
-                onClick={() => setView("queue")}
+                aria-pressed={view === "saved"}
+                onClick={() => setView("saved")}
               >
                 <span className="nav-icon">
                   <BookOpen size={25} strokeWidth={1.8} />
-                  <span className="nav-count">{ride.queue.length}</span>
+                  {saved.length > 0 && (
+                    <span className="nav-count">{saved.length}</span>
+                  )}
                 </span>
-                <span>My discoveries</span>
+                <span>Saved</span>
               </button>
               <Link href="/about">
                 <span className="nav-icon">
@@ -1183,32 +1084,13 @@ export function DiscoveryApp({ rail }: { rail: RailData }) {
                       <div hidden={!poiExpanded}>
                         <PlaceCard
                           key={activePoi.place.id}
-                          entry={activePoi}
-                          index={activePoiIndex}
-                          total={ride.queue.length}
-                          onNavigate={(index) => {
-                            setActivePoiId(ride.queue[index]?.place.id ?? null);
-                            setCardIndex(index);
-                          }}
-                          onNarrate={() =>
-                            audioGuide.replay(activePoi.place.id)
-                          }
+                          place={activePoi.place}
+                          distance={activePoi.distance}
+                          onNarrate={() => audioGuide.replay(activePoi.place)}
                           saved={isSaved(saved, activePoi.place)}
                           onSave={() => toggleSaved(activePoi.place)}
+                          onNotInterested={() => notInterested(activePoi.place)}
                         />
-                        <button
-                          className="text-button poi-discard"
-                          onClick={() => {
-                            setRide((current) =>
-                              current
-                                ? discard(current, activePoi.place.id)
-                                : current,
-                            );
-                            dismissPoi();
-                          }}
-                        >
-                          Discard discovery
-                        </button>
                       </div>
                     </>
                   ) : (
@@ -1220,145 +1102,20 @@ export function DiscoveryApp({ rail }: { rail: RailData }) {
                   )}
                 </PoiSheet>
               </section>
-              {view === "queue" && (
-                <section
-                  className="queue-panel"
-                  aria-label={
-                    discoveryList === "saved"
-                      ? "Saved discoveries"
-                      : "Your discovery queue"
-                  }
-                >
-                  <div className="queue-heading">
-                    <h2>My discoveries</h2>
-                  </div>
-                  <div
-                    className="queue-segments"
-                    role="group"
-                    aria-label="Discovery list"
-                  >
-                    <button
-                      aria-pressed={discoveryList === "ride"}
-                      onClick={() => setDiscoveryList("ride")}
-                    >
-                      This ride
-                      <span className="segment-count">
-                        {ride.queue.length}
-                      </span>
-                    </button>
-                    <button
-                      aria-pressed={discoveryList === "saved"}
-                      onClick={() => setDiscoveryList("saved")}
-                    >
-                      Saved
-                      <span className="segment-count">{saved.length}</span>
-                    </button>
-                  </div>
-                  {discoveryList === "saved" ? (
-                    <SavedPlaces
-                      entries={saved}
-                      index={savedIndex}
-                      onIndex={setSavedCursor}
-                      onToggle={toggleSaved}
-                      distance={queuedSaved?.distance}
-                      position={position}
-                      onNarrate={
-                        queuedSaved
-                          ? () => audioGuide.replay(queuedSaved.place.id)
-                          : undefined
-                      }
-                      onDiscard={
-                        queuedSaved
-                          ? () =>
-                              setRide((current) =>
-                                current
-                                  ? discard(current, queuedSaved.place.id)
-                                  : current,
-                              )
-                          : undefined
-                      }
-                    />
-                  ) : currentEntry ? (
-                    <>
-                      <PlaceCard
-                        key={currentEntry.place.id}
-                        entry={currentEntry}
-                        index={currentIndex}
-                        total={ride.queue.length}
-                        onNavigate={setCardIndex}
-                        onNarrate={() =>
-                          audioGuide.replay(currentEntry.place.id)
-                        }
-                        saved={isSaved(saved, currentEntry.place)}
-                        onSave={() => toggleSaved(currentEntry.place)}
-                        onDiscard={() =>
-                          setRide((current) =>
-                            current
-                              ? discard(current, currentEntry.place.id)
-                              : current,
-                          )
-                        }
-                      />
-                      {ride.queue.length > 1 && (
-                        <div className="queue-strip">
-                          {ride.queue.map((entry, i) => (
-                            <button
-                              key={entry.place.id}
-                              onClick={() => setCardIndex(i)}
-                              className={currentIndex === i ? "selected" : ""}
-                              aria-pressed={currentIndex === i}
-                            >
-                              <span className="queue-index">
-                                {String(i + 1).padStart(2, "0")}
-                              </span>
-                              <span className="queue-strip-name">
-                                {entry.place.name}
-                              </span>
-                              <span className="candidate-distance">
-                                {formatDistance(entry.distance)}
-                              </span>
-                              <ChevronRight size={13} />
-                            </button>
-                          ))}
-                        </div>
-                      )}
-                    </>
-                  ) : (
-                    <div
-                      className={`queue-empty${queueTone ? ` ${queueTone}` : ""}`}
-                    >
-                      <div className="empty-window">
-                        <CompassIcon size={31} strokeWidth={1.2} />
-                      </div>
-                      {queueTone === "is-waiting" && (
-                        <span className="steel-meter" aria-hidden="true">
-                          <span />
-                          <span />
-                          <span />
-                          <span />
-                          <span />
-                        </span>
-                      )}
-                      <h3>
-                        {view === "queue" && packageState === "error"
-                          ? "Places didn’t load"
-                          : view === "queue" && replayStatus === "empty"
-                            ? "No sourced place in range."
-                            : view === "queue" && catalogPending
-                              ? "Loading places…"
-                              : "Point your phone at a place"}
-                      </h3>
-                    </div>
-                  )}
+              {view === "saved" && (
+                <section className="saved-panel" aria-label="Saved discoveries">
+                  <SavedPlaces
+                    entries={saved}
+                    index={savedIndex}
+                    onIndex={setSavedCursor}
+                    onToggle={toggleSaved}
+                    position={position}
+                    onNarrate={audioGuide.replay}
+                  />
                 </section>
               )}
             </div>
             {storageNotice}
-            <p className="sr-only" aria-live="polite">
-              {ride.queue.length
-                ? `${ride.queue.length} discoveries in your queue. Latest: ${ride.queue[ride.queue.length - 1].place.name}.`
-                : "No discoveries yet."}
-            </p>
           </div>
         )}
       </main>
@@ -1394,7 +1151,6 @@ export function DiscoveryApp({ rail }: { rail: RailData }) {
         }}
         stations={devStations}
         onStation={seek}
-        queueCount={ride?.queue.length ?? 0}
         pausedReason={detectionPaused}
       />
       {!ride && (
@@ -1409,8 +1165,8 @@ export function DiscoveryApp({ rail }: { rail: RailData }) {
             My ride
           </button>
           <button
-            aria-current={homeView === "discoveries" ? "page" : undefined}
-            onClick={() => setHomeView("discoveries")}
+            aria-current={homeView === "saved" ? "page" : undefined}
+            onClick={() => setHomeView("saved")}
           >
             <span className="nav-icon">
               <BookOpen size={25} strokeWidth={1.8} />
@@ -1418,7 +1174,7 @@ export function DiscoveryApp({ rail }: { rail: RailData }) {
                 <span className="nav-count">{saved.length}</span>
               )}
             </span>
-            Discoveries
+            Saved
           </button>
           <Link href="/about">
             <span className="nav-icon">
@@ -1438,23 +1194,25 @@ function SavedPlaces({
   onIndex,
   onToggle,
   onNarrate,
-  onDiscard,
-  distance: cardDistance,
   position,
+  children,
 }: {
   entries: SavedEntry[];
   index: number;
   onIndex: (index: number) => void;
   onToggle: (place: Place) => void;
-  onNarrate?: () => void;
-  onDiscard?: () => void;
-  distance?: number;
+  onNarrate?: (place: Place) => void;
   position?: { lat: number; lon: number } | null;
+  children?: ReactNode;
 }) {
   if (!entries.length) {
     return (
-      <div className="queue-empty">
-        <h3>Nothing saved yet.</h3>
+      <div className="saved-empty">
+        <span className="empty-window" aria-hidden="true">
+          <BookOpen size={31} strokeWidth={1.5} />
+        </span>
+        <h2>Nothing saved yet</h2>
+        {children}
       </div>
     );
   }
@@ -1462,23 +1220,20 @@ function SavedPlaces({
   const entry = entries[current];
   return (
     <>
+      <h2 className="saved-heading">Saved</h2>
       <PlaceCard
         key={entry.place.id}
-        entry={{
-          place: entry.place,
-          foundAt: entry.savedAt,
-          distance: cardDistance ?? Number.NaN,
-        }}
+        place={entry.place}
+        distance={position ? distance(position, entry.place) : Number.NaN}
         index={current}
         total={entries.length}
         onNavigate={onIndex}
         saved
         onSave={() => onToggle(entry.place)}
-        onNarrate={onNarrate}
-        onDiscard={onDiscard}
+        onNarrate={onNarrate ? () => onNarrate(entry.place) : undefined}
       />
       {entries.length > 1 && (
-        <div className="queue-strip">
+        <div className="saved-strip">
           {entries.map((item, i) => {
             const meters = position
               ? distance(position, item.place)
@@ -1490,10 +1245,10 @@ function SavedPlaces({
                 className={current === i ? "selected" : ""}
                 aria-pressed={current === i}
               >
-                <span className="queue-index">
+                <span className="saved-index">
                   {String(i + 1).padStart(2, "0")}
                 </span>
-                <span className="queue-strip-name">{item.place.name}</span>
+                <span className="saved-strip-name">{item.place.name}</span>
                 {Number.isFinite(meters) ? (
                   <span className="candidate-distance">
                     {formatDistance(meters)}

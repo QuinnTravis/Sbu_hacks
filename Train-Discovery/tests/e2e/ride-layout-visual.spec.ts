@@ -149,7 +149,7 @@ for (const viewport of [{ width: 360, height: 740 }, { width: 1366, height: 768 
     await expect(expandedStatus).toBeVisible();
     await expect(expandedStatus).toContainText("Babylon");
     await expect(expandedStatus).toContainText("Simulated ride");
-    await expect(page.locator(".nav-count")).toHaveText("1");
+    await expect(page.locator(".nav-count")).toHaveCount(0);
     await expect(page.locator(".place-photo > img")).toBeVisible();
     await closeSheet(page);
     await expect(page.locator(".audio-next-name")).toHaveText(LONG_NAME);
@@ -158,10 +158,10 @@ for (const viewport of [{ width: 360, height: 740 }, { width: 1366, height: 768 
     await expectVisibleTextFragment(page.locator(".audio-next-name"), "King");
     await expectReachable(page.getByRole("button", { name: "Play now", exact: true }));
     await page.screenshot({ path: info.outputPath("babylon-selected-queued.png") });
-    await page.getByRole("button", { name: /My discoveries/ }).click();
-    await expect(page.getByRole("heading", { name: LONG_NAME, exact: true })).toBeVisible();
+    await page.locator(".mobile-tabs").getByRole("button", { name: /Saved/ }).click();
+    await expect(page.getByRole("heading", { name: "Nothing saved yet" })).toBeVisible();
     await page.getByRole("button", { name: "Discover", exact: true }).click();
-    await reopenChooser(page, 3);
+    await reopenChooser(page);
     await expectReachable(page.locator(".candidate-row").last());
     await expectNoRideIntersections(page);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
@@ -305,7 +305,7 @@ for (const viewport of [
     await expect(instruction).toBeInViewport({ ratio: 1 });
     await expectNoRideIntersections(page);
     await page.screenshot({ path: info.outputPath("chooser.png") });
-    await expect(page.locator(".candidate-row img, .queue-strip img, .place-thumb")).toHaveCount(0);
+    await expect(page.locator(".candidate-row img, .saved-strip img, .place-thumb")).toHaveCount(0);
     await expect(page.locator(".candidate-row")).toHaveCount(4);
     // Actually select every row, including rows initially below the sheet fold.
     for (const [index, place] of places.entries()) {
@@ -316,10 +316,10 @@ for (const viewport of [
       await settled(page, true);
       await expect(page.getByRole("heading", { name: place.name, exact: true })).toBeVisible();
       await expect(page.locator(".place-photo")).toBeVisible();
-      if (index < places.length - 1) await reopenChooser(page, places.length - index - 1);
+      if (index < places.length - 1) await reopenChooser(page);
       else await closeSheet(page);
     }
-    await expect(page.locator(".nav-count")).toHaveText("4");
+    await expect(page.locator(".nav-count")).toHaveCount(0);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   });
 
@@ -338,10 +338,10 @@ for (const viewport of [
     await expectReachable(sources);
     await sources.click();
     await expect(page.locator(".poi-sheet .sources")).toContainText(LONG_NAME);
-    await expectReachable(page.getByRole("button", { name: "Discard discovery", exact: true }));
+    await expectReachable(page.getByRole("button", { name: "Not interested", exact: true }));
     await page.screenshot({ path: info.outputPath("selected-card-reachable.png") });
     await closeSheet(page);
-    await expect(page.locator(".nav-count")).toHaveText("1");
+    await expect(page.locator(".nav-count")).toHaveCount(0);
     await expect(page.locator(".audio-queued")).toContainText(LONG_NAME);
     await expect(page.locator(".audio-next-name")).toHaveText(LONG_NAME);
     expect((await page.locator(".audio-next-name").boundingBox())!.width).toBeGreaterThanOrEqual(32);

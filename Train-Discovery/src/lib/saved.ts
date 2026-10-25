@@ -1,5 +1,5 @@
 import { sameDiscoverySite } from "./discovery-targets";
-import type { Evidence, Place, QueueEntry, SavedEntry, Story } from "./types";
+import type { Evidence, Place, SavedEntry, Story } from "./types";
 
 const MAX_SAVED = 500;
 
@@ -146,24 +146,4 @@ export function mergeCatalogPlaces(current: Place[], catalog: Place[], saved: Sa
     const savedPlace = saved.find((entry) => sameDiscoverySite(entry.place, place))?.place;
     return savedPlace ? keepRicherStory(withLocal, savedPlace) : withLocal;
   });
-}
-
-export function refreshQueuedPlaces(
-  queue: QueueEntry[],
-  catalog: Place[],
-  saved: SavedEntry[] = [],
-): QueueEntry[] {
-  const byId = new Map(catalog.map((place) => [place.id, place]));
-  let changed = false;
-  const next = queue.map((entry) => {
-    let place = entry.place;
-    const fromCatalog = byId.get(entry.place.id);
-    if (fromCatalog) place = keepRicherStory(place, fromCatalog);
-    const fromSaved = saved.find((item) => sameDiscoverySite(item.place, place))?.place;
-    if (fromSaved) place = keepRicherStory(place, fromSaved);
-    if (place === entry.place) return entry;
-    changed = true;
-    return { ...entry, place };
-  });
-  return changed ? next : queue;
 }

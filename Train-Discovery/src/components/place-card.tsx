@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import {
   ArrowUpRight,
+  BookmarkCheck,
+  BookmarkPlus,
   Info,
   ImageOff,
   LoaderCircle,
@@ -11,31 +13,36 @@ import {
   Volume2,
   X,
 } from "lucide-react";
-import type { Claim, Photo, QueueEntry } from "@/lib/types";
+import type { Claim, Photo, Place } from "@/lib/types";
 import { cardSummary } from "@/lib/card-face";
 import { formatDistance } from "@/lib/geo";
 import { audioNarration, narrationText, sourceExcerpt } from "@/lib/narration";
 
 export function PlaceCard({
-  entry,
-  onDiscard,
+  place,
+  distance = Number.NaN,
   index,
   total,
   onNavigate,
   onNarrate,
   onSave,
+  onNotInterested,
   saved = false,
 }: {
-  entry: QueueEntry;
-  onDiscard?: () => void;
-  index: number;
-  total: number;
-  onNavigate: (n: number) => void;
+  place: Place;
+  distance?: number;
+  index?: number;
+  total?: number;
+  onNavigate?: (n: number) => void;
   onNarrate?: () => void;
   onSave: () => void;
+  onNotInterested?: () => void;
   saved?: boolean;
 }) {
-  const { place } = entry;
+  const paging =
+    onNavigate && index !== undefined && total !== undefined && total > 1
+      ? { index, total, onNavigate }
+      : null;
   const photoDialog = useRef<HTMLDialogElement>(null);
   const [photo, setPhoto] = useState<Photo | null>(null);
   const [photoState, setPhotoState] = useState<
@@ -166,21 +173,12 @@ export function PlaceCard({
             )}
           </div>
         )}
-        {onDiscard && (
-          <button
-            className="icon-button discard-button"
-            onClick={onDiscard}
-            aria-label={`Discard ${place.name}`}
-          >
-            <X size={19} />
-          </button>
-        )}
       </div>
       <div className="place-content">
         <div className="place-meta">
           <span>{place.category}</span>
-          {Number.isFinite(entry.distance) && (
-            <span>{formatDistance(entry.distance)}</span>
+          {Number.isFinite(distance) && (
+            <span>{formatDistance(distance)}</span>
           )}
         </div>
         <h2>{place.name}</h2>
@@ -323,29 +321,43 @@ export function PlaceCard({
         </details>
       </div>
       <div className="card-footer">
+        {onNotInterested && (
+          <button className="text-button not-interested" onClick={onNotInterested}>
+            Not interested
+          </button>
+        )}
+        {paging && (
+          <>
+            <button
+              className="text-button"
+              disabled={paging.index === 0}
+              onClick={() => paging.onNavigate(paging.index - 1)}
+            >
+              Previous
+            </button>
+            <span>
+              {paging.index + 1} of {paging.total}
+            </span>
+            <button
+              className="text-button"
+              disabled={paging.index === paging.total - 1}
+              onClick={() => paging.onNavigate(paging.index + 1)}
+            >
+              Next
+            </button>
+          </>
+        )}
         <button
-          className="text-button"
-          disabled={index === 0}
-          onClick={() => onNavigate(index - 1)}
-        >
-          Previous
-        </button>
-        <span>
-          {index + 1} of {total}
-        </span>
-        <button
-          className="text-button"
-          disabled={index === total - 1}
-          onClick={() => onNavigate(index + 1)}
-        >
-          Next
-        </button>
-        <button
-          className="text-button"
+          className="save-button"
           onClick={onSave}
           aria-pressed={saved}
           aria-label={saved ? `Remove ${place.name} from saved discoveries` : `Save ${place.name}`}
         >
+          {saved ? (
+            <BookmarkCheck size={17} aria-hidden="true" />
+          ) : (
+            <BookmarkPlus size={17} aria-hidden="true" />
+          )}
           {saved ? "Saved" : "Save"}
         </button>
       </div>

@@ -31,7 +31,7 @@ When you accept an accent into the product, record the token, where it may appea
 ## What you own
 
 - Hierarchy, layout, spacing, color accents, icons, motion, and control feedback.
-- Human interactions: starting a ride, pointing, station approach, the discovery queue, audio controls, permission denial, empty stories, and offline recovery.
+- Human interactions: starting a ride, pointing, station approach, saved places, audio controls, permission denial, empty stories, and offline recovery.
 - Copy only when it clarifies an action or an uncertain state. Cut copy that describes the obvious.
 - Empty, loading, and error presentation for flows that already exist.
 - The pointing popup as a compact chooser: thumbnail, name, and distance. Keep the sourced description on the discovery card after the rider taps a candidate.
@@ -44,7 +44,7 @@ When you accept an accent into the product, record the token, where it may appea
 
 ## Shared product rules
 
-Preserve sourced narration, discoveries until the rider discards them, labeled simulation, and recoverable failure states. Keep secrets server-side. Retain the Next.js PWA, Supabase, and existing providers unless there is a concrete reason to change them; changes to those foundations belong to the builder. Do not invent facts or present proximity as proof of visibility. Stations say “Station approaching: [station name].” Pointed POIs acknowledge the gesture and include a sourced fact.
+Preserve sourced narration, saved places until the rider removes them, labeled simulation, and recoverable failure states. Keep secrets server-side. Retain the Next.js PWA, Supabase, and existing providers unless there is a concrete reason to change them; changes to those foundations belong to the builder. Do not invent facts or present proximity as proof of visibility. Stations say “Station approaching: [station name].” Pointed POIs acknowledge the gesture and include a sourced fact.
 
 ## How you work
 

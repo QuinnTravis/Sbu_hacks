@@ -4,7 +4,7 @@ import {
   pointingContext,
   stationAnnouncement,
 } from "./audio-journey";
-import type { AudioMoment, PendingStation, SelectedStory } from "./audio-journey";
+import type { AudioMoment, AudioScript, PendingStation, SelectedStory } from "./audio-journey";
 import { distance } from "./geo";
 import { narrationText } from "./narration";
 import type { Place, Position } from "./types";
@@ -23,6 +23,10 @@ export const PODCAST_AUTO_GAP_MS = 7_000;
 export const PODCAST_BREATH_MS = 900;
 
 const MAX_NEARBY_METERS = 1_100;
+/** An unverified source excerpt is narrated unprompted only beside the line. */
+export const AUTO_EXCERPT_METERS = 300;
+/** Same-topic preference: less than one checked detail (50) or ~22 m of closeness. */
+const TOPIC_NUDGE = 10;
 const MAX_STATION_METERS = 1_200;
 const MAX_FIX_AGE_MS = 15_000;
 const MAX_FIX_ACCURACY_METERS = 150;
@@ -128,6 +132,38 @@ function sameSite(a: Place, b: Place): boolean {
     distance(a, b) <= 180;
 }
 
+function supportedDetailsOf(place: Place, kind: AudioScript["kind"]): number {
+  const published = place.story;
+  if (kind === "verified" && published) {
+    return published.claims.filter((claim) => narrationText({ ...place, story: { ...published, claims: [claim] } })).length;
+  }
+  return kind === "source" ? 1 : 0;
+}
+
+/** Unprompted narration needs a verified story, or a source excerpt right beside the line. */
+function meetsAutomaticFloor(place: Place, kind: AudioScript["kind"], meters: number): boolean {
+  if (kind === "verified") return true;
+  return kind === "source" && meters <= AUTO_EXCERPT_METERS && place.category !== "Infrastructure";
+}
+
+/**
+ * Closeness and interest weigh equally (0–500 each). A verified story is worth
+ * ~550 m over an excerpt; each extra checked detail is worth ~110 m.
+ */
+function closeAndInteresting(meters: number, kind: AudioScript["kind"], supportedDetails: number): number {
+  const closeness = Math.max(0, 1 - meters / MAX_NEARBY_METERS);
+  const interest = kind === "verified" ? 0.7 + 0.1 * (Math.min(3, Math.max(1, supportedDetails)) - 1) : 0.2;
+  return 500 * closeness + 500 * interest;
+}
+
+/** Score for unprompted narration of a nearby place, or null below the quality floor. */
+export function nearbyNarrationScore(place: Place, meters: number): number | null {
+  if (!Number.isFinite(meters) || meters < 0 || meters > MAX_NEARBY_METERS) return null;
+  const script = placeAnnouncement(place, "nearby");
+  if (!script || script.kind === "announcement" || !meetsAutomaticFloor(place, script.kind, meters)) return null;
+  return closeAndInteresting(meters, script.kind, supportedDetailsOf(place, script.kind));
+}
+
 function candidateItem(input: PodcastDirectorInput, entry: PodcastCandidate, positioned: Position | null): RankedPodcastItem | null {
   const { moment } = entry;
   const { routeId } = input.geography;
@@ -181,16 +217,13 @@ function candidateItem(input: PodcastDirectorInput, entry: PodcastCandidate, pos
   const topic = cleanTopic(entry.topic ?? place.category);
   const nearbyDistance = positioned ? distance(positioned, place) : MAX_NEARBY_METERS;
   const pointed = explicit || replay;
-  const published = place.story;
-  const supportedDetails = script.kind === "verified" && published
-    ? published.claims.filter((claim) => narrationText({ ...place, story: { ...published, claims: [claim] } })).length
-    : script.kind === "source" ? 1 : 0;
+  // Excerpts the rider did not ask for stay quiet unless the place is right there.
+  if (!pointed && !meetsAutomaticFloor(place, script.kind, nearbyDistance)) return null;
+  const supportedDetails = supportedDetailsOf(place, script.kind);
   const depth = supportedDetails >= 2 ? "deep" : "brief";
   const score = (pointed ? 5_000 : 1_000) +
-    (script.kind === "verified" ? 240 : 0) +
-    Math.min(3, supportedDetails) * 20 +
-    (topic && topic === cleanTopic(input.previousTopic) ? 130 : 0) +
-    Math.max(0, (MAX_NEARBY_METERS - nearbyDistance) / 20);
+    closeAndInteresting(nearbyDistance, script.kind, supportedDetails) +
+    (topic && topic === cleanTopic(input.previousTopic) ? TOPIC_NUDGE : 0);
   return {
     moment: { ...moment, name: place.name, fallback: script,
       request: { type: "place", placeId: place.id, context } },

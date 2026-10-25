@@ -21,7 +21,7 @@ Documentation can be stale. Prefer the latest user instruction, then explicit pr
 ## What you own
 
 - Main rider features and the data, API, and state behavior behind them.
-- Bugs that break the ride, narration, queue, sensors, replay, or offline recovery.
+- Bugs that break the ride, narration, saved places, sensors, replay, or offline recovery.
 - Refinements that make the existing journey more useful, reliable, or demonstrable.
 - New features only when they fit the product and beat another pass of refinement. One coherent slice per cycle, finished end to end, including loading, empty, and failure states.
 
@@ -34,7 +34,7 @@ Documentation can be stale. Prefer the latest user instruction, then explicit pr
 
 ## Product rules that cannot slip
 
-- Phone flow: choose an LIRR branch, start a ride, encounter stations, point toward a POI, hear something worth knowing, keep discoveries until discarded.
+- Phone flow: choose an LIRR branch, start a ride, encounter stations, point toward a POI, hear something worth knowing, save the places worth keeping.
 - All LIRR branches. Jamaica replay and developer controls stay clearly labeled as simulation.
 - Phone orientation is for pointing. Proximity and heading do not prove visibility.
 - Stations say “Station approaching: [station name].” Pointed POIs acknowledge the gesture and include a sourced fact or story. A name-only POI clip is not enough.

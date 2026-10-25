@@ -1,11 +1,10 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { distance } from "../src/lib/geo";
-import { discard, enqueue } from "../src/lib/queue";
+import { dismiss } from "../src/lib/dismiss";
 import {
   isSaved,
   mergeCatalogPlaces,
   mergeSavedNarration,
-  refreshQueuedPlaces,
   refreshSaved,
   savePlace,
   unsavePlace,
@@ -50,7 +49,7 @@ const place: Place = {
   evidence: [],
 };
 const rich: Place = { ...place, story, evidence };
-const ride: Ride = { routeId: "10", startedAt: 1, replay: false, queue: [], dismissed: [] };
+const ride: Ride = { routeId: "10", startedAt: 1, replay: false, dismissed: [] };
 
 function north(meters: number, patch: Partial<Place> = {}): Place {
   return {
@@ -135,17 +134,6 @@ describe("saved discoveries", () => {
     expect(refreshSaved(library, [{ ...place, story: withoutFact, evidence }])).toBe(library);
     expect(library[0].place.story?.funFact?.quote).toBe("A later wing was added in 1800.");
 
-    const queued = [{ place: rich, foundAt: 1, distance: 40 }];
-    expect(refreshQueuedPlaces(queued, [thin])).toBe(queued);
-
-    const restored = refreshQueuedPlaces(
-      [{ place: thin, foundAt: 2, distance: 12 }],
-      [thin],
-      library,
-    );
-    expect(restored[0].place.story?.evidenceHash).toBe("hash-rich");
-    expect(restored[0].place.evidence[0].text).toContain("eighteenth century");
-
     const adopted = refreshSaved(savePlace([], thin, 3), [rich]);
     expect(adopted).toHaveLength(1);
     expect(adopted[0].place.story?.evidenceHash).toBe("hash-rich");
@@ -171,13 +159,12 @@ describe("saved library storage", () => {
     return memory;
   }
 
-  it("keeps the library when the ride queue discards the place and the ride is cleared", () => {
+  it("keeps the library when the rider is not interested in the place and the ride ends", () => {
     memoryStorage();
     const library = savePlace([], rich, 9);
     expect(writeSaved(library)).toBe(true);
-    const queued = enqueue(ride, rich, 40, 1);
-    expect(writeRide(discard(queued, place.id))).toBe(true);
-    expect(readRide()?.queue).toHaveLength(0);
+    expect(writeRide(dismiss(ride, rich))).toBe(true);
+    expect(readRide()?.dismissed).toEqual([place.id]);
     expect(readSaved()[0].place.story).toEqual(story);
     expect(writeRide(null)).toBe(true);
     expect(readRide()).toBeNull();

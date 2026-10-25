@@ -61,9 +61,6 @@ const rideSchema = z.object({
   replay: z.boolean(),
   dismissed: z.array(z.string()).max(10000),
   dismissedSites: z.array(dismissedSite).max(10000).optional(),
-  queue: z
-    .array(z.object({ place: placeSchema, foundAt: z.number(), distance: z.number() }))
-    .max(2000),
 });
 export const STORAGE_KEY = "train-discovery:ride:v1";
 export const SAVED_KEY = "train-discovery:saved:v1";

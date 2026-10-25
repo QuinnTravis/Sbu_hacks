@@ -22,7 +22,7 @@ import {
 } from "@/lib/podcast-director";
 import type { PodcastPlayback, RankedPodcastItem } from "@/lib/podcast-director";
 import { distance } from "@/lib/geo";
-import type { Place, Position, QueueEntry } from "@/lib/types";
+import type { Place, Position } from "@/lib/types";
 
 type GuideStatus = "off" | "waiting" | "preparing" | "speaking" | "paused" | "unsupported" | "error";
 type Playback = {
@@ -51,12 +51,8 @@ type JourneyContext = {
 
 const BREATH_MS = PODCAST_BREATH_MS;
 
-function gatherSelected(entries: QueueEntry[] | undefined, explicit: SelectedStory[], now: number): SelectedStory[] {
+function gatherSelected(explicit: SelectedStory[]): SelectedStory[] {
   const merged = new Map<string, SelectedStory>();
-  for (const entry of entries ?? []) {
-    if (now - entry.foundAt >= 120_000) continue;
-    merged.set(entry.place.id, { place: entry.place, selectedAt: entry.foundAt });
-  }
   for (const item of explicit) {
     const existing = merged.get(item.place.id);
     if (item.replay) merged.set(item.place.id, { ...existing, ...item, replay: true });
@@ -76,14 +72,14 @@ function delay(ms: number, signal: AbortSignal) {
 }
 
 export function useAudioGuide(
-  entries: QueueEntry[] | undefined, nearby: Place[], dismissed: string[] | undefined,
+  nearby: Place[], dismissed: string[] | undefined,
   rideId: number | null, journey: JourneyContext,
 ) {
   const [status, setStatus] = useState<GuideStatus>("off");
   const [currentName, setCurrentName] = useState<string | null>(null);
   const [nextName, setNextName] = useState<string | null>(null);
   const [queued, setQueued] = useState<{ id: string; name: string } | null>(null);
-  const [unavailable, setUnavailable] = useState<{ id: string; name: string } | null>(null);
+  const [unavailable, setUnavailable] = useState<{ id: string; name: string; place: Place; replay: boolean } | null>(null);
   const [currentPlace, setCurrentPlace] = useState<Place | null>(null);
   const [script, setScript] = useState<AudioScript | null>(null);
   const [provider, setProvider] = useState<"elevenlabs" | "device" | null>(null);
@@ -102,7 +98,6 @@ export function useAudioGuide(
   const generation = useRef(0);
   const active = useRef<Playback | null>(null);
   const player = useRef<HTMLAudioElement | null>(null);
-  const queue = useRef(entries);
   const around = useRef(nearby);
   const hidden = useRef(dismissed);
   const context = useRef(journey);
@@ -116,7 +111,7 @@ export function useAudioGuide(
   const nativeAvailable = useCallback(() => typeof window !== "undefined" &&
     "speechSynthesis" in window && "SpeechSynthesisUtterance" in window, []);
 
-  const selectedStories = useCallback(() => gatherSelected(queue.current, explicit.current, Date.now()), []);
+  const selectedStories = useCallback(() => gatherSelected(explicit.current), []);
   const pendingStations = useCallback((): PendingStation[] => [...stations.current.values()].flatMap((moment) =>
     moment.station && moment.request.type === "station" ? [{
       key: moment.key, station: moment.station, routeId: moment.request.routeId, expiresAt: moment.expiresAt ?? 0,
@@ -326,7 +321,8 @@ export function useAudioGuide(
     };
     const showUnavailable = () => {
       if (!isCurrent()) return;
-      if (chosen.place) setUnavailable({ id: chosen.place.id, name: chosen.name });
+      if (chosen.place) setUnavailable({ id: chosen.place.id, name: chosen.name, place: chosen.place,
+        replay: chosen.request.type === "place" && chosen.request.context === "replay" });
       skipped.current.add(chosen.key);
       if (chosen.place) explicit.current = explicit.current.filter((item) =>
         !(item.replay && item.place.id === chosen.place?.id));
@@ -535,10 +531,9 @@ export function useAudioGuide(
     clearPlayback(); unlock(); enabled.current = true; paused.current = false; nextDue.current = 0;
     playNext();
   }, [clearPlayback, playNext, selectedStories, unlock]);
-  const replay = useCallback((placeId: string) => {
-    const place = [...(queue.current ?? []).map((entry) => entry.place), ...around.current]
-      .find((item) => item.id === placeId && !hidden.current?.includes(placeId));
-    if (!place) return;
+  const replay = useCallback((place: Place) => {
+    const placeId = place.id;
+    if (hidden.current?.includes(placeId)) return;
     explicit.current = explicit.current.filter((item) => !(item.place.id === placeId && item.replay));
     explicit.current.push({ place, selectedAt: Date.now(), replay: true });
     spoken.current.delete(`place:${placeId}`);
@@ -565,10 +560,15 @@ export function useAudioGuide(
     if (!unavailable) return;
     spoken.current.delete(`place:${unavailable.id}`);
     skipped.current.delete(`place:${unavailable.id}`);
-    const place = explicit.current.find((item) => item.place.id === unavailable.id)?.place
-      ?? queue.current?.find((entry) => entry.place.id === unavailable.id)?.place;
+    const known = explicit.current.some((item) => item.place.id === unavailable.id) ||
+      around.current.some((item) => item.id === unavailable.id);
+    // A failed replay leaves the explicit list, and a saved place may not be nearby.
+    if (!known || unavailable.replay) {
+      explicit.current = explicit.current.filter((item) => !(item.place.id === unavailable.id && item.replay));
+      explicit.current.push({ place: unavailable.place, selectedAt: Date.now(), replay: true });
+    }
+    const place = unavailable.place;
     setUnavailable(null);
-    if (!place) return;
     if (!enabled.current) { enabled.current = true; paused.current = false; unlock(); }
     if (active.current) { setQueued({ id: place.id, name: place.name }); return; }
     interrupt.current = `place:${place.id}`;
@@ -584,7 +584,7 @@ export function useAudioGuide(
     queueMicrotask(() => { clearCurrent(); setNextName(null); setQueued(null); setUnavailable(null); setStatus("off"); });
   }, [rideId, clearPlayback, clearCurrent, dropPrefetch]);
   useEffect(() => {
-    queue.current = entries; around.current = nearby; hidden.current = dismissed; context.current = journey;
+    around.current = nearby; hidden.current = dismissed; context.current = journey;
     collectStations();
     for (const station of pendingStations()) {
       if (station.expiresAt <= Date.now() || (journey.position && distance(journey.position, station.station) > 1200))
@@ -597,7 +597,7 @@ export function useAudioGuide(
     if (unavailable && dismissed?.includes(unavailable.id)) queueMicrotask(() => setUnavailable(null));
     if (enabled.current) prepareUpcoming(active.current?.moment.place?.id ?? null);
     if (enabled.current && !paused.current && !active.current) queueMicrotask(playNext);
-  }, [entries, nearby, dismissed, journey, collectStations, clearPlayback, clearCurrent, pendingStations, playNext, prepareUpcoming, queued, unavailable]);
+  }, [nearby, dismissed, journey, collectStations, clearPlayback, clearCurrent, pendingStations, playNext, prepareUpcoming, queued, unavailable]);
   useEffect(() => {
     if (!("mediaSession" in navigator)) return;
     const session = navigator.mediaSession;

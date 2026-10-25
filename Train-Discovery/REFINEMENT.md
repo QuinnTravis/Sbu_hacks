@@ -34,7 +34,7 @@ Documentation can be stale. Resolve conflicts using the latest user instructions
 
 ## Product commitments
 
-- Keep a coherent phone experience: choose an LIRR branch, start a ride, encounter stations, point toward a POI, hear something worth knowing, and keep discoveries until discarded.
+- Keep a coherent phone experience: choose an LIRR branch, start a ride, encounter stations, point toward a POI, hear something worth knowing, and save the places worth keeping.
 - Support all LIRR branches. Jamaica replay and the developer controls must make movement and pointing easy to demonstrate, with simulation clearly labeled.
 - Follow the Waymo theme recorded in `DESIGN.md`. Improve hierarchy, layout, controls, feedback, and accessibility within that visual language. A restrained steel-and-steam accent may sit on that base once `DESIGN.md` records it. Keep visible copy purposeful and concise.
 - Use phone orientation for pointing. Geographic proximity and heading do not prove visibility or camera recognition.

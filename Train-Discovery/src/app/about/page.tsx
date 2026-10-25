@@ -23,8 +23,8 @@ export default function About() {
         places for your selected branch; your precise location and movement
         history are not sent to our discovery server. Your selected branch,
         provider requests, and normal technical request information may be
-        visible to our hosting providers. Your ride and its discovery queue stay
-        in this browser until you end the ride. Discoveries you save stay on this
+        visible to our hosting providers. Your ride, including places you mark
+        not interested, stays in this browser until you end the ride. Discoveries you save stay on this
         device after the ride, until you remove them or clear site data. A saved
         place keeps the story and sources already on the card, not your location
         history, photos, or audio.
