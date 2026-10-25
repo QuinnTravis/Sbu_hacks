@@ -1,62 +1,70 @@
 "use client";
 
 import type { Coordinate, RailRoute } from "@/lib/types";
+import type { NetworkConfig } from "@/networks";
+import { useI18n } from "@/lib/i18n";
 import "./network.css";
 
+const WIDTH = 830;
+
+/**
+ * The network's own route geometry, drawn directly: no tile key, external map
+ * SDK, or tracking. The projection comes from the network's bounds, stretched
+ * north-south so a long east-west line stays readable.
+ */
 export function Network({
+  network,
   routes,
   selected,
   position,
   onSelectRoute,
   onLocate,
 }: {
+  network: NetworkConfig;
   routes: RailRoute[];
   selected: string | null;
   position: Coordinate | null;
   onSelectRoute?: (id: string) => void;
   onLocate?: () => void;
 }) {
-  // Draw the MTA route geometry directly: no tile key, external map SDK, or tracking.
+  const { t } = useI18n();
+  const { bounds, verticalScale, regionLabels, stationLabels } = network.map;
+  const kx = Math.cos((((bounds.minLat + bounds.maxLat) / 2) * Math.PI) / 180);
+  const scale = WIDTH / ((bounds.maxLon - bounds.minLon) * kx);
+  const height = (bounds.maxLat - bounds.minLat) * verticalScale * scale;
   const project = (lat: number, lon: number) => [
-    (lon + 74.06) * 350,
-    (41.04 - lat) * 490,
-  ];
-  const names = [
-    "Penn Station",
-    "Jamaica",
-    "Hicksville",
-    "Stony Brook",
-    "Montauk",
-    "Greenport",
-    "Port Washington",
-    "Long Beach",
+    (lon - bounds.minLon) * kx * scale,
+    (bounds.maxLat - lat) * verticalScale * scale,
   ];
   const stations = [
     ...new Map(
       routes
         .flatMap((route) => route.stops)
-        .filter((stop) => names.includes(stop.name))
-        .map((stop) => [stop.name, stop]),
+        .filter((stop) => stationLabels.includes(stop.id))
+        .map((stop) => [stop.id, stop]),
     ).values(),
-  ];
+  ].sort((a, b) => a.lon - b.lon);
+  const full = new Set(routes.filter((route) => route.experience === "full").map((route) => route.id));
   return (
     <div className="network-wrap train-network-wrap">
       <svg
         className="network train-network-map"
-        viewBox="0 -55 830 385"
+        viewBox={`0 0 ${WIDTH} ${Math.round(height)}`}
         role="group"
-        aria-label="Interactive LIRR route map"
+        aria-label={t("home.mapLabel", { network: network.name })}
       >
-        <text className="water-label train-network-waterLabel" x="450" y="26">
-          LONG ISLAND SOUND
-        </text>
-        <text className="water-label train-network-waterLabel" x="375" y="303">
-          ATLANTIC OCEAN
-        </text>
+        {regionLabels.map((label) => {
+          const [x, y] = project(label.lat, label.lon);
+          return (
+            <text key={label.text} className="water-label train-network-waterLabel" x={x} y={y} textAnchor="middle">
+              {label.text}
+            </text>
+          );
+        })}
         {routes.map((route) => (
           <g
             key={route.id}
-            className="network-route train-network-route"
+            className={`network-route train-network-route${full.has(route.id) && network.segments.length ? " is-full" : ""}`}
             role={onSelectRoute ? "button" : undefined}
             tabIndex={onSelectRoute ? 0 : undefined}
             aria-label={onSelectRoute ? `Select ${route.name}` : undefined}
@@ -78,7 +86,7 @@ export function Network({
           >
             {route.paths.map((path, index) => {
               const points = path
-                .map(([lat, lon]) => project(lat, lon).join(","))
+                .map(([lat, lon]) => project(lat, lon).map((n) => n.toFixed(1)).join(","))
                 .join(" ");
               return (
                 <g key={index}>
@@ -107,15 +115,18 @@ export function Network({
             })}
           </g>
         ))}
-        {stations.map((stop) => {
+        {stations.map((stop, index) => {
           const [x, y] = project(stop.lat, stop.lon);
+          const last = index === stations.length - 1;
+          // Alternate above and below the line so neighbors on a long line do not collide.
+          const below = network.segments.length > 0 && index % 2 === 1;
           return (
             <g key={stop.id} className="station-label train-network-station">
               <circle cx={x} cy={y} r="3.3" />
               <text
-                x={x + (stop.name === "Montauk" ? -7 : 7)}
-                y={y - (stop.name === "Port Washington" ? 18 : 9)}
-                textAnchor={stop.name === "Montauk" ? "end" : "start"}
+                x={x + (last ? -7 : 7)}
+                y={below ? y + 20 : y - 9}
+                textAnchor={last ? "end" : "start"}
               >
                 {stop.name.replace(" Station", "")}
               </text>
@@ -125,7 +136,7 @@ export function Network({
         {position &&
           (() => {
             const [x, y] = project(position.lat, position.lon);
-            return x >= 0 && x <= 830 && y >= -55 && y <= 330 ? (
+            return x >= 0 && x <= WIDTH && y >= 0 && y <= height ? (
               <g
                 className={`${onLocate ? "network-user" : ""} train-network-user`}
                 role={onLocate ? "button" : undefined}
@@ -165,8 +176,8 @@ export function Network({
           })()}
       </svg>
       <div className="network-caption">
-        <span>LIRR</span>
-        <span>New York · Long Island</span>
+        <span>{network.name}</span>
+        <span>{network.map.caption}</span>
       </div>
     </div>
   );

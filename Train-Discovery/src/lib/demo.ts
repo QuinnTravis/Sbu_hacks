@@ -1,17 +1,18 @@
 import { distance } from "./geo";
-import type { RailRoute } from "./types";
+import type { Coordinate, RailRoute } from "./types";
 
-// Official MTA GTFS coordinate for Jamaica station (stop 102).
+// Official MTA GTFS coordinate for Jamaica station (stop 102), the LIRR demo start.
 export const DEMO_LOCATION = { lat: 40.69960817, lon: -73.80852987 };
 
-export function demoPath(route: RailRoute | undefined) {
+/** The path through `location` and the vertex nearest it, where a replay starts. */
+export function demoPath(route: RailRoute | undefined, location: Coordinate = DEMO_LOCATION) {
   let path: [number, number][] = [];
   let startIndex = 0;
   let nearest = Infinity;
   for (const candidate of route?.paths ?? []) {
     for (let index = 0; index < candidate.length; index++) {
       const [lat, lon] = candidate[index];
-      const meters = distance(DEMO_LOCATION, { lat, lon });
+      const meters = distance(location, { lat, lon });
       if (
         meters < nearest - 1 ||
         (Math.abs(meters - nearest) <= 1 && candidate.length > path.length)

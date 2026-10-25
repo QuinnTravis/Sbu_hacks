@@ -32,7 +32,7 @@ for (const viewport of [{ width: 320, height: 740 }, { width: 660, height: 560 }
     } }));
     await page.route("**/api/journeys/**", (route) => route.fulfill({ json: { places } }));
     await page.route("**/api/audio", (route) => route.fulfill({ status: 503, json: { error: "fixture" } }));
-    await page.goto("/?dev");
+    await page.goto("/?network=lirr&dev");
     const panel = page.getByRole("complementary", { name: "Developer controls" });
     await panel.getByRole("button", { name: "Start Jamaica demo", exact: true }).click();
     await panel.getByRole("button", { name: "Pause train", exact: true }).click();

@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import {
   ArrowUpRight,
+  CloudCheck,
   Info,
   ImageOff,
   LoaderCircle,
@@ -12,9 +13,15 @@ import {
   X,
 } from "lucide-react";
 import type { Claim, Photo, QueueEntry } from "@/lib/types";
+import type { HistoricImage, PoiContent } from "@/lib/package-types";
+import type { Side } from "@/lib/route-geometry";
 import { cardSummary } from "@/lib/card-face";
-import { formatDistance } from "@/lib/geo";
+import { useI18n } from "@/lib/i18n";
+import { englishBody, lookForLine } from "@/lib/narration-script";
 import { audioNarration, narrationText, sourceExcerpt } from "@/lib/narration";
+import { ComparisonSlider } from "@/features/history/comparison-slider";
+import { features } from "@/lib/features";
+import { BookmarkButton } from "./bookmark-button";
 
 export function PlaceCard({
   entry,
@@ -23,8 +30,14 @@ export function PlaceCard({
   total,
   onNavigate,
   onNarrate,
-  onSave,
-  saved = false,
+  bookmarked = false,
+  onToggleBookmark,
+  content,
+  history,
+  side = null,
+  offlineReady = false,
+  resolveAsset,
+  extra,
 }: {
   entry: QueueEntry;
   onDiscard?: () => void;
@@ -32,9 +45,18 @@ export function PlaceCard({
   total: number;
   onNavigate: (n: number) => void;
   onNarrate?: () => void;
-  onSave: () => void;
-  saved?: boolean;
+  bookmarked?: boolean;
+  onToggleBookmark: () => void;
+  /** Checked translation for the rider's language, when one exists. */
+  content?: PoiContent;
+  history?: HistoricImage;
+  side?: Side | null;
+  offlineReady?: boolean;
+  resolveAsset?: (url: string) => string;
+  /** More actions, e.g. Explore in 3D. */
+  extra?: ReactNode;
 }) {
+  const { t, code, distance, number } = useI18n();
   const { place } = entry;
   const photoDialog = useRef<HTMLDialogElement>(null);
   const [photo, setPhoto] = useState<Photo | null>(null);
@@ -65,10 +87,20 @@ export function PlaceCard({
   const summary = cardSummary(place);
   const excerpt = story ? null : sourceExcerpt(place);
   const storyClaims: Claim[] = story
-    ? [...story.claims, ...(story.funFact ? [story.funFact] : [])]
+    ? [...story.claims, ...(story.funFact ? [story.funFact] : []),
+      ...[story.narration?.hook, story.narration?.detail, story.narration?.why, story.narration?.lookFor]
+        .filter((claim): claim is Claim => Boolean(claim))]
     : [];
   const sources = place.evidence.filter(
     (e) => !story || storyClaims.some((claim) => claim.evidenceId === e.id),
+  );
+  // A checked translation replaces the English text; the sources stay the same.
+  const translated = code !== "en" && content?.summary ? content : undefined;
+  const englishOnly = code !== "en" && !translated && Boolean(story);
+  const lookFor = translated?.lookFor ?? (code === "en" || englishOnly ? englishBody(place)?.lookFor : undefined);
+  const basic = place.basic;
+  const details = Object.entries(place.tags).filter(([key]) =>
+    ["start_date", "architect", "operator"].includes(key),
   );
   return (
     <article className="place-card">
@@ -86,14 +118,14 @@ export function PlaceCard({
               type="button"
               className="photo-info-button"
               onClick={() => photoDialog.current?.showModal()}
-              aria-label={`View photo details for ${place.name}`}
+              aria-label={t("card.photoDetails", { name: place.name })}
             >
               <Info size={19} aria-hidden="true" />
             </button>
             <dialog
               ref={photoDialog}
               className="photo-viewer"
-              aria-label={`Photo of ${place.name}`}
+              aria-label={t("card.photoOf", { name: place.name })}
               onClick={(event) => {
                 if (event.target === event.currentTarget) event.currentTarget.close();
               }}
@@ -103,7 +135,7 @@ export function PlaceCard({
                   type="button"
                   className="icon-button photo-viewer-close"
                   onClick={() => photoDialog.current?.close()}
-                  aria-label={`Close photo of ${place.name}`}
+                  aria-label={t("card.closePhoto", { name: place.name })}
                 >
                   <X size={19} aria-hidden="true" />
                 </button>
@@ -150,7 +182,7 @@ export function PlaceCard({
               <ImageOff size={24} />
             )}
             <span>
-              {photoState === "loading" ? "Loading photo" : "Photo unavailable"}
+              {photoState === "loading" ? t("card.loadingPhoto") : t("card.photoUnavailable")}
             </span>
             {photoState === "unavailable" && (
               <button
@@ -161,7 +193,7 @@ export function PlaceCard({
                 }}
               >
                 <RefreshCw size={13} />
-                Retry
+                {t("app.retry")}
               </button>
             )}
           </div>
@@ -170,7 +202,7 @@ export function PlaceCard({
           <button
             className="icon-button discard-button"
             onClick={onDiscard}
-            aria-label={`Discard ${place.name}`}
+            aria-label={t("card.discard", { name: place.name })}
           >
             <X size={19} />
           </button>
@@ -178,9 +210,16 @@ export function PlaceCard({
       </div>
       <div className="place-content">
         <div className="place-meta">
-          <span>{place.category}</span>
+          <span>{t(`categories.${place.category}`)}</span>
           {Number.isFinite(entry.distance) && (
-            <span>{formatDistance(entry.distance)} when found</span>
+            <span>{t("card.whenFound", { distance: distance(entry.distance) })}</span>
+          )}
+          {side && <span>{t(`side.${side}`)}</span>}
+          {offlineReady && (
+            <span className="offline-ready">
+              <CloudCheck size={13} aria-hidden="true" />
+              {t("connectivity.ready")}
+            </span>
           )}
         </div>
         <h2>{place.name}</h2>
@@ -188,19 +227,29 @@ export function PlaceCard({
           <>
             <div className="verified-label">
               <ShieldCheck size={14} />
-              Evidence checked
+              {t("card.evidenceChecked")}
               {onNarrate && narrationText(place) && (
-                <button className="story-listen" onClick={onNarrate} aria-label={`Listen to ${place.name}`}>
+                <button className="story-listen" onClick={onNarrate} aria-label={t("card.listenTo", { name: place.name })}>
                   <Volume2 size={16} />
-                  Play story
+                  {t("card.playStory")}
                 </button>
               )}
             </div>
             <div className="story-facts">
               <section className="story-block story-summary">
-                <h3>Summary</h3>
-                {story.claims.length ? (
-                  <p>
+                <h3>{t("card.summary")}</h3>
+                {translated ? (
+                  <p lang={code}>
+                    {translated.summary}{" "}
+                    {translated.claims.slice(0, 3).map((claim, i) => claim.evidence[0] ? (
+                      <a key={claim.id} href={claim.evidence[0].sourceUrl} target="_blank" rel="noreferrer"
+                        aria-label={t("card.claimSource", { index: i + 1 })}>
+                        <sup>[{i + 1}]</sup>
+                      </a>
+                    ) : null)}
+                  </p>
+                ) : story.claims.length ? (
+                  <p lang={englishOnly ? "en" : undefined}>
                     {story.claims.map((claim, i) => (
                       <span key={i}>
                         {claim.text}{" "}
@@ -208,7 +257,7 @@ export function PlaceCard({
                           href={place.evidence.find((e) => e.id === claim.evidenceId)?.url}
                           target="_blank"
                           rel="noreferrer"
-                          aria-label={`Source for summary claim ${i + 1}`}
+                          aria-label={t("card.claimSource", { index: i + 1 })}
                         >
                           <sup>[{i + 1}]</sup>
                         </a>{" "}
@@ -216,81 +265,106 @@ export function PlaceCard({
                     ))}
                   </p>
                 ) : (
-                  <p>{summary?.text ?? "No sourced summary yet."}</p>
+                  <p>{summary?.text ?? t("card.noSummary")}</p>
                 )}
+                {translated && <p className="story-language-note">{t("card.localized")}</p>}
+                {englishOnly && <p className="story-language-note">{t("card.englishOnly")}</p>}
               </section>
-              {story.funFact && (
+              {story.funFact && !translated && (
                 <section className="story-block story-interesting">
-                  <h3>Interesting fact</h3>
-                  <p>
+                  <h3>{t("card.interestingFact")}</h3>
+                  <p lang={englishOnly ? "en" : undefined}>
                     {story.funFact.text}{" "}
                     <a
                       href={place.evidence.find((e) => e.id === story.funFact?.evidenceId)?.url}
                       target="_blank"
                       rel="noreferrer"
-                      aria-label="Source for interesting fact"
+                      aria-label={t("card.factSource")}
                     >
                       <sup>[{story.claims.length + 1}]</sup>
                     </a>
                   </p>
                 </section>
               )}
+              {lookFor && (
+                <section className="story-block story-look-for">
+                  <h3>{t("card.lookFor")}</h3>
+                  <p lang={translated ? code : "en"}>{lookForLine(lookFor, side, translated ? code : "en")}</p>
+                </section>
+              )}
             </div>
           </>
-        ) : (
+        ) : summary ? (
           <>
             <section className="story-block story-summary">
-              <h3>Summary</h3>
-              <p>{summary?.text ?? "No sourced summary yet."}</p>
+              <h3>{t("card.summary")}</h3>
+              <p lang="en">{summary.text}</p>
             </section>
             <div className="unverified-story">
-              {summary?.kind === "source" && (
-                <p className="source-excerpt-label">Wikipedia excerpt · not verified</p>
+              {summary.kind === "source" && (
+                <p className="source-excerpt-label">{t("card.excerptLabel")}</p>
               )}
               <a
                 href={excerpt?.evidence.url || sources[0]?.url || place.sourceUrl}
                 target="_blank"
                 rel="noreferrer"
               >
-                Read the source <ArrowUpRight size={14} />
+                {t("card.readSource")} <ArrowUpRight size={14} />
               </a>
               {onNarrate && audioNarration(place)?.kind === "source" && (
-                <button className="story-listen" onClick={onNarrate} aria-label={`Listen to source for ${place.name}`}>
+                <button className="story-listen" onClick={onNarrate} aria-label={t("card.listenSourceFor", { name: place.name })}>
                   <Volume2 size={16} />
-                  Listen to source
+                  {t("card.listenSource")}
                 </button>
               )}
             </div>
           </>
+        ) : basic ? (
+          <section className="story-block story-basic">
+            <h3>{t("card.basicInfo")}</h3>
+            <p>{t(`basicType.${basic.type}`)}</p>
+            {(basic.elevationM || basic.population) && (
+              <dl className="place-details">
+                {basic.elevationM ? (
+                  <div>
+                    <dt>{t("card.elevation")}</dt>
+                    <dd>{number(basic.elevationM)} m</dd>
+                  </div>
+                ) : null}
+                {basic.population && ["town", "city"].includes(basic.type) ? (
+                  <div>
+                    <dt>{t("card.population")}</dt>
+                    <dd>{number(basic.population)}</dd>
+                  </div>
+                ) : null}
+              </dl>
+            )}
+            <p className="story-language-note">{t("card.basicHint")}</p>
+          </section>
+        ) : (
+          <section className="story-block story-summary">
+            <h3>{t("card.summary")}</h3>
+            <p>{t("card.noSummary")}</p>
+          </section>
         )}
-        {Object.entries(place.tags).filter(([key]) =>
-          ["start_date", "architect", "operator"].includes(key),
-        ).length > 0 && (
+        {features.history && <ComparisonSlider image={history} resolve={resolveAsset} present={
+          photo && photoState === "ready" && photo.source === "Wikimedia Commons"
+            ? { url: photo.url, credit: photo.authors[0]?.displayName ?? photo.source, license: photo.license?.name ?? photo.source, licenseUrl: photo.license?.url, sourceUrl: photo.sourceUrl }
+            : null
+        } />}
+        {extra}
+        {details.length > 0 && (
           <dl className="place-details">
-            {Object.entries(place.tags)
-              .filter(([key]) =>
-                ["start_date", "architect", "operator"].includes(key),
-              )
-              .map(([key, value]) => (
-                <div key={key}>
-                  <dt>
-                    {
-                      (
-                        {
-                          start_date: "Date recorded",
-                          architect: "Architect",
-                          operator: "Operator",
-                        } as Record<string, string>
-                      )[key]
-                    }
-                  </dt>
-                  <dd>{value}</dd>
-                </div>
-              ))}
+            {details.map(([key, value]) => (
+              <div key={key}>
+                <dt>{t(`card.detail.${key}`)}</dt>
+                <dd>{value}</dd>
+              </div>
+            ))}
           </dl>
         )}
         <details className="sources">
-          <summary>Sources</summary>
+          <summary>{t("card.sources")}</summary>
           {sources.map((source) => (
             <div key={source.id}>
               <a href={source.url} target="_blank" rel="noreferrer">
@@ -299,8 +373,8 @@ export function PlaceCard({
               </a>
               <small>
                 {source.sourceType === "search-snippet"
-                  ? "Google search excerpt · source page linked"
-                  : `${source.license} · retrieved ${source.retrievedAt.slice(0, 10)}`}
+                  ? t("card.searchExcerpt")
+                  : t("card.retrieved", { license: source.license, date: source.retrievedAt.slice(0, 10) })}
               </small>
               {storyClaims
                 .filter((c) => c.evidenceId === source.id)
@@ -309,14 +383,22 @@ export function PlaceCard({
                 ))}
             </div>
           ))}
-          <a href={place.sourceUrl} target="_blank" rel="noreferrer">
-            OpenStreetMap contributors · ODbL <ArrowUpRight size={13} />
-          </a>
+          {(basic?.sources ?? []).map((source) => (
+            <div key={source.url}>
+              <a href={source.url} target="_blank" rel="noreferrer">
+                {source.title}
+                <ArrowUpRight size={13} />
+              </a>
+              <small>{source.license}</small>
+            </div>
+          ))}
+          {place.sourceUrl.includes("openstreetmap.org") && (
+            <a href={place.sourceUrl} target="_blank" rel="noreferrer">
+              {t("card.osm")} <ArrowUpRight size={13} />
+            </a>
+          )}
           {story && (
-            <small>
-              AI evidence check · {story.verifiedAt.slice(0, 10)}. Source
-              support does not guarantee historical accuracy.
-            </small>
+            <small>{t("card.aiCheck", { date: story.verifiedAt.slice(0, 10) })}</small>
           )}
         </details>
       </div>
@@ -326,26 +408,17 @@ export function PlaceCard({
           disabled={index === 0}
           onClick={() => onNavigate(index - 1)}
         >
-          Previous
+          {t("card.previous")}
         </button>
-        <span>
-          {index + 1} of {total}
-        </span>
+        <span>{t("card.position", { index: index + 1, total })}</span>
         <button
           className="text-button"
           disabled={index === total - 1}
           onClick={() => onNavigate(index + 1)}
         >
-          Next
+          {t("card.next")}
         </button>
-        <button
-          className="text-button"
-          onClick={onSave}
-          aria-pressed={saved}
-          aria-label={saved ? `Remove ${place.name} from saved discoveries` : `Save ${place.name}`}
-        >
-          {saved ? "Saved" : "Save"}
-        </button>
+        <BookmarkButton name={place.name} bookmarked={bookmarked} onToggle={onToggleBookmark} />
       </div>
     </article>
   );

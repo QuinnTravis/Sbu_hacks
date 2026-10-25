@@ -76,7 +76,7 @@ test.beforeEach(async ({ page }) => {
 });
 
 async function start(page: Page) {
-  await page.goto("/");
+  await page.goto("/?network=lirr");
   const badge = page.getByRole("button", {
     name: "Collapse Cache disabled badge",
   });
@@ -180,7 +180,7 @@ for (const viewport of [
     await expect(
       sheet.getByRole("heading", { name: longName, exact: true }),
     ).toBeVisible();
-    await expect(page.locator(".nav-count")).toHaveText("1");
+    await expect(page.getByRole("navigation", { name: "Main navigation" }).getByRole("button", { name: "Discoveries" }).locator(".nav-count")).toHaveText("1");
     await expect(page.locator(".ride-top-controls")).not.toBeVisible();
     await expect(page.locator(".ride-expanded-status")).toContainText(
       "Simulated ride",
@@ -197,14 +197,14 @@ for (const viewport of [
     await attribution.locator(".maplibregl-ctrl-attrib-button").click();
     await expect(page.locator(".ride-expanded-status")).toBeVisible();
     await expect(
-      page.getByRole("button", { name: "Discover", exact: true }),
-    ).toHaveAttribute("aria-pressed", "true");
+      page.getByRole("navigation", { name: "Main navigation" }).getByRole("button", { name: "Ride" }),
+    ).toHaveAttribute("aria-current", "page");
     await sheet
-      .getByRole("button", { name: `Save ${longName}`, exact: true })
+      .getByRole("button", { name: `Bookmark ${longName}`, exact: true })
       .click();
     await expect(
       sheet.getByRole("button", {
-        name: `Remove ${longName} from saved discoveries`,
+        name: `Remove bookmark for ${longName}`,
         exact: true,
       }),
     ).toHaveAttribute("aria-pressed", "true");
@@ -253,8 +253,8 @@ for (const viewport of [
     await settled(page, true);
     await sheet.locator(".poi-sheet__close").click();
     await expect(sheet).toHaveAttribute("aria-hidden", "true");
-    await expect(page.locator(".nav-count")).toHaveText("1");
-    await page.getByRole("button", { name: /My discoveries/ }).click();
+    await expect(page.getByRole("navigation", { name: "Main navigation" }).getByRole("button", { name: "Discoveries" }).locator(".nav-count")).toHaveText("1");
+    await page.getByRole("navigation", { name: "Main navigation" }).getByRole("button", { name: "Discoveries" }).click();
     await expect(
       page
         .locator(".queue-panel")
@@ -301,7 +301,7 @@ test("sheet follows drag, snaps and dismisses without selecting a place", async 
     .toBe(true);
   await drag(page, 150, isMobile);
   await expect(sheet).toHaveAttribute("aria-hidden", "true");
-  await expect(page.locator(".nav-count")).toHaveText("0");
+  await expect(page.getByRole("navigation", { name: "Main navigation" }).getByRole("button", { name: "Discoveries" }).locator(".nav-count")).toHaveText("0");
 });
 
 test("reduced motion and keyboard sheet controls", async ({ page }) => {
@@ -345,5 +345,5 @@ test("cancelled touch drag returns to its prior snap point", async ({
     "false",
   );
   await settled(page, false);
-  await expect(page.locator(".nav-count")).toHaveText("0");
+  await expect(page.getByRole("navigation", { name: "Main navigation" }).getByRole("button", { name: "Discoveries" }).locator(".nav-count")).toHaveText("0");
 });

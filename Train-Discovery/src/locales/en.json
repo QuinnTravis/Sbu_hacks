@@ -1,0 +1,580 @@
+{
+  "app": {
+    "name": "Gaze",
+    "tagline": "Point. Discover. Keep.",
+    "skip": "Skip to content",
+    "home": "Gaze home",
+    "loading": "Loading…",
+    "retry": "Retry",
+    "close": "Close",
+    "simulated": "Simulated",
+    "estimated": "Estimated"
+  },
+  "header": {
+    "openDev": "Open dev panel",
+    "closeDev": "Close dev panel",
+    "devTitle": "Dev panel (`)",
+    "offline": "Offline",
+    "about": "About"
+  },
+  "nav": {
+    "label": "Main navigation",
+    "ride": "Ride",
+    "discoveries": "Discoveries",
+    "bookmarks": "Bookmarks",
+    "settings": "Settings"
+  },
+  "home": {
+    "demoStart": "Start {place} demo ride",
+    "demoLabel": "{place} demo",
+    "useDemo": "Use {place} demo",
+    "findNearMe": "Find routes near me",
+    "mapLabel": "Interactive {network} route map",
+    "collapse": "Collapse route list",
+    "expand": "Expand route list",
+    "routesNear": "Routes near {place}",
+    "routesNearYou": "Routes near you",
+    "chooseRoute": "Choose a route",
+    "allRoutes": "All routes",
+    "nearby": "Nearby",
+    "search": "Search routes",
+    "searchLabel": "Search {network} routes",
+    "clearSearch": "Clear route search",
+    "noMatch": "No routes match “{query}”.",
+    "away": "{distance} away",
+    "notNearby": "Not nearby",
+    "start": "Start ride",
+    "routesGroup": "{network} routes",
+    "fullExperience": "Full experience",
+    "basicExperience": "Stations only",
+    "stops": "{from} to {to}",
+    "chooseNetwork": "Network",
+    "discoveriesEmpty": "Discoveries appear here during a ride",
+    "discoveriesEmptyHint": "Point at a place or hear its story to add it. Bookmarks stay after the ride.",
+    "startDiscovering": "Start discovering",
+    "openBookmarks": "Open bookmarks"
+  },
+  "gps": {
+    "denied": "Location is blocked. Enable it in your browser settings, then retry.",
+    "inaccurate": "GPS is imprecise. Discovery resumes when the signal improves.",
+    "requesting": "Finding your train…",
+    "unavailable": "Location unavailable. Move closer to a window and retry.",
+    "idle": "Enable location and compass to discover.",
+    "lost": "GPS signal lost. Waiting for a fresh location."
+  },
+  "compass": {
+    "denied": "Compass access is blocked. Enable Motion & Orientation in your browser settings.",
+    "flat": "Hold your phone upright and point its back toward a landmark.",
+    "inaccurate": "Compass interference detected. Move your phone away from metal.",
+    "unavailable": "This browser has no usable compass. Try Safari on iPhone or Chrome on Android.",
+    "waitingReading": "Waiting for an absolute compass reading. Hold your phone upright.",
+    "waiting": "Compass waiting",
+    "phone": "Phone direction",
+    "simulated": "Simulated heading",
+    "waitingPhone": "Waiting for phone compass",
+    "phoneLabel": "Phone pointing {degrees} degrees",
+    "simulatedLabel": "Simulated heading {degrees} degrees",
+    "holdUpright": "Hold your phone upright",
+    "simulatedAim": "Simulated aim",
+    "cardinal": {
+      "N": "N",
+      "NE": "NE",
+      "E": "E",
+      "SE": "SE",
+      "S": "S",
+      "SW": "SW",
+      "W": "W",
+      "NW": "NW"
+    }
+  },
+  "ride": {
+    "replay": "Replay",
+    "discovering": "Discovering",
+    "paused": "Paused",
+    "near": "Near {station}",
+    "waitingLocation": "Waiting for location",
+    "endConfirm": "Clear this ride and its queue?",
+    "end": "End ride",
+    "keepRiding": "Keep riding",
+    "catalogFailed": "Couldn’t load places.",
+    "pointPanel": "Point your phone",
+    "simPhone": "Simulated train · phone compass",
+    "simJoystick": "Simulated train · joystick",
+    "simAuto": "Simulated location & heading",
+    "pauseReplay": "Pause replay",
+    "playReplay": "Play replay",
+    "enableSensors": "Enable sensors",
+    "retrySensors": "Retry sensors",
+    "sensorsActive": "Location & compass active",
+    "flatSim": "Simulated phone is flat. Increase Phone tilt to point outward.",
+    "gpsJoystick": "Real GPS · simulated joystick heading",
+    "offRoute": "You seem far from this route. Check your selected route.",
+    "loadingPlaces": "Loading places…",
+    "placesUnavailable": "Places unavailable",
+    "placesNearby": {
+      "one": "{count} place nearby",
+      "other": "{count} places nearby"
+    },
+    "cached": "Cached",
+    "pausedLoading": "Paused — loading places…",
+    "pausedUnavailable": "Paused — places didn’t load",
+    "pausedEmpty": "Paused — no sourced place in range.",
+    "noSourced": "No sourced place in range.",
+    "stationsOnly": "Stations only on this segment. The Rockies has the full experience.",
+    "speedSimulated": "{speed} km/h",
+    "simulated": "Simulated ride",
+    "sensorsPaused": "Sensors paused"
+  },
+  "chooser": {
+    "label": "Places in this direction",
+    "empty": "Nothing in this direction.",
+    "row": "{name}, {distance}"
+  },
+  "queue": {
+    "title": "My discoveries",
+    "thisRide": "This ride",
+    "saved": "Bookmarks",
+    "queueLabel": "Your discovery queue",
+    "savedLabel": "Bookmarked places",
+    "failed": "Places didn’t load",
+    "loading": "Loading places…",
+    "emptyTitle": "Your next discovery is just outside.",
+    "emptyHint": "Point your phone at a nearby place. Its story stays here until you discard it.",
+    "stayHint": "Discoveries stay here until you discard them.",
+    "nothingSaved": "Nothing bookmarked yet.",
+    "live": {
+      "one": "{count} discovery in your queue. Latest: {name}.",
+      "other": "{count} discoveries in your queue. Latest: {name}."
+    },
+    "liveEmpty": "No discoveries yet."
+  },
+  "storage": {
+    "failed": "Device storage is full or blocked. Keep this tab open to retain your queue and bookmarks."
+  },
+  "card": {
+    "loadingPhoto": "Loading photo",
+    "photoUnavailable": "Photo unavailable",
+    "discard": "Discard {name}",
+    "whenFound": "{distance} when found",
+    "evidenceChecked": "Evidence checked",
+    "playStory": "Play story",
+    "listenTo": "Listen to {name}",
+    "summary": "Summary",
+    "noSummary": "No sourced summary yet.",
+    "claimSource": "Source for summary claim {index}",
+    "interestingFact": "Interesting fact",
+    "factSource": "Source for interesting fact",
+    "excerptLabel": "Wikipedia excerpt · not verified",
+    "readSource": "Read the source",
+    "listenSource": "Listen to source",
+    "listenSourceFor": "Listen to source for {name}",
+    "basicInfo": "Basic info",
+    "basicHint": "From map and Wikidata records, not a checked story.",
+    "elevation": "Elevation",
+    "population": "Population",
+    "detail": {
+      "start_date": "Date recorded",
+      "architect": "Architect",
+      "operator": "Operator"
+    },
+    "sources": "Sources",
+    "searchExcerpt": "Google search excerpt · source page linked",
+    "retrieved": "{license} · retrieved {date}",
+    "osm": "OpenStreetMap contributors · ODbL",
+    "aiCheck": "AI evidence check · {date}. Source support does not guarantee historical accuracy.",
+    "previous": "Previous",
+    "next": "Next",
+    "position": "{index} of {total}",
+    "lookFor": "Look for",
+    "localized": "Translated from checked English sources.",
+    "englishOnly": "Story available in English only.",
+    "routeKm": "Km {km} of the ride",
+    "side": "Side",
+    "photoDetails": "View photo details for {name}",
+    "photoOf": "Photo of {name}",
+    "closePhoto": "Close photo of {name}",
+    "discardDiscovery": "Discard discovery"
+  },
+  "categories": {
+    "Heritage": "Heritage",
+    "Nature": "Nature",
+    "Landmark": "Landmark",
+    "Former use": "Former use",
+    "Railway history": "Railway history",
+    "Station": "Station",
+    "Infrastructure": "Infrastructure",
+    "History": "History",
+    "Railroad heritage": "Railroad heritage",
+    "Canyon": "Canyon",
+    "River": "River",
+    "Mountain": "Mountain",
+    "Town": "Town"
+  },
+  "audio": {
+    "label": "Audio guide",
+    "start": "Start audio tour",
+    "unsupported": "Audio isn’t supported in this browser.",
+    "error": "Audio stopped. Try again.",
+    "paused": "Paused",
+    "preparing": "Preparing {name}",
+    "sourceExcerpt": "{name} · source excerpt",
+    "basicInfo": "{name} · basic info",
+    "waiting": "Waiting for a nearby story",
+    "save": "Bookmark {name}",
+    "resume": "Resume audio guide",
+    "pause": "Pause audio guide",
+    "skip": "Skip story",
+    "stop": "Turn off audio guide",
+    "queued": "queued",
+    "next": "Next ·",
+    "playNow": "Play now",
+    "unavailable": "No sourced story is available for {name} yet.",
+    "deviceVoice": "Using device voice",
+    "tapToContinue": "Tap play to continue",
+    "transcript": "Transcript & sources",
+    "englishFallback": "Narration in English; this story has no {language} translation yet.",
+    "offlineCached": "Playing from offline download"
+  },
+  "narration": {
+    "station": "Station approaching: {name}.",
+    "lead": {
+      "pointed": "You just pointed at {name}.",
+      "pointedEarlier": "That {noun} you pointed at earlier, {name}.",
+      "replay": "Once more, {name}.",
+      "nearby": "{name}."
+    },
+    "noun": {
+      "building": "building",
+      "landmark": "landmark",
+      "station": "station",
+      "place": "place"
+    },
+    "fromWikipedia": "From Wikipedia:",
+    "journey": {
+      "rhythm": "The tracks set the rhythm. The world outside supplies the stories.",
+      "simulated": "This is a simulated ride.",
+      "welcome": "Welcome aboard.",
+      "route": "We're exploring the {route} route.",
+      "segment": "We're riding the {network}. This stretch: {segment}.",
+      "close": "As we travel, we'll discover the stories behind places along the way."
+    },
+    "transition": "Let's follow a different thread.",
+    "welcome": "Welcome aboard. As we travel, let's discover some stories along the way.",
+    "intro": {
+      "0": "{name}.",
+      "1": "Next up, {name}.",
+      "2": "Here's {name}.",
+      "3": "Now for {name}.",
+      "4": "Coming up, {name}."
+    },
+    "introSide": {
+      "left": "On your left, {name}.",
+      "right": "On your right, {name}.",
+      "ahead": "Just ahead, {name}.",
+      "both": "All around us, {name}."
+    },
+    "context": {
+      "afterTunnel": "Out of the tunnel now."
+    },
+    "callback": {
+      "distance": "We're {distance} out of {place}.",
+      "count": "That makes {count} stories on this ride."
+    },
+    "lookFor": {
+      "left": "Look to your left for {thing}.",
+      "right": "Look to your right for {thing}.",
+      "ahead": "Look ahead for {thing}.",
+      "both": "Look out either side for {thing}.",
+      "unknown": "Look for {thing}."
+    },
+    "basic": {
+      "lead": "{name}, {type}.",
+      "elevation": "Elevation {value}.",
+      "population": "Population {value}."
+    },
+    "cue": {
+      "left": "Coming up on your left in about {eta}: {name}.",
+      "right": "Coming up on your right in about {eta}: {name}.",
+      "ahead": "Coming up ahead in about {eta}: {name}.",
+      "both": "Coming up on both sides in about {eta}: {name}.",
+      "unknown": "Coming up in about {eta}: {name}."
+    },
+    "cueSaved": "You saved this one.",
+    "deadZone": "No signal expected in about {eta}, for about {duration}, near {area}.",
+    "air": "Air quality ahead: {category}, AQI {aqi}, in about {eta}."
+  },
+  "basicType": {
+    "town": "a town",
+    "city": "a city",
+    "peak": "a mountain peak",
+    "pass": "a mountain pass",
+    "ridge": "a ridge",
+    "cliff": "a cliff",
+    "arch": "a rock arch",
+    "rock": "a rock formation",
+    "river": "a river",
+    "canyon": "a canyon",
+    "lake": "a lake",
+    "spring": "a spring",
+    "tunnel": "a railroad tunnel",
+    "station": "a station",
+    "railroad": "a railroad site",
+    "bridge": "a railroad bridge",
+    "dam": "a dam",
+    "park": "a protected area",
+    "baths": "a bathhouse",
+    "museum": "a museum",
+    "historic": "a historic site",
+    "hotel": "a historic hotel",
+    "building": "a building",
+    "viewpoint": "a viewpoint"
+  },
+  "side": {
+    "left": "On your left",
+    "right": "On your right",
+    "ahead": "Ahead",
+    "both": "Both sides",
+    "unknown": "Along the line",
+    "short": {
+      "left": "Left",
+      "right": "Right",
+      "ahead": "Ahead",
+      "both": "Both"
+    }
+  },
+  "lookAhead": {
+    "region": "Coming up",
+    "eta": "In about {eta}",
+    "now": "Now",
+    "whenMoving": "When we're moving",
+    "saved": "You saved this",
+    "open": "Open {name}",
+    "announce": "{side} in about {eta}: {name}",
+    "announceNow": "Now {side}: {name}"
+  },
+  "advisor": {
+    "title": "Best side to sit",
+    "open": "Best side to sit",
+    "better": {
+      "left": "Left side",
+      "right": "Right side",
+      "even": "Either side"
+    },
+    "highlights": {
+      "one": "{count} highlight",
+      "other": "{count} highlights"
+    },
+    "versus": "{side}: {count}",
+    "evenHint": "Highlights are evenly split.",
+    "direction": "Direction",
+    "toward": "Toward {stop}",
+    "facingNote": "Based on direction of travel. If you sit facing backward, sides flip.",
+    "facing": "Seat",
+    "timeIn": "about {time} in",
+    "atStart": "at the start",
+    "byTimetable": "Times follow the Amtrak timetable.",
+    "unknownDirection": "Direction of travel is unknown. Sides appear once the train moves.",
+    "balance": "Side balance along the ride",
+    "nextWindow": "Next 30 min: {side}",
+    "nextWindowEven": "Next 30 min: either side",
+    "start": "Start ride",
+    "none": "No highlights on this stretch."
+  },
+  "bookmarks": {
+    "title": "Bookmarks",
+    "add": "Bookmark {name}",
+    "remove": "Remove bookmark for {name}",
+    "bookmark": "Bookmark",
+    "bookmarked": "Bookmarked",
+    "empty": "No bookmarks yet",
+    "emptyHint": "Bookmark a place on its card, or before you reach it.",
+    "status": {
+      "upcoming": "Upcoming",
+      "passed": "Passed",
+      "discovered": "Discovered"
+    },
+    "in": "in about {eta}",
+    "export": "Export",
+    "copy": "Copy as text",
+    "download": "Download JSON",
+    "copied": "Copied",
+    "copyFailed": "Couldn’t copy. Use Download instead.",
+    "removeAction": "Remove",
+    "open": "Open {name}",
+    "otherNetwork": "Other routes",
+    "kmMark": "Km {km}",
+    "count": {
+      "one": "{count} bookmark",
+      "other": "{count} bookmarks"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "language": "Language",
+    "facing": "Seat facing",
+    "forward": "Facing forward",
+    "backward": "Facing backward",
+    "facingHint": "Left and right cues flip when you face backward.",
+    "sound": "Narration",
+    "soundHint": "Speak stories and cues during a ride.",
+    "voice": "Voice questions",
+    "voiceHint": "Show the push-to-talk button during a ride.",
+    "strips": "Route strips",
+    "on": "On",
+    "off": "Off",
+    "about": "About & privacy",
+    "credits": "Credits & licenses",
+    "offline": "Offline downloads",
+    "offlineReady": {
+      "one": "{count} place ready offline",
+      "other": "{count} places ready offline"
+    },
+    "clearOffline": "Clear downloads"
+  },
+  "history": {
+    "title": "Then and now",
+    "past": "Past",
+    "present": "Today",
+    "showPast": "Show past",
+    "showPresent": "Show present",
+    "slider": "Compare {year} with today",
+    "pastOnly": "Historic photo",
+    "credit": "{credit} · {license}",
+    "source": "Source",
+    "circa": "c. {year}"
+  },
+  "connectivity": {
+    "warning": "No signal expected in about {eta}, for about {duration}",
+    "now": "No signal expected for about {duration}",
+    "area": "{area} area",
+    "estimated": "Estimated",
+    "confidence": {
+      "high": "High confidence",
+      "medium": "Medium confidence",
+      "low": "Low confidence"
+    },
+    "reason": {
+      "tunnel": "Tunnel",
+      "canyon": "Canyon",
+      "remote": "Remote stretch",
+      "observed": "Lost signal here"
+    },
+    "places": {
+      "one": "{count} place in this stretch",
+      "other": "{count} places in this stretch"
+    },
+    "passWithoutSignal": "You’ll pass these with no signal:",
+    "download": "Download for the next 2 hours",
+    "downloading": "Downloading {done} of {total}",
+    "downloaded": "Ready offline: {done} of {total}",
+    "ready": "Ready offline",
+    "needsSignal": "Needs signal",
+    "strip": "Signal",
+    "estimatedPosition": "Estimated position",
+    "lowStorage": "Storage is low; skipping 3D models.",
+    "failed": "Some downloads failed. They will retry with signal."
+  },
+  "air": {
+    "title": "Air quality",
+    "aqi": "AQI {value}",
+    "category": {
+      "good": "Good",
+      "moderate": "Moderate",
+      "usg": "Unhealthy for sensitive groups",
+      "unhealthy": "Unhealthy",
+      "veryUnhealthy": "Very unhealthy",
+      "hazardous": "Hazardous"
+    },
+    "pollutant": {
+      "pm2_5": "PM2.5",
+      "pm10": "PM10",
+      "ozone": "Ozone",
+      "us_aqi": "Mixed"
+    },
+    "mostly": "Mostly {pollutant}",
+    "asOf": "as of {time}",
+    "alert": "Air quality ahead: {category} (AQI {aqi}) in about {eta}",
+    "simulated": "Simulated",
+    "simulatedScenario": "Simulated smoke scenario",
+    "disclaimer": "Informational only.",
+    "airnow": "Check AirNow",
+    "source": "Data: Open-Meteo (CAMS)",
+    "unavailable": "Air quality unavailable",
+    "strip": "Air"
+  },
+  "layers": {
+    "label": "Route strips",
+    "pois": "Places",
+    "air": "Air",
+    "signal": "Signal"
+  },
+  "progress": {
+    "label": "Ride progress",
+    "position": "{done} of {total}",
+    "you": "You are here"
+  },
+  "voice": {
+    "ask": "Ask",
+    "open": "Ask a question",
+    "close": "Close questions",
+    "hold": "Hold to talk",
+    "tap": "Tap to talk",
+    "stopRecording": "Stop and send",
+    "listening": "Listening…",
+    "thinking": "Thinking…",
+    "speaking": "Speaking…",
+    "placeholder": "Ask about what’s outside",
+    "send": "Send",
+    "notice": "Your recording goes to the speech provider for transcription and is not stored.",
+    "needsSignal": "Needs signal. Your question is saved and will be sent when signal returns.",
+    "queued": "Waiting for signal: {question}",
+    "noAnswer": "I couldn’t find a sourced answer to that.",
+    "offerBookmark": "Bookmark this place instead",
+    "sources": "Sources",
+    "micDenied": "Microphone access is blocked. Type your question instead.",
+    "unavailable": "Voice input is unavailable. Type your question instead.",
+    "you": "You",
+    "reply": {
+      "paused": "Paused.",
+      "resumed": "Resuming.",
+      "skipped": "Skipped.",
+      "replay": "Playing that again.",
+      "stopped": "Narration is off.",
+      "bookmarked": "Bookmarked {name}.",
+      "nothingToBookmark": "There’s nothing to bookmark right now.",
+      "comingUp": "Coming up: {name}, {side}, in about {eta}.",
+      "comingUpNoEta": "Coming up: {name}, {side}.",
+      "nothingAhead": "Nothing highlighted ahead right now.",
+      "side": "{side} has more highlights from here: {count} against {other}.",
+      "sideEven": "Both sides are even from here.",
+      "deadZone": "The next no-signal stretch starts in about {eta} and lasts about {duration}.",
+      "noDeadZone": "No signal gaps are expected ahead.",
+      "language": "Switched to {language}."
+    }
+  },
+  "models": {
+    "chip": "3D",
+    "explore": "Explore in 3D",
+    "reset": "Reset view",
+    "close": "Close 3D view",
+    "procedural": "Simplified model from map data",
+    "illustrative": "Illustrative reconstruction",
+    "credit": "Model: {author} · {license}",
+    "streetView": "Open in Street View",
+    "hint": "Drag to orbit, pinch or scroll to zoom. Arrow keys rotate; + and − zoom.",
+    "loading": "Loading 3D model…",
+    "unavailable": "3D model unavailable",
+    "label": "3D model of {name}"
+  },
+  "credits": {
+    "title": "Credits & licenses",
+    "back": "Back"
+  },
+  "dev": {
+    "panel": "Developer controls"
+  },
+  "sheet": {
+    "collapse": "Collapse sheet",
+    "expand": "Expand sheet"
+  }
+}

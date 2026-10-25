@@ -39,7 +39,7 @@ async function finishClip(page: Page) {
 }
 
 async function startLiveRide(page: Page) {
-  await page.goto("/");
+  await page.goto("/?network=lirr");
   await page.getByRole("button", { name: "Find routes near me" }).click();
   await page.getByRole("button", { name: /Port Jefferson/ }).last().click();
   await page.getByRole("button", { name: "Start ride", exact: true }).click();
@@ -244,12 +244,12 @@ test("a POI with no source stays queued and is never sent to the narration provi
       : route.fulfill({ json: announcement(input) });
   });
 
-  await page.goto("/");
+  await page.goto("/?network=lirr");
   await page.getByRole("button", { name: "Start audio tour" }).click();
   await expect.poll(() => clips(page)).toContain("https://example.org/test-clip-journey.mp3");
   await finishClip(page);
   await expect(page.getByText("Waiting for a nearby story")).toBeVisible();
-  await page.getByRole("button", { name: /My discoveries/ }).click();
+  await page.getByRole("navigation", { name: "Main navigation" }).getByRole("button", { name: "Discoveries" }).click();
   await expect(page.getByRole("heading", { name: "Window landmark" })).toBeVisible();
   expect(requested.some((input) => input.type === "place")).toBe(false);
   expect(await clips(page)).toEqual(["https://example.org/test-clip-journey.mp3"]);
@@ -264,7 +264,7 @@ test("demo ride explicitly labels its simulation and identifies the journey as s
     return route.fulfill({ json: announcement(input) });
   });
 
-  await page.goto("/");
+  await page.goto("/?network=lirr");
   await page.getByRole("button", { name: "Start Jamaica demo ride" }).click();
   const rideStatus = page.locator(".ride-heading p");
   await expect(rideStatus).toBeVisible();

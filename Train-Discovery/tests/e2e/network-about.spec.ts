@@ -20,7 +20,7 @@ for (const viewport of [
 ]) {
   test(`map tracks and station labels fit at ${viewport.width}px`, async ({ page }) => {
     await page.setViewportSize(viewport);
-    await page.goto("/");
+    await page.goto("/?network=lirr");
     const map = page.getByRole("group", { name: "Interactive LIRR route map" });
     await expect(map).toBeVisible();
     await page.evaluate(() => document.fonts.ready);
@@ -105,12 +105,12 @@ for (const viewport of [
     expect(await back.evaluate((element) => getComputedStyle(element).outlineStyle)).not.toBe("none");
     await page.keyboard.press("Enter");
     await expect(page).toHaveURL(/\/$/);
-    await expect(page.getByRole("heading", { name: "Explore LIRR" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "California Zephyr" })).toBeVisible();
   });
 }
 
 test("map routes support Enter and Space selection with a visible focus treatment", async ({ page }) => {
-  await page.goto("/");
+  await page.goto("/?network=lirr");
   const map = page.getByRole("group", { name: "Interactive LIRR route map" });
   for (const [name, key] of [["Babylon Branch", "Enter"], ["Port Jefferson Branch", "Space"]]) {
     const route = map.getByRole("button", { name: `Select ${name}`, exact: true });
@@ -124,10 +124,10 @@ test("map routes support Enter and Space selection with a visible focus treatmen
   }
 });
 
-test("mocked Greenport GPS renders a marker in the negative-y portion of the map", async ({ page, context }) => {
+test("mocked Greenport GPS renders a marker near the top of the map, inside its bounds", async ({ page, context }) => {
   await context.grantPermissions(["geolocation"]);
   await context.setGeolocation({ latitude: 41.103, longitude: -72.359, accuracy: 5 });
-  await page.goto("/");
+  await page.goto("/?network=lirr");
   await expect(page.locator(".network-user .location-dot")).toHaveCount(0);
   await page.getByRole("button", { name: "Find routes near me" }).click();
   await expect(page.getByRole("heading", { name: "Routes near you" })).toBeVisible();
@@ -138,7 +138,8 @@ test("mocked Greenport GPS renders a marker in the negative-y portion of the map
     const box = circle.ownerSVGElement!.viewBox.baseVal;
     return { x: circle.cx.baseVal.value, y: circle.cy.baseVal.value, minX: box.x, minY: box.y, maxX: box.x + box.width, maxY: box.y + box.height };
   });
-  expect(geometry.y).toBeLessThan(0);
+  // Greenport is the network's northernmost stop, so it sits in the top tenth of the map.
+  expect(geometry.y).toBeLessThan(geometry.minY + (geometry.maxY - geometry.minY) * 0.1);
   expect(geometry.y).toBeGreaterThanOrEqual(geometry.minY);
   expect(geometry.y).toBeLessThanOrEqual(geometry.maxY);
   expect(geometry.x).toBeGreaterThanOrEqual(geometry.minX);

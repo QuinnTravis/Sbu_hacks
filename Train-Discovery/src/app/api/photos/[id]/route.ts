@@ -1,5 +1,6 @@
 import { createHmac, randomBytes } from "node:crypto";
 import { database } from "@/lib/supabase";
+import { staticPlace } from "@/lib/network-data";
 import { placeIdSchema } from "@/lib/validation";
 import { wikimediaPhoto } from "@/lib/wikimedia-photo";
 import type { Photo, Place } from "@/lib/types";
@@ -38,7 +39,7 @@ async function googlePhoto(request: Request, place: Place, key: string): Promise
             "places.id,places.displayName,places.location,places.photos,places.googleMapsUri",
         },
         body: JSON.stringify({
-          textQuery: `${place.name}, New York`,
+          textQuery: place.routeIds.some((id) => id.startsWith("cz-")) ? `${place.name}, Colorado` : `${place.name}, New York`,
           pageSize: 1,
           locationBias: {
             circle: {
@@ -91,14 +92,17 @@ export async function GET(
   if (!placeIdSchema.safeParse(id).success)
     return Response.json({ error: "Unknown place." }, { status: 400, headers });
   try {
-    const { data: row, error } = await database()
-      .from("places")
-      .select("data")
-      .eq("id", id)
-      .single();
-    if (error || !row)
-      return Response.json({ error: "Place not found." }, { status: 404, headers });
-    const place = row.data as Place;
+    let place = staticPlace(id)?.place;
+    if (!place) {
+      const { data: row, error } = await database()
+        .from("places")
+        .select("data")
+        .eq("id", id)
+        .single();
+      if (error || !row)
+        return Response.json({ error: "Place not found." }, { status: 404, headers });
+      place = row.data as Place;
+    }
     const commonsOnly = new URL(request.url).searchParams.get("commons") === "1";
     const key = process.env.GOOGLE_PLACES_API_KEY;
     if (!commonsOnly && key && process.env.SUPABASE_SECRET_KEY &&

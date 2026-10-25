@@ -31,7 +31,7 @@ test("dev panel controls movement, joystick detection, tilt, and phone mode", as
   await page.route("**/api/photos/**", (r) =>
     r.fulfill({ status: 503, json: { error: "Not configured" } }),
   );
-  await page.goto("/?dev");
+  await page.goto("/?network=lirr&dev");
   const panel = page.getByRole("complementary", { name: "Developer controls" });
   await expect(panel).toBeVisible();
   await panel.getByRole("button", { name: "Start Jamaica demo" }).click();

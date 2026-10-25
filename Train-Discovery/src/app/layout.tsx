@@ -1,15 +1,17 @@
 import type { Metadata, Viewport } from "next";
+import { Providers } from "@/components/providers";
+import { LOCALE_BOOT_SCRIPT } from "@/lib/i18n-boot";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Train Discovery — LIRR",
+  title: "Gaze",
   description:
-    "Point your phone outside. Discover the places and stories along your LIRR ride.",
-  applicationName: "Train Discovery",
+    "Point. Discover. Keep. Point your phone out the train window and hear the stories of the places you pass.",
+  applicationName: "Gaze",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "Train Discovery",
+    title: "Gaze",
   },
   icons: { icon: "/icon.svg", apple: "/apple-touch-icon.png" },
 };
@@ -26,12 +28,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    // The boot script sets lang/dir from the saved language before first paint.
+    <html lang="en" dir="ltr" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: LOCALE_BOOT_SCRIPT }} />
+      </head>
       <body>
-        <a className="skip-link" href="#main-content">
-          Skip to content
-        </a>
-        {children}
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

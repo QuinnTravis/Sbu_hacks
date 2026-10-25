@@ -17,7 +17,23 @@
   --soft: #dfe3eb;
   --steel: #8e98a8;
   --brass: #8f6b3d;
-  --font-ui: "Google Sans", Arial, sans-serif;
+  /* Google Sans is Latin-only; Chinese falls through to the system CJK face. */
+  --font-ui: "Google Sans", Arial, "PingFang SC", "Noto Sans SC", "Noto Sans CJK SC",
+    "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+}
+:root:lang(zh) {
+  --font-ui: "Google Sans", "PingFang SC", "Noto Sans SC", "Noto Sans CJK SC",
+    "Hiragino Sans GB", "Microsoft YaHei", Arial, sans-serif;
+}
+/* Set by the locale boot script until the client renders in the saved language. */
+html[data-locale-pending] body {
+  visibility: hidden;
+  animation: locale-reveal 0s 3s forwards;
+}
+@keyframes locale-reveal {
+  to {
+    visibility: visible;
+  }
 }
 @theme inline {
   --color-background: var(--canvas);

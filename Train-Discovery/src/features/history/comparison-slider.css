@@ -1,0 +1,131 @@
+.history-figure {
+  margin: 16px 0 0;
+}
+.history-heading {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+.history-stage {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  border-radius: 22px;
+  overflow: hidden;
+  background: var(--soft);
+  touch-action: pan-y;
+  user-select: none;
+  cursor: ew-resize;
+}
+.history-stage.is-single {
+  cursor: default;
+}
+.history-stage img,
+.history-past {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.history-stage img {
+  object-fit: cover;
+  display: block;
+}
+.history-past {
+  will-change: clip-path;
+}
+.history-tag {
+  position: absolute;
+  top: 10px;
+  padding: 3px 10px;
+  border-radius: 14px;
+  font-size: 12px;
+  font-weight: 600;
+  background: #0c101dcc;
+  color: var(--paper);
+  pointer-events: none;
+}
+.history-tag.is-past {
+  left: 10px;
+}
+.history-tag.is-present {
+  right: 10px;
+}
+.history-handle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 44px;
+  margin-left: -22px;
+  display: grid;
+  place-items: center;
+  cursor: ew-resize;
+  outline: none;
+}
+.history-handle::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 21px;
+  width: 2px;
+  background: var(--paper);
+  box-shadow: 0 0 0 1px #0c101d33;
+}
+.history-knob {
+  position: relative;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  box-shadow: 0 6px 18px #26324d33;
+}
+.history-knob::before,
+.history-knob::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 0;
+  height: 0;
+  margin-top: -5px;
+  border: 5px solid transparent;
+}
+.history-knob::before {
+  left: 4px;
+  border-right-color: var(--ink);
+}
+.history-knob::after {
+  right: 4px;
+  border-left-color: var(--ink);
+}
+.history-handle:focus-visible .history-knob {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+.history-toggle {
+  margin-top: 10px;
+}
+.history-caption {
+  margin-top: 10px;
+  font-size: 14px;
+  line-height: 1.45;
+}
+.history-credits {
+  list-style: none;
+  margin: 6px 0 0;
+  padding: 0;
+  font-size: 12px;
+  color: var(--muted);
+}
+.history-credits a {
+  color: inherit;
+}
+.history-credit-label {
+  font-weight: 600;
+}
+@media (prefers-reduced-motion: reduce) {
+  .history-past {
+    will-change: auto;
+  }
+}

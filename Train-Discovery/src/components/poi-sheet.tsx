@@ -8,6 +8,7 @@ import {
   type ReactNode,
 } from "react";
 import { X } from "lucide-react";
+import { useI18n } from "@/lib/i18n";
 import "./poi-sheet.css";
 
 type PoiSheetProps = {
@@ -31,6 +32,7 @@ type Drag = {
 
 export function PoiSheet(props: PoiSheetProps) {
   const { open, expanded, label, children } = props;
+  const { t } = useI18n();
   const bodyId = useId();
   const sheetRef = useRef<HTMLElement>(null);
   const handleRef = useRef<HTMLButtonElement>(null);
@@ -138,6 +140,8 @@ export function PoiSheet(props: PoiSheetProps) {
     const sync = () => {
       if (disposed) return;
       releaseCapture();
+      // The collapsed height can follow the sheet's content between openings.
+      geometry = measureGeometry();
       const { height, offset } = geometry;
       const current = latest.current;
       const next = current.open ? (current.expanded ? 0 : offset) : height + 2;
@@ -270,7 +274,7 @@ export function PoiSheet(props: PoiSheetProps) {
           ref={handleRef}
           type="button"
           className="poi-sheet__handle"
-          aria-label={expanded ? "Collapse sheet" : "Expand sheet"}
+          aria-label={expanded ? t("sheet.collapse") : t("sheet.expand")}
           aria-expanded={expanded}
           aria-controls={bodyId}
           onPointerDown={(event) => engine.current?.down(event)}
@@ -295,7 +299,7 @@ export function PoiSheet(props: PoiSheetProps) {
         <button
           type="button"
           className="poi-sheet__close"
-          aria-label="Close"
+          aria-label={t("app.close")}
           onClick={() => latest.current.onDismiss()}
         >
           <X size={20} strokeWidth={2} aria-hidden="true" />

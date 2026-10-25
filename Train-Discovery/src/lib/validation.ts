@@ -5,6 +5,7 @@ export const nearbySchema = z.object({
   lon: z.coerce.number().finite().min(-74.2).max(-71.7),
   route: z.string().regex(/^(?:[1-9]|1[0-3])$/),
 });
+/** OpenStreetMap records (LIRR catalog, Zephyr rivers and canyons) or Wikidata items (Zephyr). */
 export const placeIdSchema = z
   .string()
-  .regex(/^osm-(node|way|relation)-[0-9]{1,15}$/);
+  .regex(/^(?:osm-(node|way|relation)-[0-9]{1,15}|wd-Q[0-9]{1,12})$/);

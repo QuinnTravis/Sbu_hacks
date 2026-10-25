@@ -269,6 +269,7 @@ function RideMapCanvas({
   places,
   color,
   label,
+  radius,
 }: {
   position: Coordinate;
   heading: number | null;
@@ -276,11 +277,12 @@ function RideMapCanvas({
   places: Place[];
   color?: string;
   label: string;
+  radius?: number;
 }) {
   const frame = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MapLibreMap | null>(null);
   const basemap = useQuietBasemap();
-  const [zoom, setZoom] = useState(() => pointingConeZoom(position.lat, 320));
+  const [zoom, setZoom] = useState(() => pointingConeZoom(position.lat, 320, radius));
   const [unavailable, setUnavailable] = useState(false);
   useEffect(() => {
     const node = frame.current;
@@ -290,21 +292,21 @@ function RideMapCanvas({
       const rect = node.getBoundingClientRect();
       const span = Math.min(rect.width, rect.height);
       if (span < 8) return;
-      const next = pointingConeZoom(position.lat, span);
+      const next = pointingConeZoom(position.lat, span, radius);
       setZoom((current) => (Math.abs(current - next) < 0.02 ? current : next));
     };
     apply();
     const observer = new ResizeObserver(apply);
     observer.observe(node);
     return () => observer.disconnect();
-  }, [position.lat, basemap]);
+  }, [position.lat, basemap, radius]);
   if (unavailable) {
     return <div className="ride-map ride-map-waiting" role="group" aria-label={label} />;
   }
 
   const cone =
     heading !== null && Number.isFinite(heading)
-      ? pointingConeLngLats(position, heading)
+      ? pointingConeLngLats(position, heading, radius)
       : null;
   const track = trackData(paths);
   const trackColor = color || MUTED;
@@ -403,8 +405,8 @@ function RideMapCanvas({
                 />
               </Source>
             ) : null}
-            {places.filter((place) => distance(position, place) <= POINTING_RADIUS_M).map((place) => {
-              const pointed = isPointedAt(position, heading, place);
+            {places.filter((place) => distance(position, place) <= (radius ?? POINTING_RADIUS_M)).map((place) => {
+              const pointed = isPointedAt(position, heading, place, radius);
               return (
                 <Marker key={place.id} longitude={place.lon} latitude={place.lat} anchor="center">
                   <span
@@ -453,6 +455,7 @@ export function RideMap({
   places = [],
   color,
   label,
+  radius,
 }: {
   position: Coordinate;
   heading: number | null;
@@ -460,6 +463,7 @@ export function RideMap({
   places?: Place[];
   color?: string;
   label: string;
+  radius?: number;
 }) {
   return (
     <RideMapBoundary label={label}>
@@ -470,6 +474,7 @@ export function RideMap({
         places={places}
         color={color}
         label={label}
+        radius={radius}
       />
     </RideMapBoundary>
   );

@@ -29,6 +29,7 @@ export function DevPanel({
   playing,
   onPlay,
   speed,
+  maxSpeed = 240,
   onSpeed,
   direction,
   onReverse,
@@ -36,6 +37,7 @@ export function DevPanel({
   total,
   onSeek,
   onReset,
+  resetLabel = "Jamaica",
   mode,
   onMode,
   manualHeading,
@@ -46,9 +48,11 @@ export function DevPanel({
   heading,
   active,
   places,
+  radius = 1200,
   onLocation,
   started,
   onStart,
+  startLabel = "Jamaica",
   stations,
   onStation,
   queueCount,
@@ -60,6 +64,7 @@ export function DevPanel({
   playing: boolean;
   onPlay: () => void;
   speed: number;
+  maxSpeed?: number;
   onSpeed: (n: number) => void;
   direction: number;
   onReverse: () => void;
@@ -67,6 +72,7 @@ export function DevPanel({
   total: number;
   onSeek: (n: number) => void;
   onReset: () => void;
+  resetLabel?: string;
   mode: HeadingMode;
   onMode: (m: HeadingMode) => void;
   manualHeading: number;
@@ -77,9 +83,12 @@ export function DevPanel({
   heading: number | null;
   active: boolean;
   places: Place[];
+  /** Pointing radius in meters; nearby targets list places within it. */
+  radius?: number;
   onLocation: (replay: boolean) => void;
   started: boolean;
   onStart: () => void;
+  startLabel?: string;
   stations: { id: string; name: string; offset: number }[];
   onStation: (offset: number) => void;
   queueCount: number;
@@ -94,7 +103,7 @@ export function DevPanel({
           meters: distance(position, p),
           bearing: bearing(position, p),
         }))
-        .filter((p) => p.meters <= 1200)
+        .filter((p) => p.meters <= radius)
         .sort((a, b) => a.meters - b.meters)
         .slice(0, 8)
     : [];
@@ -127,7 +136,7 @@ export function DevPanel({
       </div>
       {!started ? (
         <button className="primary-button" onClick={onStart}>
-          Start Jamaica demo
+          Start {startLabel} demo
         </button>
       ) : compact ? (
         <div className="dev-mini">
@@ -162,7 +171,7 @@ export function DevPanel({
             </button>
           )}
           <small>
-            {replay ? "Simulated train" : "Real GPS"} · {queueCount} queued
+            {replay ? `Simulated train · ${speed} km/h` : "Real GPS"} · {queueCount} queued
           </small>
         </div>
       ) : (
@@ -191,7 +200,7 @@ export function DevPanel({
                 <button
                   className="icon-button"
                   onClick={onReset}
-                  aria-label="Reset train to Jamaica"
+                  aria-label={`Reset train to ${resetLabel}`}
                 >
                   <RotateCcw size={16} />
                 </button>
@@ -202,7 +211,7 @@ export function DevPanel({
                   aria-label="Train speed"
                   type="range"
                   min="0"
-                  max="240"
+                  max={maxSpeed}
                   step="5"
                   value={speed}
                   onChange={(e) => onSpeed(+e.target.value)}
@@ -228,7 +237,7 @@ export function DevPanel({
                 <button onClick={() => onSeek(progress + 250)}>+250 m</button>
               </div>
               <div className="dev-row">
-                <label htmlFor="dev-station">Jump to station</label>
+                <label htmlFor="dev-station">Jump to</label>
                 <select
                   id="dev-station"
                   value=""
@@ -236,7 +245,7 @@ export function DevPanel({
                     if (e.target.value) onStation(+e.target.value);
                   }}
                 >
-                  <option value="">Choose station</option>
+                  <option value="">Choose a place or station</option>
                   {stations.map((s) => (
                     <option key={s.id} value={s.offset}>
                       {s.name}
@@ -370,7 +379,7 @@ export function DevPanel({
                 </button>
               ))
             ) : (
-              <p>No targets within 1.2 km.</p>
+              <p>No targets within {formatDistance(radius)}.</p>
             )}
           </div>
         </>

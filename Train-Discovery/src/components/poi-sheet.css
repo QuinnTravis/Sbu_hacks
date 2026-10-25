@@ -5,7 +5,7 @@
 }
 
 .poi-sheet {
-  --poi-sheet-collapsed-height: 34dvh;
+  --poi-sheet-collapsed-height: min(34dvh, var(--poi-sheet-content-height, 34dvh));
   --poi-sheet-visible-height: 34dvh;
   position: absolute;
   z-index: 20;

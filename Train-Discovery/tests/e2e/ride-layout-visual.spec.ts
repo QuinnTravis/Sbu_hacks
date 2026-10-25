@@ -115,7 +115,7 @@ async function startHeldGuide(page: Page) {
 }
 
 async function startRide(page: Page, branch = "Port Jefferson") {
-  await page.goto("/");
+  await page.goto("/?network=lirr");
   if (branch === "Babylon") {
     await page.getByRole("button", { name: "Expand route list", exact: true }).click();
     await page.locator(".route-row").filter({ hasText: "Babylon" }).click();
@@ -158,9 +158,9 @@ for (const viewport of [{ width: 360, height: 740 }, { width: 1366, height: 768 
     await expectVisibleTextFragment(page.locator(".audio-next-name"), "King");
     await expectReachable(page.getByRole("button", { name: "Play now", exact: true }));
     await page.screenshot({ path: info.outputPath("babylon-selected-queued.png") });
-    await page.getByRole("button", { name: /My discoveries/ }).click();
+    await page.getByRole("navigation", { name: "Main navigation" }).getByRole("button", { name: "Discoveries" }).click();
     await expect(page.getByRole("heading", { name: LONG_NAME, exact: true })).toBeVisible();
-    await page.getByRole("button", { name: "Discover", exact: true }).click();
+    await page.getByRole("navigation", { name: "Main navigation" }).getByRole("button", { name: "Ride" }).click();
     await reopenChooser(page, 3);
     await expectReachable(page.locator(".candidate-row").last());
     await expectNoRideIntersections(page);

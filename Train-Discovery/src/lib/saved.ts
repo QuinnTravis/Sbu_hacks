@@ -1,5 +1,5 @@
 import { sameDiscoverySite } from "./discovery-targets";
-import type { Evidence, Place, QueueEntry, SavedEntry, Story } from "./types";
+import type { Claim, Evidence, Place, QueueEntry, SavedEntry, Story } from "./types";
 
 const MAX_SAVED = 500;
 
@@ -21,14 +21,22 @@ function unionEvidence(primary: Evidence[], extra: Evidence[]): Evidence[] {
   return [...primary, ...extra.filter((item) => !seen.has(item.id))].slice(0, 20);
 }
 
+const copyClaim = (claim: Claim): Claim => ({ text: claim.text, evidenceId: claim.evidenceId, quote: claim.quote });
+
 function persistStory(story: Story): Story {
-  const funFact = story.funFact
-    ? { text: story.funFact.text, evidenceId: story.funFact.evidenceId, quote: story.funFact.quote }
+  const funFact = story.funFact ? copyClaim(story.funFact) : undefined;
+  const narration = story.narration
+    ? Object.fromEntries(
+        Object.entries(story.narration)
+          .filter((entry): entry is [string, Claim] => Boolean(entry[1]))
+          .map(([part, claim]) => [part, copyClaim(claim)]),
+      )
     : undefined;
   return {
     summary: (story.summary ?? "").slice(0, 1200),
-    claims: (story.claims ?? []).slice(0, 4).map(({ text, evidenceId, quote }) => ({ text, evidenceId, quote })),
+    claims: (story.claims ?? []).slice(0, 4).map(copyClaim),
     ...(funFact ? { funFact } : {}),
+    ...(narration && Object.keys(narration).length ? { narration } : {}),
     verifiedAt: story.verifiedAt,
     generator: story.generator,
     verifier: story.verifier,
@@ -64,6 +72,14 @@ export function persistablePlace(place: Place): Place {
       ...(item.sourceType ? { sourceType: item.sourceType } : {}),
     })),
     ...(story ? { story } : {}),
+    ...(place.kind ? { kind: place.kind } : {}),
+    ...(typeof place.routeKm === "number" ? { routeKm: place.routeKm } : {}),
+    ...(typeof place.lateralM === "number" ? { lateralM: place.lateralM } : {}),
+    ...(typeof place.signedLateralM === "number" ? { signedLateralM: place.signedLateralM } : {}),
+    ...(place.extentKm ? { extentKm: [place.extentKm[0], place.extentKm[1]] as [number, number] } : {}),
+    ...(place.areaKind ? { areaKind: place.areaKind } : {}),
+    ...(typeof place.fame === "number" ? { fame: place.fame } : {}),
+    ...(place.basic ? { basic: { ...place.basic, sources: place.basic.sources.slice(0, 4) } } : {}),
   };
 }
 
@@ -89,17 +105,34 @@ export function isSaved(library: SavedEntry[], place: Place): boolean {
   return library.some((entry) => sameDiscoverySite(entry.place, place));
 }
 
-export function savePlace(library: SavedEntry[], place: Place, now = Date.now()): SavedEntry[] {
+export type BookmarkMeta = { routeId?: string; networkId?: string; discoveredAt?: number };
+
+export function savePlace(
+  library: SavedEntry[],
+  place: Place,
+  now = Date.now(),
+  meta: BookmarkMeta = {},
+): SavedEntry[] {
   const stored = persistablePlace(place);
   const index = library.findIndex((entry) => sameDiscoverySite(entry.place, stored));
   if (index < 0) {
     if (library.length >= MAX_SAVED) return library;
-    return [...library, { place: stored, savedAt: now }];
+    const extra = Object.fromEntries(Object.entries(meta).filter(([, value]) => value !== undefined));
+    return [...library, { place: stored, savedAt: now, ...extra }];
   }
   const merged = keepRicherStory(library[index].place, stored);
   if (merged === library[index].place) return library;
   const next = library.slice();
   next[index] = { ...library[index], place: merged };
+  return next;
+}
+
+/** Note that a bookmarked place was pointed at or heard. Unbookmarked places are left alone. */
+export function markDiscovered(library: SavedEntry[], place: Place, now = Date.now()): SavedEntry[] {
+  const index = library.findIndex((entry) => sameDiscoverySite(entry.place, place));
+  if (index < 0 || library[index].discoveredAt) return library;
+  const next = library.slice();
+  next[index] = { ...library[index], discoveredAt: now };
   return next;
 }
 

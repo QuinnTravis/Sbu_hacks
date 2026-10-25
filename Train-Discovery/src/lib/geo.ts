@@ -106,10 +106,11 @@ export function destination(
   return { lat: (lat2 * 180) / Math.PI, lon };
 }
 
-/** Closed ring: rider, then the 1200 m arc from heading−22° to heading+22°. */
+/** Closed ring: rider, then the arc (1200 m by default) from heading−22° to heading+22°. */
 export function pointingConeRing(
   origin: Coordinate,
   heading: number,
+  radius = POINTING_RADIUS_M,
 ): Coordinate[] {
   const ring: Coordinate[] = [origin];
   for (let step = 0; step <= CONE_ARC_STEPS; step += 1) {
@@ -117,7 +118,7 @@ export function pointingConeRing(
       heading -
       POINTING_HALF_ANGLE_DEG +
       (2 * POINTING_HALF_ANGLE_DEG * step) / CONE_ARC_STEPS;
-    ring.push(destination(origin, edge, POINTING_RADIUS_M));
+    ring.push(destination(origin, edge, radius));
   }
   ring.push(origin);
   return ring;
@@ -126,8 +127,9 @@ export function pointingConeRing(
 export function pointingConeLngLats(
   origin: Coordinate,
   heading: number,
+  radius = POINTING_RADIUS_M,
 ): [number, number][] {
-  return pointingConeRing(origin, heading).map((point) => [
+  return pointingConeRing(origin, heading, radius).map((point) => [
     point.lon,
     point.lat,
   ]);
@@ -145,9 +147,10 @@ export function pointingConeContains(
   origin: Coordinate,
   heading: number,
   place: Coordinate,
+  radius = POINTING_RADIUS_M,
 ): boolean {
   if (!Number.isFinite(heading)) return false;
-  const polygon = pointingConeRing(origin, heading).map((point) =>
+  const polygon = pointingConeRing(origin, heading, radius).map((point) =>
     localMeters(origin, point),
   );
   const [x, y] = localMeters(origin, place);
@@ -164,11 +167,17 @@ export function pointingConeContains(
 }
 
 /** Fit the full radius in the smaller drawable map dimension, excluding attribution. */
-export function pointingConeZoom(latitude: number, viewportPx: number): number {
+export function pointingConeZoom(
+  latitude: number,
+  viewportPx: number,
+  radius = POINTING_RADIUS_M,
+): number {
   if (
     !Number.isFinite(latitude) ||
     !Number.isFinite(viewportPx) ||
-    viewportPx <= 0
+    !Number.isFinite(radius) ||
+    viewportPx <= 0 ||
+    radius <= 0
   )
     return 0;
   const half = viewportPx / 2;
@@ -176,12 +185,11 @@ export function pointingConeZoom(latitude: number, viewportPx: number): number {
   // Use the poleward edge's scale: Mercator stretches more there than at the rider.
   const latitudeRad = Math.min(
     rad(85.051129),
-    rad(Math.abs(latitude)) + POINTING_RADIUS_M / R,
+    rad(Math.abs(latitude)) + radius / R,
   );
   // MapLibre's world is 512 px at zoom 0 (a 256 px formula overzooms by 2×).
   const zoom = Math.log2(
-    ((2 * Math.PI * R * Math.cos(latitudeRad)) / 512) *
-      (radiusPx / POINTING_RADIUS_M),
+    ((2 * Math.PI * R * Math.cos(latitudeRad)) / 512) * (radiusPx / radius),
   );
   return Math.min(15.5, zoom);
 }

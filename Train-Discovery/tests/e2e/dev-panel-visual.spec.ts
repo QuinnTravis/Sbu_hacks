@@ -26,7 +26,7 @@ test.afterEach(async ({ page }, info) => {
 });
 
 async function startPausedDemo(page: Page) {
-  await page.goto("/?dev");
+  await page.goto("/?network=lirr&dev");
   const panel = page.getByRole("complementary", { name: "Developer controls" });
   await panel.getByRole("button", { name: "Start Jamaica demo", exact: true }).click();
   await panel.getByRole("button", { name: "Pause train", exact: true }).click();
@@ -138,7 +138,7 @@ test("movement, station jump, heading keyboard and compact playback preserve sta
   // Reset starts at the end of the reverse path; restore forward motion so
   // the later playback check does not immediately stop at that endpoint.
   await panel.getByRole("button", { name: "Direction ←", exact: true }).click();
-  const station = panel.getByLabel("Jump to station", { exact: true });
+  const station = panel.getByLabel("Jump to", { exact: true });
   const destination = await station.locator("option").evaluateAll((options) =>
     options.map((option) => (option as HTMLOptionElement).value).find((value) => value && Number(value) > 1000),
   );

@@ -4,9 +4,10 @@ import {
   pointingContext,
   stationAnnouncement,
 } from "./audio-journey";
-import type { AudioMoment, PendingStation, SelectedStory } from "./audio-journey";
+import type { AudioMoment, AudioScript, PendingStation, SelectedStory } from "./audio-journey";
 import { distance } from "./geo";
 import { narrationText } from "./narration";
+import type { PlaceAudioContext } from "./audio-journey";
 import type { Place, Position } from "./types";
 
 /**
@@ -29,6 +30,8 @@ const MAX_FIX_ACCURACY_METERS = 150;
 
 export type PodcastCandidate = {
   moment: AudioMoment;
+  /** A script composed for a static-network place (verified, source, or basic tier). */
+  script?: AudioScript | null;
   /** Optional editorial theme; otherwise the catalog category is used. */
   topic?: string | null;
   /** A selection timestamp; lets a pointed clip use the truthful lead-in. */
@@ -37,7 +40,7 @@ export type PodcastCandidate = {
 
 export type PodcastPlayback = {
   key: string;
-  kind: "story" | "station" | "intro" | "transition";
+  kind: "story" | "station" | "intro" | "transition" | "announcement";
   endedAt: number;
   topic?: string | null;
 };
@@ -45,7 +48,14 @@ export type PodcastPlayback = {
 export type PodcastDirectorInput = {
   now: number;
   candidates: readonly PodcastCandidate[];
-  geography: { routeId: string | null; position: Position | null };
+  geography: {
+    routeId: string | null;
+    position: Position | null;
+    /** How far from the rider a nearby story may be. 1.1 km on LIRR; wider on mountain corridors. */
+    nearbyMeters?: number;
+  };
+  /** Language for station lines. English when absent. */
+  language?: string;
   playedKeys: ReadonlySet<string>;
   /** Values from narrationFact(place), for different places telling the same fact. */
   playedFacts?: ReadonlySet<string>;
@@ -61,7 +71,7 @@ export type PodcastDirectorInput = {
   lastPlayback?: PodcastPlayback | null;
   current?: {
     key: string;
-    kind: "story" | "station" | "intro" | "transition";
+    kind: "story" | "station" | "intro" | "transition" | "announcement";
     boundary: "none" | "sentence" | "story";
     sentencesRemaining?: number;
   } | null;
@@ -69,7 +79,7 @@ export type PodcastDirectorInput = {
 
 export type RankedPodcastItem = {
   moment: AudioMoment;
-  priority: "station" | "pointed" | "nearby";
+  priority: "station" | "announcement" | "pointed" | "nearby";
   reason: string;
   score: number;
   topic: string | null;
@@ -82,7 +92,7 @@ export type RankedPodcastItem = {
 };
 
 export type PodcastPlan = { ranked: RankedPodcastItem[] } & (
-  | { action: "story" | "station"; item: RankedPodcastItem; reason: string }
+  | { action: "story" | "station" | "announcement"; item: RankedPodcastItem; reason: string }
   | { action: "intro" | "transition"; key: string; text: string; next: RankedPodcastItem; reason: string }
   | { action: "quiet"; reason: "no-sourced-stories" | "unknown-location" | "playback-in-progress" | "continue-current" | "breathing-room" | "invalid-time"; until?: number }
 );
@@ -131,6 +141,14 @@ function sameSite(a: Place, b: Place): boolean {
 function candidateItem(input: PodcastDirectorInput, entry: PodcastCandidate, positioned: Position | null): RankedPodcastItem | null {
   const { moment } = entry;
   const { routeId } = input.geography;
+  if (moment.request.type === "announcement") {
+    // Templated, time-sensitive lines (look-ahead cues, warnings). Never a historical claim.
+    if (!moment.fallback?.text.trim() || !Number.isFinite(moment.expiresAt) ||
+      (moment.expiresAt ?? 0) <= input.now || input.playedKeys.has(moment.key)) return null;
+    return { moment, priority: "announcement", reason: "timely announcement",
+      score: 8_000 + (moment.priority ?? 0), topic: null, depth: "brief", supportedDetails: 0,
+      siteKey: null, factKey: null };
+  }
   if (moment.request.type === "station") {
     const stop = moment.station;
     if (!stop || !positioned || !routeId || !validCoordinates(stop) ||
@@ -141,7 +159,7 @@ function candidateItem(input: PodcastDirectorInput, entry: PodcastCandidate, pos
       !Number.isFinite(moment.expiresAt) || (moment.expiresAt ?? 0) <= input.now ||
       distance(positioned, stop) > MAX_STATION_METERS ||
       input.playedKeys.has(moment.key)) return null;
-    const safeMoment: AudioMoment = { ...moment, name: stop.name, fallback: stationAnnouncement(stop) };
+    const safeMoment: AudioMoment = { ...moment, name: stop.name, fallback: stationAnnouncement(stop, input.language ?? "en") };
     return { moment: safeMoment, priority: "station", reason: "timely station encounter", score: 10_000 +
       (MAX_STATION_METERS - distance(positioned, stop)) / 10,
       topic: null, depth: "brief", supportedDetails: 0, siteKey: null, factKey: null };
@@ -156,9 +174,10 @@ function candidateItem(input: PodcastDirectorInput, entry: PodcastCandidate, pos
 
   const explicit = input.pointedPlaceId === place.id || Number.isFinite(entry.selectedAt);
   const replay = input.replayPlaceId === place.id;
+  const nearbyMeters = input.geography.nearbyMeters ?? MAX_NEARBY_METERS;
   if (!explicit && !replay && (!positioned ||
       (routeId !== null && !place.routeIds.includes(routeId)) ||
-      distance(positioned, place) > MAX_NEARBY_METERS)) return null;
+      distance(positioned, place) > nearbyMeters)) return null;
 
   const fact = narrationFact(place);
   const siteKey = podcastSiteKey(place);
@@ -174,12 +193,13 @@ function candidateItem(input: PodcastDirectorInput, entry: PodcastCandidate, pos
     : "nearby";
   // A name, a URL, or an arbitrary AudioMoment fallback cannot constitute a
   // sourced story. This rechecks claim quotes / matching Wikipedia excerpts.
-  const script = placeAnnouncement(place, context);
+  // Static-network scripts come precomposed from the same checks (narration-script.ts).
+  const script = entry.script !== undefined ? entry.script : placeAnnouncement(place, context);
   if (!script || script.kind === "announcement" || !script.sources.length ||
     !script.sources.every((source) => source.title.trim() && source.license.trim() && validLink(source.url))) return null;
 
   const topic = cleanTopic(entry.topic ?? place.category);
-  const nearbyDistance = positioned ? distance(positioned, place) : MAX_NEARBY_METERS;
+  const nearbyDistance = positioned ? Math.min(nearbyMeters, distance(positioned, place)) : nearbyMeters;
   const pointed = explicit || replay;
   const published = place.story;
   const supportedDetails = script.kind === "verified" && published
@@ -187,16 +207,16 @@ function candidateItem(input: PodcastDirectorInput, entry: PodcastCandidate, pos
     : script.kind === "source" ? 1 : 0;
   const depth = supportedDetails >= 2 ? "deep" : "brief";
   const score = (pointed ? 5_000 : 1_000) +
-    (script.kind === "verified" ? 240 : 0) +
+    (script.kind === "verified" ? 240 : script.kind === "basic" ? -200 : 0) +
     Math.min(3, supportedDetails) * 20 +
     (topic && topic === cleanTopic(input.previousTopic) ? 130 : 0) +
-    Math.max(0, (MAX_NEARBY_METERS - nearbyDistance) / 20);
+    Math.max(0, ((nearbyMeters - nearbyDistance) / nearbyMeters) * 55);
   return {
     moment: { ...moment, name: place.name, fallback: script,
-      request: { type: "place", placeId: place.id, context } },
+      request: { type: "place", placeId: place.id, context, ...(script.language && script.language !== "en" ? { locale: script.language } : {}) } },
     priority: pointed ? "pointed" : "nearby",
     reason: pointed ? replay ? "explicit replay" : depth === "deep" ? "user chose a multi-fact deep dive" : "user chose this place" :
-      script.kind === "verified" ? "nearby verified story" : "nearby attributed source excerpt",
+      script.kind === "verified" ? "nearby verified story" : script.kind === "basic" ? "nearby basic geography" : "nearby attributed source excerpt",
     score, topic, depth, supportedDetails, siteKey, factKey: fact,
   };
 }
@@ -222,32 +242,43 @@ function rank(input: PodcastDirectorInput, position: Position | null): RankedPod
  * types. `selectedAt` is carried through so delayed pointing stays truthful.
  * Does not fetch content, generate speech, or mark items played.
  */
+/** Builds a static-network moment: a script plus the parts to speak. */
+export type PlaceComposer = (place: Place, context: PlaceAudioContext) =>
+  { script: AudioScript; parts: AudioMoment["parts"] } | null;
+
 export function podcastCandidatesFromJourney(input: {
   now: number;
   selected: readonly SelectedStory[];
   nearby: readonly Place[];
   stations: readonly PendingStation[];
+  announcements?: readonly AudioMoment[];
+  compose?: PlaceComposer | null;
+  language?: string;
 }): PodcastCandidate[] {
   const candidates: PodcastCandidate[] = [];
+  const placeCandidate = (place: Place, context: PlaceAudioContext, selectedAt?: number): PodcastCandidate => {
+    const composed = input.compose ? input.compose(place, context) : undefined;
+    return {
+      ...(selectedAt !== undefined ? { selectedAt } : {}),
+      ...(input.compose ? { script: composed?.script ?? null } : {}),
+      moment: { key: `place:${place.id}`, name: place.name, place,
+        request: { type: "place", placeId: place.id, context },
+        fallback: composed ? composed.script : input.compose ? null : placeAnnouncement(place, context),
+        ...(composed?.parts ? { parts: composed.parts } : {}) },
+    };
+  };
   for (const item of input.selected) {
     const context = item.replay ? "replay" : pointingContext(item.selectedAt, input.now);
-    candidates.push({
-      selectedAt: item.selectedAt,
-      moment: { key: `place:${item.place.id}`, name: item.place.name, place: item.place,
-        request: { type: "place", placeId: item.place.id, context },
-        fallback: placeAnnouncement(item.place, context) },
-    });
+    candidates.push(placeCandidate(item.place, context, item.selectedAt));
   }
-  for (const place of input.nearby) candidates.push({
-    moment: { key: `place:${place.id}`, name: place.name, place,
-      request: { type: "place", placeId: place.id, context: "nearby" },
-      fallback: placeAnnouncement(place, "nearby") },
-  });
+  for (const place of input.nearby) candidates.push(placeCandidate(place, "nearby"));
   for (const station of input.stations) candidates.push({
     moment: { key: station.key, name: station.station.name, station: station.station,
-      request: { type: "station", routeId: station.routeId, stationId: station.station.id },
-      fallback: stationAnnouncement(station.station), expiresAt: station.expiresAt },
+      request: { type: "station", routeId: station.routeId, stationId: station.station.id,
+        ...(input.language && input.language !== "en" ? { locale: input.language } : {}) },
+      fallback: stationAnnouncement(station.station, input.language ?? "en"), expiresAt: station.expiresAt },
   });
+  for (const announcement of input.announcements ?? []) candidates.push({ moment: announcement });
   return candidates;
 }
 
@@ -271,7 +302,10 @@ export function planPodcast(input: PodcastDirectorInput): PodcastPlan {
   // The station window is short. It always precedes background narration and
   // even a selected place; the selected story stays ranked for the next turn.
   if (station) return { action: "station", item: station, reason: station.reason, ranked };
-  const next = ranked.find((item) => item.priority !== "station");
+  // Look-ahead cues and warnings expire quickly, so they also go before stories.
+  const announcement = ranked.find((item) => item.priority === "announcement");
+  if (announcement) return { action: "announcement", item: announcement, reason: announcement.reason, ranked };
+  const next = ranked.find((item) => item.priority !== "station" && item.priority !== "announcement");
   if (!next) return {
     action: "quiet", ranked,
     reason: positioned ? "no-sourced-stories" : "unknown-location",
