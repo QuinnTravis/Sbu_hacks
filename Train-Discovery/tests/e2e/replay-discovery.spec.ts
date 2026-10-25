@@ -52,13 +52,13 @@ test("Jamaica replay lists aimed candidates and saves only the selected place", 
   await page.getByRole("button", { name: "Pause replay" }).click();
   const jamaica = page.getByRole("button", { name: /^Jamaica,/ });
   await expect(jamaica).toBeVisible({ timeout: 10000 });
-  await expect(jamaica.locator("img")).toHaveAttribute("src", /^data:image\/gif/);
+  await expect(jamaica.locator("img")).toHaveCount(0);
   await expect(jamaica.locator(".candidate-summary")).toHaveCount(0);
   await expect(jamaica).not.toContainText("major rail transit hub");
   await expect(jamaica).not.toContainText("No sourced summary yet");
   const manor = page.getByRole("button", { name: /King Manor Museum,/ });
   await expect(manor).toBeVisible();
-  await expect(manor.locator("img")).toHaveAttribute("src", /^data:image\/gif/);
+  await expect(manor.locator("img")).toHaveCount(0);
   await expect(manor.locator(".candidate-summary")).toHaveCount(0);
   await expect(manor).not.toContainText("historic house");
   await expect(manor).not.toContainText("No sourced summary yet");
@@ -204,17 +204,20 @@ test("simulated ride selects one candidate and keeps it after skip", async ({ pa
   );
   await page.route("**/api/audio", async (route) => {
     const input = route.request().postDataJSON();
+    const journey = input.type === "journey";
     const station = input.type === "station";
     await route.fulfill({
       json: {
         audioUrl: `https://example.org/test-clip-${input.type}.mp3`,
         provider: "elevenlabs",
         script: {
-          name: station ? "Jamaica" : "King Manor Museum",
-          text: station
+          name: journey ? "Welcome aboard" : station ? "Jamaica" : "King Manor Museum",
+          text: journey
+            ? "Welcome aboard. This is a simulated ride. The world outside has stories."
+            : station
             ? "Station approaching: Jamaica."
             : "You just pointed at King Manor Museum. It houses a museum devoted to local history.",
-          kind: station ? "announcement" : "verified",
+          kind: journey || station ? "announcement" : "verified",
           sources: [],
         },
       },
@@ -254,6 +257,11 @@ test("simulated ride selects one candidate and keeps it after skip", async ({ pa
   await page.getByRole("button", { name: "Start Jamaica demo ride" }).click();
   await page.getByRole("button", { name: "Pause replay" }).click();
   await page.getByRole("button", { name: "Start audio tour" }).click();
+  await expect.poll(() => page.evaluate(() =>
+    (window as unknown as { __clips: string[] }).__clips,
+  )).toEqual(["https://example.org/test-clip-journey.mp3"]);
+  await expect(page.locator(".audio-title")).toContainText("Welcome");
+  await page.evaluate(() => (window as unknown as { __finishClip: () => void }).__finishClip());
   await expect(page.locator(".audio-title")).toHaveText("Jamaica", { timeout: 10000 });
   await expect(page.getByRole("button", { name: /^Jamaica,/ })).toBeVisible();
   await expect(page.getByRole("button", { name: /King Manor Museum,/ })).toBeVisible();
@@ -261,7 +269,10 @@ test("simulated ride selects one candidate and keeps it after skip", async ({ pa
   await expect(page.getByRole("heading", { name: "King Manor Museum" })).toBeVisible();
   await expect(page.locator(".nav-count")).toHaveText("1");
   await expect(page.getByText("King Manor Museum queued")).toBeVisible();
-  expect(await page.evaluate(() => (window as unknown as { __clips: string[] }).__clips)).toHaveLength(1);
+  expect(await page.evaluate(() => (window as unknown as { __clips: string[] }).__clips)).toEqual([
+    "https://example.org/test-clip-journey.mp3",
+    "https://example.org/test-clip-station.mp3",
+  ]);
   await page.getByRole("button", { name: "Skip story" }).click();
   await expect(page.getByRole("heading", { name: "King Manor Museum" })).toBeVisible();
   await expect(page.locator(".nav-count")).toHaveText("1");

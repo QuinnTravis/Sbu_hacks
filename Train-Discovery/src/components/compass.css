@@ -3,7 +3,7 @@
 .app-shell:not(.route-select-shell) .ride-columns.mobile-point > .point-panel:has(> .train-compass) {
   flex: 1 1 auto;
   min-height: 0;
-  overflow: hidden;
+  overflow: auto;
 }
 
 .train-compass.compass-instrument,
@@ -11,7 +11,7 @@
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
-  min-height: 0;
+  min-height: min-content;
   min-width: 0;
 }
 
@@ -58,6 +58,12 @@
   overflow: hidden;
   border-radius: 22px;
   background: var(--canvas);
+}
+
+.train-compass .ride-map-canvas {
+  flex: 1 1 auto;
+  height: auto;
+  min-height: 0;
 }
 
 .train-compass .ride-map::after {

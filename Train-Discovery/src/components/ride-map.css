@@ -1,9 +1,9 @@
 .ride-map-canvas {
   position: relative;
-  flex: 1 0 320px;
+  flex: 1 1 auto;
   width: 100%;
-  height: 320px;
-  min-height: 320px;
+  height: auto;
+  min-height: 0;
   min-width: 0;
   overflow: hidden;
   background: var(--canvas);
