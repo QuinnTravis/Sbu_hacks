@@ -1,1 +1,418 @@
-{"images":[]}
+{
+ "source": "Wikimedia Commons (license-checked)",
+ "images": [
+  {
+   "id": "history-denver-union-station",
+   "poiId": "wd-Q3550021",
+   "url": "/history/cz-rockies/denver-union-station-past.jpg",
+   "year": 1908,
+   "dating": "circa",
+   "yearLabel": "c. 1908",
+   "caption": "Welcome Arch and Union Depot, Denver.",
+   "credit": "Detroit Publishing Company · Library of Congress (det.4a23004)",
+   "license": "Public domain",
+   "sourceUrl": "https://commons.wikimedia.org/wiki/File:Welcome_Arch_and_Union_Depot,_Denver,_Colo..jpg",
+   "present": {
+    "url": "/history/cz-rockies/denver-union-station-present.jpg",
+    "credit": "Missvain",
+    "license": "CC BY 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Denver_Union_Station_-_June_2022_-_Sarah_Stierch_01.jpg"
+   }
+  },
+  {
+   "id": "history-moffat-tunnel",
+   "poiId": "wd-Q3318219",
+   "url": "/history/cz-rockies/moffat-tunnel-past.jpg",
+   "year": 1927,
+   "yearTo": 1947,
+   "dating": "range",
+   "yearLabel": "1927–1947",
+   "caption": "A Denver and Salt Lake train entering the east portal of the Moffat Tunnel.",
+   "credit": "HHT Co. (initials hidden in arrow that divides back of card. · Photo postcard",
+   "license": "Public domain",
+   "sourceUrl": "https://commons.wikimedia.org/wiki/File:Denver_and_Salt_Lake_train_entering_Moffat_Tunnel.JPG",
+   "focal": {
+    "x": 0.3,
+    "y": 0.42,
+    "scale": 1.35
+   },
+   "present": {
+    "url": "/history/cz-rockies/moffat-tunnel-present.jpg",
+    "credit": "Rocketdawg25",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Moffat_Tunnel_East_Portal.jpg",
+    "focal": {
+     "x": 0.86,
+     "y": 0.45,
+     "scale": 1.7
+    }
+   }
+  },
+  {
+   "id": "history-rollins-pass",
+   "poiId": "wd-Q2981964",
+   "url": "/history/cz-rockies/rollins-pass-past.jpg",
+   "year": 1898,
+   "dating": "after",
+   "yearLabel": "after 1898",
+   "caption": "Snow cuts in Rollins Pass, on the Continental Divide.",
+   "credit": "Scan by NYPL · Detroit Publishing Company · New York Public Library",
+   "license": "Public domain",
+   "sourceUrl": "https://commons.wikimedia.org/wiki/File:Snow_Cuts_in_Rollins_Pass,_Continental_Divide,_Colorado_(NYPL_b12647398-75528).tiff",
+   "present": {
+    "url": "/history/cz-rockies/rollins-pass-present.jpg",
+    "credit": "Chezunchained",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Needle%27s_Eye_Tunnel_on_Rollins_Pass_-_June_2018.jpg"
+   }
+  },
+  {
+   "id": "history-hot-sulphur-springs",
+   "poiId": "wd-Q2275053",
+   "url": "/history/cz-rockies/hot-sulphur-springs-past.jpg",
+   "year": 1910,
+   "dating": "circa",
+   "yearLabel": "c. 1910",
+   "caption": "The town of Hot Sulphur Springs, Colorado.",
+   "credit": "E. F. Sawdey and R. B. Hindmarsh · Library of Congress (pan.6a02707)",
+   "license": "Public domain",
+   "sourceUrl": "https://commons.wikimedia.org/wiki/File:CO_Hot_Sulphur_Springs_1910.jpg",
+   "present": {
+    "url": "/history/cz-rockies/hot-sulphur-springs-present.jpg",
+    "credit": "Loco Steve",
+    "license": "CC BY 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/3.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Approaching_Hot_Sulphur_Springs_Colorado_on_the_California_Zephyr_-_panoramio.jpg"
+   }
+  },
+  {
+   "id": "history-gore-canyon",
+   "poiId": "wd-Q5586097",
+   "url": "/history/cz-rockies/gore-canyon-past.jpg",
+   "year": 1874,
+   "dating": "exact",
+   "yearLabel": "1874",
+   "caption": "Entrance to Gore Canyon of the Colorado, Grand County. Photograph by William Henry Jackson.",
+   "credit": "William Henry Jackson · U.S. National Archives",
+   "license": "Public domain",
+   "sourceUrl": "https://commons.wikimedia.org/wiki/File:Entrance_to_Gore_Canyon_of_the_Colorado._Grand_County,_Colorado._-_NARA_-_517051.jpg",
+   "present": {
+    "url": "/history/cz-rockies/gore-canyon-present.jpg",
+    "credit": "Landshark99",
+    "license": "Public domain",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:GoreCanyon_ColoradoRiver4760cfs.jpg"
+   }
+  },
+  {
+   "id": "history-glenwood-canyon",
+   "poiId": "wd-Q5569458",
+   "url": "/history/cz-rockies/glenwood-canyon-past.jpg",
+   "year": 1885,
+   "dating": "exact",
+   "yearLabel": "1885",
+   "caption": "Echo Cliffs, Canyon of the Grand River, Glenwood Extension. Photograph by William Henry Jackson.",
+   "credit": "William Henry Jackson · Cleveland Museum of Art",
+   "license": "CC0",
+   "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+   "sourceUrl": "https://commons.wikimedia.org/wiki/File:William_Henry_Jackson_-_Echo_Cliffs,_Canyon_of_the_Grand_River,_Glenwood_Extension,_Colorado_-_2010.418_-_Cleveland_Museum_of_Art.jpg",
+   "present": {
+    "url": "/history/cz-rockies/glenwood-canyon-present.jpg",
+    "credit": "jimmy thomas from Seattle",
+    "license": "CC BY-SA 2.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Zephyr_eastbound_in_Glenwood_Canyon_(4491661818).jpg"
+   }
+  },
+  {
+   "id": "history-glenwood-hot-springs-pool",
+   "poiId": "wd-Q124454121",
+   "url": "/history/cz-rockies/glenwood-hot-springs-pool-past.jpg",
+   "year": 1902,
+   "yearTo": 1903,
+   "dating": "range",
+   "yearLabel": "1902–1903",
+   "caption": "Bathing in the pool, Glenwood Springs.",
+   "credit": "Detroit Publishing Company · Detroit Publishing Company · New York Public Library",
+   "license": "Public domain",
+   "sourceUrl": "https://commons.wikimedia.org/wiki/File:Bathing_in_Pool,_Glenwood_Spgs.,_Colo_(NYPL_b12647398-62963).tiff",
+   "present": {
+    "url": "/history/cz-rockies/glenwood-hot-springs-pool-present.jpg",
+    "credit": "Jeffrey Beall",
+    "license": "CC BY 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Glenwood_Hot_Springs_Pool_2020.JPG"
+   }
+  },
+  {
+   "id": "history-hotel-colorado",
+   "poiId": "wd-Q1630862",
+   "url": "/history/cz-rockies/hotel-colorado-past.jpg",
+   "year": 1901,
+   "yearTo": 1902,
+   "dating": "range",
+   "yearLabel": "1901–1902",
+   "caption": "Hotel Colorado, Glenwood Springs.",
+   "credit": "Detroit Publishing Company · Detroit Publishing Company · New York Public Library",
+   "license": "Public domain",
+   "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hotel_Colorado,Glenwood_Springs,_Colo_(NYPL_b12647398-62076).tiff",
+   "present": {
+    "url": "/history/cz-rockies/hotel-colorado-present.jpg",
+    "credit": "Loco Steve",
+    "license": "CC BY 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/3.0",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hotel_Colorado_@_Glenwood_Springs_-_panoramio.jpg"
+   }
+  }
+ ],
+ "thumbnails": {
+  "wd-Q3550021": {
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/22/Denver_union_station.jpg/250px-Denver_union_station.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "credit": "Darkshark0159 at English Wikipedia",
+   "license": "Public domain",
+   "sourceUrl": "https://commons.wikimedia.org/wiki/File:Denver_union_station.jpg"
+  },
+  "wd-Q3051472": {
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/18/Denver_Municipal_Auditorium.JPG/250px-Denver_Municipal_Auditorium.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "credit": "Jeffrey Beall",
+   "license": "CC BY-SA 3.0",
+   "sourceUrl": "https://commons.wikimedia.org/wiki/File:Denver_Municipal_Auditorium.JPG"
+  },
+  "wd-Q4595824": {
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/93/19th_Street_Bridge_Denver_CO.jpg/250px-19th_Street_Bridge_Denver_CO.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "credit": "Hustvedt",
+   "license": "CC BY-SA 3.0",
+   "sourceUrl": "https://commons.wikimedia.org/wiki/File:19th_Street_Bridge_Denver_CO.jpg"
+  },
+  "wd-Q7591007": {
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4f/Saint_Patrick_Mission_Church.JPG/250px-Saint_Patrick_Mission_Church.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "credit": "Jeffrey Beall",
+   "license": "CC BY-SA 3.0",
+   "sourceUrl": "https://commons.wikimedia.org/wiki/File:Saint_Patrick_Mission_Church.JPG"
+  },
+  "wd-Q96417895": {
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0d/Brannan_Sand_and_Gravel_Pit_No._8-Lake_Sangraco_Boathouse_Complex.JPG/250px-Brannan_Sand_and_Gravel_Pit_No._8-Lake_Sangraco_Boathouse_Complex.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "credit": "Jeffrey Beall",
+   "license": "CC BY-SA 3.0",
+   "sourceUrl": "https://commons.wikimedia.org/wiki/File:Brannan_Sand_and_Gravel_Pit_No._8-Lake_Sangraco_Boathouse_Complex.JPG"
+  },
+  "wd-Q49038862": {
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/70/Inspiration_Point_Denver.JPG/250px-Inspiration_Point_Denver.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "credit": "Jeffrey Beall",
+   "license": "CC BY 3.0",
+   "sourceUrl": "https://commons.wikimedia.org/wiki/File:Inspiration_Point_Denver.JPG"
+  },
+  "wd-Q4802347": {
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1d/Arvada_Flour_Mill_Arvada_CO.jpg/250px-Arvada_Flour_Mill_Arvada_CO.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "credit": "Hustvedt",
+   "license": "CC BY-SA 3.0",
+   "sourceUrl": "https://commons.wikimedia.org/wiki/File:Arvada_Flour_Mill_Arvada_CO.jpg"
+  },
+  "wd-Q4802344": {
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5a/Arvada_Olde_Town_Arvada_CO.jpg/250px-Arvada_Olde_Town_Arvada_CO.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "credit": "Hustvedt",
+   "license": "CC BY-SA 3.0",
+   "sourceUrl": "https://commons.wikimedia.org/wiki/File:Arvada_Olde_Town_Arvada_CO.jpg"
+  },
+  "wd-Q590849": {
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5a/Arvada_Olde_Town_Arvada_CO.jpg/250px-Arvada_Olde_Town_Arvada_CO.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "credit": "Hustvedt",
+   "license": "CC BY-SA 3.0",
+   "sourceUrl": "https://commons.wikimedia.org/wiki/File:Arvada_Olde_Town_Arvada_CO.jpg"
+  },
+  "wd-Q7363327": {
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6a/Standley_Lake.JPG/250px-Standley_Lake.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "credit": "Jeffrey Beall",
+   "license": "CC BY 3.0",
+   "sourceUrl": "https://commons.wikimedia.org/wiki/File:Standley_Lake.JPG"
+  },
+  "wd-Q4876523": {
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c6/Bear_Peak%2C_Boulder_July_2016_2.jpg/250px-Bear_Peak%2C_Boulder_July_2016_2.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "credit": "Thomson200",
+   "license": "CC0",
+   "sourceUrl": "https://commons.wikimedia.org/wiki/File:Bear_Peak,_Boulder_July_2016_2.jpg"
+  },
+  "wd-Q5354093": {
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b7/Eldorado_Canyon.JPG/250px-Eldorado_Canyon.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "credit": "OMCV",
+   "license": "Public domain",
+   "sourceUrl": "https://commons.wikimedia.org/wiki/File:Eldorado_Canyon.JPG"
+  },
+  "wd-Q5354108": {
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/33/ENE_Eldorado_Mtn.jpg/250px-ENE_Eldorado_Mtn.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "credit": "Netoe",
+   "license": "CC BY-SA 4.0",
+   "sourceUrl": "https://commons.wikimedia.org/wiki/File:ENE_Eldorado_Mtn.jpg"
+  },
+  "wd-Q18151136": {
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4d/Gross_Reservoir.JPG/250px-Gross_Reservoir.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "credit": "Jeffrey Beall",
+   "license": "CC BY 3.0",
+   "sourceUrl": "https://commons.wikimedia.org/wiki/File:Gross_Reservoir.JPG"
+  },
+  "wd-Q8025498": {
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b1/Winks_Lodge_Pinecliff_CO.jpg/250px-Winks_Lodge_Pinecliff_CO.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "credit": "Hustvedt",
+   "license": "CC BY-SA 3.0",
+   "sourceUrl": "https://commons.wikimedia.org/wiki/File:Winks_Lodge_Pinecliff_CO.jpg"
+  },
+  "wd-Q3318219": {
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c0/174AMMoffattwest.jpg/250px-174AMMoffattwest.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "credit": "BUTTON74",
+   "license": "CC BY-SA 4.0",
+   "sourceUrl": "https://commons.wikimedia.org/wiki/File:174AMMoffattwest.jpg"
+  },
+  "wd-Q2981964": {
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1c/Riflesight_Notch_1903.PNG/250px-Riflesight_Notch_1903.PNG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "credit": "By Walter Hines Page, Arthur Wilson Page",
+   "license": "Public domain",
+   "sourceUrl": "https://commons.wikimedia.org/wiki/File:Riflesight_Notch_1903.PNG"
+  },
+  "wd-Q8527843": {
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b7/James_Peak_at_dawn.jpg/250px-James_Peak_at_dawn.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "credit": "Ted Logan ( Jaeger10 at en.wikipedia )",
+   "license": "CC BY-SA 3.0",
+   "sourceUrl": "https://commons.wikimedia.org/wiki/File:James_Peak_at_dawn.jpg"
+  },
+  "wd-Q1203309": {
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/60/Downtown_Winter_Park%2C_Colorado_2005.jpg/250px-Downtown_Winter_Park%2C_Colorado_2005.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "credit": "Darkshark0159 at English Wikipedia",
+   "license": "Public domain",
+   "sourceUrl": "https://commons.wikimedia.org/wiki/File:Downtown_Winter_Park,_Colorado_2005.jpg"
+  },
+  "wd-Q5180129": {
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1a/FraserCO_CozensRanchHouse.jpg/250px-FraserCO_CozensRanchHouse.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "credit": "User:Magicpiano",
+   "license": "CC BY-SA 4.0",
+   "sourceUrl": "https://commons.wikimedia.org/wiki/File:FraserCO_CozensRanchHouse.jpg"
+  },
+  "wd-Q2303220": {
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0f/Cozens_Ranch_Museum_%28Fraser%2CColorado%29.jpg/250px-Cozens_Ranch_Museum_%28Fraser%2CColorado%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "credit": "Billy Hathorn",
+   "license": "CC BY-SA 3.0",
+   "sourceUrl": "https://commons.wikimedia.org/wiki/File:Cozens_Ranch_Museum_(Fraser,Colorado).jpg"
+  },
+  "wd-Q5493716": {
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f5/Fraser_Winter_Park_Amtrak.JPG/250px-Fraser_Winter_Park_Amtrak.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "credit": "Prasenberg at English Wikipedia",
+   "license": "Public domain",
+   "sourceUrl": "https://commons.wikimedia.org/wiki/File:Fraser_Winter_Park_Amtrak.JPG"
+  },
+  "wd-Q5594172": {
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/45/Granby%2C_Colorado_Amtrak_station.jpg/250px-Granby%2C_Colorado_Amtrak_station.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "credit": "Audriusa",
+   "license": "CC BY-SA 3.0",
+   "sourceUrl": "https://commons.wikimedia.org/wiki/File:Granby,_Colorado_Amtrak_station.jpg"
+  },
+  "wd-Q1001750": {
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c6/Granby%2C_CO%2C_Town_Hall_IMG_5402.JPG/250px-Granby%2C_CO%2C_Town_Hall_IMG_5402.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "credit": "Billy Hathorn",
+   "license": "CC BY-SA 3.0",
+   "sourceUrl": "https://commons.wikimedia.org/wiki/File:Granby,_CO,_Town_Hall_IMG_5402.JPG"
+  },
+  "wd-Q14684510": {
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9f/Fraser_River_%28Colorado%29.JPG/250px-Fraser_River_%28Colorado%29.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "credit": "Jeffrey Beall",
+   "license": "CC BY 4.0",
+   "sourceUrl": "https://commons.wikimedia.org/wiki/File:Fraser_River_(Colorado).JPG"
+  },
+  "wd-Q26823145": {
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9b/Windy_Gap_Reservoir.JPG/250px-Windy_Gap_Reservoir.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "credit": "Jeffrey Beall",
+   "license": "CC BY 4.0",
+   "sourceUrl": "https://commons.wikimedia.org/wiki/File:Windy_Gap_Reservoir.JPG"
+  },
+  "wd-Q2275053": {
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/74/Hot_Sulphur_Springs%2C_Colorado_Town_Hall.JPG/250px-Hot_Sulphur_Springs%2C_Colorado_Town_Hall.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "credit": "Jeffrey Beall",
+   "license": "CC BY 4.0",
+   "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hot_Sulphur_Springs,_Colorado_Town_Hall.JPG"
+  },
+  "wd-Q5004065": {
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5c/DSCN1878_byerscanyon_e_600.jpg/250px-DSCN1878_byerscanyon_e_600.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "credit": "Wikimedia Commons",
+   "license": "CC BY-SA 3.0",
+   "sourceUrl": "https://commons.wikimedia.org/wiki/File:DSCN1878_byerscanyon_e_600.jpg"
+  },
+  "wd-Q885861": {
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f3/DSCN1895_bluerivernearkremmling_e_600.jpg/250px-DSCN1895_bluerivernearkremmling_e_600.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "credit": "Wikimedia Commons",
+   "license": "CC BY-SA 3.0",
+   "sourceUrl": "https://commons.wikimedia.org/wiki/File:DSCN1895_bluerivernearkremmling_e_600.jpg"
+  },
+  "wd-Q579678": {
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f9/DSCN1888_danhoarekremmling_e_600.jpg/250px-DSCN1888_danhoarekremmling_e_600.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "credit": "Wikimedia Commons",
+   "license": "CC BY-SA 3.0",
+   "sourceUrl": "https://commons.wikimedia.org/wiki/File:DSCN1888_danhoarekremmling_e_600.jpg"
+  },
+  "wd-Q5586097": {
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4f/Glen_Canyon_Dam_MC.jpg/250px-Glen_Canyon_Dam_MC.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "credit": "Christian Mehlführer, User:Chmehl",
+   "license": "CC BY 2.5",
+   "sourceUrl": "https://commons.wikimedia.org/wiki/File:Glen_Canyon_Dam_MC.jpg"
+  },
+  "wd-Q27988076": {
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7a/State_Bridge%2C_Colorado.JPG/250px-State_Bridge%2C_Colorado.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "credit": "Jeffrey Beall",
+   "license": "CC BY 4.0",
+   "sourceUrl": "https://commons.wikimedia.org/wiki/File:State_Bridge,_Colorado.JPG"
+  },
+  "wd-Q85814637": {
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/13/Waterwheel_McCoy_Colorado.JPG/250px-Waterwheel_McCoy_Colorado.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "credit": "Jeffrey Beall",
+   "license": "CC BY-SA 3.0",
+   "sourceUrl": "https://commons.wikimedia.org/wiki/File:Waterwheel_McCoy_Colorado.JPG"
+  },
+  "wd-Q590797": {
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cd/DSCN3398_dotsero_e_600.jpg/250px-DSCN3398_dotsero_e_600.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "credit": "Matthew Trump",
+   "license": "CC BY-SA 3.0",
+   "sourceUrl": "https://commons.wikimedia.org/wiki/File:DSCN3398_dotsero_e_600.jpg"
+  },
+  "wd-Q5325229": {
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2b/Eagle_River_Bridge.jpg/250px-Eagle_River_Bridge.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "credit": "Thad Roan from Littleton, CO, USA",
+   "license": "CC BY-SA 2.0",
+   "sourceUrl": "https://commons.wikimedia.org/wiki/File:Eagle_River_Bridge.jpg"
+  },
+  "wd-Q5647998": {
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d1/Glenwood_Canyon.jpg/250px-Glenwood_Canyon.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "credit": "Joshuahicks ( talk · contribs )",
+   "license": "CC BY-SA 3.0",
+   "sourceUrl": "https://commons.wikimedia.org/wiki/File:Glenwood_Canyon.jpg"
+  },
+  "wd-Q5569458": {
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a1/2020_08_23-20.41.33.572-CDT.jpg/250px-2020_08_23-20.41.33.572-CDT.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "credit": "White River National Forest U.S. Forest Service",
+   "license": "Public domain",
+   "sourceUrl": "https://commons.wikimedia.org/wiki/File:2020_08_23-20.41.33.572-CDT.jpg"
+  },
+  "wd-Q3710431": {
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/85/No_Name%2C_Colorado.jpg/250px-No_Name%2C_Colorado.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "credit": "DimiTalen",
+   "license": "CC BY-SA 3.0",
+   "sourceUrl": "https://commons.wikimedia.org/wiki/File:No_Name,_Colorado.jpg"
+  },
+  "wd-Q124454121": {
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e5/Glenwood_Hot_Springs_Pool_2020.JPG/250px-Glenwood_Hot_Springs_Pool_2020.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "credit": "Jeffrey Beall",
+   "license": "CC BY 4.0",
+   "sourceUrl": "https://commons.wikimedia.org/wiki/File:Glenwood_Hot_Springs_Pool_2020.JPG"
+  },
+  "wd-Q1630862": {
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0c/Hotel_Colorado_2007.jpg/250px-Hotel_Colorado_2007.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "credit": "The original uploader was Sueswim03 at English Wikipedia .",
+   "license": "Public domain",
+   "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hotel_Colorado_2007.jpg"
+  },
+  "wd-Q5569491": {
+   "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/25/Glenwood_Springs_station_5656145582.jpg/250px-Glenwood_Springs_station_5656145582.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+   "credit": "jimmy thomas",
+   "license": "CC BY-SA 2.0",
+   "sourceUrl": "https://commons.wikimedia.org/wiki/File:Glenwood_Springs_station_5656145582.jpg"
+  }
+ }
+}

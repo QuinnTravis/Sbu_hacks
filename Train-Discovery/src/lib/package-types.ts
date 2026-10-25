@@ -41,7 +41,11 @@ export type HistoricImage = {
   url: string;
   thumbUrl?: string;
   year?: number;
-  /** e.g. "c. 1930" */
+  /** Last year of a dated range, e.g. a postcard series printed 1901–1902. */
+  yearTo?: number;
+  /** How the year is known: exact, circa, a range, or only "after". */
+  dating?: "exact" | "circa" | "range" | "after";
+  /** English label, e.g. "c. 1930"; the interface formats `year` per language. */
   yearLabel: string;
   caption: string;
   credit: string;
@@ -77,6 +81,8 @@ export type PoiContent = {
   lookFor?: string;
   claims: ContentClaim[];
   sources: { title: string; url: string }[];
+  /** verifiedAt of the English story this was translated from; a newer story needs a new translation. */
+  sourceVerifiedAt?: string;
 };
 
 export type NarratorClip = { url: string; voiceId: string; durationS: number; text: string; language: string };

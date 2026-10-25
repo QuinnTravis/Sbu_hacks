@@ -441,7 +441,9 @@
     "pastOnly": "Foto histórica",
     "credit": "{credit} · {license}",
     "source": "Fuente",
-    "circa": "c. {year}"
+    "circa": "c. {year}",
+    "after": "después de {year}",
+    "range": "{from}–{to}"
   },
   "connectivity": {
     "warning": "Se espera que no haya señal en unos {eta}, durante unos {duration}",

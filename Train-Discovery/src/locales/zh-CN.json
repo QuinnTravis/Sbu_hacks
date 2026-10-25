@@ -436,7 +436,9 @@
     "pastOnly": "历史照片",
     "credit": "{credit} · {license}",
     "source": "来源",
-    "circa": "约 {year} 年"
+    "circa": "约 {year} 年",
+    "after": "{year} 年以后",
+    "range": "{from}–{to} 年"
   },
   "connectivity": {
     "warning": "预计约 {eta} 后无信号，持续约 {duration}",
