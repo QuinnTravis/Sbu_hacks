@@ -1,5 +1,24 @@
 # Train Discovery — engineering handoff
 
+## Reviewer approval — ride map and compact chooser (2026-10-25)
+
+Approved for the reviewed browser UI scope. The pointing panel scrolls instead of clipping its contents, the instrument keeps its content height, and the map canvas flexes inside the existing 180px-minimum frame. Street labels, rider dot, facing cone, attribution, replay controls, and every chooser row remain reachable. This supersedes the fixed 320px canvas note below. Chooser rows deliberately contain no photos; the full discovery card retains its photo and sourced summary. The replay fixture now completes the held journey introduction before requiring the station clip and checks the exact introduction/station playback sequence.
+
+The source changes were committed externally during review as `87dbe575a6088ba2e01e8d4b950ca4962ef5cefd` on `codex/refine-replay-discoveries`, and merged/pushed to main as `35834c820713ed93938bc3f19d04ab1284e6034a`. The reviewer did not duplicate those commits or change branches. Only this validation note is a new reviewer commit.
+
+Validation:
+- `npm test`: 106 passed in 13 files.
+- `npm run lint`: passed; the corrected replay spec also passed scoped ESLint.
+- `npm run build`: passed in an isolated copy at `/tmp/train-review-isolated`; production build ID `uvooyEfAC3kQEzQkb61lI`, served on port 3475.
+- Full `npm run test:e2e -- --config=/tmp/train-review-final.config.ts --output=/tmp/train-review-isolated-results --reporter=line`: 92 passed, 2 failed, 4 expected live-database skips. Both failures came from the stale held-introduction fixture, not application behavior.
+- Corrected current `replay-discovery.spec.ts` against the same isolated production server: 8 passed, desktop and mobile (`/tmp/train-review-replay-final.log`, `/tmp/train-review-replay-final-results`). All 94 executable cases pass across these runs; this was not one uninterrupted clean full-suite run. No application change followed the isolated build.
+
+All 50 application/configuration files match the isolated snapshot, worktree, and committed HEAD byte-for-byte. The full snapshot covers 71 application/config/test files; only the replay test changed after snapshot creation, to correct the fixture above. Manifests: `/tmp/train-review-isolated-source.json` and `/tmp/train-review-source-after.json`. Earlier shared-build attempts were discarded after chunk HTTP 500s prevented hydration; their results are not approval evidence.
+
+Inspected actual screenshots from hydrated mobile 390×844 and desktop 1366×768 flows: expanded route list, chooser before/after scrolling, photo/story card while audio plays, audio with chooser, and Babylon's empty catalog. Streets, rider/cone, simulation labels, compact photo-free rows, and the card photo are visible; measured states have no horizontal overflow or page errors. Existing full-suite checks additionally select every row and exercise Sources, Discard, Play now, denial/retry, saved discoveries, and developer controls at 320/360/390px, desktop, and short landscape. Screenshots: `/tmp/train-review-images/{390,1366}-{route-list,chooser,chooser-scrolled,card-audio,audio-chooser,babylon-empty}.png`; manual results: `/tmp/train-review-manual-results.json`. The hydrated route map has no black land polygon. Provider responses were mocked; street tiles were network-loaded.
+
+Impeccable's detector reported only existing advisories for the 22px map radius and 11px attribution type; no new suppression or cosmetic change was added. Browser checks do not establish physical compass/GPS accuracy, line of sight, live narration quality, background sensing, or lock-screen playback. Next best action remains a physical iPhone/Android ride check over HTTPS. Untracked `UI_REVIEW_HANDOFF.md` and builder result directories remain excluded.
+
 ## Designer note — short phone (2026-10-24)
 
 The map frame flexes in the ride column, with an 180px floor. On a short phone that keeps the OpenFreeMap credit and the tip of the wedge above the tab bar. Streets, the blue dot, and the simulated replay label are unchanged.
