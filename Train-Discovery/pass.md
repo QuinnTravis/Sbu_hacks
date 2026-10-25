@@ -1,5 +1,9 @@
 # Train Discovery — engineering handoff
 
+## Designer note — short phone (2026-10-24)
+
+The map frame flexes in the ride column, with an 180px floor. On a short phone that keeps the OpenFreeMap credit and the tip of the wedge above the tab bar. Streets, the blue dot, and the simulated replay label are unchanged.
+
 ## Designer note — streets and list rows (2026-10-24)
 
 The ride map drew a canvas-colored frame because the MapLibre container was height 0. react-map-gl sets an inline relative position and `height: 100%`, which does not resolve in the flex frame, and `overflow: hidden` clipped the canvas, the streets, and the dot. The container is now absolutely inset in the map frame, so the streets, the `#0071f2` dot, and the facing cone paint in the ride column. Attribution stays in the quiet band under the map and is not hidden with `display: none`. Replay stays labeled simulated.

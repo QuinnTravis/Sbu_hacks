@@ -37,12 +37,14 @@
 .train-compass > .compass-stage {
   display: flex;
   flex: 1 1 auto;
+  align-items: stretch;
   position: relative;
   width: 100%;
   aspect-ratio: auto;
   min-width: 0;
   min-height: 180px;
   margin: 0 0 8px;
+  overflow: hidden;
 }
 
 .train-compass .ride-map {
@@ -77,20 +79,6 @@
   max-height: none;
   aspect-ratio: 360 / 340;
   margin: 0;
-}
-
-@media (max-width: 600px) {
-  /* A full-height map hides the chooser below the floating navigation. */
-  .train-compass > .compass-stage,
-  .train-compass .ride-map {
-    min-height: 240px;
-  }
-
-  .train-compass .ride-map-canvas {
-    flex: 1 1 auto;
-    height: auto;
-    min-height: 205px;
-  }
 }
 
 /* In short viewports the header and audio can consume the entire bounded
