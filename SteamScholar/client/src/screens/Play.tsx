@@ -3,6 +3,8 @@ import { Flame, TrainFront } from 'lucide-react';
 import { useEffect } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { audio } from '../audio/audioManager';
+import { narrateCurrent, listenForReply } from '../audio/eyesFree';
+import { stopListening, useVoiceStore, voiceSupported } from '../audio/voiceInput';
 import { DebugPanel } from '../components/DebugPanel';
 import { Gauge } from '../components/Gauge';
 import { MaintenancePanel } from '../components/MaintenancePanel';
@@ -10,6 +12,7 @@ import { ProgressTrack } from '../components/ProgressTrack';
 import { QuestionCard } from '../components/QuestionCard';
 import { CornerControls } from '../components/SettingsDrawer';
 import { StationBanner } from '../components/StationBanner';
+import { VoiceControl } from '../components/VoiceControl';
 import { Card } from '../components/ui/Card';
 import { isFromInteractive } from '../lib/a11y';
 import { DEBUG_MODE, QUESTIONS_PER_STATION, STATION_NAMES } from '../store/gameConfig';
@@ -34,6 +37,20 @@ function usePlayKeyboard() {
     const onKey = (e: KeyboardEvent) => {
       const s = useGameStore.getState();
       if (s.settingsOpen || e.metaKey || e.ctrlKey || e.altKey || e.repeat) return;
+      // Typing a free-response answer must not trigger shortcuts.
+      if ((e.target as HTMLElement | null)?.closest('input, textarea')) return;
+      const key = e.key.toLowerCase();
+      if (key === 'v' && voiceSupported) {
+        e.preventDefault();
+        if (useVoiceStore.getState().listening) stopListening();
+        else listenForReply();
+        return;
+      }
+      if (key === 'r') {
+        e.preventDefault();
+        narrateCurrent();
+        return;
+      }
       if (s.phase === 'playing' && s.current && !s.feedback) {
         const optionId = optionForKey(e.key);
         if (optionId) {
@@ -65,7 +82,10 @@ export default function Play() {
       phase: st.phase,
       current: st.current,
       currentIsRequeue: st.currentIsRequeue,
+      currentIsReview: st.currentIsReview,
       feedback: st.feedback,
+      grading: st.grading,
+      submitFreeResponse: st.submitFreeResponse,
       pressure: st.pressure,
       streak: st.streak,
       correctPulse: st.correctPulse,
@@ -91,7 +111,7 @@ export default function Play() {
       <StationBanner key="station" stationIndex={s.stationIndex} answered={leg.length} correct={legCorrect} onDepart={s.departStation} />
     );
   } else if (s.phase === 'maintenance' && s.current) {
-    content = <MaintenancePanel key="maintenance" question={s.current} onDismiss={s.dismissMaintenance} />;
+    content = <MaintenancePanel key="maintenance" question={s.current} feedback={s.feedback} onDismiss={s.dismissMaintenance} />;
   } else if (s.current) {
     content = (
       <QuestionCard
@@ -99,7 +119,10 @@ export default function Play() {
         question={s.current}
         feedback={s.feedback}
         isRequeue={s.currentIsRequeue}
+        isReview={s.currentIsReview}
+        grading={s.grading}
         onAnswer={s.answer}
+        onSubmitFree={s.submitFreeResponse}
       />
     );
   } else if (s.stopAtNextStation) {
@@ -174,6 +197,7 @@ export default function Play() {
         className="relative min-h-0 flex-1 overflow-y-auto border-t-2 border-brass-500 bg-iron-900 px-3 py-3 shadow-[inset_0_8px_16px_rgb(0_0_0/0.4)] md:px-8 md:py-5"
       >
         <div className="mx-auto max-w-3xl">
+          <VoiceControl />
           <AnimatePresence mode="wait">{content}</AnimatePresence>
         </div>
       </section>

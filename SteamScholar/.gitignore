@@ -4,3 +4,5 @@
 client/public/sfx-candidates/
 # Your own lecture notes for dry runs (keep private material out of git)
 test-notes/
+# Narration clips cached by /api/tts
+server/.cache/

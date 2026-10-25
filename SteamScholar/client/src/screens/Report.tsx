@@ -1,4 +1,4 @@
-import { BookOpen, Check, Download, RotateCcw, Upload, Wrench } from 'lucide-react';
+import { ArrowDownRight, ArrowUpRight, BookOpen, Check, Download, History, Minus, RotateCcw, Upload, Wrench } from 'lucide-react';
 import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CornerControls } from '../components/SettingsDrawer';
@@ -11,6 +11,21 @@ import { useGameStore } from '../store/gameStore';
 function formatDuration(ms: number) {
   const total = Math.round(ms / 1000);
   return `${Math.floor(total / 60)}:${String(total % 60).padStart(2, '0')}`;
+}
+
+/** Change since the previous journey, with icon and words (never color alone). */
+function Delta({ now, before }: { now: number; before: number | undefined }) {
+  if (before === undefined) return null;
+  const d = now - before;
+  const Icon = d > 0 ? ArrowUpRight : d < 0 ? ArrowDownRight : Minus;
+  const tone = d > 0 ? 'text-verdigris-500' : d < 0 ? 'text-copper-500' : 'text-ink-900/60';
+  return (
+    <span className="inline-flex items-center gap-0.5 text-sm font-semibold text-ink-900">
+      <Icon className={`h-4 w-4 ${tone}`} strokeWidth={3} aria-hidden="true" />
+      {d > 0 ? `+${d}` : d}
+      <span className="sr-only"> points since last journey</span>
+    </span>
+  );
 }
 
 const Perforation = () => <hr className="my-5 border-0 border-t-2 border-dashed border-ink-900/25" aria-hidden="true" />;
@@ -51,7 +66,13 @@ export default function Report() {
   const canRideAgain = lastDeck?.id === report.deckId;
   const finished = new Date(report.finishedAt);
   const stats = [
-    { label: 'Accuracy', value: `${report.accuracy}%`, detail: `${report.correctAnswers} of ${report.totalAnswers}` },
+    {
+      label: 'Accuracy',
+      value: `${report.accuracy}%`,
+      detail: report.previous
+        ? `${report.correctAnswers} of ${report.totalAnswers} · ${report.accuracy - report.previous.accuracy >= 0 ? '+' : ''}${report.accuracy - report.previous.accuracy} vs last journey`
+        : `${report.correctAnswers} of ${report.totalAnswers}`,
+    },
     { label: 'Best streak', value: `×${report.bestStreak}`, detail: 'in a row' },
     { label: 'Total time', value: formatDuration(report.totalMs), detail: 'min:sec' },
     { label: 'Peak pressure', value: `${report.peakPressure}`, detail: 'of 100' },
@@ -78,6 +99,13 @@ export default function Report() {
           <p className="text-sm text-ink-900/80">
             {STATION_NAMES[0]} → {STATION_NAMES[STATION_NAMES.length - 1]}
           </p>
+          {report.previous && (report.reviewed ?? 0) > 0 && (
+            <p className="mt-3 inline-flex items-center gap-2 rounded-md border border-ink-900/20 bg-cream-300/60 px-3 py-2 text-ink-900">
+              <History className="h-4 w-4 shrink-0" aria-hidden="true" />
+              You re-took {report.reviewed} question{report.reviewed === 1 ? '' : 's'} you missed last journey and got {report.reviewedCorrect ?? 0}{' '}
+              right.
+            </p>
+          )}
 
           <Perforation />
 
@@ -101,7 +129,7 @@ export default function Report() {
               {report.concepts.map((c) => {
                 const weak = c.accuracy < REVISIT_BELOW;
                 return (
-                  <li key={c.concept} className="grid grid-cols-[1fr_auto] items-center gap-x-3 gap-y-1 md:grid-cols-[14rem_1fr_auto]">
+                  <li key={c.concept} className="grid grid-cols-[1fr_auto] items-center gap-x-3 gap-y-1 md:grid-cols-[14rem_1fr_10rem]">
                     <span className="flex items-center gap-2 font-semibold text-ink-900">
                       {weak ? (
                         <Wrench className="h-4 w-4 shrink-0 text-copper-500" aria-hidden="true" />
@@ -122,7 +150,8 @@ export default function Report() {
                       />
                     </span>
                     <span className="text-right font-semibold tabular-nums text-ink-900">
-                      {c.accuracy}% <span className="text-sm font-normal text-ink-900/75">({c.correct}/{c.attempts})</span>
+                      {c.accuracy}% <span className="text-sm font-normal text-ink-900/75">({c.correct}/{c.attempts})</span>{' '}
+                      <Delta now={c.accuracy} before={report.previous?.concepts[c.concept]} />
                     </span>
                   </li>
                 );
@@ -145,6 +174,11 @@ export default function Report() {
                       <p className="text-ink-900">
                         <span className="font-semibold">Answer:</span> {m.correctText}
                       </p>
+                      {(m.misconceptions ?? []).map((mix) => (
+                        <p key={mix} className="text-ink-900">
+                          <span className="font-semibold">Your mix-up:</span> {mix}
+                        </p>
+                      ))}
                       <p className="inline-flex items-center gap-1 text-sm text-ink-900/80">
                         <BookOpen className="h-3.5 w-3.5" aria-hidden="true" />
                         {m.sourceLabel}

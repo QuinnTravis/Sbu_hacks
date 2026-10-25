@@ -1,18 +1,21 @@
 import { motion } from 'framer-motion';
-import { BookOpen, Wrench } from 'lucide-react';
+import { BookOpen, Lightbulb, Wrench } from 'lucide-react';
 import { useEffect, useRef } from 'react';
 import type { Question } from '../lib/types';
+import type { Feedback } from '../store/gameStore';
 import { Button } from './ui/Button';
 import { Card } from './ui/Card';
 
 interface MaintenancePanelProps {
   question: Question;
+  feedback: Feedback | null;
   onDismiss(): void;
 }
 
 /** Supportive explanation after a miss: right answer, why, and where it is in the notes. */
-export function MaintenancePanel({ question, onDismiss }: MaintenancePanelProps) {
-  const correct = question.options.find((o) => o.id === question.correctOptionId);
+export function MaintenancePanel({ question, feedback, onDismiss }: MaintenancePanelProps) {
+  const rightAnswer =
+    question.type === 'short' ? question.answer : question.options.find((o) => o.id === question.correctOptionId)?.text;
   const buttonRef = useRef<HTMLButtonElement | null>(null);
 
   // Focus the action without scrolling the header out of the (short) bottom panel.
@@ -45,8 +48,11 @@ export function MaintenancePanel({ question, onDismiss }: MaintenancePanelProps)
           <div className="space-y-3">
             <div>
               <dt className="small-caps-label text-ink-900/80">The right answer</dt>
-              <dd className="text-lg font-semibold leading-snug">{correct?.text}</dd>
+              <dd className={`font-semibold leading-snug ${(rightAnswer?.length ?? 0) > 60 ? 'text-base' : 'text-lg'}`}>
+                {rightAnswer}
+              </dd>
             </div>
+
             {question.source.page !== null && (
               <div>
                 <dt className="small-caps-label text-ink-900/80">From your notes</dt>
@@ -57,11 +63,31 @@ export function MaintenancePanel({ question, onDismiss }: MaintenancePanelProps)
               </div>
             )}
           </div>
-          <div>
-            <dt className="small-caps-label text-ink-900/80">Why</dt>
-            <dd id="maintenance-why" className="text-base leading-relaxed">
-              {question.explanation}
-            </dd>
+          <div className="space-y-3">
+            {feedback?.response && (
+              <div>
+                <dt className="small-caps-label text-ink-900/80">You said</dt>
+                <dd>
+                  <q>{feedback.response}</q>
+                  {feedback.graderFeedback && <span className="text-ink-900/90"> · {feedback.graderFeedback}</span>}
+                </dd>
+              </div>
+            )}
+            {feedback?.misconception && question.type !== 'short' && (
+              <div>
+                <dt className="small-caps-label text-ink-900/80">Likely mix-up</dt>
+                <dd className="flex items-start gap-1.5">
+                  <Lightbulb className="mt-0.5 h-4 w-4 shrink-0 text-copper-500" aria-hidden="true" />
+                  {feedback.misconception}
+                </dd>
+              </div>
+            )}
+            <div>
+              <dt className="small-caps-label text-ink-900/80">Why</dt>
+              <dd id="maintenance-why" className="text-base leading-relaxed">
+                {question.explanation}
+              </dd>
+            </div>
           </div>
         </dl>
         <p className="mt-3 text-sm text-ink-900/80">No worries. This one will come back around shortly.</p>

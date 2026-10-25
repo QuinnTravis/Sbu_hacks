@@ -2,6 +2,7 @@ import { MotionConfig } from 'framer-motion';
 import { useEffect, useRef } from 'react';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { initAudio } from './audio/audioManager';
+import { initEyesFree } from './audio/eyesFree';
 import { LiveRegion } from './components/LiveRegion';
 import { SettingsDrawer } from './components/SettingsDrawer';
 import { Toaster } from './components/ui/Toast';
@@ -34,6 +35,7 @@ export default function App() {
   const navigate = useNavigate();
 
   useEffect(() => initAudio(), []);
+  useEffect(() => initEyesFree(), []);
 
   // Finishing a run opens the report route (only on the transition, so Back still works).
   const prevPhase = useRef(phase);

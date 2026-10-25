@@ -5,6 +5,9 @@ import { fileURLToPath } from 'node:url';
 import express, { type NextFunction, type Request, type Response } from 'express';
 import { DeckSchema } from './lib/schema.js';
 import { generateRouter, MAX_UPLOAD_BYTES, sendError } from './routes/generate.js';
+import { gradeRouter } from './routes/grade.js';
+import { misconceptionsRouter } from './routes/misconceptions.js';
+import { ttsRouter } from './routes/tts.js';
 
 const SAMPLE_DECK_PATH = new URL('../sample/sampleDeck.json', import.meta.url);
 const CLIENT_DIST = fileURLToPath(new URL('../../client/dist', import.meta.url));
@@ -32,6 +35,9 @@ app.get('/api/sample', async (_req, res, next) => {
 });
 
 app.use('/api', generateRouter);
+app.use('/api', ttsRouter);
+app.use('/api', gradeRouter);
+app.use('/api', misconceptionsRouter);
 
 app.use('/api', (_req, res) => sendError(res, 404, 'bad_request', 'Unknown endpoint.'));
 

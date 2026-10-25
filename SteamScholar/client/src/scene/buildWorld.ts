@@ -45,6 +45,11 @@ export function buildWorld(scene: THREE.Scene) {
   sunLight.shadow.bias = -0.0005;
   scene.add(sunLight);
 
+  // Warm fill from the camera side: the sun backlights the train, which left the visible side black.
+  const fillLight = new THREE.DirectionalLight(0xffd9a0, 1.1);
+  fillLight.position.set(18, 10, 16);
+  scene.add(fillLight);
+
   // Glowing setting sun disk on horizon
   const sunGeo = new THREE.SphereGeometry(9, 24, 24);
   const sunMat = new THREE.MeshBasicMaterial({ color: 0xffae52, fog: false });

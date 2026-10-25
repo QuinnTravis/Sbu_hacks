@@ -68,7 +68,8 @@ export default function TrainScene() {
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.15;
+    // Brighter than the prototype (1.15) so the backlit locomotive still reads on a projector.
+    renderer.toneMappingExposure = 1.45;
     container.innerHTML = '';
     container.appendChild(renderer.domElement);
 

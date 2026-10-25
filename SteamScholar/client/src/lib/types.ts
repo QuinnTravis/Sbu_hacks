@@ -8,6 +8,10 @@ export interface AnswerRecord {
   pressureAtAnswer: number;
   stationIndex: number;
   requeue: boolean;
+  /** Re-asked from the previous journey's misses. */
+  review?: boolean;
+  /** Wrong answers: the likely confusion behind the pick (or the grader's note for free responses). */
+  misconception?: string;
 }
 
 export interface ConceptResult {
@@ -24,6 +28,18 @@ export interface MissedQuestion {
   prompt: string;
   correctText: string;
   sourceLabel: string;
+  /** Distinct mix-ups the player showed on this question. */
+  misconceptions: string[];
+}
+
+/** Compact record of a finished journey, kept per deck to drive review and progress. */
+export interface JourneySummary {
+  finishedAt: number;
+  /** 0-100 */
+  accuracy: number;
+  /** concept -> accuracy 0-100 */
+  concepts: Record<string, number>;
+  missedIds: string[];
 }
 
 export interface RunReport {
@@ -39,4 +55,9 @@ export interface RunReport {
   peakPressure: number;
   concepts: ConceptResult[];
   missed: MissedQuestion[];
+  /** The previous journey on this deck, for progress deltas. */
+  previous?: JourneySummary;
+  /** How many questions this run re-asked from the previous journey, and how many came back right. */
+  reviewed?: number;
+  reviewedCorrect?: number;
 }

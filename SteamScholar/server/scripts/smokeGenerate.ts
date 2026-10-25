@@ -31,9 +31,10 @@ try {
   const deck = await generateDeck(material);
   const count = (pick: (q: (typeof deck.questions)[number]) => boolean) => deck.questions.filter(pick).length;
   console.log(`OK in ${((Date.now() - t0) / 1000).toFixed(1)}s: "${deck.title}"`);
-  console.log(`  ${deck.questions.length} questions: easy ${count((q) => q.difficulty === 'easy')}, medium ${count((q) => q.difficulty === 'medium')}, hard ${count((q) => q.difficulty === 'hard')}; mcq ${count((q) => q.type === 'mcq')}, tf ${count((q) => q.type === 'tf')}`);
+  console.log(`  ${deck.questions.length} questions: easy ${count((q) => q.difficulty === 'easy')}, medium ${count((q) => q.difficulty === 'medium')}, hard ${count((q) => q.difficulty === 'hard')}; mcq ${count((q) => q.type === 'mcq')}, tf ${count((q) => q.type === 'tf')}, short ${count((q) => q.type === 'short')}`);
   console.log(`  concepts: ${deck.concepts.join(', ')}`);
   console.log(`  pages cited: ${[...new Set(deck.questions.map((q) => q.source.label))].join(', ')}`);
+  for (const q of deck.questions.filter((x) => x.type === 'short')) console.log(`  short: ${q.prompt}\n    -> ${q.answer}`);
 } catch (err) {
   console.error(`FAILED after ${((Date.now() - t0) / 1000).toFixed(1)}s: ${(err as Error).message}`);
   process.exitCode = 1;

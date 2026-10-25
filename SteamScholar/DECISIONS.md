@@ -153,3 +153,60 @@ Fonts (Rye, Alfa Slab One, Inter) are bundled with Fontsource instead of loaded 
 **Accuracy:** a full 24-question deck was checked claim by claim against the slide text, including the Java cast runtime check, C/C++ as borderline weak (Note 1), "built-in types are not necessarily primitive", strict vs loose nominal equivalence, and `"5" - 3 → 2`. No errors were found.
 
 **In the browser:** uploading the PDF through the Depot reached the first question in 17.9 s, and the Maintenance Stop cited "Page 7" correctly. There were no console errors.
+
+## Tier 1 pivot: eyes-free mode
+
+After a review against past grand-prize winners, the project pivots to an accessibility-first pitch: a study game you can play with your eyes closed. This goes beyond the original spec, which only allowed MCQ and true/false answered by key or click. It is a deliberate scope change agreed with the developer.
+
+**Architecture**
+- `audio/narrator.ts` plays `/api/tts` clips (ElevenLabs, "George" voice, Flash model, streamed and disk-cached by voice, model and text). On any failure it falls back to `speechSynthesis` for the rest of the session. A length-based watchdog covers Chrome's habit of never firing `onend`. The chug is ducked to 30% while speaking.
+- `audio/voiceInput.ts` wraps the Web Speech API (one utterance per listen, 5 alternatives) and routes the result to `answer`, `dismissMaintenance`, `departStation` or a repeat.
+- `lib/voiceMatch.ts` is pure and unit-tested on 22 cases. Its matching order: explicit position words with common homophones ("to" for two, "for" for four, "won" for one); lone letters; true/false including negation ("not true"); then option text by an F1 score over content words, so "last in first out" picks LIFO, not FIFO. Ambiguous phrases are rejected rather than guessed.
+- `audio/eyesFree.ts` subscribes to the store and narrates each moment, then auto-listens. After 2 misheard or silent replies in a row it stops and waits for `V`, so it never loops forever.
+- `lib/narration.ts` rewrites notation for speech ("O(n^2)" becomes "big O of n squared", "->" becomes "to", snake_case words are split).
+
+**Fixes found by testing the voice flow**
+- "Repeat" re-read the error prompt instead of the question. Prompts and "Correct!" now pass `remember: false`.
+- Two sample-deck explanations opened with "Correct." / "Exactly right.", which read wrongly in a Maintenance Stop after a miss. They were reworded, and the prompt now forbids explanations that open with Correct/True/False/Right.
+- The final station's line is kept short ("End of the line!") because the report opens 2.5 s later and would cut it off.
+- TTS errors send `Cache-Control: no-store`, so a 503 from a missing permission is never cached by the browser.
+
+**Verified:** a full `?demo=1&debug=1` run driven only by injected speech (misheard, repeat, spoken answers in several forms, continue, depart) reached the Station Report with no errors. The non-voice demo path, the keyboard-only run and the production build all still pass.
+
+**ElevenLabs narration verified** once the key gained the Text to Speech permission: a 6.5 s question clip in the George voice streams in 0.44 s on first request and comes from the disk cache instantly afterwards, byte-identical. Automated test runs cached about 40 clips, so check the remaining ElevenLabs credits before the demo.
+
+**Not yet verified:** real microphone recognition, because the headless browser has no microphone. Test on a real laptop in Chrome.
+
+## Projector lighting
+
+The prototype's sun sits behind the train, so the side facing the camera rendered almost black and would wash out on a projector. A warm fill light now shines from the camera side (`buildWorld.ts`) and tone-mapping exposure is raised from 1.15 to 1.45. The crimson paint, brass domes and spoked wheels now read clearly.
+
+## Tier 2: free-response questions graded by Gemini
+
+- **New question type `short`.** It has no options and a reference `answer` (under 25 words), and it asks for one key idea, never a list. Decks are now 16 mcq, 4 tf and 4 short; all runs since have hit that mix in 10-13 s. The sample deck converts 4 questions (stack order, collision, full dynamic array, in-order traversal).
+- **`POST /api/grade`** (Gemini Flash-Lite, 12 s budget) returns `{ verdict: correct | partial | incorrect, feedback }`. The grading prompt tolerates speech-to-text errors and paraphrase. Tested: a paraphrase scored correct, a garbled transcript ("it make a new away twice as big…") scored correct, a vague answer scored partial with what was missing, and wrong answers and "I don't know" scored incorrect. Typical time is 1.5-3 s.
+- **Offline fallback:** if grading fails, `localGrade` scores word overlap against the reference answer (F1 of 0.5 or more is correct, 0.25 or more is partial). Play never stalls.
+- **Scoring:** "partial" counts as correct but earns half the pressure. After a graded answer, play advances after 3.2 s instead of 1.2 s so the grader's sentence can be read.
+- **UI:** an input with Submit and a "Checking…" state, then a verdict box ("You said: …"). The Maintenance Stop shows what you said and the grader's note beside "Why". Focus stays on the question, not the input, so V still starts voice input.
+- **Voice:** on short questions the transcript is the answer and is submitted directly. Eyes-free mode says "Answer in your own words", then "Checking your answer", then reads the grader's sentence aloud.
+
+## Tier 3: misconception diagnosis
+
+- Each wrong option carries a `misconception` (under 15 words, e.g. "Confusing structural equivalence with nominal equivalence"). The Maintenance Stop shows it as "Likely mix-up", eyes-free mode reads it, and the Station Report lists "Your mix-up" under each missed question.
+- **Why a separate call:** adding misconceptions to the deck-generation prompt raised generation to about 30 s, dropped every short question, and lost 5 questions to validation. They now come from `POST /api/misconceptions`, which the client calls in the background after the run starts (about 6 s for 20 questions). Deck generation stayed at about 12 s. A miss before enrichment returns simply shows no mix-up line.
+- **The sample deck carries its own 50 misconceptions** (it skips the call, so the demo works offline). They were generated through the endpoint, then reviewed by hand, and 9 vague or slightly wrong ones were rewritten (for example the stack-trace distractors now name the exact pop that was forgotten).
+- For free responses, the grader's feedback serves as the misconception.
+- Reports saved before this change lack the field; the Report screen guards against that.
+
+## Learning across journeys (spaced retrieval)
+
+- Each finished run saves a compact `JourneySummary` per deck in `localStorage`: accuracy, per-concept accuracy, and the question ids still missed at the end. A miss recovered by its in-run requeue doesn't count. History keeps 5 journeys per deck and 10 decks.
+- **Ride again** seeds up to 3 of last journey's unrecovered misses into slots 1, 3 and 5, tagged "From last journey" (narrated as "From your last journey"). If missed again, they requeue like any other question.
+- The Station Report compares against the previous journey: "+N vs last journey" on accuracy, an arrow plus signed number per concept (with screen-reader text, never color alone), and "You re-took N questions you missed last journey and got M right". Eyes-free narration says "That's up N points from your last journey."
+- Verified with two sample-deck journeys: journey 2 opened with the tagged question and the report showed "+50 vs last journey", the re-take line, and per-concept deltas.
+- Limit: history is per browser. A freshly generated deck gets a new id, so the comparison applies to **Ride again** on the same deck.
+
+## Microphone safety
+
+- **Settings, Test microphone** listens for one utterance and shows what it heard, or a specific fix: permission blocked, nothing heard, no network, or unsupported browser. It's the pre-demo check for the one thing headless tests can't cover.
+- Headless Chromium exposes speech recognition but never ends a session without a microphone, and the same could happen on a laptop with a bad input device. Listening now times out: 8 s for the mic test, 12 s in game. In-game, a timeout counts as silence, so eyes-free mode re-prompts instead of sitting on "Listening…" forever.

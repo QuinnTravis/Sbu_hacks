@@ -5,11 +5,14 @@ import { z } from 'zod';
 // ---------------------------------------------------------------------------
 
 export const DifficultySchema = z.enum(['easy', 'medium', 'hard']);
-export const QuestionTypeSchema = z.enum(['mcq', 'tf']);
+/** mcq: 4 options; tf: True/False; short: answered in the player's own words, graded against `answer`. */
+export const QuestionTypeSchema = z.enum(['mcq', 'tf', 'short']);
 
 export const OptionSchema = z.object({
   id: z.string().min(1),
   text: z.string().min(1),
+  /** Wrong options only: the confusion that leads someone to pick this (shown after a miss). */
+  misconception: z.string().min(1).optional(),
 });
 
 export const QuestionSchema = z.object({
@@ -18,8 +21,10 @@ export const QuestionSchema = z.object({
   difficulty: DifficultySchema,
   concept: z.string().min(1),
   prompt: z.string().min(1),
-  options: z.array(OptionSchema).min(2).max(4),
+  options: z.array(OptionSchema).max(4),
   correctOptionId: z.string().min(1),
+  /** Reference answer for `short` questions. */
+  answer: z.string().min(1).optional(),
   explanation: z.string().min(1),
   source: z.object({
     page: z.number().int().positive().nullable(),
@@ -54,8 +59,9 @@ const RawQuestionSchema = z.object({
   difficulty: DifficultySchema,
   concept: z.string().min(1),
   prompt: z.string().min(1),
-  options: z.array(z.object({ id: z.string().min(1), text: z.string().min(1) })),
-  correctOptionId: z.string().min(1),
+  options: z.array(z.object({ id: z.string().min(1), text: z.string().min(1), misconception: z.string().optional() })).default([]),
+  correctOptionId: z.string().default(''),
+  answer: z.string().optional(),
   explanation: z.string().min(1),
   source: z
     .object({
@@ -76,7 +82,7 @@ export const geminiResponseSchema = {
       items: {
         type: 'OBJECT',
         properties: {
-          type: { type: 'STRING', enum: ['mcq', 'tf'] },
+          type: { type: 'STRING', enum: ['mcq', 'tf', 'short'] },
           difficulty: { type: 'STRING', enum: ['easy', 'medium', 'hard'] },
           concept: { type: 'STRING' },
           prompt: { type: 'STRING' },
@@ -84,11 +90,12 @@ export const geminiResponseSchema = {
             type: 'ARRAY',
             items: {
               type: 'OBJECT',
-              properties: { id: { type: 'STRING' }, text: { type: 'STRING' } },
+              properties: { id: { type: 'STRING' }, text: { type: 'STRING' }, misconception: { type: 'STRING' } },
               required: ['id', 'text'],
             },
           },
           correctOptionId: { type: 'STRING' },
+          answer: { type: 'STRING' },
           explanation: { type: 'STRING' },
           source: {
             type: 'OBJECT',
@@ -99,7 +106,7 @@ export const geminiResponseSchema = {
             required: ['label'],
           },
         },
-        required: ['type', 'difficulty', 'concept', 'prompt', 'options', 'correctOptionId', 'explanation', 'source'],
+        required: ['type', 'difficulty', 'concept', 'prompt', 'explanation', 'source'],
       },
     },
   },
@@ -137,6 +144,13 @@ function sourceFor(page: number | null | undefined, validPages: Set<number>): Qu
   return { page: null, label: 'Your notes' };
 }
 
+const MAX_MISCONCEPTION_CHARS = 140;
+
+function withMisconception(option: Option, misconception: string | undefined): Option {
+  const m = misconception?.trim();
+  return m && m.length <= MAX_MISCONCEPTION_CHARS ? { ...option, misconception: m } : option;
+}
+
 /** Turn one raw question into a clean Question, or null if it breaks a guardrail. */
 function sanitizeQuestion(
   raw: unknown,
@@ -149,6 +163,21 @@ function sanitizeQuestion(
 
   const concept = concepts.get(normalizeKey(q.concept));
   if (!concept) return null;
+
+  const base = {
+    difficulty: q.difficulty,
+    concept,
+    prompt: q.prompt.trim(),
+    explanation: q.explanation.trim(),
+    source: sourceFor(q.source?.page, validPages),
+  };
+
+  if (q.type === 'short') {
+    const answer = q.answer?.trim();
+    // A reference answer should be a phrase or a sentence, not an essay.
+    if (!answer || answer.split(/\s+/).length > 30) return null;
+    return { ...base, type: 'short', options: [], correctOptionId: 'short', answer };
+  }
 
   const correct = q.options.find((o) => o.id === q.correctOptionId);
   if (!correct) return null;
@@ -163,29 +192,21 @@ function sanitizeQuestion(
     if (texts.size !== 4) return null;
     // Shuffle so the correct position is unbiased, then relabel a-d by position.
     const shuffled = shuffle(q.options);
-    options = shuffled.map((o, i) => ({ id: MCQ_IDS[i], text: o.text.trim() }));
+    options = shuffled.map((o, i) => withMisconception({ id: MCQ_IDS[i], text: o.text.trim() }, o === correct ? undefined : o.misconception));
     correctOptionId = MCQ_IDS[shuffled.indexOf(correct)];
   } else {
     if (q.options.length !== 2) return null;
     const truth = normalizeKey(correct.text);
     if (truth !== 'true' && truth !== 'false') return null;
+    const wrong = q.options.find((o) => o !== correct)?.misconception;
     options = [
-      { id: 'true', text: 'True' },
-      { id: 'false', text: 'False' },
+      withMisconception({ id: 'true', text: 'True' }, truth === 'false' ? wrong : undefined),
+      withMisconception({ id: 'false', text: 'False' }, truth === 'true' ? wrong : undefined),
     ];
     correctOptionId = truth;
   }
 
-  return {
-    type: q.type,
-    difficulty: q.difficulty,
-    concept,
-    prompt: q.prompt.trim(),
-    options,
-    correctOptionId,
-    explanation: q.explanation.trim(),
-    source: sourceFor(q.source?.page, validPages),
-  };
+  return { ...base, type: q.type, options, correctOptionId };
 }
 
 /**

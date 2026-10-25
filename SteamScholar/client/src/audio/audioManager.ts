@@ -15,6 +15,9 @@ const CHUG_VOLUME = { min: 0.15, max: 0.5 };
 let sounds: Record<SoundName, Howl> | null = null;
 let chug: Howl | null = null;
 let unlocked = false;
+/** Lowers the chug while the narrator speaks. */
+let ducked = false;
+const DUCK_FACTOR = 0.3;
 
 function load() {
   if (sounds) return;
@@ -37,7 +40,8 @@ function updateChug(speed: number) {
   if (!unlocked || !chug) return;
   const t = Math.min(1, Math.max(0, speed / 100));
   chug.rate(CHUG_RATE.min + t * (CHUG_RATE.max - CHUG_RATE.min));
-  chug.volume(speed < 1 ? 0 : CHUG_VOLUME.min + t * (CHUG_VOLUME.max - CHUG_VOLUME.min));
+  const volume = speed < 1 ? 0 : CHUG_VOLUME.min + t * (CHUG_VOLUME.max - CHUG_VOLUME.min);
+  chug.volume(ducked ? volume * DUCK_FACTOR : volume);
 }
 
 export const audio = {
@@ -47,6 +51,11 @@ export const audio = {
     load();
     unlocked = true;
     chug?.play();
+    updateChug(useGameStore.getState().actualSpeed);
+  },
+  duck(on: boolean) {
+    if (ducked === on) return;
+    ducked = on;
     updateChug(useGameStore.getState().actualSpeed);
   },
   click: () => play('click'),

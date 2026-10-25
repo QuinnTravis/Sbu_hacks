@@ -64,6 +64,34 @@ export async function fetchSampleDeck(signal: AbortSignal): Promise<{ deck: Deck
   }
 }
 
+export type MisconceptionMap = Record<string, Record<string, string>>;
+
+/**
+ * Background enrichment: the confusion behind each wrong option. Decks that already carry
+ * misconceptions (the sample deck) skip the call. Failure just means no "Likely mix-up" lines.
+ */
+export async function fetchMisconceptions(deck: Deck): Promise<MisconceptionMap> {
+  const choice = deck.questions.filter((q) => q.type !== 'short');
+  if (choice.length === 0 || choice.some((q) => q.options.some((o) => o.misconception))) return {};
+  try {
+    const res = await fetch('/api/misconceptions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        questions: choice.map((q) => ({
+          id: q.id,
+          prompt: q.prompt,
+          correctOptionId: q.correctOptionId,
+          options: q.options.map((o) => ({ id: o.id, text: o.text })),
+        })),
+      }),
+    });
+    return res.ok ? ((await res.json()) as MisconceptionMap) : {};
+  } catch {
+    return {};
+  }
+}
+
 export const MAX_UPLOAD_BYTES = 10 * 1024 * 1024;
 export const MIN_TEXT_CHARS = 200;
 

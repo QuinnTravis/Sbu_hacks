@@ -38,10 +38,18 @@ export const REQUEUE_MAX_GAP = 4;
 
 // Pacing (spec 6.3, 6.4)
 export const CORRECT_ADVANCE_MS = 1_200;
+/** After a graded free response, leave time to read the grader's sentence. */
+export const GRADED_ADVANCE_MS = 3_200;
 export const MAINTENANCE_DELAY_MS = 600;
 export const FINAL_BANNER_MS = 2_500;
 export const SAMPLE_MIN_LOADING_MS = 2_500;
 export const GENERATION_TIMEOUT_MS = 45_000;
+
+// Learning across journeys: re-ask up to this many of last journey's misses, early in the run.
+export const REVIEW_MAX = 3;
+export const REVIEW_SLOTS = [1, 3, 5];
+export const HISTORY_PER_DECK = 5;
+export const HISTORY_MAX_DECKS = 10;
 
 /** Weak-concept threshold for the "Revisit" tag (spec 6.6). */
 export const REVISIT_BELOW = 70;

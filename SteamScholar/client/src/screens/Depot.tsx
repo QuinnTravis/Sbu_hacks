@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { audio } from '../audio/audioManager';
 import { CornerControls } from '../components/SettingsDrawer';
 import { Button } from '../components/ui/Button';
+import { Toggle } from '../components/ui/Toggle';
 import { Panel } from '../components/ui/Panel';
 import { ERROR_COPY, MIN_TEXT_CHARS, validateFile } from '../lib/api';
 import { useGameStore } from '../store/gameStore';
@@ -16,6 +17,8 @@ export default function Depot() {
   const requestDeck = useGameStore((s) => s.requestDeck);
   const depotError = useGameStore((s) => s.depotError);
   const hasReport = useGameStore((s) => Boolean(s.report));
+  const eyesFree = useGameStore((s) => s.settings.eyesFree);
+  const updateSettings = useGameStore((s) => s.updateSettings);
 
   const [file, setFile] = useState<File | null>(null);
   const [text, setText] = useState('');
@@ -167,7 +170,16 @@ export default function Depot() {
           )}
         </div>
 
-        <div className="mt-7 flex flex-col-reverse gap-3 sm:flex-row sm:justify-between">
+        <div className="mt-5 border-t border-iron-700 pt-2">
+          <Toggle
+            label="Eyes-free mode"
+            description="Questions read aloud; answer by voice. Works with your eyes closed."
+            checked={eyesFree}
+            onChange={(on) => updateSettings({ eyesFree: on })}
+          />
+        </div>
+
+        <div className="mt-5 flex flex-col-reverse gap-3 sm:flex-row sm:justify-between">
           <Button variant="secondary" onClick={trySample}>
             Try a sample deck
           </Button>
