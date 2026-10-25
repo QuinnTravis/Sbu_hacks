@@ -50,7 +50,7 @@ for (const viewport of [{ width: 320, height: 740 }, { width: 660, height: 560 }
     await expect(page.locator('[data-place-id="cardinal-90"]')).toHaveAttribute("data-pointed", "false");
     await expect(page.locator('[data-place-id="cardinal-0"]')).toHaveAttribute("title", "Catalog place 0");
     await expect(page.getByRole("img", { name: "Catalog place 0, in pointing cone", exact: true })).toBeVisible();
-    await expect(page.locator(".nav-count")).toHaveText("0");
+    await expect(page.locator(".nav-count")).toHaveCount(0);
 
     // Derive the actual rendered camera scale from two DOM markers. This checks
     // MapLibre's projection, rather than repeating the zoom helper's formula.

@@ -104,10 +104,10 @@ async function finishJourneyIntroduction(page: import("@playwright/test").Page) 
   await page.evaluate(() => (window as unknown as { __finishSpeech: () => void }).__finishSpeech());
 }
 
-test("Discoveries opens an empty collection before the first ride", async ({ page }) => {
+test("Saved opens an empty collection before the first ride", async ({ page }) => {
   await page.goto("/");
   const nav = page.getByRole("navigation", { name: "Main navigation" });
-  const discoveries = nav.getByRole("button", { name: "Discoveries" });
+  const discoveries = nav.getByRole("button", { name: /Saved/ });
   await expect(discoveries).toBeEnabled();
 
   await discoveries.click();
@@ -134,7 +134,7 @@ test("saved discoveries reopen as a collection even without an active ride", asy
   }, place);
   await page.goto("/");
   const discoveries = page.getByRole("navigation", { name: "Main navigation" })
-    .getByRole("button", { name: "Discoveries" });
+    .getByRole("button", { name: /Saved/ });
   await discoveries.click();
   await expect(page.getByRole("heading", { name: "Test landmark" })).toBeVisible();
   await expect(page.locator(".story-summary")).toContainText("The landmark was built in 1901.");
@@ -214,7 +214,7 @@ test("Jamaica verified facts render in the demo journey", async ({ page, request
   await expect(page.getByRole("link", { name: "Source for interesting fact" })).toHaveAttribute("href", funFactSource.url);
 });
 
-test("select a nearby route and retain pointed discoveries until discarded", async ({
+test("an opened place stays open while moving, and Not interested hides it for the ride", async ({
   page,
   context,
 }) => {
@@ -250,20 +250,21 @@ test("select a nearby route and retain pointed discoveries until discarded", asy
   await expect(
     page.getByRole("heading", { name: "Test landmark" }),
   ).toBeVisible();
-  await page.reload();
-  await page.getByRole("button", { name: /My discoveries/ }).click();
-  await expect(
-    page.getByRole("heading", { name: "Test landmark" }),
-  ).toBeVisible();
-  await page.getByRole("button", { name: "Discard Test landmark" }).click();
+  await expect(page.getByRole("button", { name: /End ride and clear/ })).toHaveCount(0);
+  await page.getByRole("button", { name: "Not interested", exact: true }).click();
   await expect(
     page.getByRole("heading", { name: "Test landmark" }),
   ).toHaveCount(0);
+  await context.setGeolocation({ latitude: 40.92, longitude: -73.1285, accuracy: 5 });
+  await aim(page, 0);
+  await expect(page.getByText("Nothing in this direction.")).toBeVisible({ timeout: 10000 });
+  await expect(page.getByRole("button", { name: /^Test landmark,/ })).toHaveCount(0);
   await page.reload();
-  await page.getByRole("button", { name: /My discoveries/ }).click();
-  await expect(
-    page.getByRole("heading", { name: "Test landmark" }),
-  ).toHaveCount(0);
+  const stored = await page.evaluate(() => JSON.parse(localStorage.getItem("train-discovery:ride:v1") ?? "null"));
+  expect(stored.dismissed).toContain("osm-node-1234");
+  expect(stored).not.toHaveProperty("queue");
+  await page.locator(".mobile-tabs").getByRole("button", { name: /Saved/ }).click();
+  await expect(page.getByRole("heading", { name: "Nothing saved yet." })).toBeVisible();
   const overflow = await page.evaluate(
     () => document.documentElement.scrollWidth > window.innerWidth,
   );
@@ -334,7 +335,7 @@ test("audio tour narrates nearby places without pointing, then saves, pauses, sk
     (window as unknown as { __spoken: string[] }).__spoken.includes(text), poiSpeech,
   )).toBe(true);
   await page.getByRole("button", { name: "Save Test landmark to discoveries" }).click();
-  await page.getByRole("button", { name: /My discoveries/ }).click();
+  await page.locator(".mobile-tabs").getByRole("button", { name: /Saved/ }).click();
   await expect(page.getByRole("heading", { name: "Test landmark" })).toBeVisible();
   await page.getByRole("button", { name: "Pause audio guide" }).click();
   expect(await page.evaluate(() => (window as unknown as { __paused: boolean }).__paused)).toBe(true);
@@ -390,7 +391,7 @@ test("an attributed source excerpt is visibly distinguished from a verified stor
     (window as unknown as { __spoken: string[] }).__spoken.includes(text), excerptSpeech,
   )).toBe(true);
   await page.getByRole("button", { name: "Save Example House Museum to discoveries" }).click();
-  await page.getByRole("button", { name: /My discoveries/ }).click();
+  await page.locator(".mobile-tabs").getByRole("button", { name: /Saved/ }).click();
   await expect(page.getByText("Wikipedia excerpt · not verified")).toBeVisible();
   await page.getByRole("button", { name: "Listen to source for Example House Museum" }).click();
   await expect.poll(() => page.evaluate(() =>

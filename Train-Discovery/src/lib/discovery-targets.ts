@@ -26,23 +26,26 @@ export function replayCatalogStatus(
 
 // Map imports can include separate OSM nodes for entrances to the same place.
 // Only collapse nearby places whose names agree; distinct nearby landmarks stay distinct.
-export function sameDiscoverySite(a: Place, b: Place): boolean {
+type Site = Pick<Place, "id" | "name" | "lat" | "lon">;
+
+export function sameDiscoverySite(a: Site, b: Site): boolean {
   if (a.id === b.id) return true;
   const name = (value: string) =>
     value.normalize("NFKD").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
   return Boolean(name(a.name)) && name(a.name) === name(b.name) && distance(a, b) < 180;
 }
 
-export function alreadyDiscovered(
+/** The rider said “Not interested” to this place or another node of the same site. */
+export function isDismissed(
   place: Place,
   ride: Ride,
   byId: Map<string, Place>,
 ): boolean {
   return (
-    ride.queue.some((entry) => sameDiscoverySite(entry.place, place)) ||
     ride.dismissed.some((id) =>
       id === place.id || (byId.has(id) && sameDiscoverySite(byId.get(id)!, place)),
-    )
+    ) ||
+    (ride.dismissedSites ?? []).some((site) => sameDiscoverySite(site, place))
   );
 }
 
@@ -65,7 +68,7 @@ export function chooseReplayTarget(
     .filter((place) =>
       distance(position, place) <= POINTING_RADIUS_M &&
       replayPriority(place) > 0 &&
-      !alreadyDiscovered(place, ride, byId),
+      !isDismissed(place, ride, byId),
     )
     .sort((a, b) =>
       replayPriority(b) - replayPriority(a) ||
@@ -93,7 +96,7 @@ export function rankPointingCandidates(
 ): PointingCandidate[] {
   if (heading === null || !Number.isFinite(heading)) return [];
   const matched = places.flatMap((place) => {
-    if (!isPointedAt(position, heading, place) || alreadyDiscovered(place, ride, byId)) return [];
+    if (!isPointedAt(position, heading, place) || isDismissed(place, ride, byId)) return [];
     return [{
       place,
       meters: distance(position, place),

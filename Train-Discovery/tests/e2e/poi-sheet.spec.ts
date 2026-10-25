@@ -180,7 +180,7 @@ for (const viewport of [
     await expect(
       sheet.getByRole("heading", { name: longName, exact: true }),
     ).toBeVisible();
-    await expect(page.locator(".nav-count")).toHaveText("1");
+    await expect(page.locator(".nav-count")).toHaveCount(0);
     await expect(page.locator(".ride-top-controls")).not.toBeVisible();
     await expect(page.locator(".ride-expanded-status")).toContainText(
       "Simulated ride",
@@ -254,7 +254,7 @@ for (const viewport of [
     await sheet.locator(".poi-sheet__close").click();
     await expect(sheet).toHaveAttribute("aria-hidden", "true");
     await expect(page.locator(".nav-count")).toHaveText("1");
-    await page.getByRole("button", { name: /My discoveries/ }).click();
+    await page.locator(".mobile-tabs").getByRole("button", { name: /Saved/ }).click();
     await expect(
       page
         .locator(".queue-panel")
@@ -301,7 +301,7 @@ test("sheet follows drag, snaps and dismisses without selecting a place", async 
     .toBe(true);
   await drag(page, 150, isMobile);
   await expect(sheet).toHaveAttribute("aria-hidden", "true");
-  await expect(page.locator(".nav-count")).toHaveText("0");
+  await expect(page.locator(".nav-count")).toHaveCount(0);
 });
 
 test("reduced motion and keyboard sheet controls", async ({ page }) => {
@@ -345,5 +345,5 @@ test("cancelled touch drag returns to its prior snap point", async ({
     "false",
   );
   await settled(page, false);
-  await expect(page.locator(".nav-count")).toHaveText("0");
+  await expect(page.locator(".nav-count")).toHaveCount(0);
 });

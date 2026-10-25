@@ -51,7 +51,6 @@ export function DevPanel({
   onStart,
   stations,
   onStation,
-  queueCount,
   pausedReason,
 }: {
   open: boolean;
@@ -82,7 +81,6 @@ export function DevPanel({
   onStart: () => void;
   stations: { id: string; name: string; offset: number }[];
   onStation: (offset: number) => void;
-  queueCount: number;
   pausedReason?: string;
 }) {
   const [compact, setCompact] = useState(false);
@@ -162,7 +160,7 @@ export function DevPanel({
             </button>
           )}
           <small>
-            {replay ? "Simulated train" : "Real GPS"} · {queueCount} queued
+            {replay ? "Simulated train" : "Real GPS"}
           </small>
         </div>
       ) : (
@@ -339,10 +337,6 @@ export function DevPanel({
               <dd>
                 {heading === null ? "Unavailable" : `${Math.round(heading)}°`}
               </dd>
-            </div>
-            <div>
-              <dt>Discoveries queued</dt>
-              <dd>{queueCount}</dd>
             </div>
           </dl>
           <div className="dev-pois">

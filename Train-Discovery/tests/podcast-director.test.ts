@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { placeAnnouncement } from "../src/lib/audio-journey";
 import type { PendingStation } from "../src/lib/audio-journey";
 import {
-  planPodcast, podcastCandidatesFromJourney, podcastSiteKey,
+  AUTO_EXCERPT_METERS, nearbyNarrationScore, planPodcast, podcastCandidatesFromJourney, podcastSiteKey,
   PODCAST_AUTO_GAP_MS, PODCAST_INTRO_KEY,
 } from "../src/lib/podcast-director";
 import type { PodcastCandidate, PodcastDirectorInput } from "../src/lib/podcast-director";
@@ -24,6 +24,26 @@ function place(id: string, options: Partial<Place> = {}): Place {
       verifiedAt: "2026-10-24", evidenceHash: "hash", generator: "fixture", verifier: "fixture" },
     ...options,
   };
+}
+
+const metersNorth = (meters: number) => (meters / 6371008.8) * (180 / Math.PI);
+
+function deepPlace(id: string, options: Partial<Place> = {}): Place {
+  const p = place(id, options);
+  const nextFact = `${id} welcomed its second collection in 1924.`;
+  return { ...p,
+    evidence: [...p.evidence, { id: "archive2", title: "Town archive", url: "https://example.org/second",
+      text: nextFact, license: "CC BY-SA 4.0", retrievedAt: "2026-10-24" }],
+    story: { ...p.story!, claims: [...p.story!.claims, { text: nextFact, quote: nextFact, evidenceId: "archive2" }] },
+  };
+}
+
+function excerpt(id: string, options: Partial<Place> = {}): Place {
+  return place(id, { name: "Museum excerpt", story: undefined, evidence: [{
+    id: "wiki", title: "Museum excerpt", url: "https://en.wikipedia.org/wiki/Museum_excerpt",
+    text: "Museum excerpt served as an educational landmark in the district. It housed a collection of books and maps.",
+    retrievedAt: "2026-10-24", license: "CC BY-SA 4.0",
+  }], ...options });
 }
 
 function candidate(p: Place, selectedAt?: number, topic?: string): PodcastCandidate {
@@ -156,19 +176,47 @@ describe("pure podcast planning", () => {
       .toMatchObject({ action: "quiet", ranked: [] });
   });
 
-  it("permits an attributed Wikipedia excerpt with explicit source status", () => {
-    const p = place("excerpt", { story: undefined, evidence: [{
-      id: "wiki", title: "Museum excerpt", url: "https://en.wikipedia.org/wiki/Museum_excerpt",
-      text: "Museum excerpt served as an educational landmark in the district. It housed a collection of books and maps.",
-      retrievedAt: "2026-10-24", license: "CC BY-SA 4.0",
-    }] });
-    const decision = planPodcast(input([candidate(p)]));
-    expect(decision.action).toBe("story");
+  it("plays an attributed Wikipedia excerpt the rider chose, with explicit source status", () => {
+    const p = excerpt("excerpt", { lat: POSITION.lat + metersNorth(600) });
+    const decision = planPodcast(input([candidate(p, NOW)], { pointedPlaceId: p.id, pointedAt: NOW }));
+    expect(decision).toMatchObject({ action: "story", item: { priority: "pointed" } });
     if (decision.action === "story") {
       expect(decision.item.moment.fallback?.kind).toBe("source");
       expect(decision.item.moment.fallback?.text).toContain("From Wikipedia:");
+      expect(decision.item.moment.fallback?.text).toMatch(/^You just pointed at Museum excerpt\./);
       expect(decision.item.moment.fallback?.sources[0].url).toBe(p.evidence[0].url);
     }
+    expect(planPodcast(input([candidate(p)], { replayPlaceId: p.id })))
+      .toMatchObject({ action: "story", item: { moment: { request: { context: "replay" } } } });
+  });
+
+  it("does not narrate an unverified excerpt unprompted unless it is right beside the line", () => {
+    const far = excerpt("far-excerpt", { lat: POSITION.lat + metersNorth(AUTO_EXCERPT_METERS + 100) });
+    expect(planPodcast(input([candidate(far)]))).toMatchObject({ action: "quiet", reason: "no-sourced-stories", ranked: [] });
+    expect(nearbyNarrationScore(far, AUTO_EXCERPT_METERS + 100)).toBeNull();
+
+    const beside = excerpt("beside", { lat: POSITION.lat + metersNorth(150) });
+    expect(planPodcast(input([candidate(beside)]))).toMatchObject({ action: "story",
+      item: { priority: "nearby", reason: "nearby attributed source excerpt", moment: { request: { context: "nearby" } } } });
+    const street = excerpt("street", { lat: POSITION.lat + metersNorth(150), category: "Infrastructure" });
+    expect(planPodcast(input([candidate(street)])).ranked).toEqual([]);
+
+    // A verified story farther away is still preferred to a thin excerpt beside the line.
+    const verified = place("verified-far", { lat: POSITION.lat + metersNorth(500) });
+    expect(planPodcast(input([candidate(beside), candidate(verified)])))
+      .toMatchObject({ action: "story", item: { moment: { key: "place:verified-far" } } });
+  });
+
+  it("prefers a much closer verified story over a farther one with one more checked detail", () => {
+    const close = place("close", { lat: POSITION.lat + metersNorth(150) });
+    const richer = deepPlace("richer", { lat: POSITION.lat + metersNorth(600) });
+    const decision = planPodcast(input([candidate(richer), candidate(close)]));
+    expect(decision.ranked.map((item) => item.moment.key)).toEqual(["place:close", "place:richer"]);
+    expect(decision.ranked[1].supportedDetails).toBe(2);
+    // At the same distance, the extra checked detail wins.
+    const sameDistance = deepPlace("richer", { lat: close.lat, lon: close.lon + 0.00001 });
+    expect(planPodcast(input([candidate(close), candidate(sameDistance)])).ranked[0].moment.key).toBe("place:richer");
+    expect(nearbyNarrationScore(close, 150)!).toBeGreaterThan(nearbyNarrationScore(richer, 600)!);
   });
 
   it("deduplicates played keys, factual repetition, and same-site map records", () => {
@@ -273,12 +321,16 @@ describe("pure podcast planning", () => {
     }))).toMatchObject({ action: "quiet", reason: "breathing-room", until: NOW + 600 });
   });
 
-  it("prefers a continuing topic and uses a generic transition when changing topics", () => {
-    const related = candidate(place("related", { lat: POSITION.lat + 0.005 }), undefined, "rail");
+  it("uses a continuing topic only as a tiebreaker and a generic transition when changing topics", () => {
+    const related = candidate(place("related", { lat: POSITION.lat + metersNorth(100) }), undefined, "rail");
+    const level = candidate(place("level", { lat: POSITION.lat + metersNorth(100), lon: POSITION.lon + 0.00001 }), undefined, "nature");
     const different = candidate(place("different", { lat: POSITION.lat }), undefined, "nature");
     const lastPlayback = { key: "place:old", kind: "story" as const, endedAt: NOW - 20_000, topic: "rail" };
-    const first = planPodcast(input([different, related], { lastPlayback, previousTopic: "rail" }));
-    expect(first).toMatchObject({ action: "story", item: { moment: { key: "place:related" } } });
+    expect(planPodcast(input([level, related], { lastPlayback, previousTopic: "rail" })))
+      .toMatchObject({ action: "story", item: { moment: { key: "place:related" } } });
+    const farRelated = candidate(place("related", { lat: POSITION.lat + 0.005 }), undefined, "rail");
+    const first = planPodcast(input([different, farRelated], { lastPlayback, previousTopic: "rail" }));
+    expect(first).toMatchObject({ action: "transition", next: { moment: { key: "place:different" } } });
     const transition = planPodcast(input([different], { lastPlayback, previousTopic: "rail" }));
     expect(transition).toMatchObject({ action: "transition", key: "podcast:transition:place:different" });
     if (transition.action === "transition") {

@@ -16,7 +16,7 @@ Discover places and their history by pointing a phone at the world outside the t
 
 ## Operating Context
 
-Select a nearby LIRR branch, start a ride, and use live location and absolute device orientation to discover nearby points of interest. A chosen place stays in a local queue until the rider discards it or ends the ride. A saved discovery stays on the device after the ride ends.
+Select a nearby LIRR branch, start a ride, and use live location and absolute device orientation to discover nearby points of interest. Tapping a place opens its card and plays its story once. Not interested hides a place for the rest of the ride. A saved discovery stays on the device after the ride ends. Unprompted narration picks the nearby place that is closest and most interesting.
 
 ## Capabilities and Constraints
 
@@ -27,7 +27,8 @@ All LIRR branches; Next.js PWA; Supabase database; Gemini through a structured L
 - Few controls and minimal copy; no explanatory subtitles for obvious controls.
 - Sources support every published historical claim.
 - No promise of line of sight from geographic proximity alone.
-- The ride queue lasts until the rider discards a card or ends the ride. Saved discoveries stay on the device until removed.
+- No ride queue: Saved is the one list the rider keeps. Saved discoveries stay on the device until removed.
+- Quality over quantity in automatic narration: a verified story, or a source excerpt right beside the line. Anything thinner plays only when the rider asks.
 - Location stays on the device except for the immediate nearby lookup; no location history is stored by default.
 
 ## Open Decisions

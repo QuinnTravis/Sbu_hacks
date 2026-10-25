@@ -217,18 +217,16 @@ test("a pointed POI waits for the station clip, then plays once with its sourced
   await page.locator(".poi-sheet").getByRole("button", { name: "Expand sheet", exact: true }).click();
   await expect(page.locator(".story-facts")).toBeVisible();
   await expect(page.locator(".story-facts")).toContainText(evidence.text);
-  await page.locator(".poi-sheet").getByRole("button", { name: "Discard discovery", exact: true }).click();
+  await page.locator(".poi-sheet").getByRole("button", { name: "Not interested", exact: true }).click();
   await expect(page.getByText("Waiting for a nearby story")).toBeVisible();
   expect((await clips(page)).filter((url) => url.includes("test-clip-place-pointed"))).toHaveLength(1);
 });
 
-test("a POI with no source stays queued and is never sent to the narration provider or device", async ({ page }) => {
+test("a tapped POI with no source opens its card and is never sent to the narration provider or device", async ({ page }) => {
+  const place = { id: "osm-node-1234", name: "Window landmark", lat: 40.7026, lon: -73.8085,
+    category: "Landmark", routeIds: ["10"], tags: {}, evidence: [], sourceUrl: "https://www.openstreetmap.org/node/1234" };
+  await page.route("**/api/journeys/10", (route) => route.fulfill({ json: { places: [place] } }));
   await page.addInitScript(() => {
-    const now = Date.now();
-    const place = { id: "osm-node-1234", name: "Window landmark", lat: 40.7026, lon: -73.8085,
-      category: "Landmark", routeIds: ["10"], tags: {}, evidence: [], sourceUrl: "https://www.openstreetmap.org/node/1234" };
-    localStorage.setItem("train-discovery:ride:v1", JSON.stringify({ routeId: "10", startedAt: now, replay: false,
-      queue: [{ place, foundAt: now, distance: 300 }], dismissed: [] }));
     Object.assign(window, { __nativeCount: 0 });
     Object.defineProperty(window, "speechSynthesis", { configurable: true, value: {
       speak() { (window as unknown as { __nativeCount: number }).__nativeCount++; },
@@ -244,15 +242,28 @@ test("a POI with no source stays queued and is never sent to the narration provi
       : route.fulfill({ json: announcement(input) });
   });
 
-  await page.goto("/");
-  await page.getByRole("button", { name: "Start audio tour" }).click();
+  await startLiveRide(page);
   await expect.poll(() => clips(page)).toContain("https://example.org/test-clip-journey.mp3");
   await finishClip(page);
+  await expect.poll(() => clips(page)).toContain(`https://example.org/test-clip-station-${jamaica.id}.mp3`);
+  await finishClip(page);
   await expect(page.getByText("Waiting for a nearby story")).toBeVisible();
-  await page.getByRole("button", { name: /My discoveries/ }).click();
-  await expect(page.getByRole("heading", { name: "Window landmark" })).toBeVisible();
+  await page.evaluate(() => {
+    const emit = () => {
+      const event = new Event("deviceorientationabsolute");
+      Object.defineProperties(event, { alpha: { value: 0 }, beta: { value: 90 }, gamma: { value: 0 }, absolute: { value: true } });
+      window.dispatchEvent(event);
+    };
+    emit(); const timer = setInterval(emit, 100); setTimeout(() => clearInterval(timer), 2200);
+  });
+  await page.getByRole("button", { name: /Window landmark,/ }).click();
+  await expect(page.getByRole("heading", { name: "Window landmark" })).toBeVisible({ timeout: 10000 });
+  await page.waitForTimeout(1500);
   expect(requested.some((input) => input.type === "place")).toBe(false);
-  expect(await clips(page)).toEqual(["https://example.org/test-clip-journey.mp3"]);
+  expect(await clips(page)).toEqual([
+    "https://example.org/test-clip-journey.mp3",
+    `https://example.org/test-clip-station-${jamaica.id}.mp3`,
+  ]);
   expect(await page.evaluate(() => (window as unknown as { __nativeCount: number }).__nativeCount)).toBe(0);
 });
 
