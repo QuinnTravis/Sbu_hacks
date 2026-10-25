@@ -1,0 +1,6 @@
+# TypeScript incremental build state
+*.tsbuildinfo
+# ElevenLabs takes waiting to be auditioned (npm run sfx -w client)
+client/public/sfx-candidates/
+# Your own lecture notes for dry runs (keep private material out of git)
+test-notes/

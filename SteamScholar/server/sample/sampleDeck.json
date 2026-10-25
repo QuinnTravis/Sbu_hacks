@@ -1,0 +1,718 @@
+{
+  "id": "sample-data-structures",
+  "title": "Data Structures Essentials",
+  "concepts": [
+    "Big-O Notation",
+    "Arrays and Dynamic Arrays",
+    "Linked Lists",
+    "Stacks and Queues",
+    "Hash Tables",
+    "Binary Search Trees"
+  ],
+  "questions": [
+    {
+      "id": "q1",
+      "type": "mcq",
+      "difficulty": "easy",
+      "concept": "Big-O Notation",
+      "prompt": "What is the Big-O running time of reading an array element by its index?",
+      "options": [
+        {
+          "id": "a",
+          "text": "O(1)"
+        },
+        {
+          "id": "b",
+          "text": "O(log n)"
+        },
+        {
+          "id": "c",
+          "text": "O(n)"
+        },
+        {
+          "id": "d",
+          "text": "O(n log n)"
+        }
+      ],
+      "correctOptionId": "a",
+      "explanation": "Reading by index is constant time, O(1), because the work does not depend on how big the array is. Your notes use it as the classic O(1) example.",
+      "source": {
+        "page": 1,
+        "label": "Page 1"
+      }
+    },
+    {
+      "id": "q2",
+      "type": "mcq",
+      "difficulty": "medium",
+      "concept": "Big-O Notation",
+      "prompt": "An algorithm runs an O(n) loop and then, separately, an O(n²) loop. What is its overall running time?",
+      "options": [
+        {
+          "id": "a",
+          "text": "O(n³)"
+        },
+        {
+          "id": "b",
+          "text": "O(n²)"
+        },
+        {
+          "id": "c",
+          "text": "O(n)"
+        },
+        {
+          "id": "d",
+          "text": "O(n + 2)"
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "Steps that run one after another add together, and the larger term dominates. O(n) + O(n²) simplifies to O(n²). Costs only multiply when one loop is nested inside the other.",
+      "source": {
+        "page": 1,
+        "label": "Page 1"
+      }
+    },
+    {
+      "id": "q3",
+      "type": "mcq",
+      "difficulty": "hard",
+      "concept": "Big-O Notation",
+      "prompt": "Which statement about Big-O notation is NOT true?",
+      "options": [
+        {
+          "id": "a",
+          "text": "It ignores constant factors and lower-order terms"
+        },
+        {
+          "id": "b",
+          "text": "An algorithm taking 3n + 7 steps is O(n)"
+        },
+        {
+          "id": "c",
+          "text": "An O(n) algorithm is faster than an O(n²) algorithm on every input size"
+        },
+        {
+          "id": "d",
+          "text": "It can describe memory use as well as running time"
+        }
+      ],
+      "correctOptionId": "c",
+      "explanation": "Big-O describes how cost grows and deliberately drops constant factors, so it says nothing about which algorithm wins on every input. A small input with big constants can favor the O(n²) algorithm. The other three statements come straight from your notes.",
+      "source": {
+        "page": 1,
+        "label": "Page 1"
+      }
+    },
+    {
+      "id": "q4",
+      "type": "tf",
+      "difficulty": "easy",
+      "concept": "Big-O Notation",
+      "prompt": "Binary search on a sorted array runs in O(log n) time because it halves the search range at each step.",
+      "options": [
+        {
+          "id": "true",
+          "text": "True"
+        },
+        {
+          "id": "false",
+          "text": "False"
+        }
+      ],
+      "correctOptionId": "true",
+      "explanation": "Exactly right. Cutting the problem by a constant fraction each step is what makes an algorithm logarithmic, and binary search halves the range every time.",
+      "source": {
+        "page": 1,
+        "label": "Page 1"
+      }
+    },
+    {
+      "id": "q5",
+      "type": "mcq",
+      "difficulty": "medium",
+      "concept": "Arrays and Dynamic Arrays",
+      "prompt": "Why can an array read any element by its index in O(1) time?",
+      "options": [
+        {
+          "id": "a",
+          "text": "It searches from both ends at once"
+        },
+        {
+          "id": "b",
+          "text": "Elements sit in one contiguous block, so the address is computed directly"
+        },
+        {
+          "id": "c",
+          "text": "Each element stores a pointer to the next one"
+        },
+        {
+          "id": "d",
+          "text": "The array is always kept in sorted order"
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "Because every element is the same size and stored contiguously, element i lives at the start address plus i times the element size. One calculation finds it, no matter how long the array is.",
+      "source": {
+        "page": 2,
+        "label": "Page 2"
+      }
+    },
+    {
+      "id": "q6",
+      "type": "mcq",
+      "difficulty": "medium",
+      "concept": "Arrays and Dynamic Arrays",
+      "prompt": "What happens when you append to a dynamic array that is already full?",
+      "options": [
+        {
+          "id": "a",
+          "text": "The append fails with an error"
+        },
+        {
+          "id": "b",
+          "text": "The newest element replaces the oldest one"
+        },
+        {
+          "id": "c",
+          "text": "The new element is stored in a separate linked node"
+        },
+        {
+          "id": "d",
+          "text": "It allocates a larger array, typically double the size, and copies every element over"
+        }
+      ],
+      "correctOptionId": "d",
+      "explanation": "A dynamic array grows by allocating a bigger underlying array, usually twice the capacity, and copying the elements across. That one append costs O(n), but it happens rarely.",
+      "source": {
+        "page": 2,
+        "label": "Page 2"
+      }
+    },
+    {
+      "id": "q7",
+      "type": "mcq",
+      "difficulty": "hard",
+      "concept": "Arrays and Dynamic Arrays",
+      "prompt": "Appending to a dynamic array is called \"amortized O(1)\". What does that mean?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Every single append takes constant time"
+        },
+        {
+          "id": "b",
+          "text": "Averaged over a long sequence of appends, the cost per append is constant, even though an occasional append costs O(n)"
+        },
+        {
+          "id": "c",
+          "text": "Appending is O(1) only while the array is empty"
+        },
+        {
+          "id": "d",
+          "text": "Appends are O(1) on random input but O(n²) in the worst case"
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "Amortized analysis averages cost over a worst-case sequence. Doubling makes the expensive copies rare enough that total work stays proportional to the number of appends. It does not promise every append is fast.",
+      "source": {
+        "page": 2,
+        "label": "Page 2"
+      }
+    },
+    {
+      "id": "q8",
+      "type": "tf",
+      "difficulty": "medium",
+      "concept": "Arrays and Dynamic Arrays",
+      "prompt": "Inserting an element into the middle of an array takes O(1) time because only one slot changes.",
+      "options": [
+        {
+          "id": "true",
+          "text": "True"
+        },
+        {
+          "id": "false",
+          "text": "False"
+        }
+      ],
+      "correctOptionId": "false",
+      "explanation": "Inserting in the middle means shifting every later element one position over, which is O(n) in the worst case. That shifting is the main cost of contiguous storage.",
+      "source": {
+        "page": 2,
+        "label": "Page 2"
+      }
+    },
+    {
+      "id": "q9",
+      "type": "mcq",
+      "difficulty": "easy",
+      "concept": "Linked Lists",
+      "prompt": "In a singly linked list, what does each node store?",
+      "options": [
+        {
+          "id": "a",
+          "text": "A value and its index in the list"
+        },
+        {
+          "id": "b",
+          "text": "Only a pointer to the head"
+        },
+        {
+          "id": "c",
+          "text": "A value and a pointer to the next node"
+        },
+        {
+          "id": "d",
+          "text": "A value and pointers to two children"
+        }
+      ],
+      "correctOptionId": "c",
+      "explanation": "Each node in a singly linked list holds its value plus a pointer to the next node, and the last node points to null. Two child pointers would make it a binary tree instead.",
+      "source": {
+        "page": 3,
+        "label": "Page 3"
+      }
+    },
+    {
+      "id": "q10",
+      "type": "mcq",
+      "difficulty": "medium",
+      "concept": "Linked Lists",
+      "prompt": "Which operation is O(1) on a singly linked list that keeps only a head pointer?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Inserting a new node at the head"
+        },
+        {
+          "id": "b",
+          "text": "Appending a node at the end"
+        },
+        {
+          "id": "c",
+          "text": "Finding the element at position i"
+        },
+        {
+          "id": "d",
+          "text": "Finding the last element"
+        }
+      ],
+      "correctOptionId": "a",
+      "explanation": "Inserting at the head only changes two pointers: the new node points to the old head, and the head points to the new node. The other options all require walking the list, which is O(n).",
+      "source": {
+        "page": 3,
+        "label": "Page 3"
+      }
+    },
+    {
+      "id": "q11",
+      "type": "mcq",
+      "difficulty": "hard",
+      "concept": "Linked Lists",
+      "prompt": "You have a reference to a node in a singly linked list and want to delete it. What else do you need?",
+      "options": [
+        {
+          "id": "a",
+          "text": "The tail pointer"
+        },
+        {
+          "id": "b",
+          "text": "The index of the node"
+        },
+        {
+          "id": "c",
+          "text": "Nothing; deletion is always O(1)"
+        },
+        {
+          "id": "d",
+          "text": "A reference to the node before it"
+        }
+      ],
+      "correctOptionId": "d",
+      "explanation": "Deleting a node means updating its predecessor's next pointer, and a singly linked list cannot walk backward to find it. A doubly linked list stores that previous pointer, which is why deletion there is O(1) from the node alone.",
+      "source": {
+        "page": 3,
+        "label": "Page 3"
+      }
+    },
+    {
+      "id": "q12",
+      "type": "tf",
+      "difficulty": "medium",
+      "concept": "Linked Lists",
+      "prompt": "Linked lists usually traverse faster than arrays in practice because their nodes can live anywhere in memory.",
+      "options": [
+        {
+          "id": "true",
+          "text": "True"
+        },
+        {
+          "id": "false",
+          "text": "False"
+        }
+      ],
+      "correctOptionId": "false",
+      "explanation": "Scattered nodes actually hurt: linked lists have poor cache locality, so traversal is usually slower than an array even though both are O(n). Arrays win because neighbors sit next to each other.",
+      "source": {
+        "page": 3,
+        "label": "Page 3"
+      }
+    },
+    {
+      "id": "q13",
+      "type": "mcq",
+      "difficulty": "easy",
+      "concept": "Stacks and Queues",
+      "prompt": "Which order does a stack follow?",
+      "options": [
+        {
+          "id": "a",
+          "text": "First-In, First-Out (FIFO)"
+        },
+        {
+          "id": "b",
+          "text": "Last-In, First-Out (LIFO)"
+        },
+        {
+          "id": "c",
+          "text": "Sorted order"
+        },
+        {
+          "id": "d",
+          "text": "Random order"
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "A stack is Last-In, First-Out: the most recently pushed element is the first one popped. FIFO describes a queue.",
+      "source": {
+        "page": 4,
+        "label": "Page 4"
+      }
+    },
+    {
+      "id": "q14",
+      "type": "mcq",
+      "difficulty": "easy",
+      "concept": "Stacks and Queues",
+      "prompt": "Which data structure does breadth-first search use?",
+      "options": [
+        {
+          "id": "a",
+          "text": "A queue"
+        },
+        {
+          "id": "b",
+          "text": "A stack"
+        },
+        {
+          "id": "c",
+          "text": "A hash table"
+        },
+        {
+          "id": "d",
+          "text": "A binary search tree"
+        }
+      ],
+      "correctOptionId": "a",
+      "explanation": "Breadth-first search uses a queue so that items are processed in the order they were discovered. Your notes pair stacks with depth-first search instead.",
+      "source": {
+        "page": 4,
+        "label": "Page 4"
+      }
+    },
+    {
+      "id": "q15",
+      "type": "mcq",
+      "difficulty": "medium",
+      "concept": "Stacks and Queues",
+      "prompt": "Why is a plain array that dequeues from index 0 a poor way to build a queue?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Arrays cannot store duplicate values"
+        },
+        {
+          "id": "b",
+          "text": "Enqueue becomes O(log n)"
+        },
+        {
+          "id": "c",
+          "text": "Every dequeue shifts all remaining elements, costing O(n)"
+        },
+        {
+          "id": "d",
+          "text": "Arrays can only be read from the end"
+        }
+      ],
+      "correctOptionId": "c",
+      "explanation": "Removing index 0 forces every remaining element to shift forward, so each dequeue is O(n). A circular buffer avoids this by wrapping its front and back indices around, giving O(1) operations.",
+      "source": {
+        "page": 4,
+        "label": "Page 4"
+      }
+    },
+    {
+      "id": "q16",
+      "type": "mcq",
+      "difficulty": "hard",
+      "concept": "Stacks and Queues",
+      "prompt": "A program pushes 1, 2, 3 onto an empty stack, pops twice, pushes 4 and 5, then pops once. What does peek return?",
+      "options": [
+        {
+          "id": "a",
+          "text": "1"
+        },
+        {
+          "id": "b",
+          "text": "3"
+        },
+        {
+          "id": "c",
+          "text": "4"
+        },
+        {
+          "id": "d",
+          "text": "5"
+        }
+      ],
+      "correctOptionId": "c",
+      "explanation": "Trace it: [1, 2, 3], two pops leave [1], pushing gives [1, 4, 5], and one pop leaves [1, 4]. Peek shows the top without removing it, which is 4.",
+      "source": {
+        "page": 4,
+        "label": "Page 4"
+      }
+    },
+    {
+      "id": "q17",
+      "type": "mcq",
+      "difficulty": "easy",
+      "concept": "Hash Tables",
+      "prompt": "What is a collision in a hash table?",
+      "options": [
+        {
+          "id": "a",
+          "text": "The table runs out of memory"
+        },
+        {
+          "id": "b",
+          "text": "The same key is inserted twice"
+        },
+        {
+          "id": "c",
+          "text": "The hash function returns a negative number"
+        },
+        {
+          "id": "d",
+          "text": "Two different keys hash to the same index"
+        }
+      ],
+      "correctOptionId": "d",
+      "explanation": "A collision is when two different keys map to the same bucket index. Collisions are unavoidable, which is why every hash table needs a strategy such as chaining or open addressing.",
+      "source": {
+        "page": 5,
+        "label": "Page 5"
+      }
+    },
+    {
+      "id": "q18",
+      "type": "mcq",
+      "difficulty": "medium",
+      "concept": "Hash Tables",
+      "prompt": "How does separate chaining handle collisions?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Each bucket holds a list of all entries that hashed to it"
+        },
+        {
+          "id": "b",
+          "text": "It probes the next slots until it finds an empty one"
+        },
+        {
+          "id": "c",
+          "text": "It rejects the new key"
+        },
+        {
+          "id": "d",
+          "text": "It immediately doubles the table"
+        }
+      ],
+      "correctOptionId": "a",
+      "explanation": "With separate chaining, each bucket keeps a list of every entry that hashed there, and lookup searches that one list. Probing for an empty slot is open addressing, the other strategy.",
+      "source": {
+        "page": 5,
+        "label": "Page 5"
+      }
+    },
+    {
+      "id": "q19",
+      "type": "mcq",
+      "difficulty": "hard",
+      "concept": "Hash Tables",
+      "prompt": "A hash table has 16 buckets, holds 12 entries, and resizes when its load factor passes 0.75. What happens when one more entry is inserted?",
+      "options": [
+        {
+          "id": "a",
+          "text": "The insert is rejected because 0.75 is the maximum load"
+        },
+        {
+          "id": "b",
+          "text": "The load factor stays at 0.75 because buckets are reused"
+        },
+        {
+          "id": "c",
+          "text": "Only the bucket that collided gets bigger"
+        },
+        {
+          "id": "d",
+          "text": "The load factor rises to about 0.81, so the table grows and rehashes every entry"
+        }
+      ],
+      "correctOptionId": "d",
+      "explanation": "Load factor is entries divided by buckets: 13 / 16 ≈ 0.81, which passes the 0.75 threshold. The table allocates a larger bucket array and rehashes every entry, an O(n) step that is amortized O(1) per insert.",
+      "source": {
+        "page": 5,
+        "label": "Page 5"
+      }
+    },
+    {
+      "id": "q20",
+      "type": "tf",
+      "difficulty": "medium",
+      "concept": "Hash Tables",
+      "prompt": "A hash table makes it easy to list all of its keys in sorted order.",
+      "options": [
+        {
+          "id": "true",
+          "text": "True"
+        },
+        {
+          "id": "false",
+          "text": "False"
+        }
+      ],
+      "correctOptionId": "false",
+      "explanation": "Hash tables scatter keys across buckets and don't keep them in order, so sorted output takes extra work. Keeping keys in order is one of the things binary search trees do well.",
+      "source": {
+        "page": 5,
+        "label": "Page 5"
+      }
+    },
+    {
+      "id": "q21",
+      "type": "mcq",
+      "difficulty": "easy",
+      "concept": "Binary Search Trees",
+      "prompt": "In a binary search tree, where are the keys smaller than a node's key stored?",
+      "options": [
+        {
+          "id": "a",
+          "text": "In the right subtree"
+        },
+        {
+          "id": "b",
+          "text": "In the left subtree"
+        },
+        {
+          "id": "c",
+          "text": "At the root"
+        },
+        {
+          "id": "d",
+          "text": "Only in the leaves"
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "The BST rule puts every smaller key in the left subtree and every larger key in the right subtree. It applies to whole subtrees, not just a node's immediate children.",
+      "source": {
+        "page": 6,
+        "label": "Page 6"
+      }
+    },
+    {
+      "id": "q22",
+      "type": "mcq",
+      "difficulty": "medium",
+      "concept": "Binary Search Trees",
+      "prompt": "Which traversal visits a binary search tree's keys in ascending order?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Pre-order"
+        },
+        {
+          "id": "b",
+          "text": "Post-order"
+        },
+        {
+          "id": "c",
+          "text": "In-order"
+        },
+        {
+          "id": "d",
+          "text": "Level-order"
+        }
+      ],
+      "correctOptionId": "c",
+      "explanation": "An in-order traversal visits the left subtree, then the node, then the right subtree. On a BST that matches the ordering rule, so the keys come out sorted.",
+      "source": {
+        "page": 6,
+        "label": "Page 6"
+      }
+    },
+    {
+      "id": "q23",
+      "type": "mcq",
+      "difficulty": "hard",
+      "concept": "Binary Search Trees",
+      "prompt": "The keys 10, 20, 30, 40, 50 are inserted in that order into a plain BST with no self-balancing. What results?",
+      "options": [
+        {
+          "id": "a",
+          "text": "A list-like tree where each node is a right child, so searches take O(n)"
+        },
+        {
+          "id": "b",
+          "text": "A balanced tree with 30 at the root"
+        },
+        {
+          "id": "c",
+          "text": "A tree where every node is a left child"
+        },
+        {
+          "id": "d",
+          "text": "A tree that rotates itself to keep O(log n) height"
+        }
+      ],
+      "correctOptionId": "a",
+      "explanation": "Each new key is larger than everything before it, so it always goes right, and the tree degenerates into a chain. Its height becomes n, so operations slow to O(n). Self-balancing trees like AVL and red-black trees prevent this with rotations.",
+      "source": {
+        "page": 6,
+        "label": "Page 6"
+      }
+    },
+    {
+      "id": "q24",
+      "type": "tf",
+      "difficulty": "easy",
+      "concept": "Binary Search Trees",
+      "prompt": "Search, insert, and delete in a balanced binary search tree run in O(log n) time.",
+      "options": [
+        {
+          "id": "true",
+          "text": "True"
+        },
+        {
+          "id": "false",
+          "text": "False"
+        }
+      ],
+      "correctOptionId": "true",
+      "explanation": "Correct. BST operations take O(h) time, and a balanced tree with n nodes has height about log n. That is why self-balancing trees work hard to stay balanced.",
+      "source": {
+        "page": 6,
+        "label": "Page 6"
+      }
+    }
+  ]
+}
