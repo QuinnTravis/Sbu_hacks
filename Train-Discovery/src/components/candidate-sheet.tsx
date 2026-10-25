@@ -7,27 +7,16 @@ import type { PointingCandidate } from "@/lib/discovery-targets";
 export function CandidateSheet({
   candidates,
   empty,
-  onEngage,
-  onRelease,
   onSelect,
 }: {
   candidates: PointingCandidate[];
   empty: boolean;
-  onEngage: () => void;
-  onRelease: () => void;
   onSelect: (candidate: PointingCandidate) => void;
 }) {
   return (
     <section
       className="candidate-sheet"
       aria-label="Places in this direction"
-      onPointerDown={onEngage}
-      onPointerUp={onRelease}
-      onPointerCancel={onRelease}
-      onFocusCapture={onEngage}
-      onBlur={(event) => {
-        if (!event.currentTarget.contains(event.relatedTarget)) onRelease();
-      }}
     >
       {candidates.length > 0 ? (
         <ul>

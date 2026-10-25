@@ -2,7 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { Compass as CompassIcon } from "lucide-react";
-import type { Coordinate } from "@/lib/types";
+import type { Coordinate, Place } from "@/lib/types";
 import "./compass.css";
 
 const RideMap = dynamic(
@@ -17,6 +17,7 @@ export function Compass({
   heading,
   position,
   paths = [],
+  places = [],
   color,
   liveHeading = true,
   idleLabel,
@@ -26,6 +27,7 @@ export function Compass({
   heading: number | null;
   position: Coordinate | null;
   paths?: [number, number][][];
+  places?: Place[];
   color?: string;
   liveHeading?: boolean;
   idleLabel?: string;
@@ -73,6 +75,7 @@ export function Compass({
             position={position}
             heading={heading}
             paths={paths}
+            places={places}
             color={color}
             label={label}
           />
@@ -80,11 +83,9 @@ export function Compass({
           <div className="ride-map ride-map-waiting" role="group" aria-label={label} />
         )}
       </div>
-      {heading !== null || !idleLabel ? (
+      {heading === null && !idleLabel ? (
         <p className="pointing-instruction">
-          {heading === null
-            ? "Hold your phone upright"
-            : "Point. Discover. Keep."}
+          Hold your phone upright
         </p>
       ) : null}
     </div>

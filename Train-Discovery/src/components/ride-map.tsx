@@ -4,8 +4,8 @@ import { Component, useEffect, useRef, useState, type ReactNode } from "react";
 import Map, { Layer, Marker, Source } from "react-map-gl/maplibre";
 import * as maplibregl from "maplibre-gl";
 import { setWorkerUrl, type Map as MapLibreMap, type StyleSpecification } from "maplibre-gl";
-import { pointingConeLngLats, pointingConeZoom } from "@/lib/geo";
-import type { Coordinate } from "@/lib/types";
+import { distance, isPointedAt, POINTING_RADIUS_M, pointingConeLngLats, pointingConeZoom } from "@/lib/geo";
+import type { Coordinate, Place } from "@/lib/types";
 import "maplibre-gl/dist/maplibre-gl.css";
 import "./ride-map.css";
 
@@ -246,12 +246,6 @@ function useQuietBasemap() {
   return style;
 }
 
-function parkAttribution(canvas: HTMLElement, credit: HTMLElement) {
-  const attrib = canvas.querySelector<HTMLElement>(".maplibregl-ctrl-attrib");
-  if (!attrib || attrib.parentElement === credit) return;
-  credit.replaceChildren(attrib);
-}
-
 function trackData(paths: [number, number][][]) {
   return {
     type: "FeatureCollection" as const,
@@ -272,17 +266,18 @@ function RideMapCanvas({
   position,
   heading,
   paths,
+  places,
   color,
   label,
 }: {
   position: Coordinate;
   heading: number | null;
   paths: [number, number][][];
+  places: Place[];
   color?: string;
   label: string;
 }) {
   const frame = useRef<HTMLDivElement>(null);
-  const credit = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MapLibreMap | null>(null);
   const basemap = useQuietBasemap();
   const [zoom, setZoom] = useState(() => pointingConeZoom(position.lat, 320));
@@ -303,17 +298,6 @@ function RideMapCanvas({
     observer.observe(node);
     return () => observer.disconnect();
   }, [position.lat, basemap]);
-  useEffect(() => {
-    const canvas = frame.current;
-    const slot = credit.current;
-    if (!canvas || !slot) return;
-    const park = () => parkAttribution(canvas, slot);
-    park();
-    const observer = new MutationObserver(park);
-    observer.observe(canvas, { childList: true, subtree: true });
-    return () => observer.disconnect();
-  }, [basemap]);
-
   if (unavailable) {
     return <div className="ride-map ride-map-waiting" role="group" aria-label={label} />;
   }
@@ -349,7 +333,7 @@ function RideMapCanvas({
             touchPitch={false}
             keyboard={false}
             maplibreLogo={false}
-            attributionControl={{ compact: false }}
+            attributionControl={{ compact: true }}
             cursor="default"
             canvasContextAttributes={{ failIfMajorPerformanceCaveat: false }}
             style={{
@@ -362,8 +346,10 @@ function RideMapCanvas({
               mapRef.current = event.target;
               event.target.resize();
               if (typeof basemap === "string") applyQuietBasemap(event.target);
-              const slot = credit.current;
-              if (slot) parkAttribution(event.target.getContainer(), slot);
+              event.target
+                .getContainer()
+                .querySelector<HTMLElement>(".maplibregl-ctrl-attrib")
+                ?.classList.remove("maplibregl-compact-show");
             }}
             onError={(event) => {
               if (/webgl/i.test(event.error?.message ?? "")) setUnavailable(true);
@@ -417,13 +403,27 @@ function RideMapCanvas({
                 />
               </Source>
             ) : null}
-            <Marker longitude={position.lon} latitude={position.lat} anchor="center">
+            {places.filter((place) => distance(position, place) <= POINTING_RADIUS_M).map((place) => {
+              const pointed = isPointedAt(position, heading, place);
+              return (
+                <Marker key={place.id} longitude={place.lon} latitude={place.lat} anchor="center">
+                  <span
+                    className={`ride-place-dot${pointed ? " ride-place-dot-pointed" : ""}`}
+                    data-place-id={place.id}
+                    data-pointed={pointed}
+                    role="img"
+                    aria-label={`${place.name}${pointed ? ", in pointing cone" : ""}`}
+                    title={place.name}
+                  />
+                </Marker>
+              );
+            })}
+            <Marker className="ride-rider-marker" longitude={position.lon} latitude={position.lat} anchor="center">
               <span className="rider-dot" />
             </Marker>
           </Map>
         ) : null}
       </div>
-      <div ref={credit} className="ride-map-credit" />
     </div>
   );
 }
@@ -450,12 +450,14 @@ export function RideMap({
   position,
   heading,
   paths = [],
+  places = [],
   color,
   label,
 }: {
   position: Coordinate;
   heading: number | null;
   paths?: [number, number][][];
+  places?: Place[];
   color?: string;
   label: string;
 }) {
@@ -465,6 +467,7 @@ export function RideMap({
         position={position}
         heading={heading}
         paths={paths}
+        places={places}
         color={color}
         label={label}
       />

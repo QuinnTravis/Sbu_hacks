@@ -35,7 +35,7 @@ export default function About() {
         a ride requests device permissions; ending a ride stops sensors. You can
         revoke permissions in your browser settings.
       </p>
-      <h2 id="sources">Data & credits</h2>
+      <h2 id="sources">Data sources</h2>
       <p>
         Route geometry and stations were obtained from the{" "}
         <a href="https://www.mta.info/developers">MTA</a> and are hosted by this
@@ -86,11 +86,6 @@ export default function About() {
         Google receives photo requests and technical connection information when
         images load. Supabase stores the public catalog; Gemini processes source
         passages without passenger location data.
-      </p>
-      <h2>Typography</h2>
-      <p>
-        Google Sans by the Google Sans Project Authors.{" "}
-        <a href="/fonts/Google-Sans-OFL.txt">Font license</a>.
       </p>
     </main>
   );

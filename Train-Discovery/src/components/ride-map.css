@@ -42,63 +42,87 @@
     0 1px 2px rgba(12, 16, 29, 0.22);
 }
 
-.ride-map-credit {
-  flex: 0 0 auto;
-  min-width: 0;
-  padding: 3px 8px 4px;
-  background: var(--paper);
-  color: var(--muted);
+.ride-map .maplibregl-ctrl-attrib {
+  color: var(--ink);
   font-family: var(--font-ui);
   font-size: 11px;
-  line-height: 1.25;
-  text-align: center;
+  line-height: 1.35;
 }
 
-.ride-map-credit:empty {
+.ride-map .maplibregl-ctrl-attrib.maplibregl-compact {
+  box-sizing: border-box;
+  min-width: 44px;
+  min-height: 44px;
+  margin: 8px;
   padding: 0;
+  border-radius: 50%;
+  background: var(--paper);
+  box-shadow: 0 2px 8px rgb(12 16 29 / 18%);
 }
 
-.ride-map-credit .maplibregl-ctrl-attrib,
-.ride-map-credit .maplibregl-ctrl-attrib.maplibregl-compact,
-.ride-map-credit .maplibregl-ctrl-attrib.maplibregl-compact-show {
+.ride-map .maplibregl-ctrl-attrib-button {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background-color: var(--paper);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 24px 24px;
+}
+
+.ride-map .maplibregl-ctrl-attrib.maplibregl-compact-show {
+  box-sizing: border-box;
+  max-width: min(520px, calc(100vw - 48px));
+  min-height: 44px;
+  padding: 9px 48px 9px 12px;
+  border-radius: 22px;
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow: 0 2px 8px rgb(12 16 29 / 18%);
+  text-align: left;
+}
+
+.ride-map .maplibregl-ctrl-attrib-inner {
   display: block;
-  position: static;
-  float: none;
-  width: auto;
-  min-height: 0;
-  max-width: 100%;
-  margin: 0;
-  padding: 0;
-  border-radius: 0;
-  background: transparent;
-  color: inherit;
-  font: inherit;
-  line-height: inherit;
-  text-align: inherit;
-  box-shadow: none;
+  overflow-wrap: anywhere;
 }
 
-.ride-map-credit .maplibregl-ctrl-attrib-button {
-  display: none;
-}
-
-.ride-map-credit .maplibregl-ctrl-attrib-inner,
-.ride-map-credit .maplibregl-ctrl-attrib.maplibregl-compact .maplibregl-ctrl-attrib-inner {
-  display: block;
-  overflow-wrap: break-word;
-}
-
-.ride-map-credit .maplibregl-ctrl-attrib a {
+.ride-map .maplibregl-ctrl-attrib a {
   color: inherit;
   text-decoration: none;
 }
 
-.ride-map-credit .maplibregl-ctrl-attrib a:hover,
-.ride-map-credit .maplibregl-ctrl-attrib a:focus-visible {
+.ride-map .maplibregl-ctrl-attrib a:hover,
+.ride-map .maplibregl-ctrl-attrib a:focus-visible {
   text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
-.ride-map-credit .maplibregl-ctrl-attrib a:focus-visible {
+.ride-map .maplibregl-ctrl-attrib-button:focus-visible {
   outline: 2px solid var(--accent);
-  outline-offset: 1px;
+  outline-offset: 2px;
+}
+
+/* Catalog points stay quiet until the phone faces them. Names are on demand. */
+.ride-place-dot {
+  display: block;
+  box-sizing: border-box;
+  width: 10px;
+  height: 10px;
+  border: 2px solid #0c101d;
+  border-radius: 50%;
+  background: #fefeff;
+  box-shadow: 0 1px 2px rgba(12, 16, 29, 0.18);
+}
+
+.ride-place-dot-pointed {
+  width: 12px;
+  height: 12px;
+  border-color: #fefeff;
+  background: #0071f2;
+  outline: 1px solid #0071f2;
+}
+
+.ride-map .ride-rider-marker {
+  z-index: 3;
 }

@@ -2,6 +2,10 @@
 
 A Next.js 16 PWA for all LIRR branches. Choose a branch, start a ride, and point the back of your phone toward a nearby place. Chosen places stay in the ride queue until discarded. Saving a discovery keeps that place, including a checked story already on the card, on the device after the ride. An optional ElevenLabs audio companion narrates station encounters, pointed discoveries, and nearby stories throughout the ride, with source checks and transcripts. There is no left/right window selector and no camera recognition in this scope.
 
+## Ride interface
+
+The map fills the screen. Hold an aim briefly to reveal nearby places in a bottom sheet; selecting one expands its card over the map and adds it to This ride. Drag or use the handle to expand/collapse, and close the sheet without discarding the discovery. Save keeps it beyond the ride; Discard discovery removes it from the current queue. Reduced motion disables the spring animation.
+
 ## Run
 
 Node.js 24 is recommended.
@@ -27,7 +31,7 @@ Copy `.env.example` to `.env.local` only when starting a fresh checkout; preserv
 - `RATE_LIMIT_SECRET`: random secret of at least 32 characters. Already generated locally.
 - `TRUST_PROXY=true` only behind a proxy that overwrites `X-Forwarded-For`. Otherwise all photo users share one conservative hourly bucket.
 
-Without paid provider keys the route selector, sensors, database lookups, queue, and replay work. Places with Wikipedia articles may show freely available Wikimedia Commons photographs with the photographer, source link, and license credited in the card. Other photographs show an unavailable state; historical copy stays unpublished. No placeholder text is labeled verified.
+Without paid provider keys the route selector, sensors, database lookups, queue, and replay work. Places with Wikipedia articles may show freely available Wikimedia Commons photographs with the photographer, source link, and license credited in the card’s photo-details viewer. Other photographs show an unavailable state; historical copy stays unpublished. No placeholder text is labeled verified.
 
 ## Data and verification
 
@@ -45,7 +49,7 @@ The catalog includes metadata-only places. Only places with retrieved source pas
 
 Verification lets a LangChain search planner use Serper up to twice per place, then falls back to Wikipedia for more source text. It asks the writer for a short extractive summary and, when the evidence supports one, a distinct interesting fact. Each displayed block has exact source quotes and a separate `gemini-2.5-flash-lite` support check. Google snippets remain labeled as search excerpts and link to their source pages. A sentence with a missing or rejected citation is dropped; the place fails closed when no summary claim remains. Evidence hashes invalidate stale story verification. Batch jobs checkpoint locally after each successful place. `content:verify:place` reads and updates only the requested Supabase row after verification succeeds. The full catalog publisher uses one database transaction, including removal of retired records. Keep the original feed and license metadata when redistributing data.
 
-MTA currently supplies no scheduled geometry for Belmont Park, so its track is supplemented from the attributed OSM snapshot in `public/data/belmont-osm.json`. This does not imply operating service. Google photo metadata and image URLs are fetched on demand, attributed, and excluded from persistent caches. When Google is unconfigured, limited, or cannot match the place, the photo endpoint can use its OSM Wikipedia link to retrieve a Commons thumbnail and its actual license/author metadata. Images without a Commons credit page are rejected. Wikimedia metadata fetches use a one-day upstream revalidation cache; displayed external images are never saved offline. The branch diagram uses MTA geometry. During a ride, the map is drawn in the app from that same branch line, centered on the rider, with the pointing cone used for detection. It does not load a third-party basemap.
+MTA currently supplies no scheduled geometry for Belmont Park, so its track is supplemented from the attributed OSM snapshot in `public/data/belmont-osm.json`. This does not imply operating service. Google photo metadata and image URLs are fetched on demand, attributed, and excluded from persistent caches. When Google is unconfigured, limited, or cannot match the place, the photo endpoint can use its OSM Wikipedia link to retrieve a Commons thumbnail and its actual license/author metadata. Images without a Commons credit page are rejected. Wikimedia metadata fetches use a one-day upstream revalidation cache; displayed external images are never saved offline. The branch diagram uses MTA geometry. During a ride, the full-screen map uses an OpenFreeMap basemap with the branch line, rider, and the same pointing cone used for detection. Map attribution is available through its expandable control.
 
 ## Supabase
 

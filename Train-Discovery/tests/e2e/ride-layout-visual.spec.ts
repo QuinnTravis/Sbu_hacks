@@ -125,6 +125,8 @@ async function startRide(page: Page, branch = "Port Jefferson") {
   }
   await expect(page.getByRole("heading", { name: branch, exact: true, level: 1 })).toBeVisible();
   await page.getByRole("button", { name: "Pause replay", exact: true }).click();
+  await expect(page.locator(".poi-sheet")).toHaveAttribute("aria-hidden", "false");
+  await settled(page, false);
   await expect(page.locator(".candidate-row")).toHaveCount(4);
 }
 
@@ -135,25 +137,88 @@ for (const viewport of [{ width: 360, height: 740 }, { width: 1366, height: 768 
     await expectNoRideIntersections(page);
     await expectReachable(page.locator(".candidate-row").last());
     await page.screenshot({ path: info.outputPath("babylon-photo-chooser.png") });
+    await closeSheet(page);
     await startHeldGuide(page);
+    await reopenChooser(page);
     const row = candidate(page, LONG_NAME);
     await expectReachable(row);
     await row.click();
+    await settled(page, true);
     await expect(page.getByRole("heading", { name: LONG_NAME, exact: true })).toBeVisible();
-    await expect(page.getByRole("heading", { name: "Babylon", exact: true, level: 1 })).toBeVisible();
+    const expandedStatus = page.locator(".ride-expanded-status");
+    await expect(expandedStatus).toBeVisible();
+    await expect(expandedStatus).toContainText("Babylon");
+    await expect(expandedStatus).toContainText("Simulated ride");
     await expect(page.locator(".nav-count")).toHaveText("1");
-    await expect(page.locator(".place-photo img")).toBeVisible();
+    await expect(page.locator(".place-photo > img")).toBeVisible();
+    await closeSheet(page);
     await expect(page.locator(".audio-next-name")).toHaveText(LONG_NAME);
     expect((await page.locator(".audio-next-name").boundingBox())!.width).toBeGreaterThanOrEqual(32);
     await expectVisibleTextFragment(page.locator(".audio-queued"), "queued");
     await expectVisibleTextFragment(page.locator(".audio-next-name"), "King");
     await expectReachable(page.getByRole("button", { name: "Play now", exact: true }));
     await page.screenshot({ path: info.outputPath("babylon-selected-queued.png") });
+    await page.getByRole("button", { name: /My discoveries/ }).click();
+    await expect(page.getByRole("heading", { name: LONG_NAME, exact: true })).toBeVisible();
     await page.getByRole("button", { name: "Discover", exact: true }).click();
+    await reopenChooser(page, 3);
     await expectReachable(page.locator(".candidate-row").last());
     await expectNoRideIntersections(page);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   });
+}
+
+async function settled(page: Page, expanded: boolean) {
+  await expect
+    .poll(() =>
+      page.locator(".poi-sheet").evaluate((element, isExpanded) => {
+        const sheet = element as HTMLElement;
+        const collapsed = Math.min(
+          sheet.offsetHeight,
+          parseFloat(
+            getComputedStyle(sheet).getPropertyValue(
+              "--poi-sheet-collapsed-height",
+            ),
+          ),
+        );
+        const target = isExpanded ? 0 : sheet.offsetHeight - collapsed;
+        return (
+          Math.abs(
+            new DOMMatrixReadOnly(getComputedStyle(sheet).transform).m42 -
+              target,
+          ) < 0.5
+        );
+      }, expanded),
+    )
+    .toBe(true);
+}
+
+async function closeSheet(page: Page) {
+  await page.locator(".poi-sheet__close").click();
+  await expect(page.locator(".poi-sheet")).toHaveAttribute("aria-hidden", "true");
+  await expect(page.locator(".poi-sheet")).toHaveCSS("visibility", "hidden");
+}
+
+async function reopenChooser(page: Page, remaining = 4) {
+  if (await page.locator(".poi-sheet").getAttribute("aria-hidden") === "false") await closeSheet(page);
+  await page.keyboard.press("Backquote");
+  const panel = page.getByRole("complementary", { name: "Developer controls" });
+  await panel.getByLabel("Heading", { exact: true }).selectOption("manual");
+  const heading = panel.getByRole("slider", { name: "Simulated phone heading" });
+  await heading.scrollIntoViewIfNeeded();
+  const box = (await heading.boundingBox())!;
+  // Jump outside the cone without dwelling on intermediate candidate headings.
+  await page.mouse.click(box.x + box.width / 2, box.y + box.height - 12);
+  await expect(heading).toHaveAttribute("aria-valuenow", "180");
+  await expect(page.locator(".direction-empty")).toBeVisible();
+  await expect(page.locator(".direction-empty")).toHaveText("Nothing in this direction.");
+  await expect(page.locator(".poi-sheet")).toHaveAttribute("aria-hidden", "true");
+  const northBox = (await heading.boundingBox())!;
+  await page.mouse.click(northBox.x + northBox.width / 2, northBox.y + 12);
+  await panel.getByRole("button", { name: "Close dev panel", exact: true }).click();
+  await expect(page.locator(".poi-sheet")).toHaveAttribute("aria-hidden", "false");
+  await settled(page, false);
+  await expect(page.locator(".candidate-row")).toHaveCount(remaining);
 }
 
 function candidate(page: Page, name: string) {
@@ -161,7 +226,7 @@ function candidate(page: Page, name: string) {
 }
 
 async function expectNoRideIntersections(page: Page) {
-  const boxes = await page.locator(".pointing-instruction, .replay-controls, .candidate-sheet").evaluateAll((elements) =>
+  const boxes = await page.locator(".poi-sheet__controls, .floating-nav").evaluateAll((elements) =>
     elements.map((element) => {
       const box = element.getBoundingClientRect();
       let left = Math.max(0, box.left), right = Math.min(innerWidth, box.right);
@@ -235,24 +300,24 @@ for (const viewport of [
   test(`chooser geometry, all rows and large photo containment at ${viewport.width}x${viewport.height}`, async ({ page }, info) => {
     await page.setViewportSize(viewport);
     await startRide(page);
-    const instruction = page.locator(".pointing-instruction");
+    const instruction = page.locator(".compass-stage");
     await instruction.evaluate((element) => element.scrollIntoView({ block: "center" }));
     await expect(instruction).toBeInViewport({ ratio: 1 });
-    await expectNoRideIntersections(page);
-    await expectReachable(page.getByRole("button", { name: "Play replay", exact: true }));
     await expectNoRideIntersections(page);
     await page.screenshot({ path: info.outputPath("chooser.png") });
     await expect(page.locator(".candidate-row img, .queue-strip img, .place-thumb")).toHaveCount(0);
     await expect(page.locator(".candidate-row")).toHaveCount(4);
     // Actually select every row, including rows initially below the sheet fold.
-    for (const place of places) {
+    for (const [index, place] of places.entries()) {
       const row = candidate(page, place.name);
       await expectReachable(row);
       await expectNoRideIntersections(page);
       await row.click();
+      await settled(page, true);
       await expect(page.getByRole("heading", { name: place.name, exact: true })).toBeVisible();
       await expect(page.locator(".place-photo")).toBeVisible();
-      await page.getByRole("button", { name: "Discover", exact: true }).click();
+      if (index < places.length - 1) await reopenChooser(page, places.length - index - 1);
+      else await closeSheet(page);
     }
     await expect(page.locator(".nav-count")).toHaveText("4");
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
@@ -261,10 +326,22 @@ for (const viewport of [
   test(`long queued and Next names remain meaningful with Play now at ${viewport.width}x${viewport.height}`, async ({ page }, info) => {
     await page.setViewportSize(viewport);
     await startRide(page);
+    await closeSheet(page);
     await startHeldGuide(page);
+    await reopenChooser(page);
     const row = candidate(page, LONG_NAME);
     await expectReachable(row);
     await row.click();
+    await settled(page, true);
+    // The selected card remains usable while the station clip is held.
+    const sources = page.locator(".poi-sheet .sources > summary");
+    await expectReachable(sources);
+    await sources.click();
+    await expect(page.locator(".poi-sheet .sources")).toContainText(LONG_NAME);
+    await expectReachable(page.getByRole("button", { name: "Discard discovery", exact: true }));
+    await page.screenshot({ path: info.outputPath("selected-card-reachable.png") });
+    await closeSheet(page);
+    await expect(page.locator(".nav-count")).toHaveText("1");
     await expect(page.locator(".audio-queued")).toContainText(LONG_NAME);
     await expect(page.locator(".audio-next-name")).toHaveText(LONG_NAME);
     expect((await page.locator(".audio-next-name").boundingBox())!.width).toBeGreaterThanOrEqual(32);
@@ -276,21 +353,8 @@ for (const viewport of [
     await expectReachable(playNow);
     expect((await playNow.boundingBox())!.height).toBeGreaterThanOrEqual(44);
     await page.screenshot({ path: info.outputPath("long-queued-audio.png") });
-    // Selection must leave the actual card usable, including short landscape.
-    // CSS visibility alone does not detect a zero-height ancestor scroller.
-    const sources = page.locator(".sources > summary");
-    await expectReachable(sources);
-    await sources.click();
-    await expect(page.locator(".sources")).toContainText(LONG_NAME);
-    await expectReachable(page.getByRole("button", { name: `Discard ${LONG_NAME}`, exact: true }));
-    await page.screenshot({ path: info.outputPath("selected-card-reachable.png") });
-    await page.getByRole("button", { name: "Discover", exact: true }).click();
-    await page.locator(".pointing-instruction").evaluate((element) => element.scrollIntoView({ block: "center" }));
-    await expect(page.locator(".pointing-instruction")).toBeInViewport({ ratio: 1 });
-    await expectNoRideIntersections(page);
+    await expect(page.locator(".compass-stage")).toBeInViewport({ ratio: 1 });
     await expectReachable(page.getByRole("button", { name: "Play replay", exact: true }));
-    await expectNoRideIntersections(page);
-    await expectReachable(page.locator(".candidate-row").last());
     await playNow.focus();
     await expect(playNow).toBeFocused();
     await page.keyboard.press("Enter");

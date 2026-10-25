@@ -61,9 +61,9 @@
 }
 
 .train-compass .ride-map-canvas {
-  flex: 1 1 auto;
+  flex: 1 0 148px;
   height: auto;
-  min-height: 0;
+  min-height: 148px;
 }
 
 .train-compass .ride-map::after {
