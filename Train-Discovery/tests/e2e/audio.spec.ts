@@ -105,7 +105,7 @@ test("the once-per-ride journey introduction finishes before station narration, 
   ]);
   await expect(page.locator(".audio-title")).toHaveText("Jamaica");
   await page.getByText("Transcript & sources").click();
-  await expect(page.getByText("Station approaching: Jamaica.", { exact: true })).toBeVisible();
+  await expect(page.locator(".audio-transcript").getByText("Station approaching: Jamaica.", { exact: true })).toBeVisible();
 
   await finishClip(page);
   await page.getByRole("button", { name: "Turn off audio guide" }).click();
