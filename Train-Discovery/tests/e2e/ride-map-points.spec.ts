@@ -34,7 +34,7 @@ for (const viewport of [{ width: 320, height: 740 }, { width: 660, height: 560 }
     await page.route("**/api/audio", (route) => route.fulfill({ status: 503, json: { error: "fixture" } }));
     await page.goto("/?network=lirr&dev");
     const panel = page.getByRole("complementary", { name: "Developer controls" });
-    await panel.getByRole("button", { name: "Start Jamaica demo", exact: true }).click();
+    await panel.getByRole("button", { name: "Start Jamaica ride", exact: true }).click();
     await panel.getByRole("button", { name: "Pause train", exact: true }).click();
     await panel.getByRole("button", { name: "Reset train to Jamaica", exact: true }).click();
     await page.getByLabel("Heading", { exact: true }).selectOption("manual");

@@ -60,6 +60,9 @@ export type PodcastDirectorInput = {
     position: Position | null;
     /** How far from the rider a nearby story may be. 1.1 km on LIRR; wider on mountain corridors. */
     nearbyMeters?: number;
+    /** Static route progress, used to validate area asides on corridor networks. */
+    routeKm?: number | null;
+    direction?: 1 | -1;
   };
   /** Language for station lines. English when absent. */
   language?: string;
@@ -170,6 +173,21 @@ function closeAndInteresting(meters: number, kind: AudioScript["kind"], supporte
   return 500 * closeness + 500 * interest;
 }
 
+function areaRouteGapKm(place: Place, currentKm: number, direction: 1 | -1): number | null {
+  if (!Number.isFinite(currentKm)) return null;
+  const entry = place.extentKm
+    ? direction === 1 ? place.extentKm[0] : place.extentKm[1]
+    : place.routeKm;
+  const exit = place.extentKm
+    ? direction === 1 ? place.extentKm[1] : place.extentKm[0]
+    : place.routeKm;
+  if (typeof entry !== "number" || typeof exit !== "number" ||
+      !Number.isFinite(entry) || !Number.isFinite(exit)) return null;
+  const toEntry = (entry - currentKm) * direction;
+  const toExit = (exit - currentKm) * direction;
+  return toEntry > 0 ? toEntry : toExit < 0 ? toExit : 0;
+}
+
 /** Score for unprompted narration of a nearby catalog place, or null below the quality floor. */
 export function nearbyNarrationScore(place: Place, meters: number): number | null {
   if (!Number.isFinite(meters) || meters < 0 || meters > MAX_NEARBY_METERS) return null;
@@ -218,10 +236,14 @@ function candidateItem(input: PodcastDirectorInput, entry: PodcastCandidate, pos
   // scoring; the live catalog uses the line-side quality floor and area context.
   const lineside = input.geography.nearbyMeters === undefined;
   const nearbyMeters = input.geography.nearbyMeters ?? MAX_NEARBY_METERS;
-  const area = lineside && entry.mode === "area";
+  const area = entry.mode === "area";
   const meters = positioned ? distance(positioned, place) : Infinity;
-  if (entry.mode === "area" && (!area || !positioned || !routeId || !place.routeIds.includes(routeId) ||
-      meters <= MAX_NEARBY_METERS || meters > MAX_AREA_METERS || !placeAnnouncement(place, "area"))) return null;
+  const routeGapKm = area && !lineside && positioned && typeof input.geography.routeKm === "number"
+    ? areaRouteGapKm(place, input.geography.routeKm, input.geography.direction ?? 1)
+    : null;
+  if (area && (!positioned || !routeId || !place.routeIds.includes(routeId) ||
+      (lineside && (meters <= MAX_NEARBY_METERS || meters > MAX_AREA_METERS || !placeAnnouncement(place, "area"))) ||
+      (!lineside && (routeGapKm === null || routeGapKm < -0.8 || routeGapKm > 8 || !entry.script)))) return null;
   if (!explicit && !replay && !area && (!positioned ||
       (routeId !== null && !place.routeIds.includes(routeId)) ||
       meters > nearbyMeters)) return null;
@@ -256,7 +278,10 @@ function candidateItem(input: PodcastDirectorInput, entry: PodcastCandidate, pos
   const sameTopic = Boolean(topic && topic === cleanTopic(input.previousTopic));
   let score: number;
   if (area) {
-    score = 100 + 100 * (1 - Math.min(meters, MAX_AREA_METERS) / MAX_AREA_METERS);
+    const proximity = !lineside && routeGapKm !== null
+      ? 1 - Math.min(Math.abs(routeGapKm), 8) / 8
+      : 1 - Math.min(meters, MAX_AREA_METERS) / MAX_AREA_METERS;
+    score = 100 + 100 * proximity;
   } else if (lineside) {
     score = (pointed ? 5_000 : 1_000) +
       closeAndInteresting(Math.min(meters, MAX_NEARBY_METERS), script.kind, supportedDetails) +
@@ -271,7 +296,7 @@ function candidateItem(input: PodcastDirectorInput, entry: PodcastCandidate, pos
   }
   return {
     moment: { ...moment, name: place.name, fallback: script,
-      request: { type: "place", placeId: place.id, context, ...(script.language && script.language !== "en" ? { locale: script.language } : {}) } },
+      request: { type: "place", placeId: place.id, context, ...(input.language ? { locale: input.language } : {}) } },
     priority: pointed ? "pointed" : area ? "area" : "nearby",
     reason: area ? "broader area context" : pointed ? replay ? "explicit replay" : depth === "deep" ? "user chose a multi-fact deep dive" : "user chose this place" :
       approaching ? "approaching verified story" :
@@ -309,7 +334,7 @@ export function podcastCandidatesFromJourney(input: {
   now: number;
   selected: readonly SelectedStory[];
   nearby: readonly Place[];
-  /** Live catalog only: verified places 1.1–5 km away, for occasional broader context. */
+  /** Quiet-stretch context from either the live catalog or a static corridor package. */
   area?: readonly Place[];
   approachingPlaceIds?: ReadonlySet<string>;
   stations: readonly PendingStation[];
@@ -325,7 +350,7 @@ export function podcastCandidatesFromJourney(input: {
       ...(input.compose ? { script: composed?.script ?? null } : {}),
       moment: { key: `place:${place.id}`, name: place.name, place,
         request: { type: "place", placeId: place.id, context,
-          ...(input.compose && input.language && input.language !== "en" ? { locale: input.language } : {}) },
+          ...(input.language ? { locale: input.language } : {}) },
         fallback: composed ? composed.script : input.compose ? null : placeAnnouncement(place, context),
         ...(composed?.parts ? { parts: composed.parts } : {}) },
     };
@@ -339,9 +364,7 @@ export function podcastCandidatesFromJourney(input: {
       place.story?.funFact && placeAnnouncement(place, "approaching"));
     candidates.push(placeCandidate(place, approaching ? "approaching" : "nearby"));
   }
-  if (!input.compose) {
-    for (const place of input.area ?? []) candidates.push({ ...placeCandidate(place, "area"), mode: "area" });
-  }
+  for (const place of input.area ?? []) candidates.push({ ...placeCandidate(place, "area"), mode: "area" });
   for (const station of input.stations) candidates.push({
     moment: { key: station.key, name: station.station.name, station: station.station,
       request: { type: "station", routeId: station.routeId, stationId: station.station.id,

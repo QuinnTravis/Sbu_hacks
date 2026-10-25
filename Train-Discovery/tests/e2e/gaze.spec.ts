@@ -31,16 +31,16 @@ test.beforeEach(async ({ page }) => {
 });
 
 async function openAdvisor(page: Page) {
-  await page.goto("/");
+  await page.goto("/journey");
   await expect(page.getByRole("heading", { name: "California Zephyr", level: 1 })).toBeVisible();
-  await page.getByRole("button", { name: "Start Denver demo ride" }).click();
+  await page.getByRole("button", { name: "Start a simulated ride from Denver" }).click();
   const sheet = page.getByRole("dialog", { name: "Best side to sit" });
   await expect(sheet).toBeVisible();
   return sheet;
 }
 
 test("the Zephyr is the default network and The Rockies is the full experience", async ({ page }) => {
-  await page.goto("/");
+  await page.goto("/journey");
   await expect(page.getByRole("heading", { name: "California Zephyr", level: 1 })).toBeVisible();
   await expect(page.getByRole("group", { name: "Interactive California Zephyr route map" })).toBeVisible();
   await page.getByRole("button", { name: "Expand route list" }).click();
@@ -48,7 +48,7 @@ test("the Zephyr is the default network and The Rockies is the full experience",
   await expect(page.locator(".route-row")).toHaveCount(6);
   const rockies = page.locator(".route-row").filter({ hasText: "The Rockies" });
   await expect(rockies).toContainText("Full experience");
-  await expect(page.locator(".route-row").filter({ hasText: "The Sierra" })).toContainText("Stations only");
+  await expect(page.locator(".route-row").filter({ hasText: "The Sierra" })).toContainText("Full experience");
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 });
 
@@ -111,7 +111,7 @@ test("a story checked on demand replaces basic info on the card", async ({ page 
 });
 
 test("the interface switches to Spanish and Chinese and remembers the choice", async ({ page }) => {
-  await page.goto("/");
+  await page.goto("/journey");
   const nav = page.getByRole("navigation", { name: "Main navigation" });
   await nav.getByRole("button", { name: "Settings" }).click();
   await page.getByRole("radio", { name: "Español" }).click();
@@ -129,6 +129,6 @@ test("the interface switches to Spanish and Chinese and remembers the choice", a
   const navZh = page.getByRole("navigation", { name: "主导航" });
   await expect(navZh.getByRole("button", { name: "收藏" })).toBeVisible();
   await navZh.getByRole("button", { name: "旅程" }).click();
-  await expect(page.getByRole("button", { name: "从Denver开始演示旅程" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "从Denver开始模拟旅程" })).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 });

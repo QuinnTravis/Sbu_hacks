@@ -1,4 +1,4 @@
-const VERSION = "train-discovery-v3";
+const VERSION = "train-discovery-v4";
 const SHELL = `${VERSION}-shell`;
 const JOURNEYS = `${VERSION}-journeys`;
 const ASSETS = `${VERSION}-assets`;
@@ -6,10 +6,15 @@ self.addEventListener("install", (event) => {
   event.waitUntil(
     (async () => {
       const shell = await caches.open(SHELL);
-      const response = await fetch("/");
-      if (!response.ok) throw new Error("App shell unavailable");
-      await shell.put("/", response.clone());
-      const html = await response.text();
+      const pages = await Promise.all(
+        ["/", "/journey"].map(async (path) => {
+          const response = await fetch(path);
+          if (!response.ok) throw new Error("App shell unavailable");
+          await shell.put(path, response.clone());
+          return response.text();
+        }),
+      );
+      const html = pages.join("\n");
       const assets = [
         ...new Set(
           [...html.matchAll(/(?:src|href)="([^"]+)"/g)]
@@ -30,7 +35,7 @@ self.addEventListener("install", (event) => {
       ];
       await (
         await caches.open(ASSETS)
-      ).addAll([...assets, "/fonts/google-sans.woff2", "/audio/silence.wav"]);
+      ).addAll([...assets, "/fonts/google-sans.woff2", "/fonts/landing-libre-caslon-regular.ttf", "/fonts/landing-libre-caslon-italic.ttf", "/audio/silence.wav"]);
       await shell.addAll(["/manifest.webmanifest", "/icon-192.png"]);
     })(),
   );
@@ -62,7 +67,7 @@ self.addEventListener("fetch", (event) => {
     request.headers.has("RSC")
   )
     return;
-  if (/^\/api\/journeys\/\d+$/.test(url.pathname)) {
+  if (/^\/api\/journeys\/[\w-]+$/.test(url.pathname)) {
     event.respondWith(
       (async () => {
         const cache = await caches.open(JOURNEYS);
@@ -87,16 +92,17 @@ self.addEventListener("fetch", (event) => {
         }
       })(),
     );
-  } else if (request.mode === "navigate" && url.pathname === "/") {
+  } else if (request.mode === "navigate" && (url.pathname === "/" || url.pathname === "/journey" || url.pathname === "/journey/")) {
     event.respondWith(
       (async () => {
         const cache = await caches.open(SHELL);
+        const shellPath = url.pathname === "/" ? "/" : "/journey";
         try {
           const response = await fetch(request);
-          if (response.ok) await cache.put("/", response.clone());
+          if (response.ok) await cache.put(shellPath, response.clone());
           return response;
         } catch {
-          return (await cache.match("/")) || Response.error();
+          return (await cache.match(shellPath)) || Response.error();
         }
       })(),
     );

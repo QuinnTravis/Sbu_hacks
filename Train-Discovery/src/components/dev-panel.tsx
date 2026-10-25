@@ -136,7 +136,7 @@ export function DevPanel({
       </div>
       {!started ? (
         <button className="primary-button" onClick={onStart}>
-          Start {startLabel} demo
+          Start {startLabel} ride
         </button>
       ) : compact ? (
         <div className="dev-mini">

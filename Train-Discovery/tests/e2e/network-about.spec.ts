@@ -99,12 +99,12 @@ for (const viewport of [
     await page.goto("/about#sources");
     await expect(page.locator("#sources")).toBeInViewport();
     await expect(page.locator("#sources")).toHaveText("Data sources");
-    await expect(back).toHaveAttribute("href", "/");
+    await expect(back).toHaveAttribute("href", "/journey");
     await back.focus();
     await expect(back).toBeFocused();
     expect(await back.evaluate((element) => getComputedStyle(element).outlineStyle)).not.toBe("none");
     await page.keyboard.press("Enter");
-    await expect(page).toHaveURL(/\/$/);
+    await expect(page).toHaveURL(/\/journey$/);
     await expect(page.getByRole("heading", { name: "California Zephyr" })).toBeVisible();
   });
 }

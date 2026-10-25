@@ -90,6 +90,8 @@ export function leadLine(
       });
     case "replay":
       return translate(code, "narration.lead.replay", { name });
+    case "area":
+      return translate(code, "narration.lead.area", { name });
     default:
       if (options.sideInLead && options.side && options.side !== "ahead")
         return translate(code, `narration.introSide.${options.side}`, { name });
@@ -133,7 +135,8 @@ export function composePlaceScript(input: {
 }): PlaceScript | null {
   const { place, code, context } = input;
   const side = input.side ?? null;
-  const localized = code !== "en" && input.content?.transcript ? input.content : undefined;
+  const localized = code !== "en" && place.story !== undefined && input.content?.locale === code && input.content.transcript &&
+    input.content.sourceVerifiedAt === place.story?.verifiedAt ? input.content : undefined;
   const english = englishBody(place);
   const body = localized
     ? { text: localized.transcript, lookFor: localized.lookFor, language: code }
@@ -144,7 +147,7 @@ export function composePlaceScript(input: {
     .map(({ title, url, license }) => ({ title, url, license }));
   if (body) {
     const language = body.language;
-    const lookFor = body.lookFor ? lookForLine(body.lookFor, side, language) : null;
+    const lookFor = context !== "area" && body.lookFor ? lookForLine(body.lookFor, side, language) : null;
     const parts: ScriptPart[] = [
       { part: "lead", text: leadLine(place, context, language, { side, introIndex: input.introIndex, sideInLead: !lookFor }) },
       ...(input.callback && language === code ? [{ part: "callback" as const, text: input.callback }] : []),
@@ -169,7 +172,10 @@ export function composePlaceScript(input: {
   const basic = basicLine(place, code);
   if (basic) {
     return {
-      parts: [{ part: "body", text: basic }],
+      parts: [
+        ...(context === "area" ? [{ part: "lead" as const, text: translate(code, "narration.lead.areaBasic") }] : []),
+        { part: "body", text: basic },
+      ],
       kind: "basic",
       language: code,
       sources: place.basic?.sources ?? [],

@@ -5,11 +5,12 @@ import { findRoute, railFor, staticPackageFiles, staticPlace } from "./network-d
 import { localeInfo } from "./i18n-core";
 import { composePlaceScript, cueLine, scriptText } from "./narration-script";
 import { withStory } from "./story-cache";
+import { localizeAudioScript } from "./audio-localization";
 import { journeyOpening, placeAnnouncement, stationAnnouncement } from "./audio-journey";
 import { createJourneyIntroduction, getJourneyContext } from "./journey-context";
 import type { JourneyContextInput, JourneyIntroduction } from "./journey-context";
 import {
-  AUDIO_REVISION, DEFAULT_TTS_MODEL, DEFAULT_VOICE_ID, STORY_VOICE_SETTINGS,
+  AUDIO_REVISION, DEFAULT_TTS_MODEL, DEFAULT_VOICE_ID, STORY_VOICE_SETTINGS, ttsLanguageOptions,
 } from "./audio-prompts";
 import type { AudioRequest, AudioScript, PlaceAudioContext } from "./audio-journey";
 import type { PoiContent } from "./package-types";
@@ -138,7 +139,7 @@ async function resolve(input: AudioRequest) {
     if (error || !data) throw new AudioError("place_not_found", 404);
     const place = data.data as Place;
     const context = input.context ?? "nearby";
-    return { revision: [place, context], script: () => placeScript(place, context) };
+    return { revision: [place, context, locale], script: () => placeScript(place, context) };
   }
   if (input.type === "journey") {
     const found = findRoute(input.routeId);
@@ -177,10 +178,20 @@ async function resolve(input: AudioRequest) {
 export async function journeyAudio(input: AudioRequest, request: Request) {
   if (!process.env.ELEVENLABS_API_KEY || !process.env.SUPABASE_SECRET_KEY)
     throw new AudioError("audio_not_configured", 503);
-  const voice = localeInfo(input.locale ?? "en").ttsVoiceId ||
+  return budgetedNarrationAudio(await resolve(input), input.locale ?? "en", request);
+}
+
+/** Server-only entry point: callers must construct and verify scripts from catalog evidence. */
+export async function budgetedNarrationAudio(
+  content: { revision: unknown; script: () => Promise<AudioScript> },
+  locale: string,
+  request: Request,
+) {
+  if (!process.env.ELEVENLABS_API_KEY || !process.env.SUPABASE_SECRET_KEY)
+    throw new AudioError("audio_not_configured", 503);
+  const voice = localeInfo(locale).ttsVoiceId ||
     process.env.ELEVENLABS_VOICE_ID || DEFAULT_VOICE_ID;
   const model = process.env.ELEVENLABS_MODEL || DEFAULT_TTS_MODEL;
-  const content = await resolve(input);
   const key = createHash("sha256").update(JSON.stringify([
     AUDIO_REVISION, voice, model, STORY_VOICE_SETTINGS, content.revision,
     process.env.GEMINI_MODEL || "gemini-2.5-flash", process.env.GEMINI_VERIFIER_MODEL || "gemini-2.5-flash-lite",
@@ -213,13 +224,20 @@ export async function journeyAudio(input: AudioRequest, request: Request) {
   }
   let used = 0; // No speech credit is reserved as spent until synthesis begins.
   try {
-    const script = await content.script();
+    const original = await content.script();
+    const requestedLocale = localeInfo(locale).code;
+    const script = await localizeAudioScript(original, requestedLocale);
+    // Never persist English speech under a requested translation's cache identity.
+    // The client can use sourced English/device fallback while a later job retries.
+    if ((script.language ?? "en") !== requestedLocale)
+      throw new AudioError("translation_unavailable", 422);
     if (!script.text.trim() || script.text.length > 1200) throw new AudioError("narration_too_long", 422);
     used = script.text.length; // A lost provider response may still have consumed credit.
     const speech = await fetch(
       `https://api.elevenlabs.io/v1/text-to-speech/${encodeURIComponent(voice)}?output_format=mp3_44100_128`,
       { method: "POST", headers: { "xi-api-key": process.env.ELEVENLABS_API_KEY, "Content-Type": "application/json" },
-        body: JSON.stringify({ text: script.text, model_id: model, voice_settings: STORY_VOICE_SETTINGS }),
+        body: JSON.stringify({ text: script.text, model_id: model, voice_settings: STORY_VOICE_SETTINGS,
+          ...ttsLanguageOptions(model, script.language) }),
         signal: AbortSignal.timeout(30000), cache: "no-store" },
     );
     if (!speech.ok) {

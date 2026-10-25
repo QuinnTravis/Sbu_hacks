@@ -121,7 +121,7 @@ async function startRide(page: Page, branch = "Port Jefferson") {
     await page.locator(".route-row").filter({ hasText: "Babylon" }).click();
     await page.getByRole("button", { name: "Start ride", exact: true }).click();
   } else {
-    await page.getByRole("button", { name: "Start Jamaica demo ride", exact: true }).click();
+    await page.getByRole("button", { name: "Start a simulated ride from Jamaica", exact: true }).click();
   }
   await expect(page.getByRole("heading", { name: branch, exact: true, level: 1 })).toBeVisible();
   await page.getByRole("button", { name: "Pause replay", exact: true }).click();

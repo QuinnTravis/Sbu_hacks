@@ -28,7 +28,7 @@ test.afterEach(async ({ page }, info) => {
 async function startPausedDemo(page: Page) {
   await page.goto("/?network=lirr&dev");
   const panel = page.getByRole("complementary", { name: "Developer controls" });
-  await panel.getByRole("button", { name: "Start Jamaica demo", exact: true }).click();
+  await panel.getByRole("button", { name: "Start Jamaica ride", exact: true }).click();
   await panel.getByRole("button", { name: "Pause train", exact: true }).click();
   await expect(panel.getByTestId("dev-coordinates")).not.toHaveText("Waiting");
   await expect(panel.locator(".dev-pois button")).toHaveCount(8);

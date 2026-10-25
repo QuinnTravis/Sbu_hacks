@@ -5,6 +5,7 @@ import type { useAudioGuide } from "@/hooks/use-audio-guide";
 import { useI18n } from "@/lib/i18n";
 import { localeInfo } from "@/lib/i18n-core";
 import { BookmarkButton } from "./bookmark-button";
+import { AskGuide } from "./ask-guide";
 import "./audio-guide.css";
 
 export function AudioGuideBar({ guide, onToggleBookmark, bookmarked, soundOff = false, onSoundOn }: {
@@ -17,6 +18,7 @@ export function AudioGuideBar({ guide, onToggleBookmark, bookmarked, soundOff = 
 }) {
   const { t, locale } = useI18n();
   const active = ["waiting", "preparing", "speaking", "paused"].includes(guide.status);
+  const asking = ["listening", "thinking", "error"].includes(guide.questionStatus);
   const notice = guide.notice === "device-voice" ? t("audio.deviceVoice")
     : guide.notice === "tap-to-continue" ? t("audio.tapToContinue")
     : guide.notice === "offline-clip" ? t("audio.offlineCached")
@@ -28,7 +30,7 @@ export function AudioGuideBar({ guide, onToggleBookmark, bookmarked, soundOff = 
 
   return (
     <div className="audio-companion train-audio-guide">
-    <div className={`audio-guide ${active ? "audio-guide-active" : ""}`} role="group" aria-label={t("audio.label")} data-status={guide.status}>
+    {!asking && <div className={`audio-guide ${active ? "audio-guide-active" : ""}`} role="group" aria-label={t("audio.label")} data-status={guide.status}>
       {!active ? (
         <>
           {soundOff ? (
@@ -91,7 +93,8 @@ export function AudioGuideBar({ guide, onToggleBookmark, bookmarked, soundOff = 
           ) : null}
         </>
       )}
-    </div>
+    </div>}
+    {!soundOff && <AskGuide guide={guide} />}
     {guide.unavailableName && (
       <p className="audio-notice" role="status">
         {t("audio.unavailable", { name: guide.unavailableName })}{" "}

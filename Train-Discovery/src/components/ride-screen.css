@@ -691,7 +691,7 @@ body:has(.ride-map-shell) {
   border-radius: 0;
   background: transparent;
   box-shadow: none;
-  animation: ride-chip-in 360ms cubic-bezier(0.22, 1.18, 0.36, 1) both;
+  animation: ride-chip-in 360ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 .ride-map-shell .ride-top-controls .look-ahead-open {
   gap: 10px;

@@ -27,6 +27,19 @@ const STOP = new Set([
   "Once", "Its", "His", "Her", "Their", "Built", "Since", "During", "Over", "Under", "Above", "Near",
 ]);
 
+// Only ignore these at the beginning of a sentence. Do not skip arbitrary
+// capitalized first words: a story may start with Moffat, James or Denver.
+const NARRATOR_PRONOUNS = new Set([
+  "You", "Your", "Yours", "You're", "You've", "You'll", "You'd",
+  "We", "Our", "Ours", "We're", "We've", "We'll", "We'd",
+  "They", "Them", "They're", "They've", "They'll", "They'd",
+  "He", "He's", "He'll", "He'd", "She", "She's", "She'll", "She'd",
+  "It's", "It'll", "It'd", "That's", "There's", "Here's", "Let's",
+]);
+// Match the actual lead phrases rather than globally exempting words such as
+// Next or All, which could also occur in a proper name elsewhere.
+const NARRATOR_OPENING = /^(?:Next up|Coming up|Just ahead|All around us|And just for|Out of the tunnel|Oh and we)(?:\s|$)/;
+
 /**
  * Generic parts of names that a translation renders in its own language
  * ("Moffat Tunnel" → "túnel Moffat"); only the distinctive part must survive.
@@ -41,15 +54,16 @@ const GENERIC = new Set([
   "Company", "Western", "Pacific", "Grande", "Plains",
 ]);
 
-/** Capitalized words that are not just the first word of a sentence. */
+/** Capitalized names, including sentence-initial names, excluding narrator leads. */
 export function properNouns(text: string): string[] {
   const names = new Set<string>();
   const sentences = text.split(/(?<=[.!?])\s+/);
   for (const sentence of sentences) {
     const words = sentence.match(/[A-Za-zÀ-ÿ][A-Za-zÀ-ÿ'’-]*/g) ?? [];
+    const opening = words.slice(0, 4).join(" ").replace(/’/g, "'");
     words.forEach((word, index) => {
       if (!/^[A-ZÀ-Þ]/.test(word) || word.length < 3) return;
-      if (index === 0 && STOP.has(word)) return;
+      if (index === 0 && (NARRATOR_PRONOUNS.has(word.replace(/’/g, "'")) || NARRATOR_OPENING.test(opening))) return;
       if (STOP.has(word) || GENERIC.has(word)) return;
       names.add(word.replace(/['’]s$/, ""));
     });

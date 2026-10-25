@@ -49,6 +49,10 @@ components:
 
 ## Overview
 
+### Public landing page
+
+The user explicitly pinned [Trestle on Seesaw](https://www.seesaw.website/websites/trestle) for the new `/` landing page. This surface uses a full-viewport warm paper canvas (`#eeeee8`), ink (`#222222`), large centered oldstyle serif lettering with italic phrases, and small bottom-centered navigation. Openly licensed Libre Caslon Text provides the editorial serif; Google Sans provides navigation. The reference's 132px desktop display scale and compact leading are intentional. Sparse travel-symbol stamps appear on canvas clicks, with slate (`#647894`) and warm red accents. Respect reduced motion and keyboard use. This reference applies to the landing surface; `/journey` retains the established application design below.
+
 The user rejected the previous green UI and explicitly pinned this reference: https://mobbin.com/apps/waymo-ios-028a65c1-23a8-4fe1-bcf0-aab15ced5842/dc7cedc4-3442-452c-a4ac-e0181cdac9fd/screens . The exact page's public previews are the visual authority. Its screenshot colors were sampled directly: canvas RGB(234,237,243), paper RGB(254,254,255), ink RGB(12,16,29), action blue RGB(0,113,242).
 
 ## Colors

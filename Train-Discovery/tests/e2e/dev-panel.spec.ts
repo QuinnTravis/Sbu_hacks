@@ -34,7 +34,7 @@ test("dev panel controls movement, joystick detection, tilt, and phone mode", as
   await page.goto("/?network=lirr&dev");
   const panel = page.getByRole("complementary", { name: "Developer controls" });
   await expect(panel).toBeVisible();
-  await panel.getByRole("button", { name: "Start Jamaica demo" }).click();
+  await panel.getByRole("button", { name: "Start Jamaica ride" }).click();
   await panel.getByRole("button", { name: "Pause train" }).click();
   await page.getByLabel("Heading", { exact: true }).selectOption("manual");
   const joystick = page.getByRole("slider", {

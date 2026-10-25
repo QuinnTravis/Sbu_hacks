@@ -105,7 +105,7 @@ async function finishJourneyIntroduction(page: import("@playwright/test").Page) 
 }
 
 test("Discoveries explains itself before the first ride and returns to route selection", async ({ page }) => {
-  await page.goto("/");
+  await page.goto("/journey");
   const nav = page.getByRole("navigation", { name: "Main navigation" });
   const discoveries = nav.getByRole("button", { name: "Discoveries" });
   await expect(discoveries).toBeEnabled();
@@ -126,7 +126,7 @@ test("Discoveries explains itself before the first ride and returns to route sel
 });
 
 test("saved discoveries from before the rename reopen as bookmarks without an active ride", async ({ page }) => {
-  await page.goto("/?network=lirr");
+  await page.goto("/journey?network=lirr");
   await page.evaluate((savedPlace) => {
     localStorage.setItem("train-discovery:saved:v1", JSON.stringify([{ savedAt: 1, place: savedPlace }]));
   }, place);
@@ -168,7 +168,7 @@ test("Jamaica is the default demo location and starts without GPS", async ({
   );
   await page.goto("/?network=lirr");
   await expect(
-    page.getByRole("button", { name: "Jamaica demo", exact: true }),
+    page.getByRole("button", { name: "Near Jamaica", exact: true }),
   ).toBeVisible();
   await page.getByRole("button", { name: "Expand route list" }).click();
   expect(await page.locator(".route-row").count()).toBeGreaterThan(5);
@@ -202,7 +202,7 @@ test("Jamaica verified facts render in the demo journey", async ({ page, request
     route.fulfill({ json: { places: [jamaica] } }),
   );
   await page.goto("/?network=lirr");
-  await page.getByRole("button", { name: "Start Jamaica demo ride" }).click();
+  await page.getByRole("button", { name: "Start a simulated ride from Jamaica" }).click();
   await page.getByRole("button", { name: /^Jamaica,/ }).click();
   await expect(page.getByRole("heading", { name: "Jamaica", exact: true })).toBeVisible({ timeout: 10000 });
   await expect(page.getByRole("heading", { name: "Summary" })).toBeVisible();

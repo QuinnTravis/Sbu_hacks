@@ -89,7 +89,7 @@ export function HomeScreen({
           onClick={() => onStart(true)}
           disabled={!hydrated || railLoading}
           aria-label={t("home.demoStart", { place: network.demo.place })}
-          title={t("home.demoLabel", { place: network.demo.place })}
+          title={t("home.demoStart", { place: network.demo.place })}
         >
           <Play size={18} fill="currentColor" />
         </button>

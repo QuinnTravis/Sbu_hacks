@@ -19,7 +19,7 @@ import { clipKey } from "../src/lib/clip-key";
 import { translate } from "../src/lib/i18n-core";
 import { INTRO_COUNT, composePlaceScript, englishBody, type PlaceContext } from "../src/lib/narration-script";
 import { routeIndex, type Side } from "../src/lib/route-geometry";
-import { DEFAULT_TTS_MODEL, DEFAULT_VOICE_ID, STORY_VOICE_SETTINGS } from "../src/lib/audio-prompts";
+import { DEFAULT_TTS_MODEL, DEFAULT_VOICE_ID, STORY_VOICE_SETTINGS, ttsLanguageOptions } from "../src/lib/audio-prompts";
 import { LOCALES } from "../src/locales";
 import { californiaZephyr } from "../src/networks/california-zephyr";
 import type { NarratorClip, PoiContent } from "../src/lib/package-types";
@@ -142,7 +142,8 @@ async function main() {
       {
         method: "POST",
         headers: { "xi-api-key": key, "Content-Type": "application/json" },
-        body: JSON.stringify({ text: job.text, model_id: model, voice_settings: STORY_VOICE_SETTINGS }),
+        body: JSON.stringify({ text: job.text, model_id: model, voice_settings: STORY_VOICE_SETTINGS,
+          ...ttsLanguageOptions(model, job.language) }),
         signal: AbortSignal.timeout(60_000),
       },
     );

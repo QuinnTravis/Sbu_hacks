@@ -11,6 +11,12 @@
         ],
         "createdAt": "2026-10-24T18:03:04.617Z",
         "reason": "Agent: reviewed line 1475; it transitions SVG stroke-width for route hover and keyboard focus, not CSS width or document layout. Preserve the intentional route highlight."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "landing caslon",
+        "createdAt": "2026-10-25T12:31:09.705Z",
+        "reason": "User pinned the Trestle landing reference; DESIGN.md public landing section specifies self-hosted Libre Caslon Text, using the CSS alias Landing Caslon."
       }
     ]
   }

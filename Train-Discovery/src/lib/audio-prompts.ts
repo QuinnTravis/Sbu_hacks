@@ -1,5 +1,5 @@
 /** Bump when changing narration so already generated clips are invalidated. */
-export const AUDIO_REVISION = "journey-story-4";
+export const AUDIO_REVISION = "journey-story-5-localized";
 
 export const STORYTELLER_PROMPT = `You are a warm, observant companion on a train ride. Give the listener a small reason to look up from their phone.
 
@@ -16,6 +16,13 @@ export const VOICE_DIRECTION = `An adult storyteller with a warm, rounded, conve
 
 export const DEFAULT_VOICE_ID = "JBFqnCBsd6RMkjVDRZzb"; // George
 export const DEFAULT_TTS_MODEL = "eleven_multilingual_v2";
+
+/** v2 detects the transcript's language; only known supporting models get a hint. */
+export function ttsLanguageOptions(model: string, language = "en"): { language_code?: string } {
+  if (!["eleven_flash_v2_5", "eleven_turbo_v2_5"].includes(model)) return {};
+  const code = language === "zh-CN" ? "zh" : language;
+  return ["en", "es", "zh"].includes(code) ? { language_code: code } : {};
+}
 export const STORY_VOICE_SETTINGS = {
   stability: 0.45,
   similarity_boost: 0.75,

@@ -76,13 +76,17 @@ test.beforeEach(async ({ page }) => {
 });
 
 async function start(page: Page) {
-  await page.goto("/?network=lirr");
+  await page.goto("/?network=lirr&dev");
+  await page
+    .getByRole("complementary", { name: "Developer controls" })
+    .getByRole("button", { name: "Close dev panel", exact: true })
+    .click();
   const badge = page.getByRole("button", {
     name: "Collapse Cache disabled badge",
   });
   if (await badge.isVisible()) await badge.click();
   await page
-    .getByRole("button", { name: "Start Jamaica demo ride", exact: true })
+    .getByRole("button", { name: "Start a simulated ride from Jamaica", exact: true })
     .click();
   await page.getByRole("button", { name: "Pause replay", exact: true }).click();
   await expect(page.locator(".poi-sheet")).toHaveAttribute(

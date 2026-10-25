@@ -12,7 +12,7 @@ export function AppHeader({
 }: {
   online: boolean;
   devOpen: boolean;
-  onToggleDev: () => void;
+  onToggleDev?: () => void;
 }) {
   const { t } = useI18n();
   return (
@@ -24,15 +24,17 @@ export function AppHeader({
         <span className="brand-word">Gaze</span>
       </Link>
       <div className="header-right">
-        <button
-          className="header-link dev-toggle"
-          onClick={onToggleDev}
-          aria-label={devOpen ? t("header.closeDev") : t("header.openDev")}
-          aria-expanded={devOpen}
-          title={t("header.devTitle")}
-        >
-          <SlidersHorizontal size={19} />
-        </button>
+        {onToggleDev && (
+          <button
+            className="header-link dev-toggle"
+            onClick={onToggleDev}
+            aria-label={devOpen ? t("header.closeDev") : t("header.openDev")}
+            aria-expanded={devOpen}
+            title={t("header.devTitle")}
+          >
+            <SlidersHorizontal size={19} />
+          </button>
+        )}
         {!online && (
           <span className="offline-label">
             <WifiOff size={14} aria-hidden="true" />

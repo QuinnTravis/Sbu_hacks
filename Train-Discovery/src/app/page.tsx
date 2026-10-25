@@ -1,8 +1,17 @@
-import { DiscoveryApp } from "@/components/discovery-app";
-import rail from "../../public/data/networks/california-zephyr/rail.json";
-import type { RailData } from "@/lib/types";
+import type { Metadata } from "next";
+import { LandingPage } from "@/components/landing-page";
 
-/** The default network's routes ship with the page; others load on request. */
+export const metadata: Metadata = {
+  title: "Gaze — stories along the way",
+  description: "A train ride, a window seat, and a world of stories. Explore the California Zephyr with your personal audio companion.",
+};
+
 export default function Home() {
-  return <DiscoveryApp rail={rail as unknown as RailData} />;
+  return (
+    <>
+      <link rel="preload" href="/fonts/landing-libre-caslon-regular.ttf" as="font" type="font/ttf" crossOrigin="anonymous" />
+      <link rel="preload" href="/fonts/landing-libre-caslon-italic.ttf" as="font" type="font/ttf" crossOrigin="anonymous" />
+      <LandingPage />
+    </>
+  );
 }

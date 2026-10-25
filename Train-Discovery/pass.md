@@ -1,5 +1,15 @@
 # Train Discovery — engineering handoff
 
+## Builder — ElevenLabs narration follows the language setting (2026-10-25)
+
+English, Spanish and Simplified Chinese now propagate from Settings through requests, prepared-clip cache keys and narration. Changing language cancels old playback/prefetch, rebuilds pending station/cue lines, and restarts the active narration; paused playback waits for resume. English static clips do not bypass a requested translation. Missing translations are generated server-side within the existing leased audio job, checked for names/numbers and independently checked for fidelity. A failed translation releases the job before synthesis and does not cache English under another language. Provider speech hints follow the actual transcript language on supporting models; multilingual v2 keeps automatic detection. Audio revision is `journey-story-5-localized`. No new unit tests or live provider calls. Production build and 78 existing audio/API/i18n/director checks passed. All 16 browser audio cases passed on desktop/mobile against the production build on dedicated port 3497; two new scenarios cover active/paused language switches, late responses and prepared English story replacement. Translation quality and live voice output still need a live listen.
+
+Integration recheck: parallel Zephyr segment/Ask Guide work briefly blocked the build while data files and interfaces were being added. Once those landed, removed the redundant `runtime = "nodejs"` export from `/api/ask` as required by this installed Next.js version with Cache Components. The combined production build, all 78 existing checks, and the four desktop/mobile language cases passed again.
+
+## Builder — Zephyr area asides for quiet stretches (2026-10-25)
+
+The California Zephyr’s Rockies segment can use the existing static package’s non-POI places (towns, rivers, lakes, and canyons) as occasional area context after nearby narration has priority. Candidates follow route progress and the package corridor, and need either verified/attributed narration or a sourced basic fact with population or elevation; bare names and type-only filler are skipped. The aside uses the existing narrator composition, language, clip/audio path, and one playback queue, with a 45-second minimum gap. It does not imply visibility or add a provider. The Rockies package has 85 area-feature records; 23 contain population or elevation, so coverage remains best effort. Production build passed; no tests were added or run for that earlier change.
+
 ## Native map and discovery sheet (2026-10-25)
 
 The ride map now fills the viewport. A 450ms held aim opens a spring-driven, draggable POI sheet; selection adds the discovery and expands its card in place. Close and drag-down dismissal preserve discoveries; deletion is a separate labeled action. Sheet contents scroll independently, the map stays mounted, and reduced motion skips the spring. Expanded reading uses a separate route/simulation row and keeps map attribution accessible. Short-landscape replay and audio controls remain separately reachable.
@@ -294,6 +304,14 @@ Verification: production build/TypeScript and targeted ESLint passed. One focuse
 The user retired the 3D experiment. Removed its discovery/bookmark launch controls, viewer, depth worker, generation endpoint, feature flag, translations, provider-specific tracing and dependencies. Existing historical photo comparisons and the merged California Zephyr app remain. The already-applied database migration remains as migration history; no destructive database cleanup or provider requests were performed.
 
 Validation: production build and TypeScript passed after removal.
+
+### Interruptible questions about a place
+
+Added **Ask about this place** to the ride audio companion. It freezes the current/last narrated or selected POI, immediately cancels playback and prefetch, and holds automatic narration while a one-shot browser mic or typed question is submitted. The inline panel has localized listening, source-checking, denial, unsupported-input and retry states. Recording aborts on cancel, lifecycle changes or its 20-second limit. Answers use the existing single playback pipeline, captions, transcript/source links, pause and cancellation guards; completion restores the prior tour state. Late canceled answers cannot restart playback.
+
+`POST /api/ask` accepts only a known catalog ID, supported language and at most 500 question characters. The server resolves evidence itself for LIRR or static Zephyr places, requires exact source quotes and factual agreement plus an independent Gemini answer check, and explicitly declines unsupported questions. ElevenLabs reuses private cached audio, leases and the durable character budget; a checked script can fall back to the device voice. Request bodies, request frequency and model concurrency are bounded. No database migration or new dependency was needed. The Permissions-Policy now permits microphone access for self; ordinary browser permission still applies. README and /about explain browser transcription, question processing and answer caching.
+
+Validation: final production build/TypeScript and scoped ESLint passed; existing 165 tests passed. All 22 desktop/mobile audio and mic browser checks passed against an isolated production server, including voice interruption, typed fallback, mic denial, late answer cancellation, transcript sources and microphone policy headers. Real endpoint boundary smoke returned expected 400/403/413 statuses without provider calls. The earlier dev-only mobile failure was the Next development badge intercepting navigation; it passes in production. Screenshots: `/tmp/ask-guide-desktop.png`, `/tmp/ask-guide-mobile.png`. Reviewer approved the feature. Full-project lint reported a react-hooks/refs issue in concurrently edited discovery-app.tsx outside this feature. No unit tests were implemented, no paid provider calls were made, and no commit/push was performed. Actual mobile recognition and live generated-answer quality remain to be checked on a physical device.
 
 ### Places across the full California Zephyr
 

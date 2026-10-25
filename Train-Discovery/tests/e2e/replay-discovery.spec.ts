@@ -48,7 +48,7 @@ test("Jamaica replay lists aimed candidates and saves only the selected place", 
   );
 
   await page.goto("/?network=lirr");
-  await page.getByRole("button", { name: "Start Jamaica demo ride" }).click();
+  await page.getByRole("button", { name: "Start a simulated ride from Jamaica" }).click();
   await page.getByRole("button", { name: "Pause replay" }).click();
   const jamaica = page.getByRole("button", { name: /^Jamaica,/ });
   await expect(jamaica).toBeVisible({ timeout: 10000 });
@@ -94,8 +94,9 @@ test("replay shows loading, then stays empty when nothing nearby is sourced", as
     });
   });
 
-  await page.goto("/?network=lirr");
-  await page.getByRole("button", { name: "Start Jamaica demo ride" }).click();
+  await page.goto("/?network=lirr&dev");
+  await page.getByRole("complementary", { name: "Developer controls" }).getByRole("button", { name: "Close dev panel", exact: true }).click();
+  await page.getByRole("button", { name: "Start a simulated ride from Jamaica" }).click();
   await expect(page.locator(".nearby-status")).toContainText("Loading places");
   await expect(page.getByText("Simulated aim")).toBeVisible();
   await expect(page.getByText("Hold your phone upright")).toHaveCount(0);
@@ -127,7 +128,8 @@ test("a failed replay catalog retries into a sourced discovery", async ({ page }
   );
   await page.route("**/api/journeys/10", (route) => {
     calls += 1;
-    if (calls === 1) return route.fulfill({ status: 503, json: { error: "unavailable" } });
+    // The app retries twice on its own before showing the failure.
+    if (calls <= 3) return route.fulfill({ status: 503, json: { error: "unavailable" } });
     return route.fulfill({
       json: {
         places: [{
@@ -155,10 +157,11 @@ test("a failed replay catalog retries into a sourced discovery", async ({ page }
     });
   });
 
-  await page.goto("/?network=lirr");
-  await page.getByRole("button", { name: "Start Jamaica demo ride" }).click();
+  await page.goto("/?network=lirr&dev");
+  await page.getByRole("complementary", { name: "Developer controls" }).getByRole("button", { name: "Close dev panel", exact: true }).click();
+  await page.getByRole("button", { name: "Start a simulated ride from Jamaica" }).click();
   const failure = page.getByRole("alert").filter({ hasText: "Couldn’t load places" });
-  await expect(failure).toBeVisible();
+  await expect(failure).toBeVisible({ timeout: 10000 });
   await expect(page.locator(".nearby-status")).toContainText("Places unavailable");
   await page.getByRole("button", { name: "Open dev panel" }).click();
   const panel = page.getByRole("complementary", { name: "Developer controls" });
@@ -255,7 +258,7 @@ test("simulated ride selects one candidate and keeps it after skip", async ({ pa
   );
 
   await page.goto("/?network=lirr");
-  await page.getByRole("button", { name: "Start Jamaica demo ride" }).click();
+  await page.getByRole("button", { name: "Start a simulated ride from Jamaica" }).click();
   await page.getByRole("button", { name: "Pause replay" }).click();
   await expect(page.locator(".poi-sheet")).toHaveAttribute("aria-hidden", "false");
   await page.getByRole("navigation", { name: "Main navigation" }).getByRole("button", { name: "Discoveries" }).click();

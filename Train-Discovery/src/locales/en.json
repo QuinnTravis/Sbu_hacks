@@ -25,9 +25,9 @@
     "settings": "Settings"
   },
   "home": {
-    "demoStart": "Start {place} demo ride",
-    "demoLabel": "{place} demo",
-    "useDemo": "Use {place} demo",
+    "demoStart": "Start a simulated ride from {place}",
+    "demoLabel": "Near {place}",
+    "useDemo": "Browse routes near {place}",
     "findNearMe": "Find routes near me",
     "mapLabel": "Interactive {network} route map",
     "collapse": "Collapse route list",
@@ -229,7 +229,9 @@
       "pointed": "You just pointed at {name}.",
       "pointedEarlier": "That {noun} you pointed at earlier, {name}.",
       "replay": "Once more, {name}.",
-      "nearby": "{name}."
+      "nearby": "{name}.",
+      "area": "By the way, a little context on {name}.",
+      "areaBasic": "And just for a little context:"
     },
     "noun": {
       "building": "building",
@@ -565,5 +567,50 @@
   "sheet": {
     "collapse": "Collapse sheet",
     "expand": "Expand sheet"
+  },
+  "ask": {
+    "label": "Ask about this place",
+    "cancel": "Return to tour",
+    "micLabel": "Ask by voice",
+    "stopMic": "Finish recording",
+    "input": "Ask a question",
+    "send": "Send question",
+    "listening": "Listening…",
+    "thinking": "Checking the sources…",
+    "failed": "Could not answer. Try again or return to the tour.",
+    "mic": {
+      "unsupported": "Voice input is unavailable in this browser. Type your question.",
+      "denied": "Microphone access was denied. Type your question or allow access in browser settings.",
+      "failed": "Could not hear you. Try the mic again or type your question.",
+      "empty": "No speech detected. Try again or type your question."
+    }
+  },
+  "landing": {
+    "route": "Chicago — Emeryville",
+    "stamp": "Add a travel stamp to the canvas",
+    "navigation": "Gaze navigation",
+    "start": "Start a journey",
+    "about": "About",
+    "clear": "Clear canvas",
+    "phrases": {
+      "0": {
+        "first": "finds stories",
+        "before": "along the ",
+        "emphasis": "way",
+        "after": "."
+      },
+      "1": {
+        "first": "turns your ride",
+        "before": "into a ",
+        "emphasis": "story",
+        "after": "."
+      },
+      "2": {
+        "first": "brings places",
+        "before": "to ",
+        "emphasis": "life",
+        "after": "."
+      }
+    }
   }
 }

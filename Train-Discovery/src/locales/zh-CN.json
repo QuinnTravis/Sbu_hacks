@@ -25,9 +25,9 @@
     "settings": "设置"
   },
   "home": {
-    "demoStart": "从{place}开始演示旅程",
-    "demoLabel": "{place}演示",
-    "useDemo": "使用{place}演示",
+    "demoStart": "从{place}开始模拟旅程",
+    "demoLabel": "{place}附近",
+    "useDemo": "查看{place}附近的路线",
     "findNearMe": "查找我附近的线路",
     "mapLabel": "{network}交互式线路图",
     "collapse": "收起线路列表",
@@ -227,7 +227,9 @@
       "pointed": "你刚刚指向了{name}。",
       "pointedEarlier": "你之前指向的那个地方，{name}。",
       "replay": "再听一次，{name}。",
-      "nearby": "{name}。"
+      "nearby": "{name}。",
+      "area": "顺便聊聊{name}的背景。",
+      "areaBasic": "顺便补充一点背景："
     },
     "noun": {
       "building": "建筑",
@@ -559,5 +561,50 @@
   "sheet": {
     "collapse": "收起面板",
     "expand": "展开面板"
+  },
+  "ask": {
+    "label": "询问这个地方",
+    "cancel": "返回导览",
+    "micLabel": "语音提问",
+    "stopMic": "结束录音",
+    "input": "输入问题",
+    "send": "发送问题",
+    "listening": "正在聆听…",
+    "thinking": "正在查阅来源…",
+    "failed": "暂时无法回答。请重试或返回导览。",
+    "mic": {
+      "unsupported": "此浏览器不支持语音输入。请输入问题。",
+      "denied": "麦克风权限被拒绝。请输入问题，或在浏览器设置中允许访问。",
+      "failed": "未能听清。请重试或输入问题。",
+      "empty": "未检测到语音。请重试或输入问题。"
+    }
+  },
+  "landing": {
+    "route": "芝加哥 — 埃默里维尔",
+    "stamp": "在画布上添加旅行印章",
+    "navigation": "Gaze 导航",
+    "start": "开启旅程",
+    "about": "关于",
+    "clear": "清空画布",
+    "phrases": {
+      "0": {
+        "first": "发现故事",
+        "before": "沿着",
+        "emphasis": "旅途",
+        "after": "。"
+      },
+      "1": {
+        "first": "让你的旅程",
+        "before": "成为",
+        "emphasis": "故事",
+        "after": "。"
+      },
+      "2": {
+        "first": "让你倾听",
+        "before": "沿途的",
+        "emphasis": "风景",
+        "after": "。"
+      }
+    }
   }
 }

@@ -5,7 +5,7 @@ export default function manifest(): MetadataRoute.Manifest {
     name: "Gaze",
     short_name: "Gaze",
     description: "Point. Discover. Keep. The stories outside your train window.",
-    start_url: "/",
+    start_url: "/journey",
     scope: "/",
     display: "standalone",
     background_color: "#eaedf3",

@@ -96,3 +96,140 @@
   outline: 3px solid var(--ink);
   outline-offset: 2px;
 }
+
+.train-audio-guide .ask-guide {
+  min-width: 0;
+  margin: 0 6px;
+  color: var(--ink);
+}
+
+.train-audio-guide .ask-trigger {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 0;
+  border-radius: 22px;
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.5;
+  text-align: start;
+  cursor: pointer;
+}
+
+.train-audio-guide .ask-trigger svg {
+  flex: 0 0 auto;
+}
+
+.train-audio-guide .ask-guide-open {
+  padding: 0 6px 12px;
+}
+
+.train-audio-guide .ask-heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  padding-inline-start: 6px;
+}
+
+.train-audio-guide .ask-place {
+  flex: 1 1 0;
+  min-width: 0;
+  padding-block: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.train-audio-guide .ask-form {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) 44px;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  padding: 4px;
+  border-radius: 28px;
+  background: var(--canvas);
+}
+
+.train-audio-guide .ask-form input {
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  padding: 8px 0;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--ink);
+  caret-color: var(--accent);
+  font: inherit;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.train-audio-guide .ask-form input::placeholder {
+  color: var(--muted);
+  opacity: 1;
+}
+
+.train-audio-guide .ask-form input::selection {
+  background: var(--soft);
+  color: var(--ink);
+}
+
+.train-audio-guide .ask-form input:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
+.train-audio-guide .ask-guide .audio-control {
+  width: 44px;
+  height: 44px;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.train-audio-guide .ask-mic[aria-pressed="true"],
+.train-audio-guide .ask-send {
+  background: var(--accent);
+  color: var(--paper);
+}
+
+.train-audio-guide .ask-guide :disabled {
+  cursor: default;
+  opacity: 1;
+  color: var(--muted);
+}
+
+.train-audio-guide .ask-send:disabled {
+  background: var(--soft);
+}
+
+.train-audio-guide .ask-status {
+  margin: 8px 6px 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+@media (hover: hover) {
+  .train-audio-guide .ask-trigger:hover,
+  .train-audio-guide .ask-guide .audio-control:hover:not(:disabled) {
+    background: var(--soft);
+    color: var(--ink);
+  }
+}
+
+.train-audio-guide .ask-trigger:active,
+.train-audio-guide .ask-guide .audio-control:active:not(:disabled) {
+  background: var(--soft);
+  color: var(--ink);
+}

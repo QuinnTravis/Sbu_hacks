@@ -11,6 +11,7 @@ type AudioRequest = {
   placeId?: string;
   simulation?: boolean;
   context?: string;
+  locale?: string;
 };
 
 function announcement(input: AudioRequest) {
@@ -143,6 +144,105 @@ test("skipping an introduction ignores a late provider response and lets the sta
   expect(await clips(page)).not.toContain("https://example.org/test-clip-journey.mp3");
 });
 
+test("changing language replaces playing audio, rejects a late old response, and resumes paused audio in the selected locale", async ({ page }) => {
+  const requested: AudioRequest[] = [];
+  let releaseSpanish: (() => void) | undefined;
+  let spanishSettled = false;
+  const url = (locale: string, request: number) => `https://example.org/test-clip-${locale}-${request}.mp3`;
+  await page.route("**/api/audio", async (route) => {
+    const input = route.request().postDataJSON() as AudioRequest;
+    requested.push(input);
+    const request = requested.length;
+    if (input.locale === "es") {
+      await new Promise<void>((resolve) => { releaseSpanish = resolve; });
+    }
+    const result = announcement(input);
+    await route.fulfill({ json: {
+      ...result, audioUrl: url(input.locale ?? "en", request),
+      script: { ...result.script, language: input.locale ?? "en",
+        text: input.locale === "es" ? "Bienvenidos a bordo."
+          : input.locale === "zh-CN" ? "欢迎乘车。" : "Welcome aboard." },
+    } }).catch(() => { /* Switching locale aborts the old request. */ });
+    if (input.locale === "es") spanishSettled = true;
+  });
+
+  // Exercise the existing settings control, rather than modifying locale storage.
+  const selectLanguage = async (locale: string) => {
+    const label = { en: "English", es: "Español", "zh-CN": "中文" }[locale]!;
+    await page.getByRole("radio", { name: label, exact: true }).click();
+    await expect(page.locator("html")).toHaveAttribute("lang", locale);
+  };
+
+  await startLiveRide(page);
+  await expect.poll(() => clips(page)).toEqual([url("en", 1)]);
+  expect(requested[0].type).toBe("journey");
+  expect(requested[0].locale ?? "en").toBe("en");
+  await page.getByRole("button", { name: "Settings", exact: true }).click();
+  await selectLanguage("es");
+  await expect.poll(() => Boolean(releaseSpanish)).toBe(true);
+  expect(requested[1]).toMatchObject({ type: "journey", locale: "es" });
+  await selectLanguage("zh-CN");
+  await expect.poll(() => clips(page)).toEqual([url("en", 1), url("zh-CN", 3)]);
+  expect(requested[2]).toMatchObject({ type: "journey", locale: "zh-CN" });
+
+  releaseSpanish!();
+  await expect.poll(() => spanishSettled).toBe(true);
+  // The replacement's control is visible only once playback has settled.
+  const pause = page.getByRole("button", { name: /Pause audio guide|暂停/ });
+  await pause.click();
+  await selectLanguage("en");
+  await expect(page.getByRole("button", { name: "Resume audio guide", exact: true })).toBeVisible();
+  expect(await clips(page)).toEqual([url("en", 1), url("zh-CN", 3)]);
+  expect(requested).toHaveLength(3);
+
+  await page.getByRole("button", { name: "Resume audio guide", exact: true }).click();
+  await expect.poll(() => clips(page)).toEqual([url("en", 1), url("zh-CN", 3), url("en", 4)]);
+  expect(requested.map(({ locale }) => locale ?? "en")).toEqual(["en", "es", "zh-CN", "en"]);
+  expect(requested.every(({ type }) => type === "journey")).toBe(true);
+});
+
+test("a prepared English story is replaced with the selected language before playback", async ({ page }) => {
+  const fact = "Fixture Depot opened in 1906.";
+  const place = {
+    id: "osm-way-990010", name: "Fixture Depot", category: "Heritage",
+    lat: jamaica.lat, lon: jamaica.lon + 0.001, routeIds: ["10"], tags: {},
+    sourceUrl: "https://example.org/depot",
+    evidence: [{ id: "depot", title: "Depot archive", url: "https://example.org/depot",
+      text: fact, retrievedAt: "2026-10-25T00:00:00Z", license: "CC0" }],
+    story: { summary: fact, claims: [{ text: fact, quote: fact, evidenceId: "depot" }],
+      verifiedAt: "2026-10-25T00:00:00Z", evidenceHash: "fixture", generator: "fixture", verifier: "fixture" },
+  };
+  await page.route("**/api/journeys/10", (route) => route.fulfill({ json: { places: [place] } }));
+  const requested: AudioRequest[] = [];
+  const url = (type: string, locale: string) => `https://example.org/test-clip-${type}-${locale}.mp3`;
+  await page.route("**/api/audio", (route) => {
+    const input = route.request().postDataJSON() as AudioRequest;
+    requested.push(input);
+    const locale = input.locale ?? "en";
+    const result = announcement(input);
+    return route.fulfill({ json: {
+      ...result, audioUrl: url(input.type, locale),
+      script: input.type === "place" ? {
+        name: place.name, text: locale === "es" ? "Fixture Depot abrió en 1906." : fact,
+        kind: "verified", language: locale,
+        sources: [{ title: "Depot archive", url: place.sourceUrl, license: "CC0" }],
+      } : { ...result.script, language: locale },
+    } });
+  });
+  await startLiveRide(page);
+  await expect.poll(() => requested.some((input) => input.type === "place" && input.locale === "en")).toBe(true);
+  await expect.poll(() => clips(page)).toContain(url("journey", "en"));
+  await page.getByRole("button", { name: "Settings", exact: true }).click();
+  await page.getByRole("radio", { name: "Español", exact: true }).click();
+  await expect.poll(() => requested.some((input) => input.type === "place" && input.locale === "es")).toBe(true);
+  await expect.poll(() => clips(page)).toContain(url("journey", "es"));
+  await finishClip(page);
+  await expect.poll(() => clips(page)).toContain(url("station", "es"));
+  await finishClip(page);
+  await expect.poll(() => clips(page)).toContain(url("place", "es"));
+  expect(await clips(page)).not.toContain(url("place", "en"));
+});
+
 test("skipping a preparing station prevents late audio from restarting", async ({ page }) => {
   let release: (() => void) | undefined;
   let lateSettled = false;
@@ -265,7 +365,7 @@ test("demo ride explicitly labels its simulation and identifies the journey as s
   });
 
   await page.goto("/?network=lirr");
-  await page.getByRole("button", { name: "Start Jamaica demo ride" }).click();
+  await page.getByRole("button", { name: "Start a simulated ride from Jamaica" }).click();
   const rideStatus = page.locator(".ride-heading p");
   await expect(rideStatus).toBeVisible();
   await expect(rideStatus).toContainText("Simulated ride");

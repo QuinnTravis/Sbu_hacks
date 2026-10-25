@@ -7,7 +7,7 @@ export const metadata = { title: "About & privacy — Gaze" };
 export default function About() {
   return (
     <main id="main-content" className="about-document">
-      <Link href="/" className="about-back">
+      <Link href="/journey" className="about-back">
         <ArrowLeft size={18} aria-hidden="true" />
         Back to your ride
       </Link>
@@ -36,9 +36,12 @@ export default function About() {
         With the app open, location and heading update as you travel. Locked
         screens and background browser tabs can suspend these readings. Starting
         a ride requests device permissions; ending a ride stops sensors. You can
-        revoke permissions in your browser settings. Voice questions, when you
-        use them, send your recording to the speech provider for transcription;
-        recordings are not stored.
+        revoke permissions in your browser settings. Optional voice questions
+        use your browser&apos;s speech recognition, which may send audio to its
+        speech provider. Gaze does not receive or store that recording. The
+        recognized question and selected place are sent to our server and Gemini
+        to prepare a sourced answer. Approved answer text is sent to ElevenLabs
+        for speech and may be kept in our private narration cache.
       </p>
       <h2 id="sources">Data sources</h2>
       <p>
@@ -75,8 +78,7 @@ export default function About() {
         are public-domain or openly licensed images from Wikimedia Commons and
         the Library of Congress, credited under each comparison. Air quality
         comes from <a href="https://open-meteo.com/">Open-Meteo</a> and is
-        informational only. See every source and license on the{" "}
-        <a href="/credits">credits page</a>.
+        informational only.
       </p>
       <h2>Terms</h2>
       <p>

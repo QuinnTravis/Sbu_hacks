@@ -25,9 +25,9 @@
     "settings": "Ajustes"
   },
   "home": {
-    "demoStart": "Iniciar viaje de demostración desde {place}",
-    "demoLabel": "Demo de {place}",
-    "useDemo": "Usar la demo de {place}",
+    "demoStart": "Iniciar un viaje simulado desde {place}",
+    "demoLabel": "Cerca de {place}",
+    "useDemo": "Ver rutas cerca de {place}",
     "findNearMe": "Buscar rutas cerca de mí",
     "mapLabel": "Mapa interactivo de rutas de {network}",
     "collapse": "Contraer la lista de rutas",
@@ -229,7 +229,9 @@
       "pointed": "Acabas de apuntar a {name}.",
       "pointedEarlier": "Ese lugar al que apuntaste antes, {name}.",
       "replay": "Otra vez, {name}.",
-      "nearby": "{name}."
+      "nearby": "{name}.",
+      "area": "Por cierto, un poco de contexto sobre {name}.",
+      "areaBasic": "Y, para dar un poco de contexto:"
     },
     "noun": {
       "building": "edificio",
@@ -565,5 +567,50 @@
   "sheet": {
     "collapse": "Contraer panel",
     "expand": "Expandir panel"
+  },
+  "ask": {
+    "label": "Preguntar sobre este lugar",
+    "cancel": "Volver al recorrido",
+    "micLabel": "Preguntar por voz",
+    "stopMic": "Terminar grabación",
+    "input": "Haz una pregunta",
+    "send": "Enviar pregunta",
+    "listening": "Escuchando…",
+    "thinking": "Consultando las fuentes…",
+    "failed": "No se pudo responder. Inténtalo de nuevo o vuelve al recorrido.",
+    "mic": {
+      "unsupported": "La entrada de voz no está disponible en este navegador. Escribe tu pregunta.",
+      "denied": "Se denegó el acceso al micrófono. Escribe tu pregunta o permite el acceso en el navegador.",
+      "failed": "No pudimos oírte. Inténtalo de nuevo o escribe tu pregunta.",
+      "empty": "No se detectó voz. Inténtalo de nuevo o escribe tu pregunta."
+    }
+  },
+  "landing": {
+    "route": "Chicago — Emeryville",
+    "stamp": "Añadir un sello de viaje al lienzo",
+    "navigation": "Navegación de Gaze",
+    "start": "Comenzar un viaje",
+    "about": "Acerca de",
+    "clear": "Borrar lienzo",
+    "phrases": {
+      "0": {
+        "first": "narra viajes",
+        "before": "por el ",
+        "emphasis": "camino",
+        "after": "."
+      },
+      "1": {
+        "first": "hace del viaje",
+        "before": "una ",
+        "emphasis": "historia",
+        "after": "."
+      },
+      "2": {
+        "first": "te acerca",
+        "before": "al ",
+        "emphasis": "paisaje",
+        "after": "."
+      }
+    }
   }
 }

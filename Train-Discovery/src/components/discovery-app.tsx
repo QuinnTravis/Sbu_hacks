@@ -53,7 +53,7 @@ import {
   networkForRoute,
   type NetworkId,
 } from "@/networks";
-import { entryKm } from "@/features/look-ahead/cues";
+import { entryKm, exitKm } from "@/features/look-ahead/cues";
 import { sideAdvice, minutesAt, type Timetable } from "@/features/look-ahead/advisor";
 import { useRouteTracking } from "@/features/look-ahead/use-route-tracking";
 import { useLookAhead } from "@/features/look-ahead/use-look-ahead";
@@ -76,6 +76,16 @@ import "./gaze.css";
 import "./ride-screen.css";
 
 const EMPTY_RAIL: RailData = { source: "", importedAt: "", version: "", routes: [] };
+const JOURNEY_RETRY_MS = [1_000, 3_000];
+
+function areaOffsetKm(place: Place, currentKm: number, direction: Direction): number | null {
+  const entry = entryKm(place, direction);
+  const exit = exitKm(place, direction);
+  if (entry === null || exit === null) return null;
+  const toEntry = kmAhead(entry, currentKm, direction);
+  const toExit = kmAhead(exit, currentKm, direction);
+  return toEntry > 0 ? toEntry : toExit < 0 ? toExit : 0;
+}
 
 export function DiscoveryApp({ rail: defaultRail }: { rail: RailData }) {
   const i18n = useI18n();
@@ -105,6 +115,8 @@ export function DiscoveryApp({ rail: defaultRail }: { rail: RailData }) {
   const [cardIndex, setCardIndex] = useState(0);
   const [replayOffset, setReplayOffset] = useState(0);
   const [devOpen, setDevOpen] = useState(false);
+  // Production riders never see developer controls unless the URL asks for `?dev`.
+  const [devAvailable, setDevAvailable] = useState(process.env.NODE_ENV !== "production");
   const [speed, setSpeed] = useState(network.demo.speedKmh);
   const [direction, setDirection] = useState<Direction>(1);
   const [headingMode, setHeadingMode] = useState<HeadingMode>("auto");
@@ -150,7 +162,10 @@ export function DiscoveryApp({ rail: defaultRail }: { rail: RailData }) {
         setSelected(storedRide.routeId);
       }
       setSaved(readSaved());
-      if (params.has("dev")) setDevOpen(true);
+      if (params.has("dev")) {
+        setDevAvailable(true);
+        setDevOpen(true);
+      }
       setHydrated(true);
       setOnline(navigator.onLine);
     });
@@ -233,10 +248,11 @@ export function DiscoveryApp({ rail: defaultRail }: { rail: RailData }) {
   useEffect(() => {
     if (!packageRouteId) return;
     const controller = new AbortController();
+    let timer: ReturnType<typeof setTimeout> | undefined;
     queueMicrotask(() => {
       setPackageState("loading");
     });
-    fetch(`/api/journeys/${packageRouteId}${packageLocale ? `?locale=${encodeURIComponent(packageLocale)}` : ""}`, { signal: controller.signal })
+    const load = (attempt: number): Promise<void> => fetch(`/api/journeys/${packageRouteId}${packageLocale ? `?locale=${encodeURIComponent(packageLocale)}` : ""}`, { signal: controller.signal })
       .then(async (response) => {
         if (!response.ok) throw new Error("Journey unavailable");
         const { places: catalog, ...extras } = (await response.json()) as JourneyPackage;
@@ -254,9 +270,19 @@ export function DiscoveryApp({ rail: defaultRail }: { rail: RailData }) {
         setSaved((current) => refreshSaved(current, catalog));
       })
       .catch(() => {
-        if (!controller.signal.aborted) setPackageState("error");
+        if (controller.signal.aborted) return;
+        // A server restart or a dropped connection shouldn't strand the ride.
+        if (attempt < JOURNEY_RETRY_MS.length) {
+          timer = setTimeout(() => void load(attempt + 1), JOURNEY_RETRY_MS[attempt]);
+          return;
+        }
+        setPackageState("error");
       });
-    return () => controller.abort();
+    void load(0);
+    return () => {
+      controller.abort();
+      clearTimeout(timer);
+    };
   }, [packageRouteId, packageLocale, retry]);
 
   // Segment rides start at their first stop (or last, riding the other way);
@@ -312,6 +338,7 @@ export function DiscoveryApp({ rail: defaultRail }: { rail: RailData }) {
   }, [ride?.replay, playing, direction, progress, timeline.total]);
 
   useEffect(() => {
+    if (!devAvailable) return;
     const toggle = (event: KeyboardEvent) => {
       if (
         event.key === "`" &&
@@ -328,7 +355,7 @@ export function DiscoveryApp({ rail: defaultRail }: { rail: RailData }) {
     };
     window.addEventListener("keydown", toggle);
     return () => window.removeEventListener("keydown", toggle);
-  }, []);
+  }, [devAvailable]);
 
   const position = ride?.replay ? replayPosition : sensors.position;
   const placesById = useMemo(
@@ -531,6 +558,27 @@ export function DiscoveryApp({ rail: defaultRail }: { rail: RailData }) {
     };
   }, [staticNetwork, journey?.clips, journey?.content, tracking.direction, tracking.km, settings.facing, code, tunnelExit, rideStartStop, totalKm]);
 
+  const staticAreaAudioPlaces = useMemo(() => {
+    if (!staticNetwork || tracking.km === null || !(position && gpsFresh && !offRoute && ride)) return [];
+    const travel = tracking.direction ?? direction;
+    const nearbyIds = new Set(nearbyAudioPlaces.map((place) => place.id));
+    return places.flatMap((place) => {
+      if (place.kind !== "place" || !place.areaKind || !place.routeIds.includes(ride.routeId) ||
+          ride.dismissed.includes(place.id) || nearbyIds.has(place.id) ||
+          (place.lateralM ?? Infinity) > network.corridorM) return [];
+      const offset = areaOffsetKm(place, tracking.km!, travel);
+      if (offset === null || offset < -0.8 || offset > 8) return [];
+      const script = composePlaceScript({ place, code, context: "area", content: journey?.content?.[place.id] });
+      if (!script?.sources.length) return [];
+      if (script.kind === "basic" && !place.basic?.population && !place.basic?.elevationM) return [];
+      return [{ place, offset }];
+    })
+      .sort((a, b) => Math.abs(a.offset) - Math.abs(b.offset))
+      .slice(0, 3)
+      .map(({ place }) => place);
+  }, [staticNetwork, tracking.km, tracking.direction, direction, position, gpsFresh, offRoute,
+    ride, places, network.corridorM, nearbyAudioPlaces, code, journey?.content]);
+
   const audioGuide = useAudioGuide(
     ride?.queue,
     nearbyAudioPlaces,
@@ -545,8 +593,10 @@ export function DiscoveryApp({ rail: defaultRail }: { rail: RailData }) {
       onNarrated: rememberNarration,
       language: code,
       nearbyMeters: staticNetwork ? network.nearbyM + 1000 : undefined,
+      routeKm: staticNetwork ? tracking.km : undefined,
+      direction: staticNetwork ? tracking.direction ?? direction : undefined,
       compose,
-      area: areaAudioPlaces,
+      area: staticNetwork ? staticAreaAudioPlaces : areaAudioPlaces,
       clips: journey?.clips,
       liveAudio: staticNetwork ? features.liveNarration : true,
       ...(staticNetwork && route ? { segment: { network: network.name, segment: route.name } } : {}),
@@ -715,6 +765,7 @@ export function DiscoveryApp({ rail: defaultRail }: { rail: RailData }) {
     setTab("ride");
     setSelected(id);
     setPreRide(null);
+    if (packageState === "error") setRetry((v) => v + 1);
     setRide({
       routeId: id,
       networkId: network.id,
@@ -925,7 +976,7 @@ export function DiscoveryApp({ rail: defaultRail }: { rail: RailData }) {
       style={ride ? ({ "--poi-sheet-content-height": `${poiContentHeight}px` } as CSSProperties) : undefined}
       className={`app-shell ${!ride ? "route-select-shell" : `ride-map-shell is-${view}${poiOpen && view === "point" ? " has-poi-sheet" : ""}${poiExpandedOnMap ? " is-poi-expanded" : ""}`} tab-${tab}`}
     >
-      <AppHeader online={online} devOpen={devOpen} onToggleDev={() => setDevOpen((open) => !open)} />
+      <AppHeader online={online} devOpen={devOpen} onToggleDev={devAvailable ? () => setDevOpen((open) => !open) : undefined} />
       <main id="main-content">
         {!ride && tab === "bookmarks" ? (
           bookmarksScreen
