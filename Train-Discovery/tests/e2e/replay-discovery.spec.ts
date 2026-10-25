@@ -66,7 +66,7 @@ test("Jamaica replay lists aimed candidates and saves only the selected place", 
   await expect(page.locator(".nav-count")).toHaveText("0");
   await jamaica.click();
   await expect(page.getByRole("heading", { name: "Jamaica", exact: true })).toBeVisible();
-  await expect(page.locator(".place-photo img")).toHaveAttribute("src", /^data:image\/gif/);
+  await expect(page.locator(".place-photo > img")).toHaveAttribute("src", /^data:image\/gif/);
   await expect(page.locator(".story-summary")).toContainText("major rail transit hub");
   await expect(page.locator(".story-interesting")).toContainText("Thousands of commuters");
   await expect(page.locator(".nav-count")).toHaveText("1");
@@ -256,6 +256,8 @@ test("simulated ride selects one candidate and keeps it after skip", async ({ pa
   await page.goto("/");
   await page.getByRole("button", { name: "Start Jamaica demo ride" }).click();
   await page.getByRole("button", { name: "Pause replay" }).click();
+  await expect(page.locator(".poi-sheet")).toHaveAttribute("aria-hidden", "false");
+  await page.getByRole("button", { name: /My discoveries/ }).click();
   await page.getByRole("button", { name: "Start audio tour" }).click();
   await expect.poll(() => page.evaluate(() =>
     (window as unknown as { __clips: string[] }).__clips,
@@ -263,17 +265,21 @@ test("simulated ride selects one candidate and keeps it after skip", async ({ pa
   await expect(page.locator(".audio-title")).toContainText("Welcome");
   await page.evaluate(() => (window as unknown as { __finishClip: () => void }).__finishClip());
   await expect(page.locator(".audio-title")).toHaveText("Jamaica", { timeout: 10000 });
+  await page.getByRole("button", { name: "Discover", exact: true }).click();
   await expect(page.getByRole("button", { name: /^Jamaica,/ })).toBeVisible();
   await expect(page.getByRole("button", { name: /King Manor Museum,/ })).toBeVisible();
   await page.getByRole("button", { name: /King Manor Museum,/ }).click();
   await expect(page.getByRole("heading", { name: "King Manor Museum" })).toBeVisible();
   await expect(page.locator(".nav-count")).toHaveText("1");
+  await page.locator(".poi-sheet__close").click();
+  await expect(page.locator(".poi-sheet")).toHaveAttribute("aria-hidden", "true");
   await expect(page.getByText("King Manor Museum queued")).toBeVisible();
   expect(await page.evaluate(() => (window as unknown as { __clips: string[] }).__clips)).toEqual([
     "https://example.org/test-clip-journey.mp3",
     "https://example.org/test-clip-station.mp3",
   ]);
   await page.getByRole("button", { name: "Skip story" }).click();
+  await page.getByRole("button", { name: /My discoveries/ }).click();
   await expect(page.getByRole("heading", { name: "King Manor Museum" })).toBeVisible();
   await expect(page.locator(".nav-count")).toHaveText("1");
   expect(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth)).toBe(false);

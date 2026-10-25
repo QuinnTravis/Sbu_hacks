@@ -63,6 +63,6 @@ export type Photo = {
   url: string;
   source: "Google Maps" | "Wikimedia Commons";
   sourceUrl: string;
-  authors: { displayName: string; uri: string }[];
+  authors: { displayName: string; uri: string; photoUri?: string }[];
   license?: { name: string; url: string };
 };

@@ -201,6 +201,7 @@ test("a pointed POI waits for the station clip, then plays once with its sourced
   });
   await page.getByRole("button", { name: /Window landmark,/ }).click();
   await expect(page.getByRole("heading", { name: landmark.name })).toBeVisible({ timeout: 10000 });
+  await page.locator(".poi-sheet").getByRole("button", { name: "Collapse sheet", exact: true }).click();
   await expect(page.getByText("Window landmark queued")).toBeVisible();
   expect(await clips(page)).toEqual([
     "https://example.org/test-clip-journey.mp3",
@@ -212,8 +213,11 @@ test("a pointed POI waits for the station clip, then plays once with its sourced
     { timeout: 10000 }).toContain("pointed");
   await expect.poll(() => clips(page)).toContain("https://example.org/test-clip-place-pointed.mp3");
   await expect(page.locator(".audio-title")).toHaveText(landmark.name);
+  await expect(page.locator(".audio-title")).toBeVisible();
+  await page.locator(".poi-sheet").getByRole("button", { name: "Expand sheet", exact: true }).click();
+  await expect(page.locator(".story-facts")).toBeVisible();
   await expect(page.locator(".story-facts")).toContainText(evidence.text);
-  await page.getByRole("button", { name: `Discard ${landmark.name}` }).click();
+  await page.locator(".poi-sheet").getByRole("button", { name: "Discard discovery", exact: true }).click();
   await expect(page.getByText("Waiting for a nearby story")).toBeVisible();
   expect((await clips(page)).filter((url) => url.includes("test-clip-place-pointed"))).toHaveLength(1);
 });
@@ -245,6 +249,7 @@ test("a POI with no source stays queued and is never sent to the narration provi
   await expect.poll(() => clips(page)).toContain("https://example.org/test-clip-journey.mp3");
   await finishClip(page);
   await expect(page.getByText("Waiting for a nearby story")).toBeVisible();
+  await page.getByRole("button", { name: /My discoveries/ }).click();
   await expect(page.getByRole("heading", { name: "Window landmark" })).toBeVisible();
   expect(requested.some((input) => input.type === "place")).toBe(false);
   expect(await clips(page)).toEqual(["https://example.org/test-clip-journey.mp3"]);
@@ -261,7 +266,9 @@ test("demo ride explicitly labels its simulation and identifies the journey as s
 
   await page.goto("/");
   await page.getByRole("button", { name: "Start Jamaica demo ride" }).click();
-  await expect(page.getByText("Simulated location & heading", { exact: true })).toBeVisible();
+  const rideStatus = page.locator(".ride-heading p");
+  await expect(rideStatus).toBeVisible();
+  await expect(rideStatus).toContainText("Simulated ride");
   await page.getByRole("button", { name: "Pause replay" }).click();
   await page.getByRole("button", { name: "Start audio tour" }).click();
   await expect.poll(() => requested.some((input) => input.type === "journey")).toBe(true);
@@ -271,5 +278,6 @@ test("demo ride explicitly labels its simulation and identifies the journey as s
   await expect.poll(() => clips(page)).toContain("https://example.org/test-clip-journey.mp3");
   await page.getByText("Transcript & sources").click();
   await expect(page.getByText(/This is a simulated ride\./)).toBeVisible();
-  await expect(page.getByText("Simulated location & heading", { exact: true })).toBeVisible();
+  await expect(rideStatus).toBeVisible();
+  await expect(rideStatus).toContainText("Simulated ride");
 });

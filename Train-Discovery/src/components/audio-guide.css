@@ -55,6 +55,9 @@
 }
 
 .train-audio-guide .audio-guide:not(.audio-guide-active) {
+  width: fit-content;
+  max-width: 100%;
+  margin-inline: auto;
   flex-wrap: wrap;
 }
 

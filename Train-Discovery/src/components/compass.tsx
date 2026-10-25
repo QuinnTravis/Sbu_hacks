@@ -83,11 +83,9 @@ export function Compass({
           <div className="ride-map ride-map-waiting" role="group" aria-label={label} />
         )}
       </div>
-      {heading !== null || !idleLabel ? (
+      {heading === null && !idleLabel ? (
         <p className="pointing-instruction">
-          {heading === null
-            ? "Hold your phone upright"
-            : "Point. Discover. Keep."}
+          Hold your phone upright
         </p>
       ) : null}
     </div>

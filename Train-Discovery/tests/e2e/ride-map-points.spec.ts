@@ -74,7 +74,9 @@ for (const viewport of [{ width: 320, height: 740 }, { width: 660, height: 560 }
       );
     }).toBe(true);
     for (const place of places.slice(0, 4)) await expect(page.locator(`[data-place-id="${place.id}"]`)).toBeInViewport();
-    await expect(page.locator(".ride-map-credit")).toContainText("Fixture basemap");
+    const attribution = page.locator(".maplibregl-ctrl-attrib");
+    await attribution.locator(".maplibregl-ctrl-attrib-button").click();
+    await expect(attribution).toContainText("Fixture basemap");
     await page.screenshot({ path: info.outputPath("ride-map-points.png") });
 
     await page.getByRole("button", { name: "Open dev panel", exact: true }).click();

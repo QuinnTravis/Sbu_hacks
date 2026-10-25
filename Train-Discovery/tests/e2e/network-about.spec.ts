@@ -98,7 +98,7 @@ for (const viewport of [
 
     await page.goto("/about#sources");
     await expect(page.locator("#sources")).toBeInViewport();
-    await expect(page.locator("#sources")).toHaveText("Data & credits");
+    await expect(page.locator("#sources")).toHaveText("Data sources");
     await expect(back).toHaveAttribute("href", "/");
     await back.focus();
     await expect(back).toBeFocused();

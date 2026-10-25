@@ -46,7 +46,6 @@ import {
 } from "@/lib/saved";
 import {
   chooseReplayTarget,
-  holdCandidateRows,
   rankPointingCandidates,
   replayCatalogStatus,
   sameDiscoverySite,
@@ -61,6 +60,8 @@ import { Compass } from "./compass";
 import { PlaceCard } from "./place-card";
 import { AudioGuideBar } from "./audio-guide-bar";
 import { CandidateSheet } from "./candidate-sheet";
+import { PoiSheet } from "./poi-sheet";
+import "./ride-screen.css";
 
 export function DiscoveryApp({ rail }: { rail: RailData }) {
   const [demoLocation, setDemoLocation] = useState(true);
@@ -92,11 +93,13 @@ export function DiscoveryApp({ rail }: { rail: RailData }) {
   const [saved, setSaved] = useState<SavedEntry[]>([]);
   const [savedCursor, setSavedCursor] = useState(0);
   const [discoveryList, setDiscoveryList] = useState<"ride" | "saved">("ride");
+  const [poiOpen, setPoiOpen] = useState(false);
+  const [poiExpanded, setPoiExpanded] = useState(false);
+  const [poiSnapshot, setPoiSnapshot] = useState<PointingCandidate[]>([]);
+  const [activePoiId, setActivePoiId] = useState<string | null>(null);
+  const [dismissedPoiKey, setDismissedPoiKey] = useState("");
   const savedRef = useRef(saved);
   const storageBroken = useRef(false);
-  const [sheetEngaged, setSheetEngaged] = useState(false);
-  const [frozenCandidates, setFrozenCandidates] = useState<PointingCandidate[] | null>(null);
-  const releaseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const sensors = useSensors();
   const selectionPosition = demoLocation ? DEMO_LOCATION : sensors.position;
   const route = rail.routes.find((r) => r.id === (ride?.routeId || selected));
@@ -118,10 +121,42 @@ export function DiscoveryApp({ rail }: { rail: RailData }) {
     const update = () => setOnline(navigator.onLine);
     window.addEventListener("online", update);
     window.addEventListener("offline", update);
-    if ("serviceWorker" in navigator && process.env.NODE_ENV === "production")
-      navigator.serviceWorker
-        .register("/sw.js", { updateViaCache: "none" })
-        .catch(() => {});
+    if ("serviceWorker" in navigator) {
+      if (process.env.NODE_ENV === "production") {
+        navigator.serviceWorker
+          .register("/sw.js", { updateViaCache: "none" })
+          .catch(() => {});
+      } else {
+        // A worker left over from `next start` can serve stale CSS/JS to `next dev`.
+        const appWorkerUrl = new URL("/sw.js", window.location.origin).href;
+        void navigator.serviceWorker
+          .getRegistrations()
+          .then(async (registrations) => {
+            const appRegistrations = registrations.filter((registration) =>
+              [
+                registration.installing,
+                registration.waiting,
+                registration.active,
+              ].some((worker) => worker?.scriptURL === appWorkerUrl),
+            );
+            if (!appRegistrations.length) return;
+            const removed = await Promise.all(
+              appRegistrations.map((registration) => registration.unregister()),
+            );
+            if (!removed.some(Boolean)) return;
+            const staleAssetCaches = (await caches.keys()).filter(
+              (key) =>
+                key.startsWith("train-discovery-") &&
+                (key.endsWith("-assets") || key.endsWith("-shell")),
+            );
+            await Promise.all(
+              staleAssetCaches.map((key) => caches.delete(key)),
+            );
+            window.location.reload();
+          })
+          .catch(() => {});
+      }
+    }
     return () => {
       window.removeEventListener("online", update);
       window.removeEventListener("offline", update);
@@ -155,7 +190,9 @@ export function DiscoveryApp({ rail }: { rail: RailData }) {
         const data = await response.json();
         if (!controller.signal.aborted) {
           const catalog = data.places as Place[];
-          setPlaces((current) => mergeCatalogPlaces(current, catalog, savedRef.current));
+          setPlaces((current) =>
+            mergeCatalogPlaces(current, catalog, savedRef.current),
+          );
           setPackageState(
             response.headers.get("X-Discovery-Cache") === "offline"
               ? "cached"
@@ -163,7 +200,11 @@ export function DiscoveryApp({ rail }: { rail: RailData }) {
           );
           setRide((current) => {
             if (!current) return current;
-            const queue = refreshQueuedPlaces(current.queue, catalog, savedRef.current);
+            const queue = refreshQueuedPlaces(
+              current.queue,
+              catalog,
+              savedRef.current,
+            );
             return queue === current.queue ? current : { ...current, queue };
           });
           setSaved((current) => refreshSaved(current, catalog));
@@ -273,15 +314,18 @@ export function DiscoveryApp({ rail }: { rail: RailData }) {
     () =>
       position && gpsFresh && !offRoute && ride
         ? places
-            .filter((place) =>
-              !ride.dismissed.includes(place.id) &&
-              distance(position, place) <= 1100 &&
-              (Boolean(audioNarration(place)) || audioEvidence(place).length > 0),
+            .filter(
+              (place) =>
+                !ride.dismissed.includes(place.id) &&
+                distance(position, place) <= 1100 &&
+                (Boolean(audioNarration(place)) ||
+                  audioEvidence(place).length > 0),
             )
-            .sort((a, b) =>
-              Number(audioNarration(b)?.kind === "verified") -
-                Number(audioNarration(a)?.kind === "verified") ||
-              distance(position, a) - distance(position, b),
+            .sort(
+              (a, b) =>
+                Number(audioNarration(b)?.kind === "verified") -
+                  Number(audioNarration(a)?.kind === "verified") ||
+                distance(position, a) - distance(position, b),
             )
         : [],
     [position, gpsFresh, offRoute, ride, places],
@@ -290,15 +334,31 @@ export function DiscoveryApp({ rail }: { rail: RailData }) {
     if (!narratedPlace?.story) return;
     // Keep the spoken, checked claims and their exact passages on the saved
     // card as well. No second, uncited copy of the story is generated.
-    const merge = (place: Place) => place.id === narratedPlace.id &&
+    const merge = (place: Place) =>
+      place.id === narratedPlace.id &&
       (place.story?.verifiedAt !== narratedPlace.story?.verifiedAt ||
-       place.story?.evidenceHash !== narratedPlace.story?.evidenceHash)
-      ? narratedPlace : place;
+        place.story?.evidenceHash !== narratedPlace.story?.evidenceHash)
+        ? narratedPlace
+        : place;
     setRide((current) => {
-      if (!current || !current.queue.some((entry) => merge(entry.place) !== entry.place)) return current;
-      return { ...current, queue: current.queue.map((entry) => ({ ...entry, place: merge(entry.place) })) };
+      if (
+        !current ||
+        !current.queue.some((entry) => merge(entry.place) !== entry.place)
+      )
+        return current;
+      return {
+        ...current,
+        queue: current.queue.map((entry) => ({
+          ...entry,
+          place: merge(entry.place),
+        })),
+      };
     });
-    setPlaces((current) => current.some((place) => merge(place) !== place) ? current.map(merge) : current);
+    setPlaces((current) =>
+      current.some((place) => merge(place) !== place)
+        ? current.map(merge)
+        : current,
+    );
     setSaved((current) => mergeSavedNarration(current, narratedPlace));
   }, []);
   const audioGuide = useAudioGuide(
@@ -307,11 +367,19 @@ export function DiscoveryApp({ rail }: { rail: RailData }) {
     ride?.dismissed,
     ride?.startedAt ?? null,
     {
-      routeId: ride?.routeId ?? "", routeName: route?.name ?? "", stops: route?.stops ?? [],
+      routeId: ride?.routeId ?? "",
+      routeName: route?.name ?? "",
+      stops: route?.stops ?? [],
       position: gpsFresh && !offRoute ? position : null,
       simulation: Boolean(ride?.replay),
-      livePosition: ride && !ride.replay && gpsFresh && !offRoute && sensors.gpsStatus === "active"
-        ? sensors.position : null,
+      livePosition:
+        ride &&
+        !ride.replay &&
+        gpsFresh &&
+        !offRoute &&
+        sensors.gpsStatus === "active"
+          ? sensors.position
+          : null,
       onNarrated: rememberNarration,
     },
   );
@@ -346,25 +414,54 @@ export function DiscoveryApp({ rail }: { rail: RailData }) {
           ? "is-waiting"
           : "";
 
-  useEffect(() => {
-    if (ride?.queue.length === 1) queueMicrotask(() => setView("queue"));
-  }, [ride?.queue.length]);
-  useEffect(() => () => {
-    if (releaseTimer.current) clearTimeout(releaseTimer.current);
-  }, []);
-
   const liveCandidates = useMemo(() => {
     if (!canDetect || !position || heading === null || !ride) return [];
     return rankPointingCandidates(places, position, heading, ride, placesById);
   }, [canDetect, position, heading, ride, places, placesById]);
-  const pointingCandidates = holdCandidateRows(
-    liveCandidates,
-    frozenCandidates,
-    sheetEngaged,
-  );
   const directionEmpty = Boolean(
-    canDetect && !catalogPending && packageState !== "error" && pointingCandidates.length === 0,
+    canDetect &&
+    !catalogPending &&
+    packageState !== "error" &&
+    liveCandidates.length === 0,
   );
+  const liveCandidatesRef = useRef(liveCandidates);
+  useEffect(() => {
+    liveCandidatesRef.current = liveCandidates;
+  }, [liveCandidates]);
+  const candidateKey = liveCandidates
+    .map((candidate) => candidate.place.id)
+    .sort()
+    .join("|");
+  useEffect(() => {
+    if (
+      !rideRouteId ||
+      view !== "point" ||
+      poiOpen ||
+      !candidateKey ||
+      candidateKey === dismissedPoiKey
+    )
+      return;
+    // Hold the aim briefly, then retain these rows until the rider dismisses them.
+    const timer = setTimeout(() => {
+      setPoiSnapshot(liveCandidatesRef.current);
+      setActivePoiId(null);
+      setPoiExpanded(false);
+      setPoiOpen(true);
+    }, 450);
+    return () => clearTimeout(timer);
+  }, [candidateKey, dismissedPoiKey, poiOpen, rideRouteId, view]);
+  useEffect(() => {
+    if (!candidateKey) queueMicrotask(() => setDismissedPoiKey(""));
+  }, [candidateKey]);
+  const activePoiIndex =
+    ride?.queue.findIndex((entry) => entry.place.id === activePoiId) ?? -1;
+  const activePoi =
+    activePoiIndex >= 0 ? ride?.queue[activePoiIndex] : undefined;
+  const dismissPoi = () => {
+    setDismissedPoiKey(candidateKey);
+    setPoiOpen(false);
+    setPoiExpanded(false);
+  };
 
   const ranked = useMemo(
     () =>
@@ -392,17 +489,34 @@ export function DiscoveryApp({ rail }: { rail: RailData }) {
     Math.min(cardIndex, (ride?.queue.length ?? 1) - 1),
   );
   const currentEntry = ride?.queue[currentIndex];
-  const savedIndex = saved.length ? Math.max(0, Math.min(savedCursor, saved.length - 1)) : 0;
+  const savedIndex = saved.length
+    ? Math.max(0, Math.min(savedCursor, saved.length - 1))
+    : 0;
   const visibleSaved = saved[savedIndex];
-  const queuedSaved = visibleSaved && ride
-    ? ride.queue.find((entry) => sameDiscoverySite(entry.place, visibleSaved.place))
-    : undefined;
+  const queuedSaved =
+    visibleSaved && ride
+      ? ride.queue.find((entry) =>
+          sameDiscoverySite(entry.place, visibleSaved.place),
+        )
+      : undefined;
   const toggleSaved = (place: Place) => {
-    setSaved((current) => (isSaved(current, place) ? unsavePlace(current, place) : savePlace(current, place)));
+    const removedIndex = saved.findIndex((entry) =>
+      sameDiscoverySite(entry.place, place),
+    );
+    if (removedIndex >= 0) {
+      const nextIndex = removedIndex < savedIndex ? savedIndex - 1 : savedIndex;
+      setSavedCursor(Math.max(0, Math.min(nextIndex, saved.length - 2)));
+    }
+    setSaved((current) =>
+      isSaved(current, place)
+        ? unsavePlace(current, place)
+        : savePlace(current, place),
+    );
   };
   const storageNotice = storageError ? (
     <p className="inline-notice" role="alert">
-      Device storage is full or blocked. Keep this tab open to retain your queue and saved discoveries.
+      Device storage is full or blocked. Keep this tab open to retain your queue
+      and saved discoveries.
     </p>
   ) : null;
   const nearestStation =
@@ -428,6 +542,10 @@ export function DiscoveryApp({ rail }: { rail: RailData }) {
     setHeadingMode(replay ? "auto" : "phone");
     setPlaying(true);
     setCardIndex(0);
+    setPoiOpen(false);
+    setActivePoiId(null);
+    setDismissedPoiKey("");
+    setDiscoveryList("ride");
     setView("point");
     setSelected(id);
     setRide({
@@ -485,30 +603,26 @@ export function DiscoveryApp({ rail }: { rail: RailData }) {
     setRide(null);
     setPlaces([]);
     setEndConfirm(false);
-    if (releaseTimer.current) clearTimeout(releaseTimer.current);
-    setFrozenCandidates(null);
-    setSheetEngaged(false);
-  };
-  const engageSheet = () => {
-    if (releaseTimer.current) clearTimeout(releaseTimer.current);
-    setFrozenCandidates((held) => held ?? liveCandidates);
-    setSheetEngaged(true);
-  };
-  const releaseSheet = () => {
-    if (releaseTimer.current) clearTimeout(releaseTimer.current);
-    releaseTimer.current = setTimeout(() => {
-      setFrozenCandidates(null);
-      setSheetEngaged(false);
-    }, 350);
   };
   const selectCandidate = (candidate: PointingCandidate) => {
     const now = Date.now();
-    if (releaseTimer.current) clearTimeout(releaseTimer.current);
-    setFrozenCandidates(null);
-    setSheetEngaged(false);
-    setCardIndex(ride?.queue.length ?? 0);
-    setView("queue");
-    setRide((current) => current ? enqueue(current, candidate.place, candidate.meters, now) : current);
+    const existing =
+      ride?.queue.findIndex((entry) =>
+        sameDiscoverySite(entry.place, candidate.place),
+      ) ?? -1;
+    setCardIndex(existing >= 0 ? existing : (ride?.queue.length ?? 0));
+    setActivePoiId(
+      existing >= 0 ? ride!.queue[existing].place.id : candidate.place.id,
+    );
+    setPoiExpanded(true);
+    setPoiOpen(true);
+    setDiscoveryList("ride");
+    setView("point");
+    setRide((current) =>
+      current
+        ? enqueue(current, candidate.place, candidate.meters, now)
+        : current,
+    );
     audioGuide.schedule(candidate.place, now);
   };
   const gpsMessage =
@@ -539,7 +653,9 @@ export function DiscoveryApp({ rail }: { rail: RailData }) {
               : null;
 
   return (
-    <div className={`app-shell ${!ride ? "route-select-shell" : ""}`}>
+    <div
+      className={`app-shell ${!ride ? "route-select-shell" : `ride-map-shell is-${view}${poiOpen && view === "point" ? " has-poi-sheet" : ""}${poiOpen && poiExpanded && view === "point" ? " is-poi-expanded" : ""}`}`}
+    >
       <header className="app-header">
         <Link className="brand" href="/" aria-label="Train Discovery home">
           <span className="brand-mark">
@@ -810,76 +926,114 @@ export function DiscoveryApp({ rail }: { rail: RailData }) {
           </section>
         ) : (
           <div className="ride-layout">
-            <div className="ride-heading">
-              <div>
-                <div className="ride-route-name">
-                  <span
-                    className="route-color"
-                    style={{ background: route?.color }}
-                  />
-                  <h1>{route?.name.replace(" Branch", "")}</h1>
-                  <span className="ride-running">
-                    <span />
-                    {ride.replay
-                      ? "Replay"
-                      : canDetect
-                        ? "Discovering"
-                        : "Paused"}
-                  </span>
+            <div
+              className="ride-top-controls"
+              inert={poiOpen && poiExpanded && view === "point"}
+            >
+              <div className="ride-heading">
+                <div>
+                  <div className="ride-route-name">
+                    <span
+                      className="route-color"
+                      style={{ background: route?.color }}
+                    />
+                    <h1>{route?.name.replace(" Branch", "")}</h1>
+                    <span className="ride-running">
+                      <span />
+                      {ride.replay
+                        ? "Replay"
+                        : canDetect
+                          ? "Discovering"
+                          : "Paused"}
+                    </span>
+                  </div>
+                  <p>
+                    {nearestStation
+                      ? `Near ${nearestStation.name.replace(" Station", "")}`
+                      : "Waiting for location"}
+                    {ride.replay && <span> · Simulated ride</span>}
+                  </p>
                 </div>
-                <p>
-                  {nearestStation
-                    ? `Near ${nearestStation.name.replace(" Station", "")}`
-                    : "Waiting for location"}
-                </p>
-              </div>
-              {endConfirm ? (
-                <div className="end-confirm">
-                  <span>Clear this ride and its queue?</span>
-                  <button className="text-button" onClick={finish}>
-                    End ride
-                  </button>
+                {endConfirm ? (
+                  <div className="end-confirm">
+                    <span>Clear this ride and its queue?</span>
+                    <button className="text-button" onClick={finish}>
+                      End ride
+                    </button>
+                    <button
+                      className="icon-button"
+                      onClick={() => setEndConfirm(false)}
+                      aria-label="Keep riding"
+                    >
+                      <X size={18} />
+                    </button>
+                  </div>
+                ) : (
                   <button
-                    className="icon-button"
-                    onClick={() => setEndConfirm(false)}
-                    aria-label="Keep riding"
+                    className="secondary-button"
+                    onClick={() =>
+                      ride.queue.length ? setEndConfirm(true) : finish()
+                    }
                   >
-                    <X size={18} />
+                    End ride
+                    <X size={14} />
+                  </button>
+                )}
+              </div>
+              <AudioGuideBar
+                guide={audioGuide}
+                saved={Boolean(
+                  audioGuide.currentPlace &&
+                  isSaved(saved, audioGuide.currentPlace),
+                )}
+                onSave={() => {
+                  const place = audioGuide.currentPlace;
+                  if (!place) return;
+                  setSaved((current) => savePlace(current, place));
+                  if (!position) return;
+                  setRide((current) =>
+                    current
+                      ? enqueue(current, place, distance(position, place))
+                      : current,
+                  );
+                }}
+              />
+              {packageState === "error" && (
+                <div className="catalog-alert" role="alert">
+                  <p>Couldn’t load places.</p>
+                  <button
+                    className="text-button"
+                    onClick={() => setRetry((v) => v + 1)}
+                  >
+                    <RefreshCw size={13} />
+                    Retry
                   </button>
                 </div>
-              ) : (
-                <button
-                  className="secondary-button"
-                  onClick={() =>
-                    ride.queue.length ? setEndConfirm(true) : finish()
-                  }
-                >
-                  End ride
-                  <X size={14} />
-                </button>
               )}
+              {!ride.replay &&
+                !canDetect &&
+                poiOpen &&
+                (gpsMessage || compassMessage) && (
+                  <div className="ride-sensor-warning" role="status">
+                    <p>{gpsMessage || compassMessage}</p>
+                    <button className="text-button" onClick={resume}>
+                      Retry sensors
+                    </button>
+                  </div>
+                )}
             </div>
-            <AudioGuideBar
-              guide={audioGuide}
-              saved={Boolean(audioGuide.currentPlace && isSaved(saved, audioGuide.currentPlace))}
-              onSave={() => {
-                const place = audioGuide.currentPlace;
-                if (!place) return;
-                setSaved((current) => savePlace(current, place));
-                if (!position) return;
-                setRide((current) => current ? enqueue(current, place, distance(position, place)) : current);
-              }}
-            />
-            {packageState === "error" && (
-              <div className="catalog-alert" role="alert">
-                <p>Couldn’t load places.</p>
-                <button
-                  className="text-button"
-                  onClick={() => setRetry((v) => v + 1)}
-                >
-                  <RefreshCw size={13} />
-                  Retry
-                </button>
+            {poiOpen && poiExpanded && view === "point" && (
+              <div className="ride-expanded-status" role="status">
+                <span className="ride-expanded-route">
+                  {route?.name.replace(" Branch", "")}
+                </span>
+                <span>
+                  {ride.replay
+                    ? "Simulated ride"
+                    : canDetect
+                      ? "Discovering"
+                      : "Sensors paused"}
+                </span>
               </div>
             )}
             <div className="mobile-tabs floating-nav">
@@ -924,7 +1078,9 @@ export function DiscoveryApp({ rail }: { rail: RailData }) {
                       : undefined
                   }
                   settling={Boolean(
-                    ride.replay && activeHeadingMode === "auto" && catalogPending,
+                    ride.replay &&
+                    activeHeadingMode === "auto" &&
+                    catalogPending,
                   )}
                   note={
                     replayStatus === "empty"
@@ -932,214 +1088,316 @@ export function DiscoveryApp({ rail }: { rail: RailData }) {
                       : undefined
                   }
                 />
-                {ride.replay ? (
-                  <div className="replay-controls">
-                    <span>
-                      {activeHeadingMode === "phone"
-                        ? "Simulated train · phone compass"
-                        : activeHeadingMode === "manual"
-                          ? "Simulated train · joystick"
-                          : "Simulated location & heading"}
-                    </span>
-                    <button
-                      className="icon-button"
-                      onClick={() => setPlaying((v) => !v)}
-                      aria-label={playing ? "Pause replay" : "Play replay"}
-                    >
-                      {playing ? <Pause size={16} /> : <Play size={16} />}
-                    </button>
-                  </div>
-                ) : (
-                  <div className="sensor-controls">
-                    {gpsMessage && <p role="status">{gpsMessage}</p>}
-                    {!gpsMessage && compassMessage && (
-                      <p role="status">{compassMessage}</p>
-                    )}
-                    {(!canDetect || sensors.gpsStatus === "idle") && (
-                      <button className="secondary-button" onClick={resume}>
-                        <Radio size={15} />
-                        {sensors.gpsStatus === "idle"
-                          ? "Enable sensors"
-                          : "Retry sensors"}
+                <div className="ride-sensor-overlay">
+                  {ride.replay ? (
+                    <div className="replay-controls">
+                      {activeHeadingMode !== "auto" && (
+                        <span>
+                          {activeHeadingMode === "phone"
+                            ? "Simulated train · phone compass"
+                            : "Simulated train · joystick"}
+                        </span>
+                      )}
+                      <button
+                        className="icon-button"
+                        onClick={() => setPlaying((v) => !v)}
+                        aria-label={playing ? "Pause replay" : "Play replay"}
+                      >
+                        {playing ? <Pause size={16} /> : <Play size={16} />}
                       </button>
+                    </div>
+                  ) : (
+                    <div className="sensor-controls">
+                      {gpsMessage && <p role="status">{gpsMessage}</p>}
+                      {!gpsMessage && compassMessage && (
+                        <p role="status">{compassMessage}</p>
+                      )}
+                      {(!canDetect || sensors.gpsStatus === "idle") && (
+                        <button className="secondary-button" onClick={resume}>
+                          <Radio size={15} />
+                          {sensors.gpsStatus === "idle"
+                            ? "Enable sensors"
+                            : "Retry sensors"}
+                        </button>
+                      )}
+                      {canDetect && (
+                        <span className="sensors-ready">
+                          <Radio size={14} />
+                          Location & compass active
+                        </span>
+                      )}
+                    </div>
+                  )}
+                  {ride.replay &&
+                    activeHeadingMode === "phone" &&
+                    compassMessage && (
+                      <p className="inline-notice" role="status">
+                        {compassMessage}
+                      </p>
                     )}
-                    {canDetect && (
-                      <span className="sensors-ready">
-                        <Radio size={14} />
-                        Location & compass active
-                      </span>
+                  {ride.replay &&
+                    activeHeadingMode === "manual" &&
+                    heading === null && (
+                      <p className="inline-notice" role="status">
+                        Simulated phone is flat. Increase Phone tilt to point
+                        outward.
+                      </p>
+                    )}
+                  {!ride.replay && activeHeadingMode === "manual" && (
+                    <p className="inline-notice">
+                      Real GPS · simulated joystick heading
+                    </p>
+                  )}
+                  {offRoute && !ride.replay && (
+                    <p className="inline-notice">
+                      You seem far from this branch. Check your selected route.
+                    </p>
+                  )}
+                  <div className="nearby-status">
+                    <MapPin size={15} />
+                    <span>
+                      {catalogPending
+                        ? "Loading places…"
+                        : packageState === "error"
+                          ? "Places unavailable"
+                          : `${places.filter((p) => position && distance(position, p) < POINTING_RADIUS_M).length} places nearby`}
+                    </span>
+                    {packageState === "cached" && (
+                      <span className="cached-label">Cached</span>
                     )}
                   </div>
-                )}
-                {ride.replay &&
-                  activeHeadingMode === "phone" &&
-                  compassMessage && (
-                    <p className="inline-notice" role="status">
-                      {compassMessage}
+                  {directionEmpty && (
+                    <p className="direction-empty" role="status">
+                      Nothing in this direction.
                     </p>
                   )}
-                {ride.replay &&
-                  activeHeadingMode === "manual" &&
-                  heading === null && (
-                    <p className="inline-notice" role="status">
-                      Simulated phone is flat. Increase Phone tilt to point
-                      outward.
-                    </p>
-                  )}
-                {!ride.replay && activeHeadingMode === "manual" && (
-                  <p className="inline-notice">
-                    Real GPS · simulated joystick heading
-                  </p>
-                )}
-                {offRoute && !ride.replay && (
-                  <p className="inline-notice">
-                    You seem far from this branch. Check your selected route.
-                  </p>
-                )}
-                <div className="nearby-status">
-                  <MapPin size={15} />
-                  <span>
-                    {catalogPending
-                      ? "Loading places…"
-                      : packageState === "error"
-                        ? "Places unavailable"
-                        : `${places.filter((p) => position && distance(position, p) < POINTING_RADIUS_M).length} places nearby`}
-                  </span>
-                  {packageState === "cached" && (
-                    <span className="cached-label">Cached</span>
-                  )}
                 </div>
-                {(pointingCandidates.length > 0 || directionEmpty) && (
-                  <CandidateSheet
-                    candidates={pointingCandidates}
-                    empty={directionEmpty}
-                    onEngage={engageSheet}
-                    onRelease={releaseSheet}
-                    onSelect={selectCandidate}
-                  />
-                )}
-              </section>
-              <section
-                className="queue-panel"
-                aria-label={discoveryList === "saved" ? "Saved discoveries" : "Your discovery queue"}
-              >
-                <div className="queue-heading">
-                  <h2>My discoveries</h2>
-                  <button
-                    className="text-button"
-                    aria-pressed={discoveryList === "ride"}
-                    onClick={() => setDiscoveryList("ride")}
-                  >
-                    This ride
-                  </button>
-                  <button
-                    className="text-button"
-                    aria-pressed={discoveryList === "saved"}
-                    onClick={() => setDiscoveryList("saved")}
-                  >
-                    Saved
-                  </button>
-                  <span className="count-badge">
-                    {discoveryList === "saved" ? saved.length : ride.queue.length}
-                  </span>
-                </div>
-                {discoveryList === "saved" ? (
-                  <SavedPlaces
-                    entries={saved}
-                    index={savedIndex}
-                    onIndex={setSavedCursor}
-                    onToggle={toggleSaved}
-                    distance={queuedSaved?.distance}
-                    position={position}
-                    onNarrate={queuedSaved ? () => audioGuide.replay(queuedSaved.place.id) : undefined}
-                    onDiscard={
-                      queuedSaved
-                        ? () => setRide((current) => current ? discard(current, queuedSaved.place.id) : current)
-                        : undefined
-                    }
-                  />
-                ) : currentEntry ? (
-                  <>
-                    <PlaceCard
-                      key={currentEntry.place.id}
-                      entry={currentEntry}
-                      index={currentIndex}
-                      total={ride.queue.length}
-                      onNavigate={setCardIndex}
-                      onNarrate={() => audioGuide.replay(currentEntry.place.id)}
-                      saved={isSaved(saved, currentEntry.place)}
-                      onSave={() => toggleSaved(currentEntry.place)}
-                      onDiscard={() =>
-                        setRide((current) =>
-                          current
-                            ? discard(current, currentEntry.place.id)
-                            : current,
-                        )
-                      }
-                    />
-                    {ride.queue.length > 1 && (
-                      <div className="queue-strip">
-                        {ride.queue.map((entry, i) => (
-                          <button
-                            key={entry.place.id}
-                            onClick={() => setCardIndex(i)}
-                            className={currentIndex === i ? "selected" : ""}
-                            aria-pressed={currentIndex === i}
-                          >
-                            <span className="queue-index">{String(i + 1).padStart(2, "0")}</span>
-                            <span className="queue-strip-name">{entry.place.name}</span>
-                            <span className="candidate-distance">{formatDistance(entry.distance)}</span>
-                            <ChevronRight size={13} />
-                          </button>
-                        ))}
+                <PoiSheet
+                  open={poiOpen && view === "point"}
+                  expanded={poiExpanded}
+                  onExpandedChange={setPoiExpanded}
+                  onDismiss={dismissPoi}
+                  label={
+                    activePoi
+                      ? activePoi.place.name
+                      : "Places in this direction"
+                  }
+                >
+                  {!ride.replay &&
+                    !canDetect &&
+                    poiExpanded &&
+                    (gpsMessage || compassMessage) && (
+                      <div className="poi-sensor-warning" role="status">
+                        <p>{gpsMessage || compassMessage}</p>
+                        <button className="text-button" onClick={resume}>
+                          Retry sensors
+                        </button>
                       </div>
                     )}
-                  </>
-                ) : (
-                  <div className={`queue-empty${queueTone ? ` ${queueTone}` : ""}`}>
-                    <div className="empty-window">
-                      <CompassIcon size={31} strokeWidth={1.2} />
-                    </div>
-                    {queueTone === "is-waiting" && (
-                      <span className="steel-meter" aria-hidden="true">
-                        <span />
-                        <span />
-                        <span />
-                        <span />
-                        <span />
-                      </span>
-                    )}
-                    <h3>
-                      {view === "queue" && packageState === "error" ? (
-                        "Places didn’t load"
-                      ) : view === "queue" && replayStatus === "empty" ? (
-                        "No sourced place in range."
-                      ) : view === "queue" && catalogPending ? (
-                        "Loading places…"
-                      ) : (
-                        <>
-                          Your next discovery
-                          <br />
-                          is just outside.
-                        </>
+                  {activePoi && view === "point" ? (
+                    <>
+                      {!poiExpanded && (
+                        <button
+                          className="poi-summary"
+                          onClick={() => setPoiExpanded(true)}
+                        >
+                          <span>
+                            <strong>{activePoi.place.name}</strong>
+                            <small>
+                              {formatDistance(activePoi.distance)} when found
+                            </small>
+                          </span>
+                          <ChevronRight size={20} aria-hidden="true" />
+                        </button>
                       )}
-                    </h3>
-                    <p>
-                      {catalogPending ||
-                      packageState === "error" ||
-                      replayStatus === "empty" ? (
-                        "Discoveries stay here until you discard them."
-                      ) : (
-                        <>
-                          Point your phone at a nearby place.
-                          <br />
-                          Its story stays here until you discard it.
-                        </>
-                      )}
-                    </p>
-                  </div>
-                )}
+                      <div hidden={!poiExpanded}>
+                        <PlaceCard
+                          key={activePoi.place.id}
+                          entry={activePoi}
+                          index={activePoiIndex}
+                          total={ride.queue.length}
+                          onNavigate={(index) => {
+                            setActivePoiId(ride.queue[index]?.place.id ?? null);
+                            setCardIndex(index);
+                          }}
+                          onNarrate={() =>
+                            audioGuide.replay(activePoi.place.id)
+                          }
+                          saved={isSaved(saved, activePoi.place)}
+                          onSave={() => toggleSaved(activePoi.place)}
+                        />
+                        <button
+                          className="text-button poi-discard"
+                          onClick={() => {
+                            setRide((current) =>
+                              current
+                                ? discard(current, activePoi.place.id)
+                                : current,
+                            );
+                            dismissPoi();
+                          }}
+                        >
+                          Discard discovery
+                        </button>
+                      </div>
+                    </>
+                  ) : (
+                    <CandidateSheet
+                      candidates={view === "point" ? poiSnapshot : []}
+                      empty={false}
+                      onSelect={selectCandidate}
+                    />
+                  )}
+                </PoiSheet>
               </section>
+              {view === "queue" && (
+                <section
+                  className="queue-panel"
+                  aria-label={
+                    discoveryList === "saved"
+                      ? "Saved discoveries"
+                      : "Your discovery queue"
+                  }
+                >
+                  <div className="queue-heading">
+                    <h2>My discoveries</h2>
+                    <button
+                      className="text-button"
+                      aria-pressed={discoveryList === "ride"}
+                      onClick={() => setDiscoveryList("ride")}
+                    >
+                      This ride
+                    </button>
+                    <button
+                      className="text-button"
+                      aria-pressed={discoveryList === "saved"}
+                      onClick={() => setDiscoveryList("saved")}
+                    >
+                      Saved
+                    </button>
+                    <span className="count-badge">
+                      {discoveryList === "saved"
+                        ? saved.length
+                        : ride.queue.length}
+                    </span>
+                  </div>
+                  {discoveryList === "saved" ? (
+                    <SavedPlaces
+                      entries={saved}
+                      index={savedIndex}
+                      onIndex={setSavedCursor}
+                      onToggle={toggleSaved}
+                      distance={queuedSaved?.distance}
+                      position={position}
+                      onNarrate={
+                        queuedSaved
+                          ? () => audioGuide.replay(queuedSaved.place.id)
+                          : undefined
+                      }
+                      onDiscard={
+                        queuedSaved
+                          ? () =>
+                              setRide((current) =>
+                                current
+                                  ? discard(current, queuedSaved.place.id)
+                                  : current,
+                              )
+                          : undefined
+                      }
+                    />
+                  ) : currentEntry ? (
+                    <>
+                      <PlaceCard
+                        key={currentEntry.place.id}
+                        entry={currentEntry}
+                        index={currentIndex}
+                        total={ride.queue.length}
+                        onNavigate={setCardIndex}
+                        onNarrate={() =>
+                          audioGuide.replay(currentEntry.place.id)
+                        }
+                        saved={isSaved(saved, currentEntry.place)}
+                        onSave={() => toggleSaved(currentEntry.place)}
+                        onDiscard={() =>
+                          setRide((current) =>
+                            current
+                              ? discard(current, currentEntry.place.id)
+                              : current,
+                          )
+                        }
+                      />
+                      {ride.queue.length > 1 && (
+                        <div className="queue-strip">
+                          {ride.queue.map((entry, i) => (
+                            <button
+                              key={entry.place.id}
+                              onClick={() => setCardIndex(i)}
+                              className={currentIndex === i ? "selected" : ""}
+                              aria-pressed={currentIndex === i}
+                            >
+                              <span className="queue-index">
+                                {String(i + 1).padStart(2, "0")}
+                              </span>
+                              <span className="queue-strip-name">
+                                {entry.place.name}
+                              </span>
+                              <span className="candidate-distance">
+                                {formatDistance(entry.distance)}
+                              </span>
+                              <ChevronRight size={13} />
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </>
+                  ) : (
+                    <div
+                      className={`queue-empty${queueTone ? ` ${queueTone}` : ""}`}
+                    >
+                      <div className="empty-window">
+                        <CompassIcon size={31} strokeWidth={1.2} />
+                      </div>
+                      {queueTone === "is-waiting" && (
+                        <span className="steel-meter" aria-hidden="true">
+                          <span />
+                          <span />
+                          <span />
+                          <span />
+                          <span />
+                        </span>
+                      )}
+                      <h3>
+                        {view === "queue" && packageState === "error" ? (
+                          "Places didn’t load"
+                        ) : view === "queue" && replayStatus === "empty" ? (
+                          "No sourced place in range."
+                        ) : view === "queue" && catalogPending ? (
+                          "Loading places…"
+                        ) : (
+                          <>
+                            Your next discovery
+                            <br />
+                            is just outside.
+                          </>
+                        )}
+                      </h3>
+                      <p>
+                        {catalogPending ||
+                        packageState === "error" ||
+                        replayStatus === "empty" ? (
+                          "Discoveries stay here until you discard them."
+                        ) : (
+                          <>
+                            Point your phone at a nearby place.
+                            <br />
+                            Its story stays here until you discard it.
+                          </>
+                        )}
+                      </p>
+                    </div>
+                  )}
+                </section>
+              )}
             </div>
             {storageNotice}
             <p className="sr-only" aria-live="polite">
@@ -1202,7 +1460,9 @@ export function DiscoveryApp({ rail }: { rail: RailData }) {
           >
             <span className="nav-icon">
               <BookOpen size={25} strokeWidth={1.8} />
-              {saved.length > 0 && <span className="nav-count">{saved.length}</span>}
+              {saved.length > 0 && (
+                <span className="nav-count">{saved.length}</span>
+              )}
             </span>
             Discoveries
           </button>
@@ -1266,7 +1526,9 @@ function SavedPlaces({
       {entries.length > 1 && (
         <div className="queue-strip">
           {entries.map((item, i) => {
-            const meters = position ? distance(position, item.place) : Number.NaN;
+            const meters = position
+              ? distance(position, item.place)
+              : Number.NaN;
             return (
               <button
                 key={item.place.id}
@@ -1274,10 +1536,14 @@ function SavedPlaces({
                 className={current === i ? "selected" : ""}
                 aria-pressed={current === i}
               >
-                <span className="queue-index">{String(i + 1).padStart(2, "0")}</span>
+                <span className="queue-index">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
                 <span className="queue-strip-name">{item.place.name}</span>
                 {Number.isFinite(meters) ? (
-                  <span className="candidate-distance">{formatDistance(meters)}</span>
+                  <span className="candidate-distance">
+                    {formatDistance(meters)}
+                  </span>
                 ) : null}
                 <ChevronRight size={13} />
               </button>

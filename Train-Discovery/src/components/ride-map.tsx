@@ -246,12 +246,6 @@ function useQuietBasemap() {
   return style;
 }
 
-function parkAttribution(canvas: HTMLElement, credit: HTMLElement) {
-  const attrib = canvas.querySelector<HTMLElement>(".maplibregl-ctrl-attrib");
-  if (!attrib || attrib.parentElement === credit) return;
-  credit.replaceChildren(attrib);
-}
-
 function trackData(paths: [number, number][][]) {
   return {
     type: "FeatureCollection" as const,
@@ -284,7 +278,6 @@ function RideMapCanvas({
   label: string;
 }) {
   const frame = useRef<HTMLDivElement>(null);
-  const credit = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MapLibreMap | null>(null);
   const basemap = useQuietBasemap();
   const [zoom, setZoom] = useState(() => pointingConeZoom(position.lat, 320));
@@ -305,17 +298,6 @@ function RideMapCanvas({
     observer.observe(node);
     return () => observer.disconnect();
   }, [position.lat, basemap]);
-  useEffect(() => {
-    const canvas = frame.current;
-    const slot = credit.current;
-    if (!canvas || !slot) return;
-    const park = () => parkAttribution(canvas, slot);
-    park();
-    const observer = new MutationObserver(park);
-    observer.observe(canvas, { childList: true, subtree: true });
-    return () => observer.disconnect();
-  }, [basemap]);
-
   if (unavailable) {
     return <div className="ride-map ride-map-waiting" role="group" aria-label={label} />;
   }
@@ -351,7 +333,7 @@ function RideMapCanvas({
             touchPitch={false}
             keyboard={false}
             maplibreLogo={false}
-            attributionControl={{ compact: false }}
+            attributionControl={{ compact: true }}
             cursor="default"
             canvasContextAttributes={{ failIfMajorPerformanceCaveat: false }}
             style={{
@@ -364,8 +346,10 @@ function RideMapCanvas({
               mapRef.current = event.target;
               event.target.resize();
               if (typeof basemap === "string") applyQuietBasemap(event.target);
-              const slot = credit.current;
-              if (slot) parkAttribution(event.target.getContainer(), slot);
+              event.target
+                .getContainer()
+                .querySelector<HTMLElement>(".maplibregl-ctrl-attrib")
+                ?.classList.remove("maplibregl-compact-show");
             }}
             onError={(event) => {
               if (/webgl/i.test(event.error?.message ?? "")) setUnavailable(true);
@@ -440,7 +424,6 @@ function RideMapCanvas({
           </Map>
         ) : null}
       </div>
-      <div ref={credit} className="ride-map-credit" />
     </div>
   );
 }

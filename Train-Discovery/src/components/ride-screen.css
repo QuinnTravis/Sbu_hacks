@@ -1,0 +1,567 @@
+/* The map is the ride canvas. Controls and the discovery sheet float above it. */
+.app-shell.ride-map-shell:not(.route-select-shell) {
+  position: relative;
+  width: 100%;
+  max-width: none;
+  height: 100dvh;
+  min-height: 100svh;
+  padding: 0;
+  overflow: hidden;
+  isolation: isolate;
+  --ride-gutter: max(18px, env(safe-area-inset-left));
+  --ride-gutter-right: max(18px, env(safe-area-inset-right));
+  --poi-sheet-bottom: var(--nav-clearance);
+}
+.app-shell.ride-map-shell .app-header {
+  position: absolute;
+  inset: max(12px, env(safe-area-inset-top)) var(--ride-gutter-right) auto
+    var(--ride-gutter);
+  z-index: 12;
+  height: 44px;
+  padding: 0;
+  pointer-events: none;
+}
+.ride-map-shell .app-header > * {
+  pointer-events: auto;
+}
+.ride-map-shell .brand {
+  min-height: 44px;
+  gap: 6px;
+  padding: 0 12px 0 8px;
+  border-radius: 24px;
+  background: var(--paper);
+  font-size: 16px;
+}
+.ride-map-shell .brand-mark {
+  width: 24px;
+  height: 32px;
+}
+.ride-map-shell .rail-badge {
+  display: none;
+}
+.ride-map-shell .header-link,
+.ride-map-shell .header-right .dev-toggle {
+  width: 44px;
+  height: 44px;
+}
+.app-shell.ride-map-shell main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  padding: 0;
+}
+.app-shell.ride-map-shell .ride-layout {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  padding: calc(max(12px, env(safe-area-inset-top)) + 56px) 0
+    var(--nav-clearance);
+  overflow: hidden;
+}
+.ride-map-shell .ride-top-controls {
+  position: relative;
+  z-index: 10;
+  flex: 0 0 auto;
+  width: min(440px, calc(100% - 36px));
+  margin-inline: var(--ride-gutter) auto;
+  pointer-events: none;
+}
+.ride-map-shell .ride-top-controls > * {
+  pointer-events: auto;
+}
+.app-shell.ride-map-shell .ride-heading {
+  min-height: 70px;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 26px;
+  background: var(--paper);
+}
+.ride-map-shell .ride-route-name {
+  gap: 7px;
+  flex-wrap: wrap;
+}
+.ride-map-shell .ride-route-name h1 {
+  font-size: 21px;
+  line-height: 1.15;
+}
+.ride-map-shell .ride-running {
+  font-size: 10px;
+  padding: 4px 7px;
+}
+.ride-map-shell .ride-heading p {
+  margin-top: 4px;
+  font-size: 12px;
+}
+.ride-map-shell .ride-heading > .secondary-button {
+  min-height: 44px;
+  padding: 8px 12px;
+  flex-shrink: 0;
+}
+.ride-map-shell .end-confirm {
+  min-width: 128px;
+  max-width: 180px;
+}
+.ride-map-shell .end-confirm .text-button,
+.ride-map-shell .end-confirm .icon-button {
+  min-height: 44px;
+}
+.app-shell.ride-map-shell .audio-companion {
+  margin: 8px 0 0;
+}
+.ride-map-shell .audio-guide {
+  box-shadow: 0 4px 18px rgb(12 16 29 / 6%);
+}
+.ride-map-shell .audio-transcript {
+  background: var(--paper);
+  border-radius: 18px;
+  padding: 12px;
+}
+.ride-map-shell .catalog-alert {
+  margin-top: 8px;
+  padding: 10px 14px;
+}
+.ride-map-shell .ride-sensor-warning {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--paper);
+  padding: 10px 14px;
+  margin-top: 8px;
+  border-radius: 18px;
+  font-size: 13px;
+}
+.app-shell.ride-map-shell .ride-columns {
+  position: static;
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  overflow: visible;
+}
+.app-shell.ride-map-shell .ride-columns > .point-panel,
+.app-shell.ride-map-shell .ride-columns.mobile-queue > .point-panel,
+.app-shell.ride-map-shell:not(.route-select-shell)
+  .ride-columns.mobile-point
+  > .point-panel:has(> .train-compass) {
+  position: absolute;
+  inset: 0;
+  display: block;
+  z-index: auto;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  padding: 0;
+  overflow: visible;
+}
+.app-shell.ride-map-shell .point-panel > .train-compass.compass-instrument {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+}
+.app-shell.ride-map-shell .train-compass > .compass-stage {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  margin: 0;
+}
+.app-shell.ride-map-shell .train-compass .ride-map,
+.app-shell.ride-map-shell .train-compass .ride-map-canvas {
+  min-height: 0;
+  height: 100%;
+  border-radius: 0;
+}
+.app-shell.ride-map-shell .train-compass .ride-map::after {
+  display: none;
+}
+.ride-map-shell .compass-topline,
+.ride-map-shell .aim-status,
+.ride-map-shell .pointing-instruction {
+  position: absolute;
+  z-index: 1;
+}
+.ride-map-shell .compass-topline {
+  bottom: calc(var(--nav-clearance) + 16px);
+  left: var(--ride-gutter);
+  gap: 7px;
+  padding: 10px 14px;
+  border-radius: 22px;
+  background: var(--paper);
+  font-size: 12px;
+}
+.ride-map-shell .compass-topline::after {
+  display: none;
+}
+.ride-map-shell .compass-topline strong {
+  margin-left: 7px;
+}
+.ride-map-shell .aim-status,
+.app-shell.ride-map-shell .pointing-instruction {
+  bottom: calc(var(--nav-clearance) + 110px);
+  left: var(--ride-gutter);
+  max-width: calc(100% - 36px);
+  margin: 0;
+  padding: 10px 14px;
+  border-radius: 18px;
+  background: var(--paper);
+  font-size: 14px;
+}
+.ride-map-shell .ride-sensor-overlay {
+  position: absolute;
+  z-index: 1;
+  right: var(--ride-gutter);
+  bottom: calc(var(--nav-clearance) + 66px);
+  left: var(--ride-gutter);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  pointer-events: none;
+}
+.ride-map-shell .ride-sensor-overlay > * {
+  pointer-events: auto;
+}
+.ride-map-shell .ride-sensor-overlay .icon-button {
+  min-width: 44px;
+  min-height: 44px;
+}
+.app-shell.ride-map-shell .replay-controls,
+.app-shell.ride-map-shell .sensor-controls,
+.app-shell.ride-map-shell .nearby-status,
+.ride-map-shell .ride-sensor-overlay .inline-notice,
+.ride-map-shell .direction-empty {
+  width: fit-content;
+  max-width: 100%;
+  min-height: 36px;
+  margin: 0;
+  padding: 7px 12px;
+  border-radius: 22px;
+  background: var(--paper);
+  font-size: 12px;
+}
+.ride-map-shell.has-poi-sheet .ride-sensor-overlay,
+.ride-map-shell.has-poi-sheet .compass-topline,
+.ride-map-shell.has-poi-sheet .aim-status,
+.ride-map-shell.has-poi-sheet .pointing-instruction,
+.ride-map-shell.is-queue .ride-sensor-overlay,
+.ride-map-shell.is-queue .compass-topline,
+.ride-map-shell.is-queue .aim-status,
+.ride-map-shell.is-queue .pointing-instruction {
+  visibility: hidden;
+  pointer-events: none;
+}
+.ride-map-shell .maplibregl-ctrl-bottom-right {
+  right: max(10px, env(safe-area-inset-right));
+  bottom: calc(var(--nav-clearance) + 12px);
+  z-index: 4;
+}
+.ride-map-shell.has-poi-sheet .maplibregl-ctrl-bottom-right {
+  top: calc(max(12px, env(safe-area-inset-top)) + 56px);
+  bottom: auto;
+}
+.ride-map-shell .floating-nav {
+  z-index: 20;
+}
+.app-shell.ride-map-shell .queue-panel {
+  position: relative;
+  z-index: 5;
+  width: min(660px, calc(100% - 36px));
+  flex: 0 1 auto;
+  min-height: 0;
+  max-height: 100%;
+  margin: 12px auto 0;
+  padding: 18px 14px;
+  overflow: auto;
+  overscroll-behavior: contain;
+  scroll-padding-block: 16px;
+  border-radius: 28px;
+  background: var(--canvas);
+}
+.app-shell.ride-map-shell .mobile-point .queue-panel {
+  display: none;
+}
+.ride-map-shell .poi-sheet {
+  z-index: 15;
+  inset-inline: var(--ride-gutter) var(--ride-gutter-right);
+  width: min(660px, calc(100% - var(--ride-gutter) - var(--ride-gutter-right)));
+  margin-inline: auto;
+  height: min(
+    74dvh,
+    720px,
+    calc(100dvh - var(--nav-clearance) - max(12px, env(safe-area-inset-top)))
+  );
+  max-height: min(
+    74dvh,
+    720px,
+    calc(100dvh - var(--nav-clearance) - max(12px, env(safe-area-inset-top)))
+  );
+  border-radius: 30px;
+}
+.ride-map-shell .poi-sheet .poi-sheet__body {
+  padding: 0 0 18px;
+}
+.app-shell.ride-map-shell .poi-sheet .candidate-sheet {
+  max-height: none;
+  min-height: 0;
+  overflow: visible;
+  border-radius: 0;
+  padding: 0 6px 8px;
+}
+.ride-map-shell .poi-sheet .candidate-row {
+  min-height: 60px;
+}
+.ride-map-shell .poi-sheet .place-card {
+  border-radius: 0;
+  background: transparent;
+}
+.app-shell.ride-map-shell .poi-sheet .place-photo {
+  height: clamp(120px, 23dvh, 240px);
+  border-radius: 18px;
+  margin: 0 12px;
+}
+.app-shell.ride-map-shell .poi-sheet .place-content {
+  padding: 18px 20px 12px;
+}
+.ride-map-shell .poi-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  width: 100%;
+  min-height: 76px;
+  padding: 8px 20px 20px;
+  border: 0;
+  background: transparent;
+  text-align: left;
+}
+.ride-map-shell .poi-summary strong {
+  display: block;
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1.25;
+}
+.ride-map-shell .poi-summary > span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.ride-map-shell .poi-summary > svg {
+  flex-shrink: 0;
+}
+.ride-map-shell .poi-summary small {
+  display: block;
+  margin-top: 6px;
+  color: var(--muted);
+}
+@media (min-width: 900px) {
+  .ride-map-shell .ride-top-controls {
+    margin-left: 24px;
+  }
+  .ride-map-shell .queue-panel {
+    margin-left: 24px;
+  }
+}
+@media (max-width: 360px) {
+  .ride-map-shell .brand {
+    font-size: 14px;
+  }
+  .ride-map-shell .header-right {
+    gap: 4px;
+  }
+  .ride-map-shell .ride-route-name h1 {
+    font-size: 19px;
+  }
+}
+@media (max-height: 540px) {
+  /* Override the older compass's document-scrolling short-screen fallback. */
+  .app-shell.ride-map-shell:not(.route-select-shell):has(
+      .ride-columns .train-compass
+    ) {
+    height: 100dvh;
+    min-height: 100dvh;
+  }
+  .app-shell.ride-map-shell:not(.route-select-shell):has(
+      .ride-columns .train-compass
+    )
+    main {
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+  .app-shell.ride-map-shell:not(.route-select-shell)
+    .ride-layout:has(.ride-columns .train-compass) {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+    padding-bottom: var(--nav-clearance);
+  }
+  .app-shell.ride-map-shell .ride-top-controls {
+    width: min(330px, calc(100% - 36px));
+  }
+  .app-shell.ride-map-shell:not(.route-select-shell)
+    .ride-columns:has(.train-compass) {
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+  .ride-map-shell .ride-heading {
+    min-height: 60px;
+    padding-block: 8px;
+  }
+  .ride-map-shell .ride-sensor-overlay {
+    left: auto;
+    max-width: 40%;
+  }
+  .ride-map-shell .nearby-status {
+    display: none;
+  }
+  .ride-map-shell .poi-sheet {
+    --poi-sheet-collapsed-height: max(34dvh, 132px);
+  }
+}
+@media (max-height: 540px) and (min-width: 600px) {
+  .app-shell.ride-map-shell .ride-top-controls {
+    max-height: calc(100dvh - var(--nav-clearance) - 80px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    pointer-events: auto;
+  }
+  .app-shell.ride-map-shell .queue-panel {
+    position: absolute;
+    inset: 68px var(--ride-gutter-right) var(--nav-clearance) auto;
+    width: min(48%, 660px);
+    margin: 0;
+    max-height: none;
+  }
+}
+.ride-map-shell .poi-sheet .candidate-name {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  white-space: normal;
+  line-height: 1.3;
+}
+.ride-map-shell .poi-sheet .poi-discard {
+  min-height: 44px;
+  margin: 8px 20px 0;
+  color: var(--muted);
+}
+/* Keep the map credits above the compact sheet, clear of route controls. */
+.ride-map-shell.has-poi-sheet .maplibregl-ctrl-bottom-right {
+  top: auto;
+  bottom: calc(var(--nav-clearance) + 34dvh + 12px);
+}
+body:has(.ride-map-shell) {
+  overscroll-behavior-y: none;
+}
+/* Expanded reading has its own concise context row. Chrome never peeks out. */
+.ride-map-shell.is-poi-expanded .ride-top-controls {
+  visibility: hidden;
+  pointer-events: none;
+}
+.ride-map-shell .ride-expanded-status {
+  position: absolute;
+  z-index: 13;
+  top: calc(max(12px, env(safe-area-inset-top)) + 56px);
+  left: var(--ride-gutter);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: fit-content;
+  max-width: calc(100% - var(--ride-gutter) - 74px);
+  min-height: 44px;
+  padding: 8px 14px;
+  border-radius: 24px;
+  background: var(--paper);
+  font-size: 12px;
+}
+.ride-map-shell .ride-expanded-route {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 500;
+}
+.ride-map-shell .ride-expanded-status > span:last-child {
+  flex-shrink: 0;
+  color: var(--muted);
+}
+.ride-map-shell .poi-sheet {
+  height: min(
+    74dvh,
+    720px,
+    calc(
+      100dvh - var(--nav-clearance) - max(12px, env(safe-area-inset-top)) -
+        112px
+    )
+  );
+  max-height: min(
+    74dvh,
+    720px,
+    calc(
+      100dvh - var(--nav-clearance) - max(12px, env(safe-area-inset-top)) -
+        112px
+    )
+  );
+}
+.ride-map-shell.is-poi-expanded .maplibregl-ctrl-bottom-right {
+  top: calc(max(12px, env(safe-area-inset-top)) + 48px);
+  bottom: auto;
+}
+.ride-map-shell .poi-sensor-warning {
+  margin: 0 18px 12px;
+  font-size: 13px;
+}
+@media (max-height: 540px) and (min-width: 600px) {
+  .app-shell.ride-map-shell .ride-top-controls {
+    display: flex;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 8px;
+    width: calc(100% - var(--ride-gutter) - var(--ride-gutter-right));
+  }
+  .app-shell.ride-map-shell .ride-heading {
+    flex: 1 1 310px;
+    max-width: 330px;
+  }
+  .app-shell.ride-map-shell .audio-companion {
+    flex: 1 1 220px;
+    max-width: 320px;
+    margin: 0;
+  }
+  .ride-map-shell.is-poi-expanded .poi-sheet .place-card {
+    display: flex;
+    flex-direction: column;
+  }
+  .ride-map-shell.is-poi-expanded .poi-sheet .place-content {
+    order: 0;
+  }
+  .ride-map-shell.is-poi-expanded .poi-sheet .place-photo {
+    order: 1;
+  }
+  .ride-map-shell.is-poi-expanded .poi-sheet .card-footer {
+    order: 2;
+  }
+}
+/* Attribution disclosure replaces the compact context for its duration. */
+.ride-map-shell.is-poi-expanded:has(.maplibregl-compact-show)
+  .ride-expanded-status {
+  visibility: hidden;
+}
+@media (max-height: 540px) and (min-width: 600px) {
+  .ride-map-shell .ride-sensor-overlay {
+    left: var(--ride-gutter);
+    right: auto;
+    bottom: calc(var(--nav-clearance) + 12px);
+    max-width: calc(50% - 36px);
+    align-items: flex-start;
+  }
+  .ride-map-shell .compass-topline {
+    top: calc(max(12px, env(safe-area-inset-top)) + 136px);
+    bottom: auto;
+  }
+}

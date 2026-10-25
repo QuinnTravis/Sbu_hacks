@@ -1,5 +1,17 @@
 # Train Discovery — engineering handoff
 
+## Native map and discovery sheet (2026-10-25)
+
+The ride map now fills the viewport. A 450ms held aim opens a spring-driven, draggable POI sheet; selection adds the discovery and expands its card in place. Close and drag-down dismissal preserve discoveries; deletion is a separate labeled action. Sheet contents scroll independently, the map stays mounted, and reduced motion skips the spring. Expanded reading uses a separate route/simulation row and keeps map attribution accessible. Short-landscape replay and audio controls remain separately reachable.
+
+Production build `4Gjtss2-hY4sBuxKjX74o` passed build/TypeScript, lint, and the 111 existing tests. No unit tests were added. All 112 executable browser cases are verified across the complete regression run and focused correction runs; 4 live-database cases are gated skips. The complete run had 108 passes and four failures: a saved-collection fixture race and a landscape replay/audio overlap, each in two projects. The fixture now seeds before hydration; the layout overlap is fixed. The final production build passed all 18 affected checks together, including touch dragging/cancellation, keyboard and reduced motion, photo Escape, Save/sources, attribution, queue persistence, and landscape Play now/replay reachability. Do not describe the local runs as one uninterrupted clean full suite. GitHub CI is the final merge gate.
+
+All application/configuration source hashes matched before and after final verification. Evidence: `/tmp/train-native-final-suite`, `/tmp/train-native-release-focused`, `/tmp/train-native-release-source.json`, and `.impeccable/review/`. Visual reviewer scored both material findings resolved; actual free map tiles were loaded, with provider-independent POI/photo fixtures. Browser checks do not establish physical compass/GPS accuracy or background/lock-screen audio. Untracked old handoff and builder result artifacts stay excluded from release.
+
+## Attribution presentation (2026-10-25)
+
+The full-width map attribution band and discovery-photo credit strip are replaced by a compact expandable map control and a photo-info button. The photo button opens a larger view with the source, author, and license links. Attribution remains available beside the relevant content. A visual browser check was unavailable in this session; no tests were run.
+
 ## Reviewer approval — catalog points and full cone radius (2026-10-25)
 
 Approved for this targeted browser scope. The ride map receives the actual branch catalog through DiscoveryApp → Compass → RideMap, shows every catalog place within the shared 1200m radius (including unsourced places), and highlights with the same `isPointedAt` predicate used by detection. Dots have names through titles/accessibility labels and no selection action. No automatic queue insertion was added. MapLibre's 512px world scale, poleward Mercator scale, and at least 16px padding fit the full radius inside the smaller measured canvas dimension, excluding attribution. The rider stays centered and north-up through resize. No additional features or visual changes were introduced during review.

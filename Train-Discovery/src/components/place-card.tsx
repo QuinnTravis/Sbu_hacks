@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   ArrowUpRight,
+  Info,
   ImageOff,
   LoaderCircle,
   RefreshCw,
@@ -35,6 +36,7 @@ export function PlaceCard({
   saved?: boolean;
 }) {
   const { place } = entry;
+  const photoDialog = useRef<HTMLDialogElement>(null);
   const [photo, setPhoto] = useState<Photo | null>(null);
   const [photoState, setPhotoState] = useState<
     "loading" | "ready" | "unavailable"
@@ -73,7 +75,6 @@ export function PlaceCard({
       <div className="place-photo">
         {photo && photoState === "ready" ? (
           <>
-            {/* Google photo URLs are short lived; Wikimedia photos carry their own credits. */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={photo.url}
@@ -81,21 +82,65 @@ export function PlaceCard({
               onError={() => setPhotoState("unavailable")}
               referrerPolicy="no-referrer"
             />
-            <div className="photo-credit">
-              <a href={photo.sourceUrl} target="_blank" rel="noreferrer">
-                {photo.source}
-              </a>
-              {photo.authors.map((author, i) => (
-                <a key={i} href={author.uri} target="_blank" rel="noreferrer">
-                  {author.displayName}
-                </a>
-              ))}
-              {photo.license && (
-                <a href={photo.license.url} target="_blank" rel="noreferrer">
-                  {photo.license.name}
-                </a>
-              )}
-            </div>
+            <button
+              type="button"
+              className="photo-info-button"
+              onClick={() => photoDialog.current?.showModal()}
+              aria-label={`View photo details for ${place.name}`}
+            >
+              <Info size={19} aria-hidden="true" />
+            </button>
+            <dialog
+              ref={photoDialog}
+              className="photo-viewer"
+              aria-label={`Photo of ${place.name}`}
+              onClick={(event) => {
+                if (event.target === event.currentTarget) event.currentTarget.close();
+              }}
+            >
+              <div className="photo-viewer-content">
+                <button
+                  type="button"
+                  className="icon-button photo-viewer-close"
+                  onClick={() => photoDialog.current?.close()}
+                  aria-label={`Close photo of ${place.name}`}
+                >
+                  <X size={19} aria-hidden="true" />
+                </button>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  className="photo-viewer-image"
+                  src={photo.url}
+                  alt={place.name}
+                  referrerPolicy="no-referrer"
+                />
+                <div className="photo-viewer-attribution">
+                  <a href={photo.sourceUrl} target="_blank" rel="noreferrer">
+                    {photo.source}
+                  </a>
+                  {photo.authors.map((author, i) => (
+                    <a
+                      key={i}
+                      className="photo-author"
+                      href={author.uri}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      {author.photoUri && (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={author.photoUri} alt="" referrerPolicy="no-referrer" />
+                      )}
+                      <span>{author.displayName}</span>
+                    </a>
+                  ))}
+                  {photo.license && (
+                    <a href={photo.license.url} target="_blank" rel="noreferrer">
+                      {photo.license.name}
+                    </a>
+                  )}
+                </div>
+              </div>
+            </dialog>
           </>
         ) : (
           <div className="photo-placeholder">
@@ -245,7 +290,7 @@ export function PlaceCard({
           </dl>
         )}
         <details className="sources">
-          <summary>Sources & credits</summary>
+          <summary>Sources</summary>
           {sources.map((source) => (
             <div key={source.id}>
               <a href={source.url} target="_blank" rel="noreferrer">
