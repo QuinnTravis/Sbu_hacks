@@ -2,6 +2,7 @@
 
 import { BookmarkPlus, Headphones, Pause, Play, SkipForward, VolumeX } from "lucide-react";
 import type { useAudioGuide } from "@/hooks/use-audio-guide";
+import "./audio-guide.css";
 
 export function AudioGuideBar({ guide, onSave, saved }: {
   guide: ReturnType<typeof useAudioGuide>;
@@ -11,7 +12,7 @@ export function AudioGuideBar({ guide, onSave, saved }: {
   const active = ["waiting", "preparing", "speaking", "paused"].includes(guide.status);
 
   return (
-    <div className="audio-companion">
+    <div className="audio-companion train-audio-guide">
     <div className={`audio-guide ${active ? "audio-guide-active" : ""}`} role="group" aria-label="Audio guide" data-status={guide.status}>
       {!active ? (
         <>
@@ -49,15 +50,20 @@ export function AudioGuideBar({ guide, onSave, saved }: {
           {(guide.queuedName && guide.queuedName !== guide.currentName) ||
           (guide.nextName && guide.currentName && guide.nextName !== guide.currentName) ? (
             <div className="audio-follow">
-              {guide.queuedName && guide.queuedName !== guide.currentName && (
-                <p className="audio-queued" role="status">{guide.queuedName} queued</p>
-              )}
-              {guide.nextName && guide.currentName && guide.nextName !== guide.currentName && (
-                <p className="audio-next">
-                  <span className="audio-next-label">Next ·</span>
-                  <span className="audio-next-name">{guide.nextName}</span>
-                </p>
-              )}
+              <div className="audio-follow-copy">
+                {guide.queuedName && guide.queuedName !== guide.currentName && (
+                  <p className="audio-queued" role="status">
+                    <span className="audio-queued-name" title={guide.queuedName}>{guide.queuedName}</span>{" "}
+                    <span className="audio-queued-state">queued</span>
+                  </p>
+                )}
+                {guide.nextName && guide.currentName && guide.nextName !== guide.currentName && (
+                  <p className="audio-next">
+                    <span className="audio-next-label">Next ·</span>
+                    <span className="audio-next-name" title={guide.nextName}>{guide.nextName}</span>
+                  </p>
+                )}
+              </div>
               {guide.queuedName && guide.currentName && guide.queuedName !== guide.currentName && (
                 <button className="audio-control audio-play-now" onClick={guide.playNow} aria-label="Play now">
                   Play now

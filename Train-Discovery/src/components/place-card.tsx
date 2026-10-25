@@ -22,13 +22,17 @@ export function PlaceCard({
   total,
   onNavigate,
   onNarrate,
+  onSave,
+  saved = false,
 }: {
   entry: QueueEntry;
-  onDiscard: () => void;
+  onDiscard?: () => void;
   index: number;
   total: number;
   onNavigate: (n: number) => void;
-  onNarrate: () => void;
+  onNarrate?: () => void;
+  onSave: () => void;
+  saved?: boolean;
 }) {
   const { place } = entry;
   const [photo, setPhoto] = useState<Photo | null>(null);
@@ -117,18 +121,22 @@ export function PlaceCard({
             )}
           </div>
         )}
-        <button
-          className="icon-button discard-button"
-          onClick={onDiscard}
-          aria-label={`Discard ${place.name}`}
-        >
-          <X size={19} />
-        </button>
+        {onDiscard && (
+          <button
+            className="icon-button discard-button"
+            onClick={onDiscard}
+            aria-label={`Discard ${place.name}`}
+          >
+            <X size={19} />
+          </button>
+        )}
       </div>
       <div className="place-content">
         <div className="place-meta">
           <span>{place.category}</span>
-          <span>{formatDistance(entry.distance)} when found</span>
+          {Number.isFinite(entry.distance) && (
+            <span>{formatDistance(entry.distance)} when found</span>
+          )}
         </div>
         <h2>{place.name}</h2>
         {story ? (
@@ -136,7 +144,7 @@ export function PlaceCard({
             <div className="verified-label">
               <ShieldCheck size={14} />
               Evidence checked
-              {narrationText(place) && (
+              {onNarrate && narrationText(place) && (
                 <button className="story-listen" onClick={onNarrate} aria-label={`Listen to ${place.name}`}>
                   <Volume2 size={16} />
                   Play story
@@ -201,7 +209,7 @@ export function PlaceCard({
               >
                 Read the source <ArrowUpRight size={14} />
               </a>
-              {audioNarration(place)?.kind === "source" && (
+              {onNarrate && audioNarration(place)?.kind === "source" && (
                 <button className="story-listen" onClick={onNarrate} aria-label={`Listen to source for ${place.name}`}>
                   <Volume2 size={16} />
                   Listen to source
@@ -284,6 +292,14 @@ export function PlaceCard({
           onClick={() => onNavigate(index + 1)}
         >
           Next
+        </button>
+        <button
+          className="text-button"
+          onClick={onSave}
+          aria-pressed={saved}
+          aria-label={saved ? `Remove ${place.name} from saved discoveries` : `Save ${place.name}`}
+        >
+          {saved ? "Saved" : "Save"}
         </button>
       </div>
     </article>

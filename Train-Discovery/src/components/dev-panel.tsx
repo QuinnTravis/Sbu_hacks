@@ -18,6 +18,7 @@ import {
   normalize,
 } from "@/lib/geo";
 import type { Place, Position } from "@/lib/types";
+import "./dev-panel.css";
 
 export type HeadingMode = "auto" | "manual" | "phone";
 
@@ -99,7 +100,7 @@ export function DevPanel({
     : [];
   return (
     <aside
-      className={`dev-panel ${compact && started ? "dev-compact" : ""}`}
+      className={`dev-panel train-dev-panel ${compact && started ? "dev-compact" : ""}`}
       aria-label="Developer controls"
     >
       <div className="dev-heading">

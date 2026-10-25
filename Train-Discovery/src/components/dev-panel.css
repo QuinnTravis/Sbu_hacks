@@ -1,0 +1,172 @@
+/* The prefix keeps these overrides local regardless of stylesheet ordering. */
+.train-dev-panel.dev-panel {
+  --train-dev-gutter: 18px;
+  top: max(82px, env(safe-area-inset-top));
+  right: max(18px, env(safe-area-inset-right));
+  width: min(370px, calc(100% - 36px - env(safe-area-inset-right) - env(safe-area-inset-left)));
+  max-height: calc(100svh - max(82px, env(safe-area-inset-top)) - max(18px, env(safe-area-inset-bottom)));
+  padding: 0 var(--train-dev-gutter) 18px;
+  font-size: 14px;
+  line-height: 1.5;
+  scroll-padding-top: 88px;
+  scroll-padding-bottom: 18px;
+}
+
+.train-dev-panel .dev-heading {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  gap: 8px;
+  margin: 0 calc(-1 * var(--train-dev-gutter)) 16px;
+  padding: 14px var(--train-dev-gutter);
+  background: var(--paper);
+  border-bottom: 1px solid var(--line);
+}
+
+.train-dev-panel .dev-heading > svg {
+  flex-shrink: 0;
+}
+
+.train-dev-panel .dev-heading h2 {
+  min-width: 0;
+  margin: 0;
+  font-size: 18px;
+}
+
+.train-dev-panel button,
+.train-dev-panel select {
+  min-width: 44px;
+  min-height: 44px;
+}
+
+.train-dev-panel .icon-button,
+.train-dev-panel .dev-heading > .icon-button {
+  flex: 0 0 44px;
+  width: 44px;
+  height: 44px;
+}
+
+.train-dev-panel .dev-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 6px;
+  margin: 16px 0;
+}
+
+.train-dev-panel .dev-row select {
+  width: 100%;
+  max-width: none;
+  padding: 8px 12px;
+  color: var(--ink);
+  font: inherit;
+  font-size: 16px;
+}
+
+.train-dev-panel .dev-transport {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 44px;
+  gap: 8px;
+}
+
+.train-dev-panel .dev-transport .secondary-button {
+  padding: 8px 6px;
+  font-size: 14px;
+  line-height: 1.3;
+}
+
+.train-dev-panel .dev-transport svg {
+  flex-shrink: 0;
+}
+
+.train-dev-panel .dev-slider {
+  gap: 4px 8px;
+  margin: 16px 0;
+  font-size: 14px;
+}
+
+.train-dev-panel .dev-slider input {
+  flex-basis: 100%;
+  min-width: 44px;
+  min-height: 44px;
+  height: 44px;
+  margin: 0;
+}
+
+.train-dev-panel .dev-step button {
+  min-height: 44px;
+  font-size: 14px;
+}
+
+.train-dev-panel .dev-joystick-area {
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.train-dev-panel .dev-joystick-area > div:last-child {
+  flex: 1 1 140px;
+}
+
+.train-dev-panel .dev-joystick-area p,
+.train-dev-panel .dev-joystick-area small,
+.train-dev-panel .dev-pois small,
+.train-dev-panel .dev-mini > small {
+  font-size: 12px;
+}
+
+.train-dev-panel .dev-readings > div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+  gap: 12px;
+  margin: 8px 0;
+  font-size: 13px;
+}
+
+.train-dev-panel .dev-readings dd,
+.train-dev-panel .dev-pois > button > span:first-child,
+.train-dev-panel .dev-aim-readout {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.train-dev-panel .dev-note,
+.train-dev-panel .dev-pois > button,
+.train-dev-panel .dev-pois > p {
+  font-size: 14px;
+}
+
+.train-dev-panel :is(button, select, input, [role="slider"]):focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.train-dev-panel.dev-compact {
+  top: auto;
+  bottom: var(--nav-clearance, 116px);
+  width: min(280px, calc(100% - 36px - env(safe-area-inset-right) - env(safe-area-inset-left)));
+  max-height: calc(100svh - var(--nav-clearance, 116px) - max(18px, env(safe-area-inset-top)));
+}
+
+.train-dev-panel.dev-compact .dev-heading {
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.train-dev-panel.dev-compact .dev-heading h2 {
+  font-size: 16px;
+}
+
+.train-dev-panel.dev-compact .dev-heading > .icon-button {
+  width: 44px;
+  height: 44px;
+}
+
+.train-dev-panel .dev-mini .dev-row {
+  margin: 0;
+}
+
+@media (max-width: 600px) {
+  .train-dev-panel.dev-panel:not(.dev-compact) {
+    top: max(74px, env(safe-area-inset-top));
+    max-height: calc(100svh - max(74px, env(safe-area-inset-top)) - max(18px, env(safe-area-inset-bottom)));
+  }
+}

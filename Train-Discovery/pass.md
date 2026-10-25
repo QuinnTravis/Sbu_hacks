@@ -1,5 +1,53 @@
 # Train Discovery — engineering handoff
 
+## Designer note — streets and list rows (2026-10-24)
+
+The ride map drew a canvas-colored frame because the MapLibre container was height 0. react-map-gl sets an inline relative position and `height: 100%`, which does not resolve in the flex frame, and `overflow: hidden` clipped the canvas, the streets, and the dot. The container is now absolutely inset in the map frame, so the streets, the `#0071f2` dot, and the facing cone paint in the ride column. Attribution stays in the quiet band under the map and is not hidden with `display: none`. Replay stays labeled simulated.
+
+List rows no longer show photographs. Pointing rows, the ride queue, and saved discoveries are the place name and distance, with the existing index or chevron. A saved row omits distance when there is no position. The discovery card still has its photo.
+
+## Designer note — ride map instrument (2026-10-24)
+
+The ride map is a quiet Waymo instrument in the ride column. Ground is canvas `#eaedf3`; roads and buildings are paper `#fefeff`; casings are line `#cdd1db`; parks and woods are cool gray; water is gray-blue. Place labels are ink and road labels are muted. The branch line uses that route’s color, with a paper casing. A 1px steel `#8e98a8` hairline frames the map. The rider is a small `#0071f2` dot with a white ring. The facing wedge is translucent `#0071f2`. Brass is off this surface. Attribution sits in a quiet band under the map and still reads the OpenFreeMap / OpenMapTiles / OpenStreetMap credit. It does not cover the dot, wedge, audio bar, candidate sheet, or tab bar. With no heading, the dot stays and the wedge is absent. Replay stays labeled simulated.
+
+## Latest cycle — saved discoveries (2026-10-24)
+
+A rider can save a discovery on this device so it remains after the ride ends, including a Gemini-checked story already on that place. The library is separate from the ride queue (`train-discovery:saved:v1`). There is no account, server write, or location history. Saving stores id, name, coordinates, category, source, tags, evidence, and the story fields already present. Photo bytes, Google photo URLs, and audio URLs are omitted. The same site (existing 180 m name rule) is one entry. Discarding a queued card does not unsave. Ending a ride clears only the ride key.
+
+Save on the discovery card toggles the library. The audio-bar Save writes the same library and still enqueues into the current ride when a position exists, so the card can appear. `rememberNarration` copies that story onto the saved entry when the place is already saved and does not generate another story. Catalog refresh keeps the richer checked story and its passages on the queue, the live place list, and the library.
+
+With no ride, Discoveries on the route screen opens the library. During a ride, My discoveries has This ride and Saved. An empty library says “Nothing saved yet.” A storage failure keeps the in-memory list and shows the existing storage notice. Opening a saved card shows the cached story and sources. The no-ride view does not offer Play, so display does not call `/api/audio`. The card still requests `/api/photos/:id` for the existing photo area.
+
+Verified: `npx vitest run tests/saved.test.ts` (8 passed: save, unsave, same-site dedupe, story merge, ride clear after queue discard, thinner catalog refresh, photo/audio URL omission, storage failure and unreadable data). `npx tsc --noEmit` passed. The UI was not exercised in a browser.
+
+Designer surfaces to unclutter, using the current button patterns only:
+- Discovery card footer (`.card-footer`): Previous, count, Next, and Save now share one row.
+- Audio guide bar (`.audio-controls`): the existing Save icon stays in the dense now-playing row. It now means kept after the ride.
+- My discoveries heading (`.queue-heading`): “This ride” and “Saved” sit with the title and count.
+- Route-screen Discoveries (`.home-discoveries`, `.home-discoveries-card`, `.home-discoveries.is-filled`): the empty card and the saved card list need to be readable above the home nav. `.is-filled { display: block }` only lets the card scroll; it is not a layout.
+
+The ride-map cycle below was left as found.
+
+Reviewer risks: audio-bar Save still enqueues when GPS is present, and a place already in the queue but not the library still shows that Save control. Ending a ride and discarding a card must leave `train-discovery:saved:v1` intact. Reopening a saved place with no ride must not call Gemini or `/api/audio`; the photo request can still fail offline while the story stays visible. A richer catalog story may replace a thinner saved one. Same-site saves do not create a second entry. Quota failure is in-memory only. These checks do not prove a physical phone, lock-screen playback, or live Gemini. Browser coverage for the journey Save specs was not run here.
+
+Next best action: end a ride after saving a narrated place, reopen Discoveries offline, and confirm the checked story and sources render without a new `/api/audio` request.
+
+## Latest cycle — ride map replaces the compass dial (2026-10-24)
+
+The ride instrument is a map centered on the rider (real GPS or the labeled simulated replay position). A `#0071f2` dot with a white ring marks that position. When heading is known, a translucent `#0071f2` wedge uses the same **1200 m** radius and **±22°** half-angle as `isPointedAt` (`POINTING_RADIUS_M`, `POINTING_HALF_ANGLE_DEG` in `src/lib/geo.ts`). Heading null shows the dot and no cone. The camera stays on the rider; pan and zoom gestures are off. Places stay on the candidate sheet. Replay remains labeled simulated. A heading that is not from the phone is labeled “Simulated heading,” not “Phone direction.” The branch diagram in `src/components/network.tsx` is unchanged. The saved-discovery library was left as found.
+
+Library: MapLibre GL JS draws the cone and the branch line on a local style with no tile source. OpenFreeMap was removed because its OpenStreetMap credit cannot be dropped while those tiles are shown.
+
+Rejected: Google Maps (API key, and the user forbade it), Mapbox GL JS (token and Mapbox tiles; the user forbade it), and Leaflet (raster tiles, no Positron paint overrides of the kind requested).
+
+Verified: `npm test -- tests/geo.test.ts` (6 passed, including the cone at 1200 m and ±22° along headings 20° and 350°; a place inside the wedge is inside the cone polygon; a place outside the angle or past 1200 m is not). `npx tsc --noEmit` passed. Turbopack does not emit MapLibre’s relative worker, so `/maplibre-worker` serves `maplibre-gl-worker.mjs`. A phone-width and a 660px-capped desktop ride showed the canvas, the blue dot, expanded attribution “OpenFreeMap © OpenMapTiles Data from OpenStreetMap”, “Simulated heading” with “Simulated location & heading”, no compass dial, and no overlap of the map with the audio bar, candidate sheet, or tab bar. Positron style and vector tiles returned 200.
+
+Designer surfaces: the ride map frame (`.ride-map` inside `.compass-stage`, capped with the dial’s old footprint so it does not cover the audio bar, candidate sheet, or tab bar), the expanded attribution control on a phone-width map, the rider dot and cone so the canvas does not look like a default OSM embed, and overflow at 320px and short landscape. Steel ticks and the brass needle are no longer on this surface. Do not restyle `network.tsx` or the saved-discovery library as part of this map.
+
+Reviewer risks: Positron tiles and `/maplibre-worker` need network and are not in the service-worker cache, so an offline ride can show a gray frame; a missing WebGL context falls back to that frame. A flat simulated phone showed the dot, “Compass waiting”, and “Simulated train · joystick”, not “Phone direction”. A short drag left the dot in place. These checks do not prove a physical compass or a long offline ride.
+
+Next best action: on a phone over HTTPS, confirm tiles, attribution, and that dragging the map does not leave the rider.
+
 ## Designer note — pointing chooser (2026-10-24)
 
 The pointing sheet is a compact chooser: thumbnail, place name, and distance. The sourced description stays on the discovery card Summary after the rider taps a row. “No sourced summary yet.” is not in the sheet. Rows scroll inside the band above the tab bar when the dial cannot shrink further. The card footer follows the summary instead of covering it. Replay stays labeled simulated. Steel `#8e98a8` remains the dial ticks; brass `#8f6b3d` remains the compass needle.
@@ -138,6 +186,8 @@ The real flow uses high-accuracy geolocation and absolute orientation. iOS `webk
 Opt-in audio tour uses native browser `speechSynthesis`. Verified claims are checked against their cited passage again before narration. With no verified story, the app can read two sentences verbatim from a matched Wikipedia article; voice and player identify these as unverified **source excerpts**. An existing story with stale citations fails closed, and obviously unrelated source titles are rejected. It detects a fresh on-route position, prioritizes stored discoveries then nearby places within 1.1 km (verified stories first), and reads each at most once per session. Cards offer Play story or Listen to source; the compact player can pause, resume, skip, stop, or save the place currently being read. On-device voices and screen-lock/background playback require real mobile testing. At this snapshot only 1 of 138 places has published verified history, so additional verification is still a critical release task.
 
 Queue items are deduplicated and persist per ride in validated local storage. Turning away, moving, scrubbing the developer replay, or reload does not discard them. Dismissal is explicit. Ending a nonempty ride confirms before clearing. Live sensors require a fresh gesture after reload. Private browsing/site-data clearing can erase the queue.
+
+On the home screen, the Discoveries tab is available before a ride starts. With no ride, it opens a dedicated empty collection with a route-selection action. During a ride, Discoveries opens the current ride queue even when it has zero items. The home collection is currently an empty-state screen; discoveries remain scoped to the ride as described above.
 
 PWA caches app shell/assets and branch package, network-first with offline fallback. Google and Wikimedia images and other external/API responses are not persisted in the service worker. Service worker is production-only; use trusted HTTPS for phone location/orientation access. Don't force-update a worker during an active ride.
 

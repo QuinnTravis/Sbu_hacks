@@ -1,5 +1,6 @@
 import { distance, segmentDistance } from "./geo";
 import { audioEvidence, audioNarration } from "./narration";
+import { createJourneyIntroduction } from "./journey-context";
 import type { Coordinate, Evidence, Place, Position, RailRoute, Story } from "./types";
 
 export type RailStop = RailRoute["stops"][number];
@@ -8,7 +9,8 @@ export const POINTED_TIMELY_MS = 45_000;
 export const STATION_TIMELY_MS = 90_000;
 export type AudioRequest =
   | { type: "place"; placeId: string; context?: PlaceAudioContext }
-  | { type: "station"; routeId: string; stationId: string };
+  | { type: "station"; routeId: string; stationId: string }
+  | { type: "journey"; routeId: string; simulation: boolean; lat?: number; lon?: number };
 
 export type AudioScript = {
   name: string;
@@ -49,6 +51,30 @@ export function reachedStation(
 
 export function stationAnnouncement(stop: RailStop): AudioScript {
   return { name: stop.name, text: `Station approaching: ${stop.name}.`, kind: "announcement", sources: [] };
+}
+
+/** One opening per route and mode. The device fallback never claims live weather. */
+export function journeyMoment(
+  routeId: string,
+  routeName: string,
+  simulation: boolean,
+  position: Coordinate | null,
+): AudioMoment {
+  const opening = createJourneyIntroduction({ routeName });
+  return {
+    key: `journey:${routeId}:${simulation ? "simulation" : "live"}`,
+    name: `Welcome to ${routeName}`,
+    request: {
+      type: "journey", routeId, simulation,
+      ...(position ? { lat: position.lat, lon: position.lon } : {}),
+    },
+    fallback: {
+      name: `Welcome to ${routeName}`,
+      text: `The tracks set the rhythm. The world outside supplies the stories. ${simulation ? "This is a simulated ride. " : ""}${opening.text}`,
+      kind: "announcement",
+      sources: [],
+    },
+  };
 }
 
 export function pointingContext(selectedAt: number, now: number): "pointed" | "pointed-earlier" {

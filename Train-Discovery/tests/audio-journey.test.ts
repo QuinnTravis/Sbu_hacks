@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
-  chooseAudioMoment, deviceSpeechResume, isActivePlayback, narrationFact, nextNarration, placeAnnouncement, playbackSegments,
+  chooseAudioMoment, deviceSpeechResume, isActivePlayback, journeyMoment, narrationFact, nextNarration, placeAnnouncement, playbackSegments,
   playNowSelection, pointingContext, preparationOrder, reachedStation, sentenceGapElapsed, stationAnnouncement,
 } from "../src/lib/audio-journey";
 import type { AudioMoment, PendingStation } from "../src/lib/audio-journey";
@@ -14,6 +14,22 @@ const place: AudioMoment = { key: "place:landmark", name: "Landmark",
   place: { id: "landmark" } as Place, request: { type: "place", placeId: "landmark" }, fallback: station.fallback };
 
 describe("journey audio scheduling", () => {
+  it("makes a stable, identifiable journey opener with coordinates and an offline script", () => {
+    const position = { lat: 40.7, lon: -73.8 };
+    const moment = journeyMoment("10", "Port Jefferson Branch", false, position);
+    expect(moment.key).toBe("journey:10:live");
+    expect(moment.request).toEqual({ type: "journey", routeId: "10", simulation: false, ...position });
+    expect(moment.fallback?.text).toContain("Port Jefferson Branch route");
+    expect(moment.fallback?.text).not.toContain("forecast");
+    expect(moment.fallback?.kind).toBe("announcement");
+    expect(journeyMoment("10", "Port Jefferson Branch", false, { lat: 40.8, lon: -73.7 }).key).toBe(moment.key);
+    const replay = journeyMoment("10", "Port Jefferson Branch", true, position);
+    expect(replay.key).toBe("journey:10:simulation");
+    expect(replay.request).toMatchObject({ simulation: true });
+    expect(replay.fallback?.text).toMatch(/simulated ride/i);
+    expect(journeyMoment("10", "Port Jefferson Branch", true, null).request)
+      .toEqual({ type: "journey", routeId: "10", simulation: true });
+  });
   it("triggers a nearby station even on the first GPS fix", () => {
     expect(reachedStation(stop, fix(stop.lat), null)).toBe(true);
     expect(reachedStation(stop, fix(stop.lat + 0.004), null)).toBe(false);

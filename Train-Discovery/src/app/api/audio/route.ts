@@ -1,13 +1,20 @@
 import { z } from "zod";
-import { AudioError, journeyAudio } from "@/lib/audio-server";
-import { placeIdSchema } from "@/lib/validation";
+import { AudioError, journeyAudio } from "../../../lib/audio-server";
+import { placeIdSchema } from "../../../lib/validation";
+import rail from "../../../../public/data/lirr.json";
 
 export const maxDuration = 120;
 const headers = { "Cache-Control": "private, no-store" };
+const routeIdSchema = z.string().refine((id) => rail.routes.some((route) => route.id === id));
 const inputSchema = z.discriminatedUnion("type", [
   z.object({ type: z.literal("place"), placeId: placeIdSchema,
     context: z.enum(["pointed", "pointed-earlier", "nearby", "replay"]).default("nearby") }).strict(),
   z.object({ type: z.literal("station"), routeId: z.string().regex(/^(?:[1-9]|1[0-3])$/), stationId: z.string().regex(/^\d{1,8}$/) }).strict(),
+  z.object({
+    type: z.literal("journey"), routeId: routeIdSchema, simulation: z.boolean(),
+    lat: z.number().finite().min(-90).max(90).optional(),
+    lon: z.number().finite().min(-180).max(180).optional(),
+  }).strict().refine(({ lat, lon }) => (lat === undefined) === (lon === undefined)),
 ]);
 
 export async function POST(request: Request) {

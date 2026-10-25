@@ -5,6 +5,8 @@ import { database } from "./supabase";
 import { audioEvidence, audioNarration } from "./narration";
 import { verifyPlace } from "./verification";
 import { placeAnnouncement, stationAnnouncement } from "./audio-journey";
+import { createJourneyIntroduction, getJourneyContext } from "./journey-context";
+import type { JourneyContextInput, JourneyIntroduction } from "./journey-context";
 import {
   AUDIO_REVISION, DEFAULT_TTS_MODEL, DEFAULT_VOICE_ID, STORY_VOICE_SETTINGS,
 } from "./audio-prompts";
@@ -13,6 +15,12 @@ import type { Place } from "./types";
 
 const BUCKET = "journey-audio";
 const ephemeralSecret = randomBytes(32).toString("hex");
+const WEATHER_WINDOW_MS = 30 * 60 * 1000;
+const WEATHER_TTL_MS = 15 * 60 * 1000;
+const WEATHER_FAILURE_TTL_MS = 60 * 1000;
+const WEATHER_CACHE_MAX = 64;
+const weatherCache = new Map<string, { intro: JourneyIntroduction; expiresAt: number }>();
+const weatherPending = new Map<string, Promise<JourneyIntroduction>>();
 
 export class AudioError extends Error {
   constructor(public code: string, public status: number) { super(code); }
@@ -33,6 +41,56 @@ async function placeScript(place: Place, context: PlaceAudioContext): Promise<Au
   return script;
 }
 
+/** The grid is coarse and hashed: no exact coordinate or location history is stored. */
+function weatherWindow(input: Extract<AudioRequest, { type: "journey" }>): string | null {
+  if (input.simulation || input.lat === undefined || input.lon === undefined) return null;
+  const tile = `${Math.round(input.lat * 20)},${Math.round(input.lon * 20)}`;
+  const hash = createHash("sha256").update(tile).digest("hex").slice(0, 16);
+  return `${input.routeId}:${Math.floor(Date.now() / WEATHER_WINDOW_MS)}:${hash}`;
+}
+
+async function cachedIntroduction(
+  input: JourneyContextInput,
+  windowKey: string | null,
+): Promise<JourneyIntroduction> {
+  const fallback = () => createJourneyIntroduction(input);
+  if (!windowKey) return fallback();
+  const now = Date.now();
+  const cached = weatherCache.get(windowKey);
+  if (cached && cached.expiresAt > now) return cached.intro;
+  weatherCache.delete(windowKey);
+  const pending = weatherPending.get(windowKey);
+  if (pending) return pending;
+
+  const work = (async () => {
+    // Weather is optional. Network failures never prevent an opening narration.
+    const intro = await getJourneyContext(input).catch(fallback);
+    const endsAt = (Math.floor(now / WEATHER_WINDOW_MS) + 1) * WEATHER_WINDOW_MS;
+    const forecastEnd = intro.weather?.source.validUntil ? Date.parse(intro.weather.source.validUntil) : NaN;
+    const lifetime = intro.weather ? WEATHER_TTL_MS : WEATHER_FAILURE_TTL_MS;
+    const expiresAt = Math.min(now + lifetime, endsAt, Number.isFinite(forecastEnd) ? forecastEnd : Infinity);
+    weatherCache.set(windowKey, { intro, expiresAt });
+    // Bound memory even if many callers request distinct areas.
+    if (weatherCache.size > WEATHER_CACHE_MAX) weatherCache.delete(weatherCache.keys().next().value!);
+    return intro;
+  })();
+  weatherPending.set(windowKey, work);
+  try { return await work; }
+  finally { weatherPending.delete(windowKey); }
+}
+
+function journeyScript(routeName: string, simulation: boolean, intro: JourneyIntroduction): AudioScript {
+  return {
+    name: `Welcome to ${routeName}`,
+    text: `The tracks set the rhythm. The world outside supplies the stories. ${simulation ? "This is a simulated ride. " : ""}${intro.text}`,
+    kind: "announcement",
+    sources: [
+      { title: "MTA Long Island Rail Road GTFS", url: rail.source, license: "MTA published transit data" },
+      ...intro.sources.map(({ title, url }) => ({ title, url, license: "U.S. government forecast" })),
+    ],
+  };
+}
+
 async function resolve(input: AudioRequest) {
   if (input.type === "place") {
     const { data, error } = await database().from("places").select("data").eq("id", input.placeId).single();
@@ -40,6 +98,26 @@ async function resolve(input: AudioRequest) {
     const place = data.data as Place;
     const context = input.context ?? "nearby";
     return { revision: [place, context], script: () => placeScript(place, context) };
+  }
+  if (input.type === "journey") {
+    const route = rail.routes.find((candidate) => candidate.id === input.routeId);
+    if (!route) throw new AudioError("route_not_found", 404);
+    // This defense also applies to direct server calls which bypass the route schema.
+    if (typeof input.simulation !== "boolean" ||
+      (input.lat === undefined) !== (input.lon === undefined) ||
+      (input.lat !== undefined && (!Number.isFinite(input.lat) || input.lat < -90 || input.lat > 90)) ||
+      (input.lon !== undefined && (!Number.isFinite(input.lon) || input.lon < -180 || input.lon > 180)))
+      throw new AudioError("invalid_request", 400);
+    const windowKey = weatherWindow(input);
+    const context: JourneyContextInput = {
+      routeName: route.name,
+      includeWeather: Boolean(windowKey),
+      coordinates: windowKey ? { lat: input.lat!, lon: input.lon! } : null,
+    };
+    return {
+      revision: [rail.version, route.id, input.simulation, windowKey],
+      script: async () => journeyScript(route.name, input.simulation, await cachedIntroduction(context, windowKey)),
+    };
   }
   const route = rail.routes.find((route) => route.id === input.routeId);
   const stop = route?.stops.find((stop) => stop.id === input.stationId);

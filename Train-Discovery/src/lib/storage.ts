@@ -1,5 +1,5 @@
 import { z } from "zod";
-import type { Ride } from "./types";
+import type { Ride, SavedEntry } from "./types";
 
 const dismissedSite = z.object({
   id: z.string(),
@@ -66,6 +66,8 @@ const rideSchema = z.object({
     .max(2000),
 });
 export const STORAGE_KEY = "train-discovery:ride:v1";
+export const SAVED_KEY = "train-discovery:saved:v1";
+const savedSchema = z.array(z.object({ savedAt: z.number(), place: placeSchema })).max(500);
 
 export function readRide(): Ride | null {
   try {
@@ -81,6 +83,34 @@ export function writeRide(ride: Ride | null): boolean {
   try {
     if (ride) localStorage.setItem(STORAGE_KEY, JSON.stringify(ride));
     else localStorage.removeItem(STORAGE_KEY);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+export function readSaved(): SavedEntry[] {
+  try {
+    const raw = localStorage.getItem(SAVED_KEY);
+    if (!raw || raw.length > 8_000_000) return [];
+    const parsed = savedSchema.safeParse(JSON.parse(raw));
+    return parsed.success ? parsed.data : [];
+  } catch {
+    return [];
+  }
+}
+
+export function writeSaved(entries: SavedEntry[]): boolean {
+  try {
+    if (!entries.length) {
+      localStorage.removeItem(SAVED_KEY);
+      return true;
+    }
+    const parsed = savedSchema.safeParse(entries);
+    if (!parsed.success) return false;
+    const payload = JSON.stringify(parsed.data);
+    if (payload.length > 8_000_000) return false;
+    localStorage.setItem(SAVED_KEY, payload);
     return true;
   } catch {
     return false;

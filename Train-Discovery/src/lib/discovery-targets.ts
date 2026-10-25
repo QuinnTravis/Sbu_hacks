@@ -1,4 +1,10 @@
-import { angleDelta, bearing, distance, isPointedAt } from "./geo";
+import {
+  POINTING_RADIUS_M,
+  angleDelta,
+  bearing,
+  distance,
+  isPointedAt,
+} from "./geo";
 import { narrationText, sourceExcerpt } from "./narration";
 import type { Coordinate, Place, Ride } from "./types";
 
@@ -57,7 +63,7 @@ export function chooseReplayTarget(
 ): Place | null {
   return places
     .filter((place) =>
-      distance(position, place) <= 1200 &&
+      distance(position, place) <= POINTING_RADIUS_M &&
       replayPriority(place) > 0 &&
       !alreadyDiscovered(place, ride, byId),
     )
