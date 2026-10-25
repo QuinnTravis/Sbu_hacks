@@ -26,7 +26,7 @@ export function AudioGuideBar({ guide, onSave, saved }: {
       ) : (
         <>
           <div className="audio-now">
-            <span className="audio-indicator" aria-hidden="true"><span /><span /><span /></span>
+            <Headphones className="audio-now-icon" size={19} strokeWidth={1.8} aria-hidden="true" />
             <span className="audio-title" role="status">
               {guide.status === "paused" ? "Paused" : guide.status === "preparing" ? `Preparing ${guide.currentName}` : guide.currentName ? `${guide.currentName}${guide.currentKind === "source" ? " · source excerpt" : ""}` : "Waiting for a nearby story"}
             </span>

@@ -180,7 +180,7 @@ export function PlaceCard({
         <div className="place-meta">
           <span>{place.category}</span>
           {Number.isFinite(entry.distance) && (
-            <span>{formatDistance(entry.distance)} when found</span>
+            <span>{formatDistance(entry.distance)}</span>
           )}
         </div>
         <h2>{place.name}</h2>
@@ -247,19 +247,21 @@ export function PlaceCard({
               {summary?.kind === "source" && (
                 <p className="source-excerpt-label">Wikipedia excerpt · not verified</p>
               )}
-              <a
-                href={excerpt?.evidence.url || sources[0]?.url || place.sourceUrl}
-                target="_blank"
-                rel="noreferrer"
-              >
-                Read the source <ArrowUpRight size={14} />
-              </a>
-              {onNarrate && audioNarration(place)?.kind === "source" && (
-                <button className="story-listen" onClick={onNarrate} aria-label={`Listen to source for ${place.name}`}>
-                  <Volume2 size={16} />
-                  Listen to source
-                </button>
-              )}
+              <div className="story-actions">
+                <a
+                  href={excerpt?.evidence.url || sources[0]?.url || place.sourceUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Read the source <ArrowUpRight size={14} />
+                </a>
+                {onNarrate && audioNarration(place)?.kind === "source" && (
+                  <button className="story-listen" onClick={onNarrate} aria-label={`Listen to source for ${place.name}`}>
+                    <Volume2 size={16} />
+                    Listen to source
+                  </button>
+                )}
+              </div>
             </div>
           </>
         )}

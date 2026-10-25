@@ -22,7 +22,6 @@ export function Compass({
   liveHeading = true,
   idleLabel,
   settling = false,
-  note,
 }: {
   heading: number | null;
   position: Coordinate | null;
@@ -32,7 +31,6 @@ export function Compass({
   liveHeading?: boolean;
   idleLabel?: string;
   settling?: boolean;
-  note?: string;
 }) {
   const direction =
     heading === null
@@ -64,11 +62,6 @@ export function Compass({
         </span>
         <span className="direction-letter">{direction}</span>
       </div>
-      {note ? (
-        <p className="aim-status" role="status">
-          {note}
-        </p>
-      ) : null}
       <div className="compass-stage">
         {position ? (
           <RideMap

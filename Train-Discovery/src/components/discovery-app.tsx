@@ -14,7 +14,6 @@ import {
   MapPin,
   Pause,
   Play,
-  Radio,
   RefreshCw,
   Search,
   SlidersHorizontal,
@@ -525,10 +524,6 @@ export function DiscoveryApp({ rail }: { rail: RailData }) {
           (a, b) => distance(position, a) - distance(position, b),
         )[0]
       : null;
-  const selectedDistance = ranked.find(
-    (r) => r.route.id === selected,
-  )?.distance;
-
   const start = (replay = false) => {
     replay = replay || demoLocation;
     const id = selected || (replay ? "10" : null);
@@ -673,17 +668,12 @@ export function DiscoveryApp({ rail }: { rail: RailData }) {
           >
             <SlidersHorizontal size={19} />
           </button>
-          <span className="rail-badge">LIRR</span>
           {!online && (
             <span className="offline-label">
               <WifiOff size={14} />
               Offline
             </span>
           )}
-          <Link className="header-link" href="/about">
-            <Info size={22} />
-            <span className="sr-only">About</span>
-          </Link>
         </div>
       </header>
       <main id="main-content">
@@ -702,7 +692,6 @@ export function DiscoveryApp({ rail }: { rail: RailData }) {
                   <BookOpen size={31} strokeWidth={1.5} />
                 </span>
                 <h1>No saved discoveries yet</h1>
-                <p>Save a place during a ride to find it here later.</p>
                 <button
                   className="primary-button"
                   onClick={() => setHomeView("map")}
@@ -869,10 +858,12 @@ export function DiscoveryApp({ rail }: { rail: RailData }) {
                         </span>
                         <span className="route-name">
                           {item.name.replace(" Branch", "")}
-                          {Number.isFinite(meters) && (
-                            <small>{formatDistance(meters)} away</small>
-                          )}
                         </span>
+                        {Number.isFinite(meters) && (
+                          <span className="route-distance">
+                            {formatDistance(meters)}
+                          </span>
+                        )}
                         {selected === item.id ? (
                           <span className="route-check">
                             <Check size={17} />
@@ -886,20 +877,6 @@ export function DiscoveryApp({ rail }: { rail: RailData }) {
                       <p className="no-results">No routes match “{search}”.</p>
                     )}
                   </div>
-                  {selected && route && (
-                    <div className="sheet-selected-route">
-                      <span
-                        className="route-color"
-                        style={{ background: route.color }}
-                      />
-                      <span>{route.name.replace(" Branch", "")}</span>
-                      {selectedDistance !== undefined &&
-                        selectedDistance > 3000 &&
-                        Number.isFinite(selectedDistance) && (
-                          <small>Not nearby</small>
-                        )}
-                    </div>
-                  )}
                   <button
                     className="primary-button start-button sheet-start"
                     disabled={!selected || !hydrated}
@@ -930,42 +907,39 @@ export function DiscoveryApp({ rail }: { rail: RailData }) {
               className="ride-top-controls"
               inert={poiOpen && poiExpanded && view === "point"}
             >
-              <div className="ride-heading">
-                <div>
+              <div
+                className={`ride-heading${endConfirm ? " is-confirming" : ""}`}
+              >
+                <div className="ride-heading-text">
                   <div className="ride-route-name">
-                    <span
-                      className="route-color"
-                      style={{ background: route?.color }}
-                    />
                     <h1>{route?.name.replace(" Branch", "")}</h1>
-                    <span className="ride-running">
-                      <span />
-                      {ride.replay
-                        ? "Replay"
-                        : canDetect
-                          ? "Discovering"
-                          : "Paused"}
-                    </span>
                   </div>
                   <p>
                     {nearestStation
                       ? `Near ${nearestStation.name.replace(" Station", "")}`
                       : "Waiting for location"}
-                    {ride.replay && <span> · Simulated ride</span>}
+                    {ride.replay ? (
+                      <span> · Simulated ride</span>
+                    ) : (
+                      !canDetect && <span> · Paused</span>
+                    )}
                   </p>
                 </div>
                 {endConfirm ? (
                   <div className="end-confirm">
-                    <span>Clear this ride and its queue?</span>
-                    <button className="text-button" onClick={finish}>
-                      End ride
-                    </button>
+                    <span>End ride and clear the queue?</span>
                     <button
                       className="icon-button"
                       onClick={() => setEndConfirm(false)}
                       aria-label="Keep riding"
                     >
                       <X size={18} />
+                    </button>
+                    <button
+                      className="end-confirm-action"
+                      onClick={finish}
+                    >
+                      End ride
                     </button>
                   </div>
                 ) : (
@@ -974,9 +948,9 @@ export function DiscoveryApp({ rail }: { rail: RailData }) {
                     onClick={() =>
                       ride.queue.length ? setEndConfirm(true) : finish()
                     }
+                    aria-label="End ride"
                   >
-                    End ride
-                    <X size={14} />
+                    End
                   </button>
                 )}
               </div>
@@ -1082,51 +1056,12 @@ export function DiscoveryApp({ rail }: { rail: RailData }) {
                     activeHeadingMode === "auto" &&
                     catalogPending,
                   )}
-                  note={
-                    replayStatus === "empty"
-                      ? "No sourced place in range."
-                      : undefined
-                  }
                 />
                 <div className="ride-sensor-overlay">
-                  {ride.replay ? (
-                    <div className="replay-controls">
-                      {activeHeadingMode !== "auto" && (
-                        <span>
-                          {activeHeadingMode === "phone"
-                            ? "Simulated train · phone compass"
-                            : "Simulated train · joystick"}
-                        </span>
-                      )}
-                      <button
-                        className="icon-button"
-                        onClick={() => setPlaying((v) => !v)}
-                        aria-label={playing ? "Pause replay" : "Play replay"}
-                      >
-                        {playing ? <Pause size={16} /> : <Play size={16} />}
-                      </button>
-                    </div>
-                  ) : (
-                    <div className="sensor-controls">
-                      {gpsMessage && <p role="status">{gpsMessage}</p>}
-                      {!gpsMessage && compassMessage && (
-                        <p role="status">{compassMessage}</p>
-                      )}
-                      {(!canDetect || sensors.gpsStatus === "idle") && (
-                        <button className="secondary-button" onClick={resume}>
-                          <Radio size={15} />
-                          {sensors.gpsStatus === "idle"
-                            ? "Enable sensors"
-                            : "Retry sensors"}
-                        </button>
-                      )}
-                      {canDetect && (
-                        <span className="sensors-ready">
-                          <Radio size={14} />
-                          Location & compass active
-                        </span>
-                      )}
-                    </div>
+                  {replayStatus === "empty" && (
+                    <p className="aim-status" role="status">
+                      No sourced place in range.
+                    </p>
                   )}
                   {ride.replay &&
                     activeHeadingMode === "phone" &&
@@ -1153,24 +1088,61 @@ export function DiscoveryApp({ rail }: { rail: RailData }) {
                       You seem far from this branch. Check your selected route.
                     </p>
                   )}
-                  <div className="nearby-status">
-                    <MapPin size={15} />
-                    <span>
-                      {catalogPending
-                        ? "Loading places…"
-                        : packageState === "error"
-                          ? "Places unavailable"
-                          : `${places.filter((p) => position && distance(position, p) < POINTING_RADIUS_M).length} places nearby`}
-                    </span>
-                    {packageState === "cached" && (
-                      <span className="cached-label">Cached</span>
-                    )}
-                  </div>
                   {directionEmpty && (
                     <p className="direction-empty" role="status">
                       Nothing in this direction.
                     </p>
                   )}
+                  <div className="ride-status-row">
+                    {ride.replay ? (
+                      <div className="replay-controls">
+                        {activeHeadingMode !== "auto" && (
+                          <span>
+                            {activeHeadingMode === "phone"
+                              ? "Simulated train · phone compass"
+                              : "Simulated train · joystick"}
+                          </span>
+                        )}
+                        <button
+                          className="icon-button"
+                          onClick={() => setPlaying((v) => !v)}
+                          aria-label={playing ? "Pause replay" : "Play replay"}
+                        >
+                          {playing ? <Pause size={16} /> : <Play size={16} />}
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="sensor-controls">
+                        {gpsMessage && <p role="status">{gpsMessage}</p>}
+                        {!gpsMessage && compassMessage && (
+                          <p role="status">{compassMessage}</p>
+                        )}
+                        {(!canDetect || sensors.gpsStatus === "idle") && (
+                          <button
+                            className="secondary-button"
+                            onClick={resume}
+                          >
+                            {sensors.gpsStatus === "idle"
+                              ? "Enable sensors"
+                              : "Retry sensors"}
+                          </button>
+                        )}
+                      </div>
+                    )}
+                    <div className="nearby-status">
+                      <MapPin size={15} />
+                      <span>
+                        {catalogPending
+                          ? "Loading places…"
+                          : packageState === "error"
+                            ? "Places unavailable"
+                            : `${places.filter((p) => position && distance(position, p) < POINTING_RADIUS_M).length} places nearby`}
+                      </span>
+                      {packageState === "cached" && (
+                        <span className="cached-label">Cached</span>
+                      )}
+                    </div>
+                  </div>
                 </div>
                 <PoiSheet
                   open={poiOpen && view === "point"}
@@ -1203,9 +1175,7 @@ export function DiscoveryApp({ rail }: { rail: RailData }) {
                         >
                           <span>
                             <strong>{activePoi.place.name}</strong>
-                            <small>
-                              {formatDistance(activePoi.distance)} when found
-                            </small>
+                            <small>{formatDistance(activePoi.distance)}</small>
                           </span>
                           <ChevronRight size={20} aria-hidden="true" />
                         </button>
@@ -1261,25 +1231,28 @@ export function DiscoveryApp({ rail }: { rail: RailData }) {
                 >
                   <div className="queue-heading">
                     <h2>My discoveries</h2>
+                  </div>
+                  <div
+                    className="queue-segments"
+                    role="group"
+                    aria-label="Discovery list"
+                  >
                     <button
-                      className="text-button"
                       aria-pressed={discoveryList === "ride"}
                       onClick={() => setDiscoveryList("ride")}
                     >
                       This ride
+                      <span className="segment-count">
+                        {ride.queue.length}
+                      </span>
                     </button>
                     <button
-                      className="text-button"
                       aria-pressed={discoveryList === "saved"}
                       onClick={() => setDiscoveryList("saved")}
                     >
                       Saved
+                      <span className="segment-count">{saved.length}</span>
                     </button>
-                    <span className="count-badge">
-                      {discoveryList === "saved"
-                        ? saved.length
-                        : ride.queue.length}
-                    </span>
                   </div>
                   {discoveryList === "saved" ? (
                     <SavedPlaces
@@ -1367,33 +1340,14 @@ export function DiscoveryApp({ rail }: { rail: RailData }) {
                         </span>
                       )}
                       <h3>
-                        {view === "queue" && packageState === "error" ? (
-                          "Places didn’t load"
-                        ) : view === "queue" && replayStatus === "empty" ? (
-                          "No sourced place in range."
-                        ) : view === "queue" && catalogPending ? (
-                          "Loading places…"
-                        ) : (
-                          <>
-                            Your next discovery
-                            <br />
-                            is just outside.
-                          </>
-                        )}
+                        {view === "queue" && packageState === "error"
+                          ? "Places didn’t load"
+                          : view === "queue" && replayStatus === "empty"
+                            ? "No sourced place in range."
+                            : view === "queue" && catalogPending
+                              ? "Loading places…"
+                              : "Point your phone at a place"}
                       </h3>
-                      <p>
-                        {catalogPending ||
-                        packageState === "error" ||
-                        replayStatus === "empty" ? (
-                          "Discoveries stay here until you discard them."
-                        ) : (
-                          <>
-                            Point your phone at a nearby place.
-                            <br />
-                            Its story stays here until you discard it.
-                          </>
-                        )}
-                      </p>
                     </div>
                   )}
                 </section>

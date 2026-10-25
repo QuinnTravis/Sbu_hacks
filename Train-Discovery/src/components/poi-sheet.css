@@ -60,10 +60,12 @@
   background: #8e98a8;
 }
 
+/* A 32px circle inside the 44px target: 12px from the top and right edges,
+   centered on the grip. */
 .poi-sheet .poi-sheet__close {
   position: absolute;
   top: 6px;
-  right: 12px;
+  right: 6px;
   display: grid;
   width: 44px;
   height: 44px;
@@ -71,9 +73,18 @@
   padding: 0;
   border: 0;
   border-radius: 50%;
-  background: #eaedf3;
+  background: transparent;
   color: #0c101d;
   cursor: pointer;
+  isolation: isolate;
+}
+.poi-sheet .poi-sheet__close::before {
+  content: "";
+  position: absolute;
+  inset: 6px;
+  z-index: -1;
+  border-radius: 50%;
+  background: #eaedf3;
 }
 
 .poi-sheet .poi-sheet__body {
@@ -93,7 +104,7 @@
   outline-offset: -3px;
 }
 
-.poi-sheet .poi-sheet__close:active {
+.poi-sheet .poi-sheet__close:active::before {
   background: #dfe3eb;
 }
 .poi-sheet .poi-sheet__handle:active .poi-sheet__grip {
@@ -105,7 +116,7 @@
 }
 
 @media (hover: hover) {
-  .poi-sheet .poi-sheet__close:hover {
+  .poi-sheet .poi-sheet__close:hover::before {
     background: #dfe3eb;
   }
   .poi-sheet .poi-sheet__handle:hover .poi-sheet__grip {
