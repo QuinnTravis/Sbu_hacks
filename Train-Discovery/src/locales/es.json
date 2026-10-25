@@ -567,5 +567,28 @@
   "sheet": {
     "collapse": "Contraer panel",
     "expand": "Expandir panel"
+  },
+  "portal": {
+    "open": "Portal del tiempo",
+    "title": "PORTAL DEL TIEMPO",
+    "today": "Hoy",
+    "close": "Cerrar el portal",
+    "reset": "Restablecer la vista",
+    "panoramaLabel": "Panorama histórico. Arrastra o usa las flechas para mirar alrededor.",
+    "building": "Creando {year}",
+    "addingDepth": "Añadiendo profundidad",
+    "depthView": "Vista con profundidad",
+    "panoramaView": "Vista panorámica",
+    "chooseYear": "Elegir un año histórico",
+    "years": "Años históricos",
+    "references": "Referencias de imágenes",
+    "referencesTitle": "Referencias de la búsqueda de imágenes de Google usadas para esta escena",
+    "noReferences": "Las referencias no están disponibles para esta escena.",
+    "disclosure": "Recreación histórica generada por IA; puede contener errores.",
+    "errorBudget": "Se ha agotado el presupuesto compartido para generar imágenes.",
+    "errorQuota": "Gemini ha alcanzado su límite de generación por ahora.",
+    "errorConfig": "La generación de imágenes no está configurada.",
+    "errorPlace": "Este lugar ya no está disponible.",
+    "errorScene": "No se pudo crear esta escena."
   }
 }

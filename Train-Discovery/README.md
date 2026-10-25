@@ -112,3 +112,7 @@ Open the sliders button in the header, press the backtick key, or visit `/?dev`.
 - Use the compact-controls button to keep a floating joystick visible while watching the app, especially on a phone. Nearby targets show distance, bearing, and angular error. Aim selects a target's bearing and switches to an upright joystick heading. Position and heading sources are always labeled. Controls exercise the same detection and persistent queue as a real ride; scrubbing does not erase the queue.
 
 Dev control values are transient; refreshing starts the simulated position near Jamaica while preserving your discovery queue.
+
+## Time Portal
+
+Open **Time Portal** on a discovery or bookmark to explore a historical panorama with local depth and parallax. The California Zephyr is the default network. Generation uses the existing Gemini key, Google Image Search and any bundled historical photographs; no extra provider key is needed. Set `NEXT_PUBLIC_FEATURE_MODELS_3D=0` to disable it. See [TIME_PORTAL.md](TIME_PORTAL.md) for the 50-attempt budget, caching and deployment details.

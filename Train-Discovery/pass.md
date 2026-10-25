@@ -280,3 +280,11 @@ The live-database offline test requires the configured Supabase catalog. Unit te
 ## Interaction and copy constraints
 
 Keep UI minimal. Do not add helper text that merely explains visible controls, redundant subtitles, side-of-train selection, pretend live readings, unverified history presented as fact, fake photos, or claims that nearby automatically means visible. Keep simulation clearly labeled. Preserve clear attribution and distinguish sourced metadata from verified historical claims.
+
+### Time Portal — merged California Zephyr
+
+Discovery and bookmark cards now open the historical Time Portal under the existing `models3d` flag. Gemini Nano Banana 2.1 uses Google Web/Image Search, the POI's sourced facts and up to three bundled historical photographs. Generated scenes use a private Supabase cache, deduplicated request leases and a lifetime 50-attempt guard; the aligned migration is already applied. No additional provider key is required.
+
+The Three.js panorama adds relative-depth geometry and shallow camera parallax. Quantized Depth Anything V2 Small runs in a module worker, probes for a usable GPU adapter, and uses WASM when unavailable. GPU failures restart in a fresh WASM worker to avoid a rejected ONNX runtime chain. Rendering runs on demand, and the device retains up to 12 depth maps.
+
+Verification: production build/TypeScript and targeted ESLint passed. One focused browser flow against the production Zephyr app used a local historical-image fixture instead of Gemini, while running the actual depth model. It completed real WASM inference, changed the rendered image on drag, switched 1920 → 1880 without losing WebGL, fit phone and short-landscape viewports, and reused cached depth after closing/reopening without more model requests. The expected photo-endpoint 404 came from the fixture's explicit provider block. Screenshots: `/tmp/gaze-time-portal-mobile.png` and `/tmp/gaze-time-portal-landscape.png`. The server trace includes 16 historical assets. Live cache metadata showed zero provider attempts, RLS/private storage enabled and anonymous RPC access denied. No unit tests or paid generation requests were run. Actual Gemini output quality and seam fidelity remain unmeasured.

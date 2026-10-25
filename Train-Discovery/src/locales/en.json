@@ -567,5 +567,28 @@
   "sheet": {
     "collapse": "Collapse sheet",
     "expand": "Expand sheet"
+  },
+  "portal": {
+    "open": "Time Portal",
+    "title": "TIME PORTAL",
+    "today": "Today",
+    "close": "Close Time Portal",
+    "reset": "Reset view",
+    "panoramaLabel": "Historical panorama. Drag or use arrow keys to look around.",
+    "building": "Building {year}",
+    "addingDepth": "Adding depth",
+    "depthView": "Depth view",
+    "panoramaView": "Panorama view",
+    "chooseYear": "Choose a historical year",
+    "years": "Historical years",
+    "references": "Image search references",
+    "referencesTitle": "Google image search references used for this scene",
+    "noReferences": "Search references are not available for this scene.",
+    "disclosure": "AI-generated historical reimagining; details may be inaccurate.",
+    "errorBudget": "The shared image-generation budget has been used.",
+    "errorQuota": "Gemini has reached its generation limit for now.",
+    "errorConfig": "Image generation is not configured for this app.",
+    "errorPlace": "This place is no longer available.",
+    "errorScene": "This scene could not be created."
   }
 }

@@ -31,7 +31,7 @@ export const features = {
    * and capped by ELEVENLABS_MONTHLY_CHARACTER_LIMIT; set to 0 for device voice.
    */
   liveNarration: flag(process.env.NEXT_PUBLIC_FEATURE_LIVE_NARRATION, true),
-  /** F9: movable 3D models of approaching places. */
+  /** F9: Gemini historical panoramas with local depth and 3D parallax. */
   models3d: flag(process.env.NEXT_PUBLIC_FEATURE_MODELS_3D, true),
 } as const;
 
