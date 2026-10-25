@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./fixtures";
 
 // These checks use the existing server and never contact paid providers.
 test.beforeEach(async ({ page }) => {

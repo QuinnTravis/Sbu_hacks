@@ -121,12 +121,12 @@ describe("POI narration contract", () => {
     expect(placeAnnouncement({ ...landmark, story: undefined, evidence: [] }, "pointed")).toBeNull();
     expect(placeAnnouncement({ ...landmark, evidence: [{ ...landmark.evidence[0], text: "No matching fact." }] }, "pointed")).toBeNull();
   });
-  it("allows a clearly attributed source fact when a verified story is unavailable", () => {
+  it("reads a matched source fact plainly when no story exists", () => {
     const script = placeAnnouncement({ ...landmark, story: undefined, evidence: [{ ...landmark.evidence[0],
       title: "Old Library", url: "https://en.wikipedia.org/wiki/Old_Library",
       text: "Old Library is a historic building used for education. It opened in 1901." }] }, "pointed")!;
     expect(script.kind).toBe("source");
-    expect(script.text).toContain("From Wikipedia:");
+    expect(script.text).not.toContain("From Wikipedia");
     expect(script.text).toContain("It opened in 1901.");
   });
 });

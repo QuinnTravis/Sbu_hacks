@@ -92,6 +92,10 @@ Use one continuous spring for entrance, dragging, snap, and exit; drag follows t
 
 The source summary, evidence state, photo details, and sources remain on the expanded discovery card. The chooser is text-only. Ride-queue and saved-discovery rows remain text-only. Map attribution remains a compact, keyboard-accessible expandable control with complete source links. Place it where neither the navigation nor the discovery sheet blocks it. Sensor failures, catalog retry, and simulated rides remain explicit. Route selection retains its geographic map, searchable route sheet, and Start ride action.
 
+Route selection: the collapsed route sheet always carries the one primary start action (the demo ride, or Start ride once a route is selected). On wide screens (at least 1024px wide and 541px tall) the route sheet is a left column and the map fits the space beside it; on phones the map fits the space above the open sheet, so the selected route stays visible.
+
+Captions: while narration speaks, the current line floats over the map directly under the top card, in a translucent paper box with ink text sized for reading across a room. Captions dim while paused and disappear when the guide stops or fails. They never cover the rider dot; on wide screens their width is capped at half the viewport.
+
 ## Elevation & Depth
 
 Use the reference's floating translucent white navigation bar with a subtle downward shadow. Sheets use white tonal separation without decorative borders or shadows.

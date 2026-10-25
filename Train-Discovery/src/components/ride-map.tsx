@@ -348,10 +348,27 @@ function RideMapCanvas({
               mapRef.current = event.target;
               event.target.resize();
               if (typeof basemap === "string") applyQuietBasemap(event.target);
-              event.target
+              const attribution = event.target
                 .getContainer()
-                .querySelector<HTMLElement>(".maplibregl-ctrl-attrib")
-                ?.classList.remove("maplibregl-compact-show");
+                .querySelector<HTMLElement>(".maplibregl-ctrl-attrib");
+              if (!attribution) return;
+              // MapLibre opens the compact credit when attribution text first
+              // arrives, which can happen after load.
+              const collapse = () => {
+                if (!attribution.classList.contains("maplibregl-compact"))
+                  return false;
+                attribution.classList.remove("maplibregl-compact-show");
+                attribution.setAttribute("open", "");
+                return true;
+              };
+              if (collapse()) return;
+              const observer = new MutationObserver(() => {
+                if (collapse()) observer.disconnect();
+              });
+              observer.observe(attribution, {
+                attributes: true,
+                attributeFilter: ["class"],
+              });
             }}
             onError={(event) => {
               if (/webgl/i.test(event.error?.message ?? "")) setUnavailable(true);

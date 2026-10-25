@@ -1,4 +1,4 @@
-import { test, expect, type Page } from "@playwright/test";
+import { test, expect, type Page } from "./fixtures";
 import rail from "../../public/data/lirr.json";
 
 const jamaica = rail.routes.flatMap((route) => route.stops).find((stop) => stop.name === "Jamaica")!;
@@ -91,7 +91,7 @@ test("the once-per-ride journey introduction finishes before station narration, 
   expect(requested[0]).toMatchObject({ type: "journey", routeId: "10", simulation: false });
   await expect.poll(() => clips(page)).toEqual(["https://example.org/test-clip-journey.mp3"]);
   await page.getByText("Transcript & sources").click();
-  await expect(page.getByText("Welcome aboard. The world outside has stories.", { exact: true })).toBeVisible();
+  await expect(page.locator(".audio-transcript").getByText("Welcome aboard. The world outside has stories.", { exact: true })).toBeVisible();
   await page.getByRole("button", { name: "Pause audio guide" }).click();
   await expect(page.locator(".audio-title")).toHaveText("Paused");
   await page.getByRole("button", { name: "Resume audio guide" }).click();
@@ -105,7 +105,7 @@ test("the once-per-ride journey introduction finishes before station narration, 
   ]);
   await expect(page.locator(".audio-title")).toHaveText("Jamaica");
   await page.getByText("Transcript & sources").click();
-  await expect(page.getByText("Station approaching: Jamaica.", { exact: true })).toBeVisible();
+  await expect(page.locator(".audio-transcript").getByText("Station approaching: Jamaica.", { exact: true })).toBeVisible();
 
   await finishClip(page);
   await page.getByRole("button", { name: "Turn off audio guide" }).click();

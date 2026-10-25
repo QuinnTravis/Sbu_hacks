@@ -3,9 +3,8 @@ import { createHash, createHmac, randomBytes } from "node:crypto";
 import { database } from "./supabase";
 import { findRoute, railFor, staticPackageFiles, staticPlace } from "./network-data";
 import { localeInfo } from "./i18n-core";
-import { englishBody } from "./narration-script";
-import { audioEvidence, audioNarration } from "./narration";
-import { verifyPlace } from "./verification";
+import { composePlaceScript, cueLine, scriptText } from "./narration-script";
+import { withStory } from "./story-cache";
 import { journeyOpening, placeAnnouncement, stationAnnouncement } from "./audio-journey";
 import { createJourneyIntroduction, getJourneyContext } from "./journey-context";
 import type { JourneyContextInput, JourneyIntroduction } from "./journey-context";
@@ -30,16 +29,8 @@ export class AudioError extends Error {
 }
 
 async function placeScript(place: Place, context: PlaceAudioContext): Promise<AudioScript> {
-  const base = audioNarration(place);
-  let story = base?.kind === "verified" ? place.story : undefined;
-  // A stale published story fails closed. Only title-matched Wikipedia passages
-  // enter generation; source text is never accepted from the browser.
-  const evidence = audioEvidence(place);
-  if (!place.story && evidence.length && process.env.GEMINI_API_KEY) {
-    try { story = await verifyPlace({ ...place, evidence }, 25000); }
-    catch { /* Separate model check rejected it; retain the attributed reading. */ }
-  }
-  const script = placeAnnouncement(story ? { ...place, story } : place, context);
+  // Source text is never accepted from the browser; stories come from the catalog or a server-side check.
+  const script = placeAnnouncement(await withStory(place), context);
   if (!script) throw new AudioError("story_unavailable", 422);
   return script;
 }
@@ -104,30 +95,43 @@ function journeyScript(
   };
 }
 
-/** Static networks: the verified story body alone, in the requested language. */
-function storyBodyScript(place: Place, locale: string, content: PoiContent | undefined): AudioScript {
-  const english = englishBody(place);
-  const text = locale !== "en" && content?.transcript ? content.transcript : english?.text;
-  if (!text) throw new AudioError("story_unavailable", 422);
+/**
+ * Static networks: the whole composed story (lead, body, look-for) as one
+ * narration, so a story never switches voices between its parts.
+ */
+function composedScript(place: Place, context: PlaceAudioContext, locale: string, content: PoiContent | undefined): AudioScript {
+  const script = composePlaceScript({ place, code: locale, context, content, introIndex: 0 });
+  if (!script) throw new AudioError("story_unavailable", 422);
   return {
     name: place.name,
-    text,
-    kind: "verified",
-    sources: place.evidence.map(({ title, url, license }) => ({ title, url, license })),
-    language: locale !== "en" && content?.transcript ? locale : "en",
+    text: scriptText(script),
+    kind: script.kind,
+    sources: script.sources,
+    language: script.language,
+    ...(place.story ? { story: place.story, evidence: place.evidence } : {}),
   };
 }
 
 async function resolve(input: AudioRequest) {
-  if (input.type === "announcement") throw new AudioError("invalid_request", 400);
   const locale = localeInfo(input.locale ?? "en").code;
+  if (input.type === "announcement") {
+    const cue = input.cue;
+    const fromPackage = cue ? staticPlace(cue.placeId) : null;
+    if (!cue || !fromPackage) throw new AudioError("invalid_request", 400);
+    const text = cueLine(locale, { name: fromPackage.place.name, side: cue.side, minutes: cue.minutes, saved: cue.saved });
+    return {
+      revision: [fromPackage.place.id, fromPackage.place.name, "cue", text, locale],
+      script: async (): Promise<AudioScript> => ({ name: fromPackage.place.name, text, kind: "announcement", sources: [], language: locale }),
+    };
+  }
   if (input.type === "place") {
     const fromPackage = staticPlace(input.placeId);
     if (fromPackage) {
       const content = staticPackageFiles(fromPackage.routeId)?.content[locale]?.[input.placeId];
+      const context = input.context ?? "nearby";
       return {
-        revision: [fromPackage.place, "story-body", locale, content?.transcript ?? null],
-        script: async () => storyBodyScript(fromPackage.place, locale, content),
+        revision: [fromPackage.place, "composed", context, locale, content?.transcript ?? null],
+        script: async () => composedScript(await withStory(fromPackage.place), context, locale, content),
       };
     }
     const { data, error } = await database().from("places").select("data").eq("id", input.placeId).single();
@@ -173,7 +177,7 @@ async function resolve(input: AudioRequest) {
 export async function journeyAudio(input: AudioRequest, request: Request) {
   if (!process.env.ELEVENLABS_API_KEY || !process.env.SUPABASE_SECRET_KEY)
     throw new AudioError("audio_not_configured", 503);
-  const voice = (input.type !== "announcement" && localeInfo(input.locale ?? "en").ttsVoiceId) ||
+  const voice = localeInfo(input.locale ?? "en").ttsVoiceId ||
     process.env.ELEVENLABS_VOICE_ID || DEFAULT_VOICE_ID;
   const model = process.env.ELEVENLABS_MODEL || DEFAULT_TTS_MODEL;
   const content = await resolve(input);

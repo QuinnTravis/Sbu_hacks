@@ -12,8 +12,10 @@ export type AudioRequest =
   | { type: "place"; placeId: string; context?: PlaceAudioContext; locale?: string }
   | { type: "station"; routeId: string; stationId: string; locale?: string }
   | { type: "journey"; routeId: string; simulation: boolean; lat?: number; lon?: number; locale?: string }
-  /** Look-ahead cues and warnings: templated lines spoken on the device, never sent to the server. */
-  | { type: "announcement" };
+  /** Look-ahead cues and warnings: templated lines. Only a cue, which the server re-templates itself, may be voiced live. */
+  | { type: "announcement"; cue?: AnnouncementCue; locale?: string };
+
+export type AnnouncementCue = { placeId: string; side: "left" | "right" | "ahead" | "both" | null; minutes: number; saved: boolean };
 
 export type AudioScript = {
   name: string;

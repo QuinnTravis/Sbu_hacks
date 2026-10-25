@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "./fixtures";
 import type { Place } from "../../src/lib/types";
 
 const place = {
@@ -113,7 +113,7 @@ test("Discoveries explains itself before the first ride and returns to route sel
   await discoveries.click();
   await expect(discoveries).toHaveAttribute("aria-current", "page");
   await expect(page.getByRole("heading", { name: "Discoveries appear here during a ride" })).toBeVisible();
-  await expect(page.getByText("No sourced place in range.")).toHaveCount(0);
+  await expect(page.getByText("No places in range.")).toHaveCount(0);
   await expect(page.getByRole("button", { name: "Start discovering" })).toBeVisible();
 
   const ride = nav.getByRole("button", { name: "Ride" });
@@ -205,7 +205,6 @@ test("Jamaica verified facts render in the demo journey", async ({ page, request
   await page.getByRole("button", { name: "Start Jamaica demo ride" }).click();
   await page.getByRole("button", { name: /^Jamaica,/ }).click();
   await expect(page.getByRole("heading", { name: "Jamaica", exact: true })).toBeVisible({ timeout: 10000 });
-  await expect(page.getByText("Evidence checked")).toBeVisible();
   await expect(page.getByRole("heading", { name: "Summary" })).toBeVisible();
   await expect(page.locator(".story-summary")).toContainText(claim.text);
   await expect(page.getByRole("link", { name: "Source for summary claim 1" })).toHaveAttribute("href", source.url);
@@ -352,7 +351,7 @@ test("audio tour narrates nearby places without pointing, then saves, pauses, sk
   await expect(page.getByRole("button", { name: "Start audio tour" })).toBeVisible();
 });
 
-test("an attributed source excerpt is visibly distinguished from a verified story", async ({ page, context }) => {
+test("a source excerpt reads as plainly as a story, with no verification labels", async ({ page, context }) => {
   await context.setGeolocation({ latitude: 40.923, longitude: -73.1285, accuracy: 5 });
   const unverified = {
     ...place,
@@ -386,16 +385,18 @@ test("an attributed source excerpt is visibly distinguished from a verified stor
   await page.getByRole("button", { name: "Start ride", exact: true }).click();
   await page.getByRole("button", { name: "Start audio tour" }).click();
   await finishJourneyIntroduction(page);
-  await expect(page.getByText("Example House Museum · source excerpt")).toBeVisible();
-  const excerptSpeech = "Example House Museum. From Wikipedia: Example House is a preserved building used for education. It is near a railway line.";
+  await expect(page.locator(".audio-guide")).toContainText("Example House Museum");
+  await expect(page.getByText("source excerpt", { exact: false })).toHaveCount(0);
+  const excerptSpeech = "Example House Museum. Example House is a preserved building used for education. It is near a railway line.";
   await expect.poll(() => page.evaluate((text) =>
     (window as unknown as { __spoken: string[] }).__spoken.includes(text), excerptSpeech,
   )).toBe(true);
   await page.getByRole("button", { name: "Bookmark Example House Museum" }).click();
   if (await page.getByRole("navigation", { name: "Main navigation" }).getByRole("button", { name: "Discoveries" }).isVisible())
     await page.getByRole("navigation", { name: "Main navigation" }).getByRole("button", { name: "Discoveries" }).click();
-  await expect(page.getByText("Wikipedia excerpt · not verified")).toBeVisible();
-  await page.getByRole("button", { name: "Listen to source for Example House Museum" }).click();
+  await expect(page.locator(".story-summary")).toContainText("Example House is a preserved building used for education.");
+  await expect(page.getByText(/not verified|not a checked story|Evidence checked/)).toHaveCount(0);
+  await page.getByRole("button", { name: "Listen to Example House Museum" }).click();
   await expect.poll(() => page.evaluate(() =>
     (window as unknown as { __spoken: string[] }).__spoken.filter((entry) =>
       entry.includes("Example House is a preserved building used for education.")).length,

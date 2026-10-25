@@ -26,7 +26,6 @@ export function Compass({
   liveHeading = true,
   idleLabel,
   settling = false,
-  note,
   radius,
   overlay,
 }: {
@@ -38,7 +37,6 @@ export function Compass({
   liveHeading?: boolean;
   idleLabel?: string;
   settling?: boolean;
-  note?: string;
   radius?: number;
   /** Floats over the top of the map, e.g. the look-ahead pill. */
   overlay?: ReactNode;
@@ -73,11 +71,6 @@ export function Compass({
         </span>
         <span className="direction-letter">{direction}</span>
       </div>
-      {note ? (
-        <p className="aim-status" role="status">
-          {note}
-        </p>
-      ) : null}
       <div className="compass-stage">
         {overlay ? <div className="compass-overlay">{overlay}</div> : null}
         {position ? (

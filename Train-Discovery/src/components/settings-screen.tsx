@@ -1,10 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { ChevronRight, Languages } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { features } from "@/lib/features";
 import { useI18n } from "@/lib/i18n";
 import { useSettings } from "@/lib/settings";
+import "./screens.css";
 
 export function SettingsScreen() {
   const { t, code, locales, setLocale } = useI18n();
@@ -16,10 +17,7 @@ export function SettingsScreen() {
       </div>
       {features.i18n && (
         <fieldset className="settings-group">
-          <legend>
-            <Languages size={16} aria-hidden="true" />
-            {t("settings.language")}
-          </legend>
+          <legend>{t("settings.language")}</legend>
           <div className="segmented is-wrap" role="radiogroup" aria-label={t("settings.language")}>
             {locales.map((locale) => (
               <button
@@ -36,28 +34,26 @@ export function SettingsScreen() {
           </div>
         </fieldset>
       )}
-      <fieldset className="settings-group">
-        <legend>{t("settings.facing")}</legend>
-        <div className="segmented" role="radiogroup" aria-label={t("settings.facing")}>
-          {(["forward", "backward"] as const).map((facing) => (
-            <button
-              key={facing}
-              type="button"
-              role="radio"
-              aria-checked={settings.facing === facing}
-              onClick={() => update({ facing })}
-            >
-              {t(`settings.${facing}`)}
-            </button>
-          ))}
-        </div>
-        <p className="settings-hint">{t("settings.facingHint")}</p>
-      </fieldset>
-      <div className="settings-group settings-toggles">
+      <div className="settings-group settings-ride">
+        <fieldset className="settings-field">
+          <legend>{t("settings.facing")}</legend>
+          <div className="segmented" role="radiogroup" aria-label={t("settings.facing")}>
+            {(["forward", "backward"] as const).map((facing) => (
+              <button
+                key={facing}
+                type="button"
+                role="radio"
+                aria-checked={settings.facing === facing}
+                onClick={() => update({ facing })}
+              >
+                {t(facing === "forward" ? "settings.seatForward" : "settings.seatBackward")}
+              </button>
+            ))}
+          </div>
+        </fieldset>
         <label className="toggle-row">
           <span>
             <strong>{t("settings.sound")}</strong>
-            <small>{t("settings.soundHint")}</small>
           </span>
           <input
             type="checkbox"

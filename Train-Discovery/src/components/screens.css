@@ -1,0 +1,93 @@
+/* Bookmarks, settings, and the tab bar. Imported before gaze.css, so each
+   override carries one more class than the rule it replaces. */
+
+/* Tab bar: equal tabs until a label needs more room (Spanish "Descubrimientos"). */
+.floating-nav.app-nav > button {
+  min-width: auto;
+}
+.app-nav .nav-count {
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  border-radius: 9px;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.app-nav .nav-count.is-zero {
+  background: var(--soft);
+  color: var(--muted);
+}
+@media (forced-colors: active) {
+  .app-nav .nav-count {
+    border-color: CanvasText;
+  }
+}
+
+/* Bookmark rows: the name gets the full width; status leads the meta line. */
+.bookmarks-screen .bookmark-name {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  line-height: 1.3;
+}
+.bookmarks-screen .bookmark-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px 6px;
+  margin-top: 3px;
+  line-height: 1.35;
+}
+.bookmarks-screen .bookmark-meta .status-pill {
+  margin-left: 0;
+  padding: 2px 8px;
+  line-height: 1.3;
+}
+.bookmarks-screen .bookmark-remove {
+  flex-shrink: 0;
+}
+.bookmarks-screen .bookmark-export {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  margin: 12px 4px 0;
+}
+.bookmarks-screen .bookmark-export .secondary-button {
+  min-width: 0;
+  white-space: normal;
+}
+@media (max-width: 600px) {
+  .bookmarks-screen .bookmark-export {
+    grid-template-columns: 1fr 1fr;
+  }
+  .bookmarks-screen .bookmark-export > span {
+    grid-column: 1 / -1;
+    margin: 0 2px 2px;
+  }
+}
+
+/* Settings: full-size pill options; seat and narration share one card. */
+.settings-screen .segmented {
+  border-radius: 26px;
+}
+.settings-screen .segmented > button {
+  min-height: 44px;
+  border-radius: 22px;
+}
+.settings-screen .settings-ride {
+  padding-bottom: 4px;
+}
+.settings-ride .settings-field {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.settings-ride .toggle-row {
+  margin-top: 16px;
+  border-top: 1px solid var(--soft);
+}

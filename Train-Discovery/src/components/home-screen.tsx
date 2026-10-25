@@ -1,13 +1,12 @@
 "use client";
 
-import { useMemo } from "react";
+import { useLayoutEffect, useMemo, useRef } from "react";
 import {
   ArrowRight,
   Check,
   ChevronRight,
   LocateFixed,
   MapPin,
-  Play,
   Search,
   TrainFront,
   X,
@@ -78,26 +77,31 @@ export function HomeScreen({
     selectionPosition && nearby.length && !allRoutes && !search ? nearby : ranked
   ).filter((r) => r.route.name.toLowerCase().includes(search.toLowerCase()));
   const route = routes.find((r) => r.id === selected);
-  const selectedDistance = ranked.find((r) => r.route.id === selected)?.distance;
-  const stopsLabel = (item: RailRoute) =>
-    network.segments.length && item.stops.length > 1
-      ? t("home.stops", { from: item.stops[0].name, to: item.stops[item.stops.length - 1].name })
-      : null;
   const shortName = (name: string) => name.replace(" Branch", "");
+  const screenRef = useRef<HTMLElement>(null);
+  const sheetRef = useRef<HTMLElement>(null);
+
+  // The map fits the space the open sheet leaves, so a selected route stays in view.
+  useLayoutEffect(() => {
+    const screen = screenRef.current;
+    const sheet = sheetRef.current;
+    if (!screen || !sheet) return;
+    const update = () =>
+      screen.style.setProperty("--home-sheet-height", `${Math.round(sheet.offsetHeight)}px`);
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(sheet);
+    return () => observer.disconnect();
+  }, []);
 
   return (
-    <section className="selection-map-screen" aria-label={t("home.chooseRoute")}>
+    <section
+      ref={screenRef}
+      className={`selection-map-screen${sheetOpen ? " is-sheet-open" : ""}`}
+      aria-label={t("home.chooseRoute")}
+    >
       <div className="map-topline">
         <h1>{network.name}</h1>
-        <button
-          className="map-action"
-          onClick={() => onStart(true)}
-          disabled={!hydrated || railLoading}
-          aria-label={t("home.demoStart", { place: network.demo.place })}
-          title={t("home.demoLabel", { place: network.demo.place })}
-        >
-          <Play size={18} fill="currentColor" />
-        </button>
       </div>
       <div className="selection-map">
         {railLoading ? (
@@ -127,6 +131,7 @@ export function HomeScreen({
         )}
       </div>
       <section
+        ref={sheetRef}
         className={`route-sheet ${sheetOpen ? "is-open" : "is-collapsed"}`}
         aria-labelledby="route-sheet-title"
       >
@@ -149,11 +154,36 @@ export function HomeScreen({
                 : t("home.chooseRoute")}
           </h2>
           {selectionPosition && nearby.length > 0 && (
-            <button className="text-button" onClick={() => onAllRoutes(!allRoutes)}>
+            <button
+              className="text-button"
+              onClick={() => {
+                onAllRoutes(!allRoutes);
+                onSheetOpen(true);
+              }}
+            >
               {allRoutes ? t("home.nearby") : t("home.allRoutes")}
             </button>
           )}
         </div>
+        {!sheetOpen &&
+          (selected && route ? (
+            <button
+              className="primary-button start-button sheet-start"
+              disabled={!hydrated}
+              onClick={() => onStart(false)}
+            >
+              <span>{t("home.start")}</span>
+              <ArrowRight size={19} />
+            </button>
+          ) : (
+            <button
+              className="primary-button start-button sheet-start"
+              disabled={!hydrated || railLoading}
+              onClick={() => onStart(true)}
+            >
+              <span>{t("home.demoStart", { place: network.demo.place })}</span>
+            </button>
+          ))}
         {sheetOpen && (
           <>
             <label className="route-search sheet-search">
@@ -191,17 +221,16 @@ export function HomeScreen({
                   <span className="route-icon">
                     <TrainFront size={22} strokeWidth={1.8} />
                   </span>
-                  <span className="route-name">
-                    {shortName(item.name)}
-                    {stopsLabel(item) && <small>{stopsLabel(item)}</small>}
-                    {Number.isFinite(meters) && !network.segments.length && (
-                      <small>{t("home.away", { distance: distance(meters) })}</small>
-                    )}
-                    {item.experience === "full" && network.segments.length > 0 && (
-                      <span className="experience-badge">{t("home.fullExperience")}</span>
-                    )}
-                    {item.experience === "basic" && <small className="experience-basic">{t("home.basicExperience")}</small>}
-                  </span>
+                  <span className="route-name">{shortName(item.name)}</span>
+                  {item.experience === "full" && network.segments.length > 0 && (
+                    <span className="experience-badge">{t("home.fullExperience")}</span>
+                  )}
+                  {item.experience === "basic" && (
+                    <span className="route-distance">{t("home.basicExperience")}</span>
+                  )}
+                  {Number.isFinite(meters) && !network.segments.length && (
+                    <span className="route-distance">{distance(meters)}</span>
+                  )}
                   {selected === item.id ? (
                     <span className="route-check">
                       <Check size={17} />
@@ -215,15 +244,6 @@ export function HomeScreen({
                 <p className="no-results">{t("home.noMatch", { query: search })}</p>
               )}
             </div>
-            {selected && route && (
-              <div className="sheet-selected-route">
-                <span className="route-color" style={{ background: route.color }} />
-                <span>{shortName(route.name)}</span>
-                {selectedDistance !== undefined && selectedDistance > 3000 && Number.isFinite(selectedDistance) && (
-                  <small>{t("home.notNearby")}</small>
-                )}
-              </div>
-            )}
             <button
               className="primary-button start-button sheet-start"
               disabled={!selected || !hydrated}

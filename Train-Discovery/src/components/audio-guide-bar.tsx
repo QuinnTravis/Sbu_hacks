@@ -24,11 +24,10 @@ export function AudioGuideBar({ guide, onToggleBookmark, bookmarked, soundOff = 
     : null;
   const title = guide.status === "paused" ? t("audio.paused")
     : guide.status === "preparing" ? t("audio.preparing", { name: guide.currentName ?? "" })
-    : guide.currentName
-      ? guide.currentKind === "source" ? t("audio.sourceExcerpt", { name: guide.currentName })
-      : guide.currentKind === "basic" ? t("audio.basicInfo", { name: guide.currentName })
-      : guide.currentName
-    : t("audio.waiting");
+    : guide.currentName ?? t("audio.waiting");
+  const pausedName = guide.status === "paused" ? guide.currentName : null;
+  const queued = guide.queuedName && guide.queuedName !== guide.currentName ? guide.queuedName : null;
+  const next = guide.nextName && guide.currentName && guide.nextName !== guide.currentName ? guide.nextName : null;
 
   return (
     <div className="audio-companion train-audio-guide">
@@ -52,12 +51,36 @@ export function AudioGuideBar({ guide, onToggleBookmark, bookmarked, soundOff = 
       ) : (
         <>
           <div className="audio-now">
-            <span className="audio-indicator" aria-hidden="true"><span /><span /><span /></span>
-            <span className="audio-title" role="status">{title}</span>
-            <div className="audio-controls">
-              {guide.currentPlace && (
-                <BookmarkButton compact className="audio-control" name={guide.currentPlace.name} bookmarked={bookmarked} onToggle={onToggleBookmark} />
+            <Headphones className="audio-now-icon" size={19} strokeWidth={1.8} aria-hidden="true" />
+            <span className="audio-now-text">
+              <span className="audio-title" role="status">{title}</span>
+              {pausedName && <span className="audio-now-place" title={pausedName}>{pausedName}</span>}
+            </span>
+            {guide.currentPlace && (
+              <BookmarkButton compact className="audio-control" name={guide.currentPlace.name} bookmarked={bookmarked} onToggle={onToggleBookmark} />
+            )}
+          </div>
+          {queued && (
+            <div className="audio-follow">
+              <p className="audio-queued" role="status">
+                <span className="audio-queued-name" title={queued}>{queued}</span>{" "}
+                <span className="audio-queued-state">{t("audio.queued")}</span>
+              </p>
+              {guide.currentName && (
+                <button className="audio-control audio-play-now" onClick={guide.playNow} aria-label={t("audio.playNow")}>
+                  {t("audio.playNow")}
+                </button>
               )}
+            </div>
+          )}
+          <div className="audio-transport">
+            {next ? (
+              <p className="audio-next">
+                <span className="audio-next-label">{t("audio.next")}</span>
+                <span className="audio-next-name" title={next}>{next}</span>
+              </p>
+            ) : <span className="audio-next" aria-hidden="true" />}
+            <div className="audio-controls">
               <button className="audio-control" onClick={guide.togglePause} aria-label={guide.status === "paused" ? t("audio.resume") : t("audio.pause")}>
                 {guide.status === "paused" ? <Play size={18} /> : <Pause size={18} />}
               </button>
@@ -69,30 +92,6 @@ export function AudioGuideBar({ guide, onToggleBookmark, bookmarked, soundOff = 
               </button>
             </div>
           </div>
-          {(guide.queuedName && guide.queuedName !== guide.currentName) ||
-          (guide.nextName && guide.currentName && guide.nextName !== guide.currentName) ? (
-            <div className="audio-follow">
-              <div className="audio-follow-copy">
-                {guide.queuedName && guide.queuedName !== guide.currentName && (
-                  <p className="audio-queued" role="status">
-                    <span className="audio-queued-name" title={guide.queuedName}>{guide.queuedName}</span>{" "}
-                    <span className="audio-queued-state">{t("audio.queued")}</span>
-                  </p>
-                )}
-                {guide.nextName && guide.currentName && guide.nextName !== guide.currentName && (
-                  <p className="audio-next">
-                    <span className="audio-next-label">{t("audio.next")}</span>
-                    <span className="audio-next-name" title={guide.nextName}>{guide.nextName}</span>
-                  </p>
-                )}
-              </div>
-              {guide.queuedName && guide.currentName && guide.queuedName !== guide.currentName && (
-                <button className="audio-control audio-play-now" onClick={guide.playNow} aria-label={t("audio.playNow")}>
-                  {t("audio.playNow")}
-                </button>
-              )}
-            </div>
-          ) : null}
         </>
       )}
     </div>

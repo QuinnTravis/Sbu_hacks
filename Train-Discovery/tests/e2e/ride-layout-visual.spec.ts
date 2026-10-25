@@ -1,4 +1,4 @@
-import { expect, test, type Locator, type Page } from "@playwright/test";
+import { expect, test, type Locator, type Page } from "./fixtures";
 import type { Place } from "../../src/lib/types";
 
 // Reproduction shared with the compass/audio designers: four northward places

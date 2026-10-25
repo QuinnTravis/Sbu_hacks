@@ -2,6 +2,7 @@
 
 import { Binoculars, Bookmark, Route as RouteIcon, Settings2 } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
+import "./screens.css";
 
 export type Tab = "ride" | "discoveries" | "bookmarks" | "settings";
 
@@ -17,7 +18,7 @@ export function BottomNav({
   discoveries: number | null;
   bookmarks: number;
 }) {
-  const { t } = useI18n();
+  const { t, plural } = useI18n();
   const items: { id: Tab; label: string; icon: React.ReactNode; count?: number | null }[] = [
     { id: "ride", label: t("nav.ride"), icon: <RouteIcon size={25} strokeWidth={1.8} /> },
     { id: "discoveries", label: t("nav.discoveries"), icon: <Binoculars size={25} strokeWidth={1.8} />, count: discoveries },
@@ -36,10 +37,13 @@ export function BottomNav({
           <span className="nav-icon">
             {item.icon}
             {item.count !== undefined && item.count !== null && (
-              <span className="nav-count" aria-hidden="true">{item.count}</span>
+              <span className={`nav-count${item.count === 0 ? " is-zero" : ""}`} aria-hidden="true">{item.count}</span>
             )}
           </span>
           <span className="nav-label">{item.label}</span>
+          {item.count !== undefined && item.count !== null && (
+            <span className="sr-only">, {plural("nav.count", item.count)}</span>
+          )}
         </button>
       ))}
     </nav>

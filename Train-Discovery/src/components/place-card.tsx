@@ -3,12 +3,11 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import {
   ArrowUpRight,
-  CloudCheck,
+  ChevronDown,
   Info,
   ImageOff,
   LoaderCircle,
   RefreshCw,
-  ShieldCheck,
   Volume2,
   X,
 } from "lucide-react";
@@ -18,7 +17,7 @@ import type { Side } from "@/lib/route-geometry";
 import { cardSummary } from "@/lib/card-face";
 import { useI18n } from "@/lib/i18n";
 import { englishBody, lookForLine } from "@/lib/narration-script";
-import { audioNarration, narrationText, sourceExcerpt } from "@/lib/narration";
+import { audioNarration, narrationText } from "@/lib/narration";
 import { ComparisonSlider } from "@/features/history/comparison-slider";
 import { features } from "@/lib/features";
 import { BookmarkButton } from "./bookmark-button";
@@ -35,7 +34,6 @@ export function PlaceCard({
   content,
   history,
   side = null,
-  offlineReady = false,
   resolveAsset,
   extra,
 }: {
@@ -51,7 +49,6 @@ export function PlaceCard({
   content?: PoiContent;
   history?: HistoricImage;
   side?: Side | null;
-  offlineReady?: boolean;
   resolveAsset?: (url: string) => string;
   /** More actions, e.g. Explore in 3D. */
   extra?: ReactNode;
@@ -85,17 +82,32 @@ export function PlaceCard({
   }, [place.id, attempt]);
   const story = place.story;
   const summary = cardSummary(place);
-  const excerpt = story ? null : sourceExcerpt(place);
   const storyClaims: Claim[] = story
     ? [...story.claims, ...(story.funFact ? [story.funFact] : []),
       ...[story.narration?.hook, story.narration?.detail, story.narration?.why, story.narration?.lookFor]
         .filter((claim): claim is Claim => Boolean(claim))]
     : [];
-  const sources = place.evidence.filter(
-    (e) => !story || storyClaims.some((claim) => claim.evidenceId === e.id),
-  );
+  const sources = place.evidence;
   // A checked translation replaces the English text; the sources stay the same.
   const translated = code !== "en" && content?.summary ? content : undefined;
+  // Matches the [n] markers printed after the English summary claims and the fact.
+  const citation = new Map<Claim, number>();
+  if (story && !translated) {
+    story.claims.forEach((claim, i) => citation.set(claim, i + 1));
+    if (story.funFact) citation.set(story.funFact, story.claims.length + 1);
+  }
+  const excerpts = (sourceId: string) => {
+    const byQuote = new Map<string, number[]>();
+    for (const claim of storyClaims) {
+      const quote = claim.quote?.trim();
+      if (claim.evidenceId !== sourceId || !quote) continue;
+      const marks = byQuote.get(quote) ?? [];
+      const mark = citation.get(claim);
+      if (mark && !marks.includes(mark)) marks.push(mark);
+      byQuote.set(quote, marks);
+    }
+    return [...byQuote];
+  };
   const englishOnly = code !== "en" && !translated && Boolean(story);
   const lookFor = translated?.lookFor ?? (code === "en" || englishOnly ? englishBody(place)?.lookFor : undefined);
   const basic = place.basic;
@@ -104,7 +116,7 @@ export function PlaceCard({
   );
   return (
     <article className="place-card">
-      <div className="place-photo">
+      <div className={`place-photo${photoState === "unavailable" ? " is-unavailable" : ""}`}>
         {photo && photoState === "ready" ? (
           <>
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -186,6 +198,7 @@ export function PlaceCard({
             </span>
             {photoState === "unavailable" && (
               <button
+                type="button"
                 className="text-button"
                 onClick={() => {
                   setPhotoState("loading");
@@ -212,29 +225,13 @@ export function PlaceCard({
         <div className="place-meta">
           <span>{t(`categories.${place.category}`)}</span>
           {Number.isFinite(entry.distance) && (
-            <span>{t("card.whenFound", { distance: distance(entry.distance) })}</span>
+            <span>{distance(entry.distance)}</span>
           )}
           {side && <span>{t(`side.${side}`)}</span>}
-          {offlineReady && (
-            <span className="offline-ready">
-              <CloudCheck size={13} aria-hidden="true" />
-              {t("connectivity.ready")}
-            </span>
-          )}
         </div>
         <h2>{place.name}</h2>
         {story ? (
           <>
-            <div className="verified-label">
-              <ShieldCheck size={14} />
-              {t("card.evidenceChecked")}
-              {onNarrate && narrationText(place) && (
-                <button className="story-listen" onClick={onNarrate} aria-label={t("card.listenTo", { name: place.name })}>
-                  <Volume2 size={16} />
-                  {t("card.playStory")}
-                </button>
-              )}
-            </div>
             <div className="story-facts">
               <section className="story-block story-summary">
                 <h3>{t("card.summary")}</h3>
@@ -267,7 +264,6 @@ export function PlaceCard({
                 ) : (
                   <p>{summary?.text ?? t("card.noSummary")}</p>
                 )}
-                {translated && <p className="story-language-note">{t("card.localized")}</p>}
                 {englishOnly && <p className="story-language-note">{t("card.englishOnly")}</p>}
               </section>
               {story.funFact && !translated && (
@@ -293,6 +289,14 @@ export function PlaceCard({
                 </section>
               )}
             </div>
+            {onNarrate && narrationText(place) && (
+              <div className="story-actions">
+                <button className="story-listen" onClick={onNarrate} aria-label={t("card.listenTo", { name: place.name })}>
+                  <Volume2 size={16} />
+                  {t("card.playStory")}
+                </button>
+              </div>
+            )}
           </>
         ) : summary ? (
           <>
@@ -300,24 +304,14 @@ export function PlaceCard({
               <h3>{t("card.summary")}</h3>
               <p lang="en">{summary.text}</p>
             </section>
-            <div className="unverified-story">
-              {summary.kind === "source" && (
-                <p className="source-excerpt-label">{t("card.excerptLabel")}</p>
-              )}
-              <a
-                href={excerpt?.evidence.url || sources[0]?.url || place.sourceUrl}
-                target="_blank"
-                rel="noreferrer"
-              >
-                {t("card.readSource")} <ArrowUpRight size={14} />
-              </a>
-              {onNarrate && audioNarration(place)?.kind === "source" && (
-                <button className="story-listen" onClick={onNarrate} aria-label={t("card.listenSourceFor", { name: place.name })}>
+            {onNarrate && audioNarration(place) && (
+              <div className="story-actions">
+                <button className="story-listen" onClick={onNarrate} aria-label={t("card.listenTo", { name: place.name })}>
                   <Volume2 size={16} />
-                  {t("card.listenSource")}
+                  {t("card.playStory")}
                 </button>
-              )}
-            </div>
+              </div>
+            )}
           </>
         ) : basic ? (
           <section className="story-block story-basic">
@@ -339,7 +333,6 @@ export function PlaceCard({
                 ) : null}
               </dl>
             )}
-            <p className="story-language-note">{t("card.basicHint")}</p>
           </section>
         ) : (
           <section className="story-block story-summary">
@@ -364,23 +357,25 @@ export function PlaceCard({
           </dl>
         )}
         <details className="sources">
-          <summary>{t("card.sources")}</summary>
+          <summary>
+            {t("card.sources")}
+            <ChevronDown size={18} aria-hidden="true" />
+          </summary>
           {sources.map((source) => (
             <div key={source.id}>
               <a href={source.url} target="_blank" rel="noreferrer">
                 {source.title}
                 <ArrowUpRight size={13} />
               </a>
-              <small>
-                {source.sourceType === "search-snippet"
-                  ? t("card.searchExcerpt")
-                  : t("card.retrieved", { license: source.license, date: source.retrievedAt.slice(0, 10) })}
-              </small>
-              {storyClaims
-                .filter((c) => c.evidenceId === source.id)
-                .map((claim, i) => (
-                  <blockquote key={i}>{claim.quote}</blockquote>
-                ))}
+              <small>{t("card.retrieved", { license: source.license, date: source.retrievedAt.slice(0, 10) })}</small>
+              {excerpts(source.id).map(([quote, marks]) => (
+                <blockquote key={quote}>
+                  {marks.length > 0 && (
+                    <span className="source-cite">{marks.map((mark) => `[${mark}]`).join(" ")}</span>
+                  )}
+                  {quote}
+                </blockquote>
+              ))}
             </div>
           ))}
           {(basic?.sources ?? []).map((source) => (
@@ -397,27 +392,28 @@ export function PlaceCard({
               {t("card.osm")} <ArrowUpRight size={13} />
             </a>
           )}
-          {story && (
-            <small>{t("card.aiCheck", { date: story.verifiedAt.slice(0, 10) })}</small>
-          )}
         </details>
       </div>
       <div className="card-footer">
-        <button
-          className="text-button"
-          disabled={index === 0}
-          onClick={() => onNavigate(index - 1)}
-        >
-          {t("card.previous")}
-        </button>
-        <span>{t("card.position", { index: index + 1, total })}</span>
-        <button
-          className="text-button"
-          disabled={index === total - 1}
-          onClick={() => onNavigate(index + 1)}
-        >
-          {t("card.next")}
-        </button>
+        {total > 1 && (
+          <>
+            <button
+              className="text-button"
+              disabled={index === 0}
+              onClick={() => onNavigate(index - 1)}
+            >
+              {t("card.previous")}
+            </button>
+            <span>{t("card.position", { index: index + 1, total })}</span>
+            <button
+              className="text-button"
+              disabled={index === total - 1}
+              onClick={() => onNavigate(index + 1)}
+            >
+              {t("card.next")}
+            </button>
+          </>
+        )}
         <BookmarkButton name={place.name} bookmarked={bookmarked} onToggle={onToggleBookmark} />
       </div>
     </article>

@@ -10,12 +10,19 @@
   isolation: isolate;
   --ride-gutter: max(18px, env(safe-area-inset-left));
   --ride-gutter-right: max(18px, env(safe-area-inset-right));
+  --ride-top: max(12px, env(safe-area-inset-top));
+  --ride-heading-height: 68px;
+  /* Utility buttons share the route card's first row, centered on it. */
+  --ride-utility-top: calc(
+    var(--ride-top) + (var(--ride-heading-height) - 44px) / 2
+  );
   --poi-sheet-bottom: var(--nav-clearance);
 }
 .app-shell.ride-map-shell .app-header {
   position: absolute;
-  inset: max(12px, env(safe-area-inset-top)) var(--ride-gutter-right) auto
-    var(--ride-gutter);
+  top: var(--ride-utility-top);
+  right: var(--ride-gutter-right);
+  left: auto;
   z-index: 12;
   height: 44px;
   padding: 0;
@@ -25,24 +32,21 @@
   pointer-events: auto;
 }
 .ride-map-shell .brand {
-  min-height: 44px;
-  gap: 6px;
-  padding: 0 12px 0 8px;
-  border-radius: 24px;
-  background: var(--paper);
-  font-size: 16px;
-}
-.ride-map-shell .brand-mark {
-  width: 24px;
-  height: 32px;
-}
-.ride-map-shell .rail-badge {
   display: none;
 }
-.ride-map-shell .header-link,
+.ride-map-shell .header-right {
+  gap: 8px;
+}
 .ride-map-shell .header-right .dev-toggle {
   width: 44px;
   height: 44px;
+  box-shadow: 0 4px 14px rgb(12 16 29 / 8%);
+}
+.ride-map-shell .offline-label {
+  min-height: 44px;
+  padding: 0 14px;
+  border-radius: 22px;
+  background: var(--paper);
 }
 .app-shell.ride-map-shell main {
   display: flex;
@@ -55,84 +59,225 @@
   flex-direction: column;
   width: 100%;
   height: 100%;
-  padding: calc(max(12px, env(safe-area-inset-top)) + 56px) 0
-    var(--nav-clearance);
+  padding: var(--ride-top) 0 var(--nav-clearance);
   overflow: hidden;
 }
+/* One card carries the ride: route row, then audio, then any alert. */
 .ride-map-shell .ride-top-controls {
   position: relative;
   z-index: 10;
   flex: 0 0 auto;
-  width: min(440px, calc(100% - 36px));
+  width: min(440px, calc(100% - var(--ride-gutter) - var(--ride-gutter-right) - 52px));
   margin-inline: var(--ride-gutter) auto;
-  pointer-events: none;
-}
-.ride-map-shell .ride-top-controls > * {
-  pointer-events: auto;
-}
-.app-shell.ride-map-shell .ride-heading {
-  min-height: 70px;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 14px;
+  overflow: hidden;
   border-radius: 26px;
   background: var(--paper);
+  box-shadow: 0 8px 24px rgb(12 16 29 / 8%);
 }
-.ride-map-shell .ride-route-name {
-  gap: 7px;
-  flex-wrap: wrap;
+/* Captions float over the map under the top card, so they never resize it. */
+.ride-map-shell .ride-caption-slot {
+  position: relative;
+  z-index: 9;
+  flex: 0 0 0;
+  height: 0;
+  pointer-events: none;
+}
+.ride-map-shell .ride-caption {
+  position: absolute;
+  top: 8px;
+  left: var(--ride-gutter);
+  right: var(--ride-gutter-right);
+  width: fit-content;
+  max-width: min(640px, calc(100% - var(--ride-gutter) - var(--ride-gutter-right)));
+  margin: 0;
+  padding: 10px 16px;
+  border-radius: 18px;
+  background: rgb(254 254 255 / 88%);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 4px 16px rgb(12 16 29 / 10%);
+  color: var(--ink);
+  font-size: clamp(18px, 0.75vw + 13px, 23px);
+  font-weight: 500;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+  transition: opacity 200ms ease;
+}
+/* Captions follow the voice: dimmed while paused, gone once it stops. */
+.ride-map-shell
+  .ride-layout:has(.ride-top-controls .audio-guide[data-status="paused"])
+  .ride-caption {
+  opacity: 0.6;
+}
+.ride-map-shell
+  .ride-layout:has(
+    .ride-top-controls
+      .audio-guide:not([data-status="speaking"], [data-status="paused"])
+  )
+  .ride-caption-slot {
+  display: none;
+}
+@media (min-width: 900px) {
+  /* Keep long captions clear of the rider dot at the map's center. */
+  .ride-map-shell .ride-caption {
+    max-width: min(600px, calc(50% - var(--ride-gutter) - 40px));
+  }
+}
+@media (max-height: 540px) and (min-width: 780px) {
+  /* No room under the card in short landscape: sit beside it, left of the utility buttons. */
+  .ride-map-shell .ride-caption-slot {
+    position: static;
+  }
+  .ride-map-shell .ride-caption {
+    top: var(--ride-top);
+    left: calc(var(--ride-gutter) + 440px + 12px);
+    right: auto;
+    max-width: calc(100% - var(--ride-gutter) - 440px - 12px - var(--ride-gutter-right) - 56px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ride-map-shell .ride-caption {
+    transition: none;
+  }
+}
+@media (forced-colors: active) {
+  .ride-map-shell .ride-caption {
+    border: 1px solid CanvasText;
+  }
+}
+.ride-map-shell .ride-top-controls > * + * {
+  border-top: 1px solid #e4e6ed;
+}
+.app-shell.ride-map-shell .ride-heading {
+  min-height: var(--ride-heading-height);
+  align-items: center;
+  gap: 12px;
+  padding: 12px 12px 12px 18px;
+}
+.ride-map-shell .ride-heading-text {
+  min-width: 0;
 }
 .ride-map-shell .ride-route-name h1 {
-  font-size: 21px;
-  line-height: 1.15;
-}
-.ride-map-shell .ride-running {
-  font-size: 10px;
-  padding: 4px 7px;
+  overflow: hidden;
+  font-size: 20px;
+  line-height: 24px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .ride-map-shell .ride-heading p {
-  margin-top: 4px;
-  font-size: 12px;
+  margin-top: 2px;
+  overflow: hidden;
+  font-size: 13px;
+  line-height: 18px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .ride-map-shell .ride-heading p > span {
   white-space: nowrap;
 }
 .ride-map-shell .ride-heading > .secondary-button {
   min-height: 44px;
-  padding: 8px 12px;
+  padding: 0 16px;
   flex-shrink: 0;
+  border: 0;
+  background: var(--soft);
+  font-size: 13px;
+}
+.ride-map-shell .ride-heading.is-confirming .ride-heading-text {
+  display: none;
 }
 .ride-map-shell .end-confirm {
-  min-width: 128px;
-  max-width: 180px;
+  display: flex;
+  flex: 1 1 auto;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  max-width: none;
+  font-size: 14px;
 }
-.ride-map-shell .end-confirm .text-button,
+.ride-map-shell .end-confirm > span {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-weight: 500;
+  line-height: 18px;
+}
 .ride-map-shell .end-confirm .icon-button {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  background: var(--canvas);
+}
+.ride-map-shell .end-confirm-action {
+  flex-shrink: 0;
   min-height: 44px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 22px;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
 }
 .app-shell.ride-map-shell .audio-companion {
-  margin: 8px 0 0;
+  margin: 0;
 }
-.ride-map-shell .audio-guide {
-  box-shadow: 0 4px 18px rgb(12 16 29 / 6%);
+.app-shell.ride-map-shell .ride-top-controls .audio-guide {
+  width: 100%;
+  min-height: 52px;
+  margin: 0;
+  padding: 4px 6px;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+.app-shell.ride-map-shell .ride-top-controls .audio-guide:not(.audio-guide-active) {
+  justify-content: flex-start;
+}
+.ride-map-shell .ride-top-controls .audio-activate {
+  justify-content: flex-start;
+  width: 100%;
+  min-height: 44px;
+  padding: 0 12px;
+  border-radius: 20px;
+  font-size: 14px;
+}
+.ride-map-shell .ride-top-controls .audio-guide > [role="status"]:not(.audio-title) {
+  flex-basis: 100%;
+  padding: 0 12px 8px;
+}
+.app-shell.ride-map-shell .ride-top-controls .audio-guide.audio-guide-active {
+  padding: 4px 6px 4px 18px;
+}
+.app-shell.ride-map-shell .ride-top-controls .audio-follow {
+  padding: 0 0 4px;
 }
 .ride-map-shell .audio-transcript {
-  background: var(--paper);
-  border-radius: 18px;
-  padding: 12px;
+  margin: 0;
+  padding: 0 18px 12px;
+}
+.ride-map-shell .audio-transcript:not([open]) {
+  padding-bottom: 2px;
+}
+.ride-map-shell .audio-notice {
+  margin: 0;
+  padding: 10px 18px;
 }
 .ride-map-shell .catalog-alert {
-  margin-top: 8px;
-  padding: 10px 14px;
+  margin: 0;
+  padding: 12px 8px 8px 18px;
+  border-radius: 0;
+}
+.ride-map-shell .catalog-alert::before {
+  justify-self: start;
+  width: 16px;
 }
 .ride-map-shell .ride-sensor-warning {
   display: flex;
   align-items: center;
   gap: 10px;
-  background: var(--paper);
-  padding: 10px 14px;
-  margin-top: 8px;
-  border-radius: 18px;
+  padding: 8px 8px 8px 18px;
   font-size: 13px;
 }
 .app-shell.ride-map-shell .ride-columns {
@@ -184,16 +329,17 @@
   display: none;
 }
 .ride-map-shell .compass-topline,
-.ride-map-shell .aim-status,
 .ride-map-shell .pointing-instruction {
   position: absolute;
   z-index: 1;
 }
 .ride-map-shell .compass-topline {
-  bottom: calc(var(--nav-clearance) + 16px);
+  bottom: var(--nav-clearance);
   left: var(--ride-gutter);
+  align-items: center;
   gap: 7px;
-  padding: 10px 14px;
+  min-height: 44px;
+  padding: 0 16px;
   border-radius: 22px;
   background: var(--paper);
   font-size: 12px;
@@ -204,26 +350,29 @@
 .ride-map-shell .compass-topline strong {
   margin-left: 7px;
 }
-.ride-map-shell .aim-status,
+/* The rider sits at the map's center; the instruction sits just below. */
 .app-shell.ride-map-shell .pointing-instruction {
-  bottom: calc(var(--nav-clearance) + 110px);
-  left: var(--ride-gutter);
-  max-width: calc(100% - 36px);
+  top: calc(50% + 28px);
+  left: 50%;
+  max-width: calc(100% - var(--ride-gutter) - var(--ride-gutter-right));
   margin: 0;
-  padding: 10px 14px;
-  border-radius: 18px;
+  padding: 10px 16px;
+  border-radius: 22px;
   background: var(--paper);
   font-size: 14px;
+  transform: translateX(-50%);
+  white-space: nowrap;
 }
+/* Above the bottom row of map chrome (heading readout and credits). */
 .ride-map-shell .ride-sensor-overlay {
   position: absolute;
   z-index: 1;
-  right: var(--ride-gutter);
-  bottom: calc(var(--nav-clearance) + 66px);
+  right: var(--ride-gutter-right);
+  bottom: calc(var(--nav-clearance) + 52px);
   left: var(--ride-gutter);
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   gap: 8px;
   pointer-events: none;
 }
@@ -234,57 +383,107 @@
   min-width: 44px;
   min-height: 44px;
 }
+.ride-map-shell .ride-status-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  max-width: 100%;
+}
 .app-shell.ride-map-shell .replay-controls,
 .app-shell.ride-map-shell .sensor-controls,
 .app-shell.ride-map-shell .nearby-status,
+.ride-map-shell .ride-sensor-overlay .aim-status,
 .ride-map-shell .ride-sensor-overlay .inline-notice,
 .ride-map-shell .direction-empty {
+  display: flex;
+  align-items: center;
   width: fit-content;
   max-width: 100%;
-  min-height: 36px;
+  min-height: 44px;
   margin: 0;
-  padding: 7px 12px;
+  padding: 0 16px;
   border-radius: 22px;
   background: var(--paper);
-  font-size: 12px;
+  font-size: 13px;
+  text-align: left;
+}
+.app-shell.ride-map-shell .replay-controls {
+  gap: 4px;
+  padding: 0 0 0 16px;
+}
+.app-shell.ride-map-shell .replay-controls:has(> .icon-button:only-child) {
+  padding: 0;
+}
+.app-shell.ride-map-shell .sensor-controls {
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  padding: 0 4px 0 16px;
+}
+.app-shell.ride-map-shell .sensor-controls p {
+  margin: 0;
+  padding: 10px 0;
+  line-height: 1.4;
+}
+.app-shell.ride-map-shell .sensor-controls .secondary-button {
+  border: 0;
+  background: var(--soft);
 }
 .ride-map-shell.has-poi-sheet .ride-sensor-overlay,
 .ride-map-shell.has-poi-sheet .compass-topline,
-.ride-map-shell.has-poi-sheet .aim-status,
 .ride-map-shell.has-poi-sheet .pointing-instruction,
 .ride-map-shell.is-queue .ride-sensor-overlay,
 .ride-map-shell.is-queue .compass-topline,
-.ride-map-shell.is-queue .aim-status,
 .ride-map-shell.is-queue .pointing-instruction {
   visibility: hidden;
   pointer-events: none;
 }
 .ride-map-shell .maplibregl-ctrl-bottom-right {
-  right: max(10px, env(safe-area-inset-right));
-  bottom: calc(var(--nav-clearance) + 12px);
+  right: var(--ride-gutter-right);
+  bottom: var(--nav-clearance);
   z-index: 4;
 }
-.ride-map-shell.has-poi-sheet .maplibregl-ctrl-bottom-right {
-  top: calc(max(12px, env(safe-area-inset-top)) + 56px);
-  bottom: auto;
+.ride-map-shell .ride-map .maplibregl-ctrl-attrib.maplibregl-compact {
+  margin: 0;
 }
 .ride-map-shell .floating-nav {
   z-index: 20;
 }
+/* The discovery list is its own page: the map steps back, content scrolls
+   beneath the floating navigation. */
+.app-shell.ride-map-shell.is-queue {
+  background: var(--canvas);
+}
+.app-shell.ride-map-shell.is-queue .ride-layout {
+  padding-bottom: 0;
+}
+.app-shell.ride-map-shell.is-queue .ride-columns > .point-panel {
+  visibility: hidden;
+}
+.app-shell.ride-map-shell.is-queue .ride-top-controls {
+  box-shadow: none;
+}
 .app-shell.ride-map-shell .queue-panel {
   position: relative;
   z-index: 5;
-  width: min(660px, calc(100% - 36px));
-  flex: 0 1 auto;
+  width: 100%;
+  flex: 1 1 auto;
   min-height: 0;
   max-height: 100%;
-  margin: 12px auto 0;
-  padding: 18px 14px;
+  margin: 0;
+  padding: 24px var(--ride-gutter-right) var(--nav-clearance)
+    var(--ride-gutter);
   overflow: auto;
   overscroll-behavior: contain;
-  scroll-padding-block: 16px;
-  border-radius: 28px;
-  background: var(--canvas);
+  scroll-padding-block: 16px var(--nav-clearance);
+  border-radius: 0;
+  background: transparent;
+}
+.app-shell.ride-map-shell .queue-panel > * {
+  max-width: 660px;
+}
+.app-shell.ride-map-shell .queue-panel {
+  mask-image: linear-gradient(to bottom, transparent 0, #000 20px);
 }
 .app-shell.ride-map-shell .mobile-point .queue-panel {
   display: none;
@@ -306,30 +505,38 @@
   );
   border-radius: 30px;
 }
+/* Every row, photo, and line of text in the sheet sits 20px from its edge. */
 .ride-map-shell .poi-sheet .poi-sheet__body {
-  padding: 0 0 18px;
+  padding: 0 0 20px;
 }
 .app-shell.ride-map-shell .poi-sheet .candidate-sheet {
   max-height: none;
   min-height: 0;
   overflow: visible;
   border-radius: 0;
-  padding: 0 6px 8px;
+  padding: 0 8px 4px;
 }
 .ride-map-shell .poi-sheet .candidate-row {
-  min-height: 60px;
+  min-height: 56px;
+  padding: 8px 12px;
+  border-radius: 16px;
+  font-size: 16px;
 }
 .ride-map-shell .poi-sheet .place-card {
   border-radius: 0;
   background: transparent;
 }
 .app-shell.ride-map-shell .poi-sheet .place-photo {
-  height: clamp(120px, 23dvh, 240px);
-  border-radius: 18px;
-  margin: 0 12px;
+  height: clamp(120px, 23dvh, 220px);
+  border-radius: 20px;
+  margin: 0 20px;
 }
 .app-shell.ride-map-shell .poi-sheet .place-content {
-  padding: 18px 20px 12px;
+  padding: 20px 20px 8px;
+}
+.app-shell.ride-map-shell .poi-sheet .card-footer {
+  margin: 0 20px;
+  padding: 8px 0 0;
 }
 .ride-map-shell .poi-summary {
   display: flex;
@@ -360,17 +567,6 @@
   display: block;
   margin-top: 6px;
   color: var(--muted);
-}
-@media (min-width: 900px) {
-  .ride-map-shell .ride-top-controls {
-    margin-left: 24px;
-  }
-  /* Panels share the ride column with the heading instead of covering the map's center. */
-  .app-shell.ride-map-shell .queue-panel {
-    width: min(440px, calc(100% - 48px));
-    margin: 12px 0 0 24px;
-    box-shadow: 0 12px 40px rgb(12 16 29 / 10%);
-  }
 }
 @media (max-width: 360px) {
   .ride-map-shell .brand {
@@ -405,24 +601,10 @@
     overflow: hidden;
     padding-bottom: var(--nav-clearance);
   }
-  .app-shell.ride-map-shell .ride-top-controls {
-    width: min(330px, calc(100% - 36px));
-  }
   .app-shell.ride-map-shell:not(.route-select-shell)
     .ride-columns:has(.train-compass) {
     flex: 1 1 auto;
     min-height: 0;
-  }
-  .ride-map-shell .ride-heading {
-    min-height: 60px;
-    padding-block: 8px;
-  }
-  .ride-map-shell .ride-sensor-overlay {
-    left: auto;
-    max-width: 40%;
-  }
-  .ride-map-shell .nearby-status {
-    display: none;
   }
   .ride-map-shell .poi-sheet {
     --poi-sheet-collapsed-height: min(
@@ -433,19 +615,11 @@
 }
 @media (max-height: 540px) and (min-width: 600px) {
   .app-shell.ride-map-shell .ride-top-controls {
-    max-height: calc(100dvh - var(--nav-clearance) - 80px);
+    /* End above the replay and heading pills, which sit 52px + 44px over the nav. */
+    max-height: calc(100dvh - var(--nav-clearance) - 104px - var(--ride-top));
     overflow-y: auto;
     overscroll-behavior: contain;
     pointer-events: auto;
-  }
-  .app-shell.ride-map-shell .queue-panel {
-    position: absolute;
-    /* Below the audio pill that shares the top row with the heading. */
-    inset: calc(max(12px, env(safe-area-inset-top)) + 112px)
-      var(--ride-gutter-right) var(--nav-clearance) auto;
-    width: min(48%, 660px);
-    margin: 0;
-    max-height: none;
   }
 }
 .ride-map-shell .poi-sheet .candidate-name {
@@ -458,8 +632,9 @@
 }
 .ride-map-shell .poi-sheet .poi-discard {
   min-height: 44px;
-  margin: 8px 20px 0;
+  margin: 4px 12px 0;
   color: var(--muted);
+  font-size: 14px;
 }
 /* Keep the map credits above the compact sheet, clear of route controls. */
 .ride-map-shell.has-poi-sheet .maplibregl-ctrl-bottom-right {
@@ -480,18 +655,18 @@ body:has(.ride-map-shell) {
 .ride-map-shell .ride-expanded-status {
   position: absolute;
   z-index: 13;
-  top: calc(max(12px, env(safe-area-inset-top)) + 56px);
+  top: var(--ride-utility-top);
   left: var(--ride-gutter);
   display: flex;
   align-items: center;
   gap: 10px;
   width: fit-content;
-  max-width: calc(100% - var(--ride-gutter) - 74px);
+  max-width: calc(100% - var(--ride-gutter) - var(--ride-gutter-right) - 112px);
   min-height: 44px;
-  padding: 8px 14px;
-  border-radius: 24px;
+  padding: 0 16px;
+  border-radius: 22px;
   background: var(--paper);
-  font-size: 12px;
+  font-size: 13px;
 }
 .ride-map-shell .ride-expanded-route {
   min-width: 0;
@@ -508,45 +683,28 @@ body:has(.ride-map-shell) {
   height: min(
     74dvh,
     720px,
-    calc(
-      100dvh - var(--nav-clearance) - max(12px, env(safe-area-inset-top)) -
-        112px
-    )
+    calc(100dvh - var(--nav-clearance) - var(--ride-utility-top) - 56px)
   );
   max-height: min(
     74dvh,
     720px,
-    calc(
-      100dvh - var(--nav-clearance) - max(12px, env(safe-area-inset-top)) -
-        112px
-    )
+    calc(100dvh - var(--nav-clearance) - var(--ride-utility-top) - 56px)
   );
 }
+/* Credits join the utility row, just left of the dev toggle. */
 .ride-map-shell.is-poi-expanded .maplibregl-ctrl-bottom-right {
-  top: calc(max(12px, env(safe-area-inset-top)) + 48px);
+  top: var(--ride-utility-top);
+  right: calc(var(--ride-gutter-right) + 52px);
   bottom: auto;
+}
+.ride-map-shell.is-poi-expanded .ride-map .maplibregl-ctrl-attrib.maplibregl-compact-show {
+  max-width: calc(100vw - var(--ride-gutter) - var(--ride-gutter-right) - 52px);
 }
 .ride-map-shell .poi-sensor-warning {
   margin: 0 18px 12px;
   font-size: 13px;
 }
 @media (max-height: 540px) and (min-width: 600px) {
-  .app-shell.ride-map-shell .ride-top-controls {
-    display: flex;
-    align-items: flex-start;
-    flex-wrap: wrap;
-    gap: 8px;
-    width: calc(100% - var(--ride-gutter) - var(--ride-gutter-right));
-  }
-  .app-shell.ride-map-shell .ride-heading {
-    flex: 1 1 310px;
-    max-width: 330px;
-  }
-  .app-shell.ride-map-shell .audio-companion {
-    flex: 1 1 220px;
-    max-width: 320px;
-    margin: 0;
-  }
   .ride-map-shell.is-poi-expanded .poi-sheet .place-card {
     display: flex;
     flex-direction: column;
@@ -566,66 +724,52 @@ body:has(.ride-map-shell) {
   .ride-expanded-status {
   visibility: hidden;
 }
-@media (max-height: 540px) and (min-width: 600px) {
-  .ride-map-shell .ride-sensor-overlay {
-    left: var(--ride-gutter);
-    right: auto;
-    bottom: calc(var(--nav-clearance) + 12px);
-    max-width: calc(50% - 36px);
-    align-items: flex-start;
-  }
-  .ride-map-shell .compass-topline {
-    top: calc(max(12px, env(safe-area-inset-top)) + 136px);
-    bottom: auto;
-  }
-}
-/* Ride progress: a hairline in the route color under the heading copy. */
-.ride-map-shell .ride-progress {
-  display: block;
-  height: 4px;
-  margin-top: 9px;
-  overflow: hidden;
-  border-radius: 2px;
-  background: var(--soft);
-}
-.ride-map-shell .ride-progress > span {
-  display: block;
-  height: 100%;
-  border-radius: inherit;
-  transform-origin: left center;
-  transition: transform 600ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-.ride-map-shell .ride-heading > div:first-child {
-  min-width: 0;
-  flex: 1 1 auto;
-}
-/* Look-ahead floats with the audio pill: same surface, same rhythm. */
+/* The upcoming highlight is one more row of the ride card. */
 .ride-map-shell .ride-top-controls .look-ahead {
-  margin: 8px 0 0;
+  margin: 0;
+  padding: 6px 6px 6px 16px;
   border: 0;
-  box-shadow: 0 4px 18px rgb(12 16 29 / 6%);
+  border-top: 1px solid #e4e6ed;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
   animation: ride-chip-in 360ms cubic-bezier(0.22, 1.18, 0.36, 1) both;
 }
-.ride-map-shell .ride-overlay-row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  max-width: 100%;
+.ride-map-shell .ride-top-controls .look-ahead-open {
+  gap: 10px;
+  min-height: 44px;
+}
+.ride-map-shell .ride-top-controls .look-ahead-side,
+.ride-map-shell .ride-top-controls .look-ahead.is-now .look-ahead-side {
+  width: 19px;
+  height: 19px;
+  border-radius: 0;
+  background: transparent;
+  color: var(--ink);
+}
+.ride-map-shell .ride-top-controls .look-ahead.is-now .look-ahead-side {
+  color: var(--accent);
+}
+.ride-map-shell .ride-top-controls .look-ahead-when {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ride-map-shell .ride-top-controls .look-ahead-name {
+  font-size: 15px;
 }
 .ride-map-shell .side-advice-pill {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
-  min-height: 36px;
-  padding: 7px 14px 7px 11px;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 16px;
   border: 0;
   border-radius: 22px;
   background: var(--paper);
   color: var(--ink);
   font: inherit;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 500;
   white-space: nowrap;
   cursor: pointer;
@@ -643,19 +787,17 @@ body:has(.ride-map-shell) {
     background: #f2f4f8;
   }
 }
-/* Bookmarks and settings open as panels over the ride map. */
+/* Bookmarks and settings are pages like the discovery list. */
 .app-shell.ride-map-shell .queue-panel.ride-panel {
-  padding: 14px 14px 18px;
   animation: ride-panel-in 320ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 .app-shell.ride-map-shell .ride-panel .bookmarks-screen,
 .app-shell.ride-map-shell .ride-panel .settings-screen {
   width: 100%;
+  max-width: 660px;
+  margin: 0;
   padding: 0;
   overflow: visible;
-}
-.app-shell.ride-map-shell .ride-panel .screen-heading {
-  margin-top: 2px;
 }
 .app-shell.ride-map-shell .mobile-point .queue-panel.ride-panel {
   display: none;
@@ -673,16 +815,19 @@ body:has(.ride-map-shell) {
   }
 }
 @media (max-height: 540px) {
-  .ride-map-shell .ride-progress {
-    margin-top: 6px;
-  }
   /* No room beside the sheet: the cue is still spoken and returns when the sheet closes. */
-  .ride-map-shell.has-poi-sheet .ride-top-controls .look-ahead {
+  .ride-map-shell.has-poi-sheet .ride-top-controls .look-ahead,
+  .ride-map-shell.has-poi-sheet .ride-top-controls .audio-transcript:not([open]) {
     display: none;
+  }
+  .app-shell.ride-map-shell .ride-top-controls .audio-guide.audio-guide-active {
+    padding-block: 0;
+  }
+  .ride-map-shell .ride-top-controls .audio-transcript:not([open]) summary {
+    padding-top: 10px;
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .ride-map-shell .ride-progress > span,
   .ride-map-shell .side-advice-pill {
     transition: none;
   }

@@ -96,12 +96,9 @@
 
 @media (max-width: 600px) {
   .train-network-wrap.train-network-wrap.train-network-wrap {
-    /* The external map canvas bleeds beyond the phone. Its content must not. */
-    width: calc(100% / 1.2);
+    width: 100%;
     max-width: 100vw;
-    padding: 16px 12px;
-    /* Keep the western stations above the floating Jamaica demo control. */
-    transform: translateY(-48px);
+    padding: 0 4px;
   }
 
   .train-network-map .train-network-station text {
@@ -112,6 +109,116 @@
   .train-network-map .train-network-waterLabel {
     font-size: 17px;
     letter-spacing: 0.08em;
+  }
+}
+
+/* Route selection home. The collapsed sheet carries the first action. */
+.selection-map-screen {
+  --home-sheet-collapsed: 168px;
+  --home-controls-bottom: calc(
+    var(--home-sheet-bottom) + var(--home-sheet-collapsed) + 12px
+  );
+}
+
+.selection-map-screen .route-sheet.is-collapsed .sheet-start > span {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.selection-map-screen .route-row.is-selected .experience-badge {
+  background: var(--paper, #fefeff);
+}
+
+/* An open sheet covers the corner controls; keep them out of the tab order. */
+.selection-map-screen.is-sheet-open .map-demo-label,
+.selection-map-screen.is-sheet-open .map-location-button {
+  visibility: hidden;
+}
+
+/* Bottom sheet over the map: fit the map to the space above the open sheet. */
+@media (max-width: 599px), (max-width: 1023px) and (min-height: 541px) {
+  .selection-map-screen.is-sheet-open .selection-map {
+    grid-template-rows: minmax(0, 1fr);
+    padding-bottom: calc(
+      var(--home-sheet-bottom) + var(--home-sheet-height, 0px) + 12px
+    );
+  }
+
+  .selection-map-screen.is-sheet-open .selection-map .network-wrap,
+  .selection-map-screen.is-sheet-open .selection-map .network {
+    height: 100%;
+    max-height: none;
+  }
+}
+
+/* Wide screens: the sheet floats in a left column and the map takes the rest. */
+@media (min-width: 1024px) and (min-height: 541px) {
+  .selection-map-screen {
+    --home-column: 400px;
+  }
+
+  .selection-map-screen .route-sheet {
+    left: max(24px, calc(50% - 566px));
+    width: var(--home-column);
+    max-height: min(540px, calc(100svh - var(--home-sheet-bottom) - 156px));
+    transform: none;
+  }
+
+  .selection-map-screen .route-sheet .route-list {
+    max-height: clamp(
+      84px,
+      calc(100svh - var(--home-sheet-bottom) - 396px),
+      336px
+    );
+  }
+
+  .selection-map-screen .train-network-map .train-network-station text {
+    font-size: 16px;
+  }
+
+  .selection-map-screen .train-network-map .train-network-waterLabel {
+    font-size: 12px;
+  }
+
+  .selection-map-screen .map-demo-label {
+    left: 24px;
+  }
+
+  .selection-map-screen .map-location-button {
+    right: auto;
+    left: calc(24px + var(--home-column) - 48px);
+  }
+
+  .selection-map-screen .selection-map {
+    padding: 150px 24px calc(var(--home-sheet-bottom) + 12px)
+      calc(48px + var(--home-column));
+  }
+}
+
+/* Short landscape: the action shares the heading row to leave the map its height. */
+@media (max-height: 540px) and (min-width: 600px) {
+  .selection-map-screen {
+    --home-sheet-collapsed: 100px;
+  }
+
+  .selection-map-screen .route-sheet.is-collapsed {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    column-gap: 16px;
+  }
+
+  .selection-map-screen .route-sheet.is-collapsed .sheet-handle {
+    grid-column: 1 / -1;
+  }
+
+  .selection-map-screen .route-sheet.is-collapsed .sheet-start {
+    width: auto;
+    max-width: 280px;
+    margin-top: 0;
+    padding-inline: 22px;
   }
 }
 

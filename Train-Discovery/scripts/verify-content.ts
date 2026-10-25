@@ -1,10 +1,5 @@
 import { readFile, rename, writeFile } from "node:fs/promises";
-import {
-  evidenceHash,
-  mergeEvidence,
-  searchEvidence,
-  verifyPlace,
-} from "../src/lib/verification";
+import { evidenceHash, verifyPlace } from "../src/lib/verification";
 import type { Place } from "../src/lib/types";
 
 async function main() {
@@ -20,28 +15,17 @@ async function main() {
     await readFile("public/data/places.json", "utf8"),
   );
   const pending = catalog.places
-    .filter(
-      (p) =>
-        (p.evidence.length > 0 || Boolean(process.env.SERPER_API_KEY)) &&
-        (!p.story || p.story.evidenceHash !== evidenceHash(p.evidence)),
-    )
+    .filter((p) => !p.story || p.story.evidenceHash !== evidenceHash(p.evidence))
     .slice(0, limit);
   let failed = 0;
   for (const place of pending) {
     try {
-      const found = await searchEvidence(place).catch((error: unknown) => {
-        console.error(
-          `${place.id}: search skipped (${error instanceof Error ? error.message : "Wikipedia unavailable"})`,
-        );
-        return [];
-      });
-      place.evidence = mergeEvidence(found, place.evidence);
-      if (!place.evidence.length)
-        throw new Error("No evidence after search; refusing generation.");
-      place.story = await verifyPlace(place);
+      const { story, evidence } = await verifyPlace(place);
+      place.story = story;
+      place.evidence = evidence;
       await writeFile("public/data/places.json.tmp", JSON.stringify(catalog));
       await rename("public/data/places.json.tmp", "public/data/places.json");
-      console.log(`Verified ${place.name}: ${place.story.summary}`);
+      console.log(`Verified ${place.name}: ${story.summary}`);
     } catch (error) {
       failed++;
       console.error(

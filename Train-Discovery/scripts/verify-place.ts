@@ -1,10 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import { placeSchema } from "../src/lib/storage";
-import {
-  mergeEvidence,
-  searchEvidence,
-  verifyPlace,
-} from "../src/lib/verification";
+import { verifyPlace } from "../src/lib/verification";
 
 async function main() {
   const idArg = process.argv.find((arg) => arg.startsWith("--id="));
@@ -32,11 +28,9 @@ async function main() {
 
   const place = placeSchema.parse(row.data);
   if (place.id !== id) throw new Error("Catalog ID and place payload do not match.");
-  const found = await searchEvidence(place);
-  place.evidence = mergeEvidence(found, place.evidence);
-  if (!place.evidence.length)
-    throw new Error(`No source passages found for ${id}; refusing to publish.`);
-  place.story = await verifyPlace(place);
+  const { story, evidence } = await verifyPlace(place);
+  place.story = story;
+  place.evidence = evidence;
 
   const { data: updated, error: writeError } = await database
     .from("places")
@@ -46,7 +40,7 @@ async function main() {
     .single();
   if (writeError) throw new Error(`Could not save ${id}: ${writeError.message}`);
   if (updated.id !== id) throw new Error("Updated row ID did not match the requested place.");
-  console.log(`Verified and saved ${place.name} (${id}): ${place.story.summary}`);
+  console.log(`Verified and saved ${place.name} (${id}): ${story.summary}`);
 }
 
 main().catch((error: unknown) => {

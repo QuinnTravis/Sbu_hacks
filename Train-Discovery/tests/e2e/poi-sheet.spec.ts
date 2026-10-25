@@ -1,4 +1,4 @@
-import { test, expect, type Page } from "@playwright/test";
+import { test, expect, type Page } from "./fixtures";
 
 const longName =
   "King Manor Museum and Rufus King Historic House in Jamaica, Queens";

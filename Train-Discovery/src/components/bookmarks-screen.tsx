@@ -7,6 +7,7 @@ import { etaSeconds, kmAhead, type Direction } from "@/lib/route-geometry";
 import { NETWORKS, isNetworkId } from "@/networks";
 import type { Thumbnail } from "@/lib/package-types";
 import type { RailRoute, SavedEntry } from "@/lib/types";
+import "./screens.css";
 
 export type BookmarkStatus = "upcoming" | "passed" | "discovered" | null;
 
@@ -113,7 +114,6 @@ export function BookmarksScreen({
     <section className="bookmarks-screen" aria-labelledby="bookmarks-title">
       <div className="screen-heading">
         <h1 id="bookmarks-title">{t("bookmarks.title")}</h1>
-        {entries.length > 0 && <span className="count-badge">{entries.length}</span>}
       </div>
       {entries.length === 0 ? (
         <div className="home-discoveries-card">
@@ -121,7 +121,6 @@ export function BookmarksScreen({
             <Bookmark size={31} strokeWidth={1.5} />
           </span>
           <h2>{t("bookmarks.empty")}</h2>
-          <p>{t("bookmarks.emptyHint")}</p>
         </div>
       ) : (
         <>
@@ -158,12 +157,14 @@ export function BookmarksScreen({
                         <span className="bookmark-copy">
                           <span className="bookmark-name">{entry.place.name}</span>
                           <span className="bookmark-meta">
-                            {t(`categories.${entry.place.category}`)}
-                            {typeof entry.place.routeKm === "number" && ` · ${t("bookmarks.kmMark", { km: Math.round(entry.place.routeKm) })}`}
-                            {eta !== null && eta > 0 && ` · ${t("bookmarks.in", { eta: duration(eta) })}`}
+                            {status && <span className={`status-pill is-${status}`}>{t(`bookmarks.status.${status}`)}</span>}
+                            <span>
+                              {t(`categories.${entry.place.category}`)}
+                              {typeof entry.place.routeKm === "number" && ` · ${t("bookmarks.kmMark", { km: Math.round(entry.place.routeKm) })}`}
+                              {eta !== null && eta > 0 && ` · ${t("bookmarks.in", { eta: duration(eta) })}`}
+                            </span>
                           </span>
                         </span>
-                        {status && <span className={`status-pill is-${status}`}>{t(`bookmarks.status.${status}`)}</span>}
                       </button>
                       <button
                         type="button"
