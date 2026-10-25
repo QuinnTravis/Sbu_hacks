@@ -16,7 +16,8 @@
     "content:verify": "node --env-file-if-exists=.env --env-file-if-exists=.env.local --import tsx scripts/verify-content.ts",
     "content:verify:place": "node --env-file-if-exists=.env --env-file-if-exists=.env.local --import tsx scripts/verify-place.ts",
     "content:publish": "node --env-file-if-exists=.env.local --import tsx scripts/publish.ts",
-    "content:network": "node --env-file-if-exists=.env --env-file-if-exists=.env.local --import tsx scripts/verify-network.ts"
+    "content:network": "node --env-file-if-exists=.env --env-file-if-exists=.env.local --import tsx scripts/verify-network.ts",
+    "demo:precompute": "node --env-file-if-exists=.env --env-file-if-exists=.env.local --import tsx scripts/precompute-demo.ts"
   },
   "dependencies": {
     "@langchain/core": "1.3.0",

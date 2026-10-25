@@ -1,1 +1,627 @@
-{"clips":{}}
+{
+ "clips": {
+  "eb1d2bba530d7914": {
+   "url": "/audio/demo/588dd24a9d4f3015.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 15,
+   "text": "The tracks set the rhythm. The world outside supplies the stories. This is a simulated ride. Welcome aboard. We're riding the California Zephyr. This stretch: The Rockies. As we travel, we'll discover the stories behind places along the way.",
+   "language": "en"
+  },
+  "f965c3b1906e5e45": {
+   "url": "/audio/demo/b35233479da8ed06.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 18,
+   "text": "Las vías marcan el ritmo. El mundo de fuera pone las historias. Este es un viaje simulado. Te damos la bienvenida a bordo. Viajamos en el California Zephyr. Este tramo: The Rockies. Por el camino descubriremos las historias de los lugares que pasamos.",
+   "language": "es"
+  },
+  "39ef148d6e128c78": {
+   "url": "/audio/demo/7cbd233b513d8623.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 16,
+   "text": "铁轨打着节拍，窗外的世界讲着故事。 这是一次模拟旅程。 欢迎上车。 我们乘坐的是California Zephyr。本段路程：The Rockies。 一路上，我们将发现沿途地点背后的故事。",
+   "language": "zh-CN"
+  },
+  "a7c00c269b863ee5": {
+   "url": "/audio/demo/9d3038f327c5e173.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 2,
+   "text": "Station approaching: Denver.",
+   "language": "en"
+  },
+  "4d963b77ef3d7916": {
+   "url": "/audio/demo/6f056ca1a2b4808f.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 3,
+   "text": "Station approaching: Winter Park/Fraser.",
+   "language": "en"
+  },
+  "1b134f8f92ef9ff6": {
+   "url": "/audio/demo/ea3c204f8c9964f0.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 2,
+   "text": "Station approaching: Granby.",
+   "language": "en"
+  },
+  "d33f251b578b2d20": {
+   "url": "/audio/demo/b7b823bf977039d3.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 3,
+   "text": "Station approaching: Glenwood Springs.",
+   "language": "en"
+  },
+  "3bafb1003333ae8b": {
+   "url": "/audio/demo/2f7fc0941c2494b7.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 16,
+   "text": "The Moffat Tunnel cuts through the Continental Divide in north-central Colorado, making a path for both trains and water. This finally provided Denver with a western link through the Continental Divide, something both Cheyenne, Wyoming, and Pueblo already had.",
+   "language": "en"
+  },
+  "2cd470c30cae3315": {
+   "url": "/audio/demo/19ffa4674fa7c8e8.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 23,
+   "text": "A station first opened here in 1881, but it burned down. The current structure was erected in two stages, with an enlarged central portion completed in 1914. In 2012, the station underwent a major renovation, transforming it into the centerpiece of a new transit-oriented mixed-use development built on the site's former railyards.",
+   "language": "en"
+  },
+  "9e8ab96d3e018f3f": {
+   "url": "/audio/demo/1e4b725664df9f6e.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 2,
+   "text": "Próxima estación: Denver.",
+   "language": "es"
+  },
+  "9a9f2448f0b2715c": {
+   "url": "/audio/demo/5ad3fcfaa18a8efe.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 3,
+   "text": "Próxima estación: Winter Park/Fraser.",
+   "language": "es"
+  },
+  "b1cf6b986f066d5c": {
+   "url": "/audio/demo/80d3854ce0aae62e.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 2,
+   "text": "Próxima estación: Granby.",
+   "language": "es"
+  },
+  "533ebb2c1cc84106": {
+   "url": "/audio/demo/e53d3afb20f34fdc.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 3,
+   "text": "Próxima estación: Glenwood Springs.",
+   "language": "es"
+  },
+  "6927ca5fef5f6c99": {
+   "url": "/audio/demo/e7ec81945d3cff18.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 2,
+   "text": "即将到站：Denver。",
+   "language": "zh-CN"
+  },
+  "f5a5ca660bc9ab32": {
+   "url": "/audio/demo/a2ec631fa6e1f8df.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 3,
+   "text": "即将到站：Winter Park/Fraser。",
+   "language": "zh-CN"
+  },
+  "2429fa4e110c9042": {
+   "url": "/audio/demo/12deef1276a83b2b.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 2,
+   "text": "即将到站：Granby。",
+   "language": "zh-CN"
+  },
+  "a10cc50a9859990c": {
+   "url": "/audio/demo/fad8dc803879bd97.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 3,
+   "text": "即将到站：Glenwood Springs。",
+   "language": "zh-CN"
+  },
+  "d21713f5ef91047f": {
+   "url": "/audio/demo/abe0e845b9b19ae5.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 1,
+   "text": "South Platte River.",
+   "language": "en"
+  },
+  "61e60e2afce9e482": {
+   "url": "/audio/demo/9717b26b7ee550af.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 12,
+   "text": "From Wikipedia: The South Platte River (Sioux: Wašíŋ-Wakpá [waˈʃĩ wakˈpa] lit. “bison tallow river”) is one of the two principal tributaries of the Platte River.",
+   "language": "en"
+  },
+  "e9a46e4be28de27c": {
+   "url": "/audio/demo/02bc98794a46942c.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 2,
+   "text": "Next up, South Platte River.",
+   "language": "en"
+  },
+  "f1376dad6a70e4da": {
+   "url": "/audio/demo/d10b0ed25528d22e.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 2,
+   "text": "Here's South Platte River.",
+   "language": "en"
+  },
+  "ebcca816984c7c8e": {
+   "url": "/audio/demo/4cd72e21d59c65dc.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 2,
+   "text": "Now for South Platte River.",
+   "language": "en"
+  },
+  "ba4b39d923fb776c": {
+   "url": "/audio/demo/fdfa2dc61723b658.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 2,
+   "text": "Coming up, South Platte River.",
+   "language": "en"
+  },
+  "76f6310214c6edfa": {
+   "url": "/audio/demo/52b32dd41e9f284b.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 2,
+   "text": "On your left, South Platte River.",
+   "language": "en"
+  },
+  "9af7f1c38c186ae8": {
+   "url": "/audio/demo/b04759f5e1cc6049.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 2,
+   "text": "On your right, South Platte River.",
+   "language": "en"
+  },
+  "8c8afe39c7085e18": {
+   "url": "/audio/demo/d16dfd81e55ebdc2.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 2,
+   "text": "All around us, South Platte River.",
+   "language": "en"
+  },
+  "617f6f44ff35e514": {
+   "url": "/audio/demo/5ffe8893821ed985.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 2,
+   "text": "You just pointed at South Platte River.",
+   "language": "en"
+  },
+  "11ce2d44d9304b8d": {
+   "url": "/audio/demo/4aa4b5f13de07379.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 3,
+   "text": "That place you pointed at earlier, South Platte River.",
+   "language": "en"
+  },
+  "90d597a3c48f45f2": {
+   "url": "/audio/demo/1540ca2277cc3468.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 2,
+   "text": "Once more, South Platte River.",
+   "language": "en"
+  },
+  "02a799157e7612a9": {
+   "url": "/audio/demo/9073b3c0c4e7ac78.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 2,
+   "text": "Denver Union Station.",
+   "language": "en"
+  },
+  "62b6f64b3ba15c2a": {
+   "url": "/audio/demo/e582490b17dca0db.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 2,
+   "text": "Next up, Denver Union Station.",
+   "language": "en"
+  },
+  "c5898d2dacc40fe0": {
+   "url": "/audio/demo/3ab0761c2da2947c.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 2,
+   "text": "Here's Denver Union Station.",
+   "language": "en"
+  },
+  "567d36226b0b82f0": {
+   "url": "/audio/demo/c229811e9ec07753.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 2,
+   "text": "Now for Denver Union Station.",
+   "language": "en"
+  },
+  "5e0d84797babc516": {
+   "url": "/audio/demo/3ffe2d1841da66e6.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 2,
+   "text": "Coming up, Denver Union Station.",
+   "language": "en"
+  },
+  "5f8887ce1bea1128": {
+   "url": "/audio/demo/3f5bb9bd03fa0831.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 3,
+   "text": "On your left, Denver Union Station.",
+   "language": "en"
+  },
+  "78e7ec035f396f02": {
+   "url": "/audio/demo/60f81eb298f99e97.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 2,
+   "text": "On your right, Denver Union Station.",
+   "language": "en"
+  },
+  "a86f16d97e7f5d02": {
+   "url": "/audio/demo/2905f7fa83d6d3e3.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 3,
+   "text": "All around us, Denver Union Station.",
+   "language": "en"
+  },
+  "df13ca60efa0e192": {
+   "url": "/audio/demo/b0a78e976500127c.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 3,
+   "text": "You just pointed at Denver Union Station.",
+   "language": "en"
+  },
+  "31ebb86061c21e17": {
+   "url": "/audio/demo/6d68734083819dc3.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 4,
+   "text": "That place you pointed at earlier, Denver Union Station.",
+   "language": "en"
+  },
+  "cf211d63fe345f38": {
+   "url": "/audio/demo/c6ed898fe692f0ba.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 2,
+   "text": "Once more, Denver Union Station.",
+   "language": "en"
+  },
+  "e697206ba0d5b8d0": {
+   "url": "/audio/demo/c156242dc00daa08.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 1,
+   "text": "Moffat Tunnel.",
+   "language": "en"
+  },
+  "5ee1d195b886d801": {
+   "url": "/audio/demo/56166761f255689b.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 2,
+   "text": "Next up, Moffat Tunnel.",
+   "language": "en"
+  },
+  "1086a9a39b68f7a7": {
+   "url": "/audio/demo/ff5a4e7f1e239c00.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 2,
+   "text": "Here's Moffat Tunnel.",
+   "language": "en"
+  },
+  "adbf44ceb0417ffd": {
+   "url": "/audio/demo/81e364c4191a449c.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 2,
+   "text": "Now for Moffat Tunnel.",
+   "language": "en"
+  },
+  "35f9917795bd51b9": {
+   "url": "/audio/demo/297e9632ededf093.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 2,
+   "text": "Coming up, Moffat Tunnel.",
+   "language": "en"
+  },
+  "2eaf43c2c08c0a95": {
+   "url": "/audio/demo/a8aca4f2401b563e.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 2,
+   "text": "On your left, Moffat Tunnel.",
+   "language": "en"
+  },
+  "d0701bedda9f5755": {
+   "url": "/audio/demo/959bbdc34e80c1e8.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 2,
+   "text": "On your right, Moffat Tunnel.",
+   "language": "en"
+  },
+  "684e59174695064d": {
+   "url": "/audio/demo/dd50eb93909d23ae.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 2,
+   "text": "All around us, Moffat Tunnel.",
+   "language": "en"
+  },
+  "d5e479386b123bc7": {
+   "url": "/audio/demo/354122075328083b.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 2,
+   "text": "You just pointed at Moffat Tunnel.",
+   "language": "en"
+  },
+  "856ce338b4ccc6c4": {
+   "url": "/audio/demo/4944800526b9a2eb.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 3,
+   "text": "That place you pointed at earlier, Moffat Tunnel.",
+   "language": "en"
+  },
+  "6151808d53a94b67": {
+   "url": "/audio/demo/006cbd97947d9aeb.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 2,
+   "text": "Once more, Moffat Tunnel.",
+   "language": "en"
+  },
+  "a20127a1743bafa8": {
+   "url": "/audio/demo/87d85f9e9ce340e4.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 5,
+   "text": "Rollins Pass, a railroad site. Elevation 3,500 meters.",
+   "language": "en"
+  },
+  "cdf2ea3fa25da19a": {
+   "url": "/audio/demo/0cac3f5266b1979d.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 1,
+   "text": "Gore Canyon.",
+   "language": "en"
+  },
+  "97367b539f0a71eb": {
+   "url": "/audio/demo/6c01693091189f47.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 26,
+   "text": "From Wikipedia: Gore Canyon, elevation 6,985 feet (2,129 m), is a short isolated canyon on the upper Colorado River in southwestern Grand County, Colorado in the United States. Steep and rugged, the approximately 3-mile-long (4.8 km) gorge was carved by the river as it passed the northern end of the Gore Range southwest of Kremmling.",
+   "language": "en"
+  },
+  "9c012e01063ff76f": {
+   "url": "/audio/demo/30c7dd1dc4c8bcfe.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 2,
+   "text": "Next up, Gore Canyon.",
+   "language": "en"
+  },
+  "af6b7d3715739c7d": {
+   "url": "/audio/demo/fada01de6f47d634.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 2,
+   "text": "Here's Gore Canyon.",
+   "language": "en"
+  },
+  "f88c455e5cb423bf": {
+   "url": "/audio/demo/15793d9b46522e03.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 2,
+   "text": "Now for Gore Canyon.",
+   "language": "en"
+  },
+  "0dee5f53e37faaa3": {
+   "url": "/audio/demo/160dca1b4bd16883.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 2,
+   "text": "Coming up, Gore Canyon.",
+   "language": "en"
+  },
+  "5f7cc95a3ec1af13": {
+   "url": "/audio/demo/1aa2054b312a1bf8.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 2,
+   "text": "On your left, Gore Canyon.",
+   "language": "en"
+  },
+  "b0dce49984f67e7f": {
+   "url": "/audio/demo/79898eaeab860d9e.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 2,
+   "text": "On your right, Gore Canyon.",
+   "language": "en"
+  },
+  "aab718736031d88f": {
+   "url": "/audio/demo/76aed94394001237.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 2,
+   "text": "All around us, Gore Canyon.",
+   "language": "en"
+  },
+  "9e1673686b1cc70d": {
+   "url": "/audio/demo/8076b1707c08fb8b.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 2,
+   "text": "You just pointed at Gore Canyon.",
+   "language": "en"
+  },
+  "7faa4d68e17307ce": {
+   "url": "/audio/demo/720db7eab31c1310.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 3,
+   "text": "That place you pointed at earlier, Gore Canyon.",
+   "language": "en"
+  },
+  "8df935b934debf8d": {
+   "url": "/audio/demo/a595709fee790ada.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 2,
+   "text": "Once more, Gore Canyon.",
+   "language": "en"
+  },
+  "6a8be9696afbaae6": {
+   "url": "/audio/demo/9ddce32ca2d30855.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 1,
+   "text": "Glenwood Canyon.",
+   "language": "en"
+  },
+  "95df462bf4dd439f": {
+   "url": "/audio/demo/bf1e8ef256ec5019.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 16,
+   "text": "From Wikipedia: Glenwood Canyon is a rugged scenic 12.5 mi (20 km) canyon in western Colorado in the United States. Its walls climb as high as 1,300 feet (400 m) above the Colorado River.",
+   "language": "en"
+  },
+  "8492005b2edc3b33": {
+   "url": "/audio/demo/1af30ba0597e5904.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 2,
+   "text": "Next up, Glenwood Canyon.",
+   "language": "en"
+  },
+  "6a467b51b9f54311": {
+   "url": "/audio/demo/7d8671d1875a9aef.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 2,
+   "text": "Here's Glenwood Canyon.",
+   "language": "en"
+  },
+  "a6af0370a9925fd3": {
+   "url": "/audio/demo/01bff73f086d4fc8.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 2,
+   "text": "Now for Glenwood Canyon.",
+   "language": "en"
+  },
+  "47817df5d9db0f67": {
+   "url": "/audio/demo/139f1f9a314aaf07.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 2,
+   "text": "Coming up, Glenwood Canyon.",
+   "language": "en"
+  },
+  "4f0f9a948c51d80f": {
+   "url": "/audio/demo/c31933d1440d5140.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 2,
+   "text": "On your left, Glenwood Canyon.",
+   "language": "en"
+  },
+  "ebd25c83d6980f63": {
+   "url": "/audio/demo/12b48a960cee1854.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 2,
+   "text": "On your right, Glenwood Canyon.",
+   "language": "en"
+  },
+  "54503d155435323b": {
+   "url": "/audio/demo/2101dd84e5743d34.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 2,
+   "text": "All around us, Glenwood Canyon.",
+   "language": "en"
+  },
+  "881506f2a8bdc129": {
+   "url": "/audio/demo/3139e94a1dc7606b.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 2,
+   "text": "You just pointed at Glenwood Canyon.",
+   "language": "en"
+  },
+  "5d8c80f2855aa162": {
+   "url": "/audio/demo/b6ec9d8e2ada3f29.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 3,
+   "text": "That place you pointed at earlier, Glenwood Canyon.",
+   "language": "en"
+  },
+  "3cf71f2310bee511": {
+   "url": "/audio/demo/7ed62d34a49f0b2c.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 2,
+   "text": "Once more, Glenwood Canyon.",
+   "language": "en"
+  },
+  "75a348df89d3bc21": {
+   "url": "/audio/demo/47fa1dc0fad580e4.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 2,
+   "text": "Hotel Colorado.",
+   "language": "en"
+  },
+  "3a038522c217745f": {
+   "url": "/audio/demo/f364a9ed18508d8b.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 11,
+   "text": "From Wikipedia: Hotel Colorado is an 1893 Italianate structure in Glenwood Springs, Colorado, United States, and one of the oldest hotels in Colorado.",
+   "language": "en"
+  },
+  "5d50194147545832": {
+   "url": "/audio/demo/95b212efffd34ca2.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 2,
+   "text": "Next up, Hotel Colorado.",
+   "language": "en"
+  },
+  "fc50eee79ed1244c": {
+   "url": "/audio/demo/a97a35c0a2d6e2f2.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 2,
+   "text": "Here's Hotel Colorado.",
+   "language": "en"
+  },
+  "ffe6500073202ef0": {
+   "url": "/audio/demo/e681b80bbfe671e0.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 2,
+   "text": "Now for Hotel Colorado.",
+   "language": "en"
+  },
+  "45702fd3c9d6356a": {
+   "url": "/audio/demo/a30eb724166d3ba1.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 2,
+   "text": "Coming up, Hotel Colorado.",
+   "language": "en"
+  },
+  "3803f67c4c82c69c": {
+   "url": "/audio/demo/bb1a9e6bf353471a.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 2,
+   "text": "On your left, Hotel Colorado.",
+   "language": "en"
+  },
+  "d63dd3c9ac18775e": {
+   "url": "/audio/demo/cddb2d6d85ebafc9.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 2,
+   "text": "On your right, Hotel Colorado.",
+   "language": "en"
+  },
+  "555ceaf3faed6e86": {
+   "url": "/audio/demo/27b5e98a186a1a11.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 2,
+   "text": "All around us, Hotel Colorado.",
+   "language": "en"
+  },
+  "ef809a326e42d9b2": {
+   "url": "/audio/demo/ea7d30976999f758.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 2,
+   "text": "You just pointed at Hotel Colorado.",
+   "language": "en"
+  },
+  "59c8355bf505324f": {
+   "url": "/audio/demo/1dad329bec24a758.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 4,
+   "text": "That building you pointed at earlier, Hotel Colorado.",
+   "language": "en"
+  },
+  "d82d7f69aba16fb4": {
+   "url": "/audio/demo/6e797cfb1eef9ff8.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 2,
+   "text": "Once more, Hotel Colorado.",
+   "language": "en"
+  },
+  "e50cf55e390ad69b": {
+   "url": "/audio/demo/271f4aafb48a4260.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 3,
+   "text": "Glenwood Hot Springs Pool, a spring.",
+   "language": "en"
+  }
+ }
+}

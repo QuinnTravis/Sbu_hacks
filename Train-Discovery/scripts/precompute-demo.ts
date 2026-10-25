@@ -17,8 +17,8 @@ import { buildZones, type TunnelStretch } from "../src/lib/connectivity";
 import { fetchAirQuality, zoneSpans } from "../src/lib/air-quality";
 import { clipKey } from "../src/lib/clip-key";
 import { translate } from "../src/lib/i18n-core";
-import { englishBody } from "../src/lib/narration-script";
-import { routeIndex } from "../src/lib/route-geometry";
+import { INTRO_COUNT, composePlaceScript, englishBody, type PlaceContext } from "../src/lib/narration-script";
+import { routeIndex, type Side } from "../src/lib/route-geometry";
 import { DEFAULT_TTS_MODEL, DEFAULT_VOICE_ID, STORY_VOICE_SETTINGS } from "../src/lib/audio-prompts";
 import { LOCALES } from "../src/locales";
 import { californiaZephyr } from "../src/networks/california-zephyr";
@@ -42,6 +42,16 @@ const DEMO_STORIES = [
   "Byers Canyon", "Hot Sulphur Springs", "Fraser–Winter Park station", "Granby station", "Colorado River",
   "Glenwood Springs station", "Hanging Lake", "Kremmling", "State Bridge", "Dotsero",
 ];
+/**
+ * Demo-path places voiced end to end: every lead, body and look-for line the
+ * ride can compose for them, so the device voice never cuts in mid-story.
+ */
+const FULL_VOICE = [
+  "South Platte River", "Denver Union Station", "Moffat Tunnel", "Rollins Pass", "Gore Canyon",
+  "Glenwood Canyon", "Hotel Colorado", "Glenwood Hot Springs Pool",
+];
+const CONTEXTS: PlaceContext[] = ["nearby", "pointed", "pointed-earlier", "replay"];
+const SIDES: (Side | null)[] = [null, "left", "right", "ahead", "both"];
 /** Stories voiced in Spanish and Chinese for the multilingual moment of the demo. */
 const LOCALIZED_STORIES = ["Moffat Tunnel", "Denver Union Station", "Gore Canyon"];
 
@@ -93,6 +103,17 @@ async function main() {
     const place = places.find((p) => p.name === name);
     const body = place ? englishBody(place) : null;
     if (body) jobs.push({ text: body.text, language: "en", label: name });
+  }
+  for (const name of FULL_VOICE) {
+    const place = places.find((p) => p.name === name);
+    if (!place) continue;
+    const texts = new Set<string>();
+    for (const context of CONTEXTS)
+      for (const side of SIDES)
+        for (let introIndex = 0; introIndex < INTRO_COUNT; introIndex++)
+          for (const part of composePlaceScript({ place, code: "en", context, side, introIndex })?.parts ?? [])
+            texts.add(part.text);
+    for (const text of texts) jobs.push({ text, language: "en", label: `${name}: ${text.slice(0, 40)}` });
   }
   for (const locale of LOCALES.filter((l) => l.code !== "en")) {
     for (const stop of route.stops) jobs.push({ text: translate(locale.code, "narration.station", { name: stop.name }), language: locale.code, label: `station ${stop.id} (${locale.code})` });
