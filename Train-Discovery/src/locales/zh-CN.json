@@ -46,7 +46,6 @@
     "start": "开始旅程",
     "routesGroup": "{network}线路",
     "fullExperience": "完整体验",
-    "basicExperience": "仅播报车站",
     "stops": "{from}至{to}",
     "chooseNetwork": "线网",
     "discoveriesEmpty": "旅途中的发现会显示在这里",
@@ -120,7 +119,6 @@
     "pausedUnavailable": "已暂停：地点未能加载",
     "pausedEmpty": "已暂停：范围内没有地点。",
     "noSourced": "范围内没有地点。",
-    "stationsOnly": "此路段仅播报车站，完整体验见落基山脉。",
     "speedSimulated": "{speed} 公里/小时",
     "simulated": "模拟行程",
     "sensorsPaused": "传感器已暂停"

@@ -1,7 +1,12 @@
 import "server-only";
 import lirrRail from "../../public/data/lirr.json";
 import zephyrRail from "../../public/data/networks/california-zephyr/rail.json";
+import plainsPlaces from "../../public/data/networks/california-zephyr/places/cz-plains.json";
 import rockiesPlaces from "../../public/data/networks/california-zephyr/places/cz-rockies.json";
+import canyonsPlaces from "../../public/data/networks/california-zephyr/places/cz-canyons.json";
+import basinPlaces from "../../public/data/networks/california-zephyr/places/cz-basin.json";
+import sierraPlaces from "../../public/data/networks/california-zephyr/places/cz-sierra.json";
+import bayPlaces from "../../public/data/networks/california-zephyr/places/cz-bay.json";
 import rockiesConnectivity from "../../public/data/networks/california-zephyr/connectivity/cz-rockies.json";
 import rockiesAir from "../../public/data/networks/california-zephyr/air/cz-rockies.json";
 import rockiesHistory from "../../public/data/networks/california-zephyr/history/cz-rockies.json";
@@ -43,7 +48,22 @@ type PackageFiles = {
   clips: Record<string, NarratorClip>;
 };
 
+/** Catalogs without separately curated media or environmental observations. */
+function placesPackage(catalog: { places: Place[] }): PackageFiles {
+  return {
+    places: catalog.places,
+    connectivity: [],
+    air: null,
+    history: [],
+    models: [],
+    thumbnails: {},
+    content: {},
+    clips: {},
+  };
+}
+
 const PACKAGES: Record<string, PackageFiles> = {
+  // First-match lookups retain curated Rockies stories and clips at shared boundaries.
   "cz-rockies": {
     places: (rockiesPlaces as { places: Place[] }).places,
     connectivity: (rockiesConnectivity as { zones: ConnectivityZone[] }).zones,
@@ -54,6 +74,11 @@ const PACKAGES: Record<string, PackageFiles> = {
     content: rockiesContent as Record<string, Record<string, PoiContent>>,
     clips: (rockiesAudio as { clips: Record<string, NarratorClip> }).clips,
   },
+  "cz-plains": placesPackage(plainsPlaces as { places: Place[] }),
+  "cz-canyons": placesPackage(canyonsPlaces as { places: Place[] }),
+  "cz-basin": placesPackage(basinPlaces as { places: Place[] }),
+  "cz-sierra": placesPackage(sierraPlaces as { places: Place[] }),
+  "cz-bay": placesPackage(bayPlaces as { places: Place[] }),
 };
 
 export function railFor(networkId: NetworkId): RailData {

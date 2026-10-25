@@ -112,3 +112,17 @@ Open the sliders button in the header, press the backtick key, or visit `/?dev`.
 - Use the compact-controls button to keep a floating joystick visible while watching the app, especially on a phone. Nearby targets show distance, bearing, and angular error. Aim selects a target's bearing and switches to an upright joystick heading. Position and heading sources are always labeled. Controls exercise the same detection and persistent queue as a real ride; scrubbing does not erase the queue.
 
 Dev control values are transient; refreshing starts the simulated position near Jamaica while preserving your discovery queue.
+
+## Places across the California Zephyr
+
+All six segments from Chicago to Emeryville now include discoverable places. The five catalogs outside the Rockies are built from nearby Wikipedia articles with real coordinates, Wikidata identifiers and attributed source excerpts. Records are filtered to the rail corridor and distributed along each segment. The existing Rockies stories, historical photos and recorded audio stay curated separately. Sparse stretches of countryside can still have fewer documented places; proximity is not a guarantee of visibility.
+
+Refresh the additional catalogs without touching the Rockies or downloading GTFS again:
+
+```sh
+npm run data:zephyr
+npm run data:zephyr -- --segment=cz-sierra
+npm run data:zephyr -- --refresh
+```
+
+This importer uses cached, serial requests to the public MediaWiki API and needs no API key. Coverage and source availability are recorded in each catalog’s `coverage` metadata. Newly imported source excerpts are not labeled as verified generated stories; translated narration and cloud audio remain separate provider operations.

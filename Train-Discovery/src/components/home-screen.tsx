@@ -190,9 +190,6 @@ export function HomeScreen({
                   {item.experience === "full" && network.segments.length > 0 && (
                     <span className="experience-badge">{t("home.fullExperience")}</span>
                   )}
-                  {item.experience === "basic" && (
-                    <span className="route-distance">{t("home.basicExperience")}</span>
-                  )}
                   {Number.isFinite(meters) && !network.segments.length && (
                     <span className="route-distance">{distance(meters)}</span>
                   )}

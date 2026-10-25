@@ -46,7 +46,6 @@
     "start": "Iniciar viaje",
     "routesGroup": "Rutas de {network}",
     "fullExperience": "Experiencia completa",
-    "basicExperience": "Solo estaciones",
     "stops": "De {from} a {to}",
     "chooseNetwork": "Red",
     "discoveriesEmpty": "Tus descubrimientos aparecen aquí durante el viaje",
@@ -121,7 +120,6 @@
     "pausedUnavailable": "En pausa: no se cargaron los lugares",
     "pausedEmpty": "En pausa: no hay lugares al alcance.",
     "noSourced": "No hay lugares al alcance.",
-    "stationsOnly": "Solo estaciones aquí. Experiencia completa en Las Rocosas.",
     "speedSimulated": "{speed} km/h",
     "simulated": "Viaje simulado",
     "sensorsPaused": "Sensores en pausa"

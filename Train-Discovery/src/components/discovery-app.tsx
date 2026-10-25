@@ -1135,9 +1135,6 @@ export function DiscoveryApp({ rail: defaultRail }: { rail: RailData }) {
                   {offRoute && !ride.replay && (
                     <p className="inline-notice">{t("ride.offRoute")}</p>
                   )}
-                  {staticNetwork && !fullExperience && (
-                    <p className="inline-notice">{t("ride.stationsOnly")}</p>
-                  )}
                   {directionEmpty && (
                     <p className="direction-empty" role="status">
                       {t("chooser.empty")}

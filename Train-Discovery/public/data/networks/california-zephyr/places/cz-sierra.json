@@ -1,0 +1,1533 @@
+{
+  "importedAt": "2026-10-25T12:09:40.525Z",
+  "source": "English Wikipedia via MediaWiki geosearch (coordinates, Wikidata IDs, exact article excerpts)",
+  "license": "Wikipedia excerpts: CC BY-SA 4.0; Wikidata identifiers: CC0.",
+  "corridorM": 5000,
+  "samplingKm": 12,
+  "searchRadiusM": 10000,
+  "coverage": {
+    "routeLengthKm": 213.16830509247328,
+    "firstPoiKm": 0,
+    "lastPoiKm": 210.9168351766557,
+    "narratableCount": 49,
+    "sampleCount": 19,
+    "failedSamples": [],
+    "gapsOver30Km": [],
+    "largestGapKm": 14.399645073030403
+  },
+  "places": [
+    {
+      "id": "wd-Q7313369",
+      "name": "Reno station",
+      "lat": 39.5287,
+      "lon": -119.8116,
+      "category": "Railroad heritage",
+      "routeIds": [
+        "cz-sierra"
+      ],
+      "wikipedia": "Reno station",
+      "wikidata": "Q7313369",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Reno_station",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-11135926",
+          "title": "Reno station",
+          "url": "https://en.wikipedia.org/wiki/Reno_station",
+          "text": "Reno station is an Amtrak intercity train station in Reno, Nevada, served by the California Zephyr train. It is also serviced by five times per weekday, and twice on weekends, by Amtrak Thruway routes to Sacramento.",
+          "retrievedAt": "2026-10-25T12:07:58.068Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 0,
+      "lateralM": 53.41328571973906,
+      "signedLateralM": 53.41328571973906
+    },
+    {
+      "id": "wd-Q7003326",
+      "name": "Reno station (Nevada–California–Oregon Railway)",
+      "lat": 39.53111111,
+      "lon": -119.80944444,
+      "category": "Railroad heritage",
+      "routeIds": [
+        "cz-sierra"
+      ],
+      "wikipedia": "Reno station (Nevada–California–Oregon Railway)",
+      "wikidata": "Q7003326",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Reno_station_(Nevada%E2%80%93California%E2%80%93Oregon_Railway)",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-22657917",
+          "title": "Reno station (Nevada–California–Oregon Railway)",
+          "url": "https://en.wikipedia.org/wiki/Reno_station_(Nevada%E2%80%93California%E2%80%93Oregon_Railway)",
+          "text": "The Nevada-California-Oregon Railroad Depot was built by the Nevada-California-Oregon Railway (NCO) in 1910 in Reno, Nevada. It is Nevada Historical Marker number 210. It is also listed in the National Register of Historic Places. The building today is used for a restaurant and microbrewery called The Depot Craft Brewery Distillery",
+          "retrievedAt": "2026-10-25T12:07:58.068Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 0,
+      "lateralM": 350.3385042171284,
+      "signedLateralM": -350.3385042171284
+    },
+    {
+      "id": "wd-Q5694773",
+      "name": "Mogul, Nevada",
+      "lat": 39.51361111,
+      "lon": -119.92583333,
+      "category": "Town",
+      "routeIds": [
+        "cz-sierra"
+      ],
+      "wikipedia": "Mogul, Nevada",
+      "wikidata": "Q5694773",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Mogul%2C_Nevada",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-14029423",
+          "title": "Mogul, Nevada",
+          "url": "https://en.wikipedia.org/wiki/Mogul%2C_Nevada",
+          "text": "Mogul is a census-designated place (CDP) in Washoe County, Nevada, United States. It lies on the western side of the Reno–Sparks Metropolitan Statistical Area, just off Interstate 80. As of the 2020 census, Mogul had a population of 1,258. Prior to 2010, the community was part of the Verdi-Mogul CDP.\n\n",
+          "retrievedAt": "2026-10-25T12:07:59.023Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 10.679259497665347,
+      "lateralM": 29.599746151626046,
+      "signedLateralM": -29.599746151626046,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q2323167",
+      "name": "Verdi-Mogul, Nevada",
+      "lat": 39.51444444,
+      "lon": -119.95722222,
+      "category": "Town",
+      "routeIds": [
+        "cz-sierra"
+      ],
+      "wikipedia": "Verdi-Mogul, Nevada",
+      "wikidata": "Q2323167",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Verdi-Mogul%2C_Nevada",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-124469",
+          "title": "Verdi-Mogul, Nevada",
+          "url": "https://en.wikipedia.org/wiki/Verdi-Mogul%2C_Nevada",
+          "text": "Verdi-Mogul is a former census-designated place (CDP) in Washoe County, Nevada, United States. For the 2010 census it was split into two separate CDPs, Verdi and Mogul. The communities lie on the western side of the Reno–Sparks Metropolitan Statistical Area, just off Interstate 80. The population of the combined CDP was 2,949 at the 2000 census.\n\n",
+          "retrievedAt": "2026-10-25T12:07:59.023Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 13.817081803013934,
+      "lateralM": 103.11406929993498,
+      "signedLateralM": 103.11406929993498,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q7921102",
+      "name": "Verdi, Nevada",
+      "lat": 39.51833333,
+      "lon": -119.98861111,
+      "category": "Town",
+      "routeIds": [
+        "cz-sierra"
+      ],
+      "wikipedia": "Verdi, Nevada",
+      "wikidata": "Q7921102",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Verdi%2C_Nevada",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-379444",
+          "title": "Verdi, Nevada",
+          "url": "https://en.wikipedia.org/wiki/Verdi%2C_Nevada",
+          "text": "Verdi ( VUR-dye) is a census-designated place (CDP) in Washoe County, Nevada, United States. It is on the western side of the Reno metropolitan area near Interstate 80 and stretches eastward towards its neighborhood-exclave of Lawton, Nevada, surrounded by Reno, Nevada, west of Mae Anne Avenue. The CDP of Verdi, California, lies immediately adjacent across the state line. Both are in the shadow of California's Verdi Range. As of the 2020 census, Verdi had a population of 1,396. Prior to 2010, the community was listed by the U.S. Census Bureau as part of the Verdi-Mogul CDP.",
+          "retrievedAt": "2026-10-25T12:07:59.023Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 16.688262057193736,
+      "lateralM": 101.400797177016,
+      "signedLateralM": -101.400797177016,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q6160569",
+      "name": "Verdi, California",
+      "lat": 39.50944444,
+      "lon": -120.04777778,
+      "category": "Town",
+      "routeIds": [
+        "cz-sierra"
+      ],
+      "wikipedia": "Verdi, California",
+      "wikidata": "Q6160569",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Verdi%2C_California",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-32317246",
+          "title": "Verdi, California",
+          "url": "https://en.wikipedia.org/wiki/Verdi%2C_California",
+          "text": "Verdi is a census-designated place (CDP) in Sierra County, California, United States. Verdi sits at an elevation of 5,315 feet (1,620 m). The 2020 United States census reported Verdi's population was 179.  It is just across the state line from Verdi, Nevada and below the Verdi Range.\nThe town of Verdi was named after Giuseppe Verdi by Charles Crocker, founder of the Central Pacific Railroad, when he pulled a slip of paper from a hat and read the name of the Italian opera composer in 1868.",
+          "retrievedAt": "2026-10-25T12:07:59.023Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 18.257766176735483,
+      "lateralM": 4650.607362775728,
+      "signedLateralM": -4650.607362775728,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q5461916",
+      "name": "Floriston, California",
+      "lat": 39.39305556,
+      "lon": -120.01527778,
+      "category": "Town",
+      "routeIds": [
+        "cz-sierra"
+      ],
+      "wikipedia": "Floriston, California",
+      "wikidata": "Q5461916",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Floriston%2C_California",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-22984112",
+          "title": "Floriston, California",
+          "url": "https://en.wikipedia.org/wiki/Floriston%2C_California",
+          "text": "Floriston is an unincorporated community and census-designated place in Nevada County, California. It is situated at an elevation of 5,400 ft (1,600 m) above sea level. Floriston is located on the Truckee River, 10 miles (16.1 km) east-northeast of Truckee. Formerly an important railroad stop and mill town, Floriston survives to this day as a small residential community. The population was 80 at the 2020 census.",
+          "retrievedAt": "2026-10-25T12:07:59.952Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 32.657411249765886,
+      "lateralM": 676.1551566455709,
+      "signedLateralM": 676.1551566455709,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q14682269",
+      "name": "Hirschdale, California",
+      "lat": 39.36861111,
+      "lon": -120.07611111,
+      "category": "Town",
+      "routeIds": [
+        "cz-sierra"
+      ],
+      "wikipedia": "Hirschdale, California",
+      "wikidata": "Q14682269",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Hirschdale%2C_California",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-32209582",
+          "title": "Hirschdale, California",
+          "url": "https://en.wikipedia.org/wiki/Hirschdale%2C_California",
+          "text": "Hirschdale is an unincorporated community in Nevada County, California. It lies at an elevation of 5446 feet (1660 m). Hirschdale is located 6.25 miles (10.1 km) east-northeast of Truckee.  Hirschdale began in 1926 as a stop on US 40, built by Jonas Hirsch; it was originally a recreational community with a tavern and several rental vacation cabins along the Truckee River.\n\n",
+          "retrievedAt": "2026-10-25T12:08:00.507Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 39.36357613310068,
+      "lateralM": 182.70218478072687,
+      "signedLateralM": 182.70218478072687,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q4936110",
+      "name": "Boca Reservoir",
+      "lat": 39.3901,
+      "lon": -120.0954,
+      "category": "Nature",
+      "routeIds": [
+        "cz-sierra"
+      ],
+      "wikipedia": "Boca Reservoir",
+      "wikidata": "Q4936110",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Boca_Reservoir",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-24685849",
+          "title": "Boca Reservoir",
+          "url": "https://en.wikipedia.org/wiki/Boca_Reservoir",
+          "text": "Boca Reservoir  is an artificial lake in Nevada County, California, United States, located in the perimeter covered by Tahoe National Forest. It was created by the construction of Boca Dam across Little Truckee River, approximately  10 km northeast of Truckee. It is located downstream (south) of Stampede Dam and to the east of Prosser Creek Dam and Prosser Creek Reservoir.",
+          "retrievedAt": "2026-10-25T12:08:00.507Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 42.49632043861544,
+      "lateralM": 551.7921829683672,
+      "signedLateralM": -551.7921829683672,
+      "areaKind": "lake"
+    },
+    {
+      "id": "wd-Q104841636",
+      "name": "Prosser Creek",
+      "lat": 39.37034,
+      "lon": -120.11695,
+      "category": "River",
+      "routeIds": [
+        "cz-sierra"
+      ],
+      "wikipedia": "Prosser Creek",
+      "wikidata": "Q104841636",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Prosser_Creek",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-32146310",
+          "title": "Prosser Creek",
+          "url": "https://en.wikipedia.org/wiki/Prosser_Creek",
+          "text": "Prosser Creek is a perennial stream in Nevada County, California, formed from the North Fork Prosser Creek and South Fork Prosser Creek, then flowing into Prosser Creek Reservoir, and then to the Truckee River.",
+          "retrievedAt": "2026-10-25T12:08:00.507Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 45.16129798229283,
+      "lateralM": 18.661492517311636,
+      "signedLateralM": -18.661492517311636,
+      "areaKind": "river"
+    },
+    {
+      "id": "wd-Q506402",
+      "name": "Truckee, California",
+      "lat": 39.35694444,
+      "lon": -120.185,
+      "category": "Town",
+      "routeIds": [
+        "cz-sierra"
+      ],
+      "wikipedia": "Truckee, California",
+      "wikidata": "Q506402",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Truckee%2C_California",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-107803",
+          "title": "Truckee, California",
+          "url": "https://en.wikipedia.org/wiki/Truckee%2C_California",
+          "text": "Truckee is an incorporated town in Nevada County, California, United States. As of the 2020 United States census, the population was 16,729, an increase from the 16,180 recorded in the 2010 census.\n\n",
+          "retrievedAt": "2026-10-25T12:08:01.524Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 54.2162202547558,
+      "lateralM": 3100.2969661908373,
+      "signedLateralM": -3100.2969661908373,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q19461102",
+      "name": "Commercial Row–Brickelltown Historic District",
+      "lat": 39.3275,
+      "lon": -120.18666667,
+      "category": "Heritage",
+      "routeIds": [
+        "cz-sierra"
+      ],
+      "wikipedia": "Commercial Row–Brickelltown Historic District",
+      "wikidata": "Q19461102",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Commercial_Row%E2%80%93Brickelltown_Historic_District",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-45591533",
+          "title": "Commercial Row–Brickelltown Historic District",
+          "url": "https://en.wikipedia.org/wiki/Commercial_Row%E2%80%93Brickelltown_Historic_District",
+          "text": "The Commercial Row–Brickelltown Historic District is a historic district in downtown Truckee, California. Developed from 1870 to 1930, the district includes the significant parts of Truckee's early commercial district. Due to several major fires, the district had several distinct construction and rebuilding periods; the fires also destroyed several significant buildings, including the stagecoach station which established the site of the city's downtown. To protect them from fires, most of the surviving commercial buildings were built with stone or brick. Once the Central Pacific Railroad was completed through Truckee in 1869, it became one of the city's main economic drivers; the Commercial Row district's businesses mainly catered to workers and travelers on the railroad. The Brickelltown district, meanwhile, housed and served workers in Truckee's other main industry, lumber. In the twentieth century, both industries declined due to economic shifts and the Great Depression; the city, and Commercial Row in particular, instead built a tourist economy on visitors to the region's recreational activities.\nThe district was added to the National Register of Historic Places on October 8, 2009.",
+          "retrievedAt": "2026-10-25T12:08:01.524Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 55.40976318103217,
+      "lateralM": 47.99089685560452,
+      "signedLateralM": -47.99089685560452
+    },
+    {
+      "id": "wd-Q136223020",
+      "name": "Truckee Veterans Memorial Building and Rocking Stone Tower",
+      "lat": 39.32777778,
+      "lon": -120.18861111,
+      "category": "Heritage",
+      "routeIds": [
+        "cz-sierra"
+      ],
+      "wikipedia": "Truckee Veterans Memorial Building and Rocking Stone Tower",
+      "wikidata": "Q136223020",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Truckee_Veterans_Memorial_Building_and_Rocking_Stone_Tower",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-80893211",
+          "title": "Truckee Veterans Memorial Building and Rocking Stone Tower",
+          "url": "https://en.wikipedia.org/wiki/Truckee_Veterans_Memorial_Building_and_Rocking_Stone_Tower",
+          "text": "The Truckee Veterans Memorial Building and Rocking Stone Tower is a historic building located in Truckee, California. It has been used as a schoolhouse, community center and veterans' meeting place.",
+          "retrievedAt": "2026-10-25T12:08:01.524Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 55.525312127517175,
+      "lateralM": 135.2524393859292,
+      "signedLateralM": -135.2524393859292
+    },
+    {
+      "id": "wd-Q35724175",
+      "name": "Anderson Peak (Placer County, California)",
+      "lat": 39.2590339,
+      "lon": -120.2971744,
+      "category": "Mountain",
+      "routeIds": [
+        "cz-sierra"
+      ],
+      "wikipedia": "Anderson Peak (Placer County, California)",
+      "wikidata": "Q35724175",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Anderson_Peak_(Placer_County%2C_California)",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-71317686",
+          "title": "Anderson Peak (Placer County, California)",
+          "url": "https://en.wikipedia.org/wiki/Anderson_Peak_(Placer_County%2C_California)",
+          "text": "Anderson Peak is an 8,683-foot-elevation (2,647-meter) mountain summit in Placer County, California, United States.",
+          "retrievedAt": "2026-10-25T12:08:03.558Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 64.17800717168824,
+      "lateralM": 4321.7873731314885,
+      "signedLateralM": 4321.7873731314885
+    },
+    {
+      "id": "wd-Q3363979",
+      "name": "Donner Memorial State Park",
+      "lat": 39.32,
+      "lon": -120.24166667,
+      "category": "Nature",
+      "routeIds": [
+        "cz-sierra"
+      ],
+      "wikipedia": "Donner Memorial State Park",
+      "wikidata": "Q3363979",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Donner_Memorial_State_Park",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-2237704",
+          "title": "Donner Memorial State Park",
+          "url": "https://en.wikipedia.org/wiki/Donner_Memorial_State_Park",
+          "text": "Donner Memorial State Park is a California State Park, located at the town of Truckee, California, United States. The park preserves a portion of the Donner Camp site, where members of the ill-fated Donner Party were trapped just short of Donner Pass by weather during the winter of 1846–1847. Caught without shelter or adequate supplies, members of the group resorted to cannibalism to survive. The camp site, high in the Sierra Nevada, has been designated a National Historic Landmark.\nThe 3,549-acre (1,436 ha) Donner Memorial State Park was established in 1928. It includes memorials to the Donner Party, such as the 1918 Pioneer Monument, along with a visitor center. Recreational opportunities include 18.5 miles (29.8 km) of trails, campgrounds, and 1.7 miles (2.7 km) of frontage on Donner Lake.",
+          "retrievedAt": "2026-10-25T12:08:02.483Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 67.84642288351924,
+      "lateralM": 626.1711966337813,
+      "signedLateralM": -626.1711966337813,
+      "areaKind": "park"
+    },
+    {
+      "id": "wd-Q3888447",
+      "name": "Donner Lake",
+      "lat": 39.32277778,
+      "lon": -120.26444444,
+      "category": "Nature",
+      "routeIds": [
+        "cz-sierra"
+      ],
+      "wikipedia": "Donner Lake",
+      "wikidata": "Q3888447",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Donner_Lake",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-1167417",
+          "title": "Donner Lake",
+          "url": "https://en.wikipedia.org/wiki/Donner_Lake",
+          "text": "Donner Lake, formerly known as Truckee Lake, is a freshwater lake in Northeast California on the eastern slope of the Sierra Nevada and about 20 miles (32 km) northwest of the much larger Lake Tahoe. A moraine serves as a natural dam for the lake. The lake is located in the town of Truckee, between Interstate 80 to the north and Schallenberger Ridge to the south.  The tracks of the Union Pacific Railroad run along\nSchallenberger Ridge and closely follow the route of the original transcontinental railroad. The historic route of the Lincoln Highway, the first automobile road across America and US 40 follows the northern shoreline, then climbs to Donner Pass from where the entire lake may be viewed.",
+          "retrievedAt": "2026-10-25T12:08:02.483Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 69.16327936955322,
+      "lateralM": 988.2870102948541,
+      "signedLateralM": -988.2870102948541,
+      "areaKind": "lake"
+    },
+    {
+      "id": "wd-Q29633993",
+      "name": "Donner Peak",
+      "lat": 39.3087392,
+      "lon": -120.3124753,
+      "category": "Mountain",
+      "routeIds": [
+        "cz-sierra"
+      ],
+      "wikipedia": "Donner Peak",
+      "wikidata": "Q29633993",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Donner_Peak",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-71228724",
+          "title": "Donner Peak",
+          "url": "https://en.wikipedia.org/wiki/Donner_Peak",
+          "text": "Donner Peak is an 8,019-foot-elevation (2,444-meter) summit in Placer County, California, United States.",
+          "retrievedAt": "2026-10-25T12:08:02.483Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 74.6077571576704,
+      "lateralM": 509.29733740741443,
+      "signedLateralM": -509.29733740741443
+    },
+    {
+      "id": "wd-Q2113165",
+      "name": "Donner Pass",
+      "lat": 39.31444444,
+      "lon": -120.32694444,
+      "category": "Heritage",
+      "routeIds": [
+        "cz-sierra"
+      ],
+      "wikipedia": "Donner Pass",
+      "wikidata": "Q2113165",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Donner_Pass",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-887062",
+          "title": "Donner Pass",
+          "url": "https://en.wikipedia.org/wiki/Donner_Pass",
+          "text": "Donner Pass is a 7,056-foot-high (2,151 m) mountain pass in the northern Sierra Nevada, above Donner Lake and Donner Memorial State Park about 9 miles (14 km) west of Truckee, California. Like the Sierra Nevada itself, the pass has a steep approach from the east and a gradual approach from the west.\nThe pass has been used by the California Trail, First transcontinental railroad, Overland Route, Lincoln Highway and Victory Highway (both later U.S. Route 40 and still later Donner Pass Road), as well as indirectly by Interstate 80. The pass gets its name from the ill-fated Donner Party who overwintered there in 1846.\nToday, the area is home to a recreational community with several alpine lakes and ski resorts (Donner Ski Ranch, Boreal, and Sugar Bowl). The permanent communities in the area include Kingvale and Soda Springs, as well as the larger community below the pass surrounding Donner Lake.",
+          "retrievedAt": "2026-10-25T12:08:03.558Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 75.98025298168666,
+      "lateralM": 771.400325693817,
+      "signedLateralM": -771.400325693817
+    },
+    {
+      "id": "wd-Q7553186",
+      "name": "Soda Springs, Nevada County, California",
+      "lat": 39.32333333,
+      "lon": -120.38,
+      "category": "Town",
+      "routeIds": [
+        "cz-sierra"
+      ],
+      "wikipedia": "Soda Springs, Nevada County, California",
+      "wikidata": "Q7553186",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Soda_Springs%2C_Nevada_County%2C_California",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-22984992",
+          "title": "Soda Springs, Nevada County, California",
+          "url": "https://en.wikipedia.org/wiki/Soda_Springs%2C_Nevada_County%2C_California",
+          "text": "Soda Springs (formerly, Summit Valley, Soda Springs Station, Hopkins, Hopkins Springs, and Tinkers Station) is an unincorporated community and census-designated place (CDP) in Nevada County, California, United States. Soda Springs is located 3 miles (4.8 km) west of Donner Pass. The population was 94 at the 2020 census.\nThe Soda Springs Mountain Resort is located just off Highway 80 near Donner Summit.\nRoyal Gorge Cross Country Ski Resort, one of the largest in North America, is located about one mile southwest of Soda Springs.",
+          "retrievedAt": "2026-10-25T12:08:04.520Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 80.7585877991464,
+      "lateralM": 94.64107763851308,
+      "signedLateralM": -94.64107763851308,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q6413802",
+      "name": "Kingvale, California",
+      "lat": 39.32027778,
+      "lon": -120.43861111,
+      "category": "Town",
+      "routeIds": [
+        "cz-sierra"
+      ],
+      "wikipedia": "Kingvale, California",
+      "wikidata": "Q6413802",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Kingvale%2C_California",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-23087996",
+          "title": "Kingvale, California",
+          "url": "https://en.wikipedia.org/wiki/Kingvale%2C_California",
+          "text": "Kingvale is a census-designated place (CDP) in Placer County and Nevada County, California, United States.  The CDP straddles the border of the two counties, with Nevada County to the north and Placer County to the south. It is located near Soda Springs, 5.5 mi (8.9 km) west of Donner Pass. Kingvale was listed on an official map as of 1955. The population was 128 at the 2020 census.",
+          "retrievedAt": "2026-10-25T12:08:04.520Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 85.6235943291017,
+      "lateralM": 933.0278823233798,
+      "signedLateralM": -933.0278823233798,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q7284553",
+      "name": "Rainbow, Placer County, California",
+      "lat": 39.31027778,
+      "lon": -120.50861111,
+      "category": "Town",
+      "routeIds": [
+        "cz-sierra"
+      ],
+      "wikipedia": "Rainbow, Placer County, California",
+      "wikidata": "Q7284553",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Rainbow%2C_Placer_County%2C_California",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-32368717",
+          "title": "Rainbow, Placer County, California",
+          "url": "https://en.wikipedia.org/wiki/Rainbow%2C_Placer_County%2C_California",
+          "text": "Rainbow is an unincorporated community in Placer County, California. Rainbow is located 1.5 miles (2.4 km) east of Cisco Grove.  It lies at an elevation of 5781 feet (1762 m).\nRainbow is named for the Rainbow Lodge, a tavern built on US 40 at the site in 1927.  The lodge soon became a service stop on the highway and a recreational destination, with a small rope-pulled ski lift.",
+          "retrievedAt": "2026-10-25T12:08:04.520Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 92.86160704682895,
+      "lateralM": 545.3201059913736,
+      "signedLateralM": -545.3201059913736,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q4905087",
+      "name": "Big Bend, Placer County, California",
+      "lat": 39.30555556,
+      "lon": -120.51805556,
+      "category": "Town",
+      "routeIds": [
+        "cz-sierra"
+      ],
+      "wikipedia": "Big Bend, Placer County, California",
+      "wikidata": "Q4905087",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Big_Bend%2C_Placer_County%2C_California",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-32305636",
+          "title": "Big Bend, Placer County, California",
+          "url": "https://en.wikipedia.org/wiki/Big_Bend%2C_Placer_County%2C_California",
+          "text": "Big Bend or Rainbow is an unincorporated community in Placer County, California. Big Bend is located on the South Yuba River, 1 mile (1.6 km) east-southeast of Cisco Grove. It lies at an elevation of 5738 feet (1749 m).\nBig Bend was the site of a travelers' inn and grocery store on the Lincoln Highway.  The historic Rainbow Lodge is nearby.  Today Big Bend consists of a US Forest Service campground, a fire station, and a few vacation homes.\n\n",
+          "retrievedAt": "2026-10-25T12:08:05.487Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 94.2022589533564,
+      "lateralM": 832.1939669344852,
+      "signedLateralM": -832.1939669344852,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q5122127",
+      "name": "Cisco, California",
+      "lat": 39.30166667,
+      "lon": -120.54694444,
+      "category": "Town",
+      "routeIds": [
+        "cz-sierra"
+      ],
+      "wikipedia": "Cisco, California",
+      "wikidata": "Q5122127",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Cisco%2C_California",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-32308838",
+          "title": "Cisco, California",
+          "url": "https://en.wikipedia.org/wiki/Cisco%2C_California",
+          "text": "Cisco (formerly, Heaton Station) is an unincorporated community in Placer County, California. Cisco is located on the Union Pacific Railroad, 0.5 miles (0.8 km) south-southwest of Cisco Grove. It lies at an elevation of 5938 feet (1810 m).\nThe Cisco post office operated from 1866 to 1941. The name Cisco honors John J. Cisco, treasurer of the Central Pacific Railroad.\nThe folk singer and songwriter Cisco Houston, who later befriended and toured extensively with Woody Guthrie, derived his nickname from Cisco, California.\nCisco, California was the fictional location of the opening and end of the movie Vanishing Point (1971).  The actual filming location was in Cisco, Utah.\nVery little is left of Cisco today, and it has no actual population. Most Cisco residents have moved to the nearby locales of Cisco Grove and Kingvale.",
+          "retrievedAt": "2026-10-25T12:08:05.487Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 97.31589810515915,
+      "lateralM": 40.70403812934503,
+      "signedLateralM": 40.70403812934503,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q5191232",
+      "name": "Crystal Lake (California)",
+      "lat": 39.32277778,
+      "lon": -120.57027778,
+      "category": "Nature",
+      "routeIds": [
+        "cz-sierra"
+      ],
+      "wikipedia": "Crystal Lake (California)",
+      "wikidata": "Q5191232",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Crystal_Lake_(California)",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-32196074",
+          "title": "Crystal Lake (California)",
+          "url": "https://en.wikipedia.org/wiki/Crystal_Lake_(California)",
+          "text": "Crystal Lake is a mountain lake in Nevada County, California. It lies at an elevation of 5738 feet (1749 m). The lake resides on private property and is not open to the public. Crystal Lake is located adjacent to the Union Pacific Railroad, 2.5 miles (4.0 km) east of Yuba Gap.",
+          "retrievedAt": "2026-10-25T12:08:05.487Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 100.6625735179499,
+      "lateralM": 12.531737421057409,
+      "signedLateralM": -12.531737421057409,
+      "areaKind": "lake"
+    },
+    {
+      "id": "wd-Q6477809",
+      "name": "Lake Spaulding Dam",
+      "lat": 39.32714,
+      "lon": -120.64287,
+      "category": "Infrastructure",
+      "routeIds": [
+        "cz-sierra"
+      ],
+      "wikipedia": "Lake Spaulding Dam",
+      "wikidata": "Q6477809",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Lake_Spaulding_Dam",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-36564795",
+          "title": "Lake Spaulding Dam",
+          "url": "https://en.wikipedia.org/wiki/Lake_Spaulding_Dam",
+          "text": "Lake Spaulding Dam (National ID # CA00358) is a dam in Nevada County, California.\nOwned and operated by Pacific Gas & Electric for hydroelectric power generation, the 275-foot (84 m)-high dam was designed by John R. Freeman and completed in 1913 (1913).\nIt impounds the South Fork of the Yuba River, which originates near Donner Pass.  At the time of construction it was the highest dam in California, and one of ten PG&E hydroelectric facilities.  A temporary camp called Camp Spaulding, California was established to house workers on the dam during its construction.\nLake Spaulding, the reservoir created by the dam, has a capacity of 74,773 acre-feet (92,231,000 m3) and supports recreational camping, boating, fishing, and underwater diving.",
+          "retrievedAt": "2026-10-25T12:08:06.052Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 107.05641873714058,
+      "lateralM": 1604.6191990333941,
+      "signedLateralM": -1604.6191990333941
+    },
+    {
+      "id": "wd-Q5371099",
+      "name": "Emigrant Gap, California",
+      "lat": 39.29694444,
+      "lon": -120.67277778,
+      "category": "Town",
+      "routeIds": [
+        "cz-sierra"
+      ],
+      "wikipedia": "Emigrant Gap, California",
+      "wikidata": "Q5371099",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Emigrant_Gap%2C_California",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-4430706",
+          "title": "Emigrant Gap, California",
+          "url": "https://en.wikipedia.org/wiki/Emigrant_Gap%2C_California",
+          "text": "Emigrant Gap (formerly, Wilsons Ranch) is an unincorporated community in Placer County, California. The Emigrant Gap community is located 0.25 miles (0.4 km) southwest of the Emigrant Gap landmark. It lies at an elevation of 5190 feet (1582 m).\nThe Wilsons Ranch post office opened in 1865, changed its name to Emigrant Gap in 1868. The name Wilsons Ranch honored a stage stop operator.",
+          "retrievedAt": "2026-10-25T12:08:06.052Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 110.76681851229583,
+      "lateralM": 32.966611680365006,
+      "signedLateralM": 32.966611680365006,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q4928940",
+      "name": "Blue Canyon, California",
+      "lat": 39.25722222,
+      "lon": -120.71111111,
+      "category": "Town",
+      "routeIds": [
+        "cz-sierra"
+      ],
+      "wikipedia": "Blue Canyon, California",
+      "wikidata": "Q4928940",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Blue_Canyon%2C_California",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-32308527",
+          "title": "Blue Canyon, California",
+          "url": "https://en.wikipedia.org/wiki/Blue_Canyon%2C_California",
+          "text": "Blue Canyon (also, Blue Cañon) is an unincorporated community in Placer County, California. Blue Canyon is located 4 miles (6.4 km) southwest of Emigrant Gap. It lies at an elevation of 4695 feet (1431 m).\nBlue Canyon was possibly named for the blue smoke of the camps when extensive lumbering occurred there in the 1850s. It might otherwise have been named after a miner from that same period named \"Old Jim Blue\".\nThe Blue Canyon post office operated from 1867 to 1927. The Blue Cañon post office operated from 1936 to 1942 and from 1948 to 1964.",
+          "retrievedAt": "2026-10-25T12:08:06.052Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 119.05127490811074,
+      "lateralM": 11.89755700873901,
+      "signedLateralM": -11.89755700873901,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q4873819",
+      "name": "Baxter, California",
+      "lat": 39.21305556,
+      "lon": -120.78111111,
+      "category": "Town",
+      "routeIds": [
+        "cz-sierra"
+      ],
+      "wikipedia": "Baxter, California",
+      "wikidata": "Q4873819",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Baxter%2C_California",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-32305548",
+          "title": "Baxter, California",
+          "url": "https://en.wikipedia.org/wiki/Baxter%2C_California",
+          "text": "Baxter is an unincorporated community in Placer County, California. Baxter is located 3 miles (4.8 km) east of Dutch Flat. It lies at an elevation of 3891 feet (1186 m).\nBaxter started as a travelers' rest stop on the Lincoln Highway, later US 40.  Food, lodging, and gasoline were available at the site, which remained a service stop into the 1980s.  Baxter was also the point at which US 40 was closed over Donner Pass during heavy snow.  The townsite was destroyed by a wildfire in 1998.\nThe Baxter post office opened in 1935.",
+          "retrievedAt": "2026-10-25T12:08:07.240Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 127.05527996437316,
+      "lateralM": 1518.9049620641592,
+      "signedLateralM": -1518.9049620641592,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q5047846",
+      "name": "Casa Loma, Placer County, California",
+      "lat": 39.20055556,
+      "lon": -120.77666667,
+      "category": "Town",
+      "routeIds": [
+        "cz-sierra"
+      ],
+      "wikipedia": "Casa Loma, Placer County, California",
+      "wikidata": "Q5047846",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Casa_Loma%2C_Placer_County%2C_California",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-32308765",
+          "title": "Casa Loma, Placer County, California",
+          "url": "https://en.wikipedia.org/wiki/Casa_Loma%2C_Placer_County%2C_California",
+          "text": "Casa Loma (Spanish for \"Hill House\") is an unincorporated community in Placer County, California. Casa Loma is located 3.25 miles (5.2 km) east of Dutch Flat. It lies at an elevation of 4032 feet (1229 m).\nCasa Loma began around 1910-11 as a summer resort operated by the Unitarian Society.  It was located on the Southern Pacific Railroad.  A few residences remain at the site today.",
+          "retrievedAt": "2026-10-25T12:08:07.240Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 129.6371161086598,
+      "lateralM": 297.84661509078916,
+      "signedLateralM": -297.84661509078916,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q7829859",
+      "name": "Towle, California",
+      "lat": 39.20416667,
+      "lon": -120.79916667,
+      "category": "Town",
+      "routeIds": [
+        "cz-sierra"
+      ],
+      "wikipedia": "Towle, California",
+      "wikidata": "Q7829859",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Towle%2C_California",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-32369879",
+          "title": "Towle, California",
+          "url": "https://en.wikipedia.org/wiki/Towle%2C_California",
+          "text": "Towle (formerly, Towles) was an unincorporated community in Placer County, California. Towle was located on the Southern Pacific Railroad, 2 miles (3.2 km) east of Dutch Flat. It lies at an elevation of 3694 feet (1126 m).",
+          "retrievedAt": "2026-10-25T12:08:07.240Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 132.68084726055568,
+      "lateralM": 19.220613039438543,
+      "signedLateralM": -19.220613039438543,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q4735944",
+      "name": "Alta, California",
+      "lat": 39.20666667,
+      "lon": -120.81138889,
+      "category": "Town",
+      "routeIds": [
+        "cz-sierra"
+      ],
+      "wikipedia": "Alta, California",
+      "wikidata": "Q4735944",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Alta%2C_California",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-14529315",
+          "title": "Alta, California",
+          "url": "https://en.wikipedia.org/wiki/Alta%2C_California",
+          "text": "Alta (Spanish for \"Upper\") is a small unincorporated community and census-designated place (CDP) in Placer County, California, United States, about 30 miles (48 km) northeast of Auburn. The village is located off Interstate 80 and along the historical First transcontinental railroad. The ZIP code is 95701 and the area code 530. One of the few buildings other than private residences is the Alta-Dutch Flat Grammar School serving kindergarten through eighth grade students. The high school that serves Alta is named Colfax High School. Colfax High School is 11 miles southwest in the incorporated town of Colfax. The population of Alta was 615 at the 2020 census.\nA historical California place once named Alta was located in San Diego County near the present-day La Mesa–El Cajon boundary.  This historical place was along the San Diego and Arizona Eastern Railway, now the San Diego Trolley Orange Line, at its Murray Drive undercrossing in La Mesa. The community was named after the Spanish word meaning \"upper\" or \"high\".",
+          "retrievedAt": "2026-10-25T12:08:07.240Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 133.88352763775396,
+      "lateralM": 9.653714018436489,
+      "signedLateralM": -9.653714018436489,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q5578837",
+      "name": "Gold Run, California",
+      "lat": 39.18083333,
+      "lon": -120.85583333,
+      "category": "Town",
+      "routeIds": [
+        "cz-sierra"
+      ],
+      "wikipedia": "Gold Run, California",
+      "wikidata": "Q5578837",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Gold_Run%2C_California",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-23843008",
+          "title": "Gold Run, California",
+          "url": "https://en.wikipedia.org/wiki/Gold_Run%2C_California",
+          "text": "Gold Run was a former mining town of the California Gold Rush, located in Placer County, California.\nThe former settlement is a listed California Historical Landmark (#405).",
+          "retrievedAt": "2026-10-25T12:08:08.259Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 139.87184307166095,
+      "lateralM": 26.378798488949737,
+      "signedLateralM": 26.378798488949737,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q16974115",
+      "name": "Bear River Bridge",
+      "lat": 39.1355,
+      "lon": -120.9526,
+      "category": "Infrastructure",
+      "routeIds": [
+        "cz-sierra"
+      ],
+      "wikipedia": "Bear River Bridge",
+      "wikidata": "Q16974115",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Bear_River_Bridge",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-40193683",
+          "title": "Bear River Bridge",
+          "url": "https://en.wikipedia.org/wiki/Bear_River_Bridge",
+          "text": "The Bear River Bridge was located in Nevada County, California, from 1908 to 1963, replacing an earlier wooden structure. When built over the Bear River, it was the highest railway bridge in the state.\nThe bridge was built by the Nevada County Narrow Gauge Railroad, under the management of Sarah Kidder. From the surface of the water, at an average stage, up to the track was 200 feet (61 m). The total length was about 900 feet (270 m), and at the time of construction there were no approaches, the opposite banks being abrupt. The pier foundations were built of reinforced concrete, requiring more than 500 cubic yards. The piers and superstructure were of structural steel, of which about 500 tons were used. All the steel material was furnished by the American Bridge Company of San Francisco, and the constructing contractors were Shattuck & Edinger Construction Company, also of San Francisco. The total cost of the bridge was approximately US$70,000.\nThe engineering involved much difficulty—principally due to the unusual height of the structure. At the beginning of the work the contractors stretched a 2.25 inch diameter steel cable from bank to bank more than 200 feet (61 m) above the Bear...",
+          "retrievedAt": "2026-10-25T12:08:09.741Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 153.89641320375554,
+      "lateralM": 1554.6074353637227,
+      "signedLateralM": -1554.6074353637227
+    },
+    {
+      "id": "wd-Q7361269",
+      "name": "Rollins Dam",
+      "lat": 39.13576,
+      "lon": -120.95233,
+      "category": "Infrastructure",
+      "routeIds": [
+        "cz-sierra"
+      ],
+      "wikipedia": "Rollins Dam",
+      "wikidata": "Q7361269",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Rollins_Dam",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-36992441",
+          "title": "Rollins Dam",
+          "url": "https://en.wikipedia.org/wiki/Rollins_Dam",
+          "text": "Rollins Dam (National ID # CA00255) is a dam on the border of Nevada and Placer counties in northern California, in the United States.\nThe earthen dam was constructed in 1965 by the Nevada Irrigation District, with a height of 228 feet (69 m), and a length of 1,840 feet (560 m) at its crest. It impounds the Bear River, a tributary of the Feather River, for hydropower, flood control, irrigation water storage, and municipal water use. The dam is one of the ten facilities owned and operated by the Nevada Irrigation District. The dam is part of the Yuba-Bear Hydroelectric Project.\nThe reservoir it creates, Rollins Reservoir, has a normal water surface of 1.3 square miles (3.4 km2), and a maximum capacity of 66,000 acre-feet. Recreation includes trout fishing in the spring, and bass fishing in the summer.\nThe California Office Of Environmental Health Hazard Assessment has issued a safe eating advisory for any fish caught in Rollins Reservoir due to elevated levels of mercury.",
+          "retrievedAt": "2026-10-25T12:08:09.741Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 153.89641320375554,
+      "lateralM": 1569.3284628986162,
+      "signedLateralM": -1569.3284628986162
+    },
+    {
+      "id": "wd-Q7460892",
+      "name": "Shady Glen, California",
+      "lat": 39.11805556,
+      "lon": -120.94972222,
+      "category": "Town",
+      "routeIds": [
+        "cz-sierra"
+      ],
+      "wikipedia": "Shady Glen, California",
+      "wikidata": "Q7460892",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Shady_Glen%2C_California",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-32369119",
+          "title": "Shady Glen, California",
+          "url": "https://en.wikipedia.org/wiki/Shady_Glen%2C_California",
+          "text": "Shady Glen is an unincorporated community in Placer County, California. Shady Glen is located 1.25 miles (2.0 km) north of Colfax. It lies at an elevation of 2451 feet (747 m).",
+          "retrievedAt": "2026-10-25T12:08:09.741Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 154.5856749137514,
+      "lateralM": 306.8955004038681,
+      "signedLateralM": -306.8955004038681,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q5144737",
+      "name": "Colfax station",
+      "lat": 39.0994,
+      "lon": -120.9531,
+      "category": "Railroad heritage",
+      "routeIds": [
+        "cz-sierra"
+      ],
+      "wikipedia": "Colfax station",
+      "wikidata": "Q5144737",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Colfax_station",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-10143887",
+          "title": "Colfax station",
+          "url": "https://en.wikipedia.org/wiki/Colfax_station",
+          "text": "Colfax station is an Amtrak train station in Colfax, California. Served by the California Zephyr, it is unstaffed. The station was built in 1905 by the Southern Pacific Railroad and was restored in the early 21st century; in addition to a waiting room, the building also houses the Colfax Heritage Museum. The platform is movable to accommodate Union Pacific rotary snowplows, which are liable to scrape a platform eight inches above top of rail.\n\n",
+          "retrievedAt": "2026-10-25T12:08:10.766Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 156.70682155667438,
+      "lateralM": 19.674801443353285,
+      "signedLateralM": 19.674801443353285
+    },
+    {
+      "id": "wd-Q7980208",
+      "name": "Weimar, California",
+      "lat": 39.0375,
+      "lon": -120.9725,
+      "category": "Town",
+      "routeIds": [
+        "cz-sierra"
+      ],
+      "wikipedia": "Weimar, California",
+      "wikidata": "Q7980208",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Weimar%2C_California",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-4991161",
+          "title": "Weimar, California",
+          "url": "https://en.wikipedia.org/wiki/Weimar%2C_California",
+          "text": "Weimar (formerly, \"New England Mills\" or \"Weimer\") is an unincorporated community in Placer County, California, located in the Sacramento area.  Weimar is located 4.5 miles (7.2 km) south-southwest of Colfax. As of 2020, its population is 339.",
+          "retrievedAt": "2026-10-25T12:08:10.766Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 163.92786338622133,
+      "lateralM": 355.13952035959056,
+      "signedLateralM": -355.13952035959056,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q6475409",
+      "name": "Lake Clementine",
+      "lat": 38.94408333,
+      "lon": -121.00236111,
+      "category": "Nature",
+      "routeIds": [
+        "cz-sierra"
+      ],
+      "wikipedia": "Lake Clementine",
+      "wikidata": "Q6475409",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Lake_Clementine",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-11639952-excerpt",
+          "title": "Lake Clementine",
+          "url": "https://en.wikipedia.org/wiki/Lake_Clementine",
+          "text": "Lake Clementine (also known as North Fork Lake) is a reservoir on the North Fork American River Canyon above the picturesque, California Gold Rush-era town of Auburn (elevation 1,200 feet (370 m)) in Northern California.",
+          "retrievedAt": "2026-10-25T12:08:11.800Z",
+          "license": "CC BY-SA 4.0"
+        },
+        {
+          "id": "wikipedia-11639952",
+          "title": "Lake Clementine",
+          "url": "https://en.wikipedia.org/wiki/Lake_Clementine",
+          "text": "Lake Clementine (also known as North Fork Lake) is a reservoir on the North Fork American River Canyon above the picturesque, California Gold Rush-era town of Auburn (elevation 1,200 feet (370 m)) in Northern California. It was created in 1939 when the North Fork Dam, a 155-foot (47 m) tall constant angle arch dam, was completed by the United States Army Corps of Engineers, for the purpose of containing gold-mining debris which were washing downriver. This resulting reservoir is a long and narrow lake approximately 3.5 miles long and 300 feet wide in some areas. The lake and surrounding area is owned by the United States Bureau of Reclamation and managed by California Department of Parks and Recreation.",
+          "retrievedAt": "2026-10-25T12:08:11.800Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 174.33234867575743,
+      "lateralM": 2437.5807470486584,
+      "signedLateralM": 2437.5807470486584,
+      "areaKind": "lake"
+    },
+    {
+      "id": "wd-Q4951282",
+      "name": "Bowman, California",
+      "lat": 38.94194444,
+      "lon": -121.0475,
+      "category": "Town",
+      "routeIds": [
+        "cz-sierra"
+      ],
+      "wikipedia": "Bowman, California",
+      "wikidata": "Q4951282",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Bowman%2C_California",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-32308613",
+          "title": "Bowman, California",
+          "url": "https://en.wikipedia.org/wiki/Bowman%2C_California",
+          "text": "Bowman is an unincorporated community in Placer County, California. Bowman is located on the Southern Pacific Railroad, 3.25 miles (5.2 km) north-northeast of Auburn. It lies at an elevation of 1617 feet (493 m).\nThe Bowman post office opened in 1893. The name honors Harry Hoisington Bowman, fruit grower.",
+          "retrievedAt": "2026-10-25T12:08:12.917Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 177.29602027377754,
+      "lateralM": 7.845321729124781,
+      "signedLateralM": 7.845321729124781,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q25238189",
+      "name": "Middle Fork American River",
+      "lat": 38.91527778,
+      "lon": -121.03722222,
+      "category": "River",
+      "routeIds": [
+        "cz-sierra"
+      ],
+      "wikipedia": "Middle Fork American River",
+      "wikidata": "Q25238189",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Middle_Fork_American_River",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-31846454",
+          "title": "Middle Fork American River",
+          "url": "https://en.wikipedia.org/wiki/Middle_Fork_American_River",
+          "text": "The Middle Fork American River is one of three forks that form the American River in Northern California. It drains a large watershed in the high Sierra Nevada west of Lake Tahoe and northeast of Sacramento in Placer and El Dorado Counties, between the watersheds of the North Fork American River and South Fork American River. The Middle Fork joins with the North Fork near Auburn and they continue downstream to Folsom Lake as the North Fork, even though the Middle Fork carries a larger volume of water.\nThe Middle Fork was one of the richest gold mining areas during the California Gold Rush of the 1850s, and is still recreationally mined today. The river is dammed extensively to produce hydroelectricity and provide domestic water supply. Although long stretches of the Middle Fork have been dewatered by diversions, the portion of the river and canyon in the Auburn State Recreation Area is one of the state's most popular whitewater runs. Professional whitewater rafting companies offer guided trips on the Middle Fork American river from May to October. The Middle Fork canyon also has an extensive system of hiking and riding trails including the Western States Trail, which stretches 100 miles...",
+          "retrievedAt": "2026-10-25T12:08:12.917Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 177.53545631494535,
+      "lateralM": 3094.2282692047993,
+      "signedLateralM": 3094.2282692047993,
+      "areaKind": "river"
+    },
+    {
+      "id": "wd-Q49534895",
+      "name": "Old Auburn Historic District",
+      "lat": 38.894167,
+      "lon": -121.076111,
+      "category": "Heritage",
+      "routeIds": [
+        "cz-sierra"
+      ],
+      "wikipedia": "Old Auburn Historic District",
+      "wikidata": "Q49534895",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Old_Auburn_Historic_District",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-77578938",
+          "title": "Old Auburn Historic District",
+          "url": "https://en.wikipedia.org/wiki/Old_Auburn_Historic_District",
+          "text": "The Old Auburn Historic District is a historic district in Auburn, California, United States. It is listed as one of the National Register of Historic Places since December 29, 1970. It is also known as North Fork Dry Diggings, and Woods Dry Diggings.\n\n",
+          "retrievedAt": "2026-10-25T12:08:13.838Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 185.62005333253046,
+      "lateralM": 448.5679660671253,
+      "signedLateralM": 448.5679660671253
+    },
+    {
+      "id": "wd-Q128791043",
+      "name": "Auburn Joss House",
+      "lat": 38.894787,
+      "lon": -121.078208,
+      "category": "Heritage",
+      "routeIds": [
+        "cz-sierra"
+      ],
+      "wikipedia": "Auburn Joss House",
+      "wikidata": "Q128791043",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Auburn_Joss_House",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-77567529",
+          "title": "Auburn Joss House",
+          "url": "https://en.wikipedia.org/wiki/Auburn_Joss_House",
+          "text": "The Auburn Joss House is a historic Chinese community building in Auburn, California, United States. It now serves as a cultural history museum, which is open to the public with limited hours. The Auburn Joss House is part of the Old Auburn Historic District, a National Register of Historic Place listed historic district; and has a historical marker erected in 2005 by the Native Sons of the Golden West. It is also known as Joss House and Joss House Museum.",
+          "retrievedAt": "2026-10-25T12:08:13.838Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 185.63037191050734,
+      "lateralM": 254.70443108159483,
+      "signedLateralM": 254.70443108159483
+    },
+    {
+      "id": "wd-Q3131990",
+      "name": "Newcastle, California",
+      "lat": 38.87222222,
+      "lon": -121.13055556,
+      "category": "Town",
+      "routeIds": [
+        "cz-sierra"
+      ],
+      "wikipedia": "Newcastle, California",
+      "wikidata": "Q3131990",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Newcastle%2C_California",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-2772268",
+          "title": "Newcastle, California",
+          "url": "https://en.wikipedia.org/wiki/Newcastle%2C_California",
+          "text": "Newcastle is an unincorporated community and census-designated place (CDP) in Placer County, California.  Nestled in the Sierra Nevada foothills, Newcastle is located 8 miles (12.9 km) northeast of Rocklin and 31 miles northeast of Sacramento. Newcastle generally has moderate winters and warm summers.\nAs of the 2020 U.S. Census, Newcastle had a population of 1,321.",
+          "retrievedAt": "2026-10-25T12:08:13.838Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 190.91588343378334,
+      "lateralM": 395.32254309389197,
+      "signedLateralM": 395.32254309389197,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q3476131",
+      "name": "Penryn, California",
+      "lat": 38.84833333,
+      "lon": -121.16972222,
+      "category": "Town",
+      "routeIds": [
+        "cz-sierra"
+      ],
+      "wikipedia": "Penryn, California",
+      "wikidata": "Q3476131",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Penryn%2C_California",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-1475442",
+          "title": "Penryn, California",
+          "url": "https://en.wikipedia.org/wiki/Penryn%2C_California",
+          "text": "Penryn is a census-designated place in Placer County, California, in the United States. Geographic location is 38°51′08″N 121°10′06″W. Penryn is located 5.5 miles (8.9 km) northeast of Rocklin. The population was 1150 at the 2020 census.",
+          "retrievedAt": "2026-10-25T12:08:13.838Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 194.87376291429734,
+      "lateralM": 2379.180355735583,
+      "signedLateralM": 2379.180355735583,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q5578752",
+      "name": "Gold Hill, Placer County, California",
+      "lat": 38.90166667,
+      "lon": -121.18166667,
+      "category": "Town",
+      "routeIds": [
+        "cz-sierra"
+      ],
+      "wikipedia": "Gold Hill, Placer County, California",
+      "wikidata": "Q5578752",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Gold_Hill%2C_Placer_County%2C_California",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-32309434",
+          "title": "Gold Hill, Placer County, California",
+          "url": "https://en.wikipedia.org/wiki/Gold_Hill%2C_Placer_County%2C_California",
+          "text": "Gold Hill (formerly, Orr City) is an unincorporated community in Placer County, California. Gold Hill is located 6 miles (9.7 km) west of Auburn. It lies at an elevation of 354 feet (108 m).\nGold Hill is located within the Sierra Nevada foothills, in a geologic region known as the West Belt, so named because it is west of the Mother Lode Belt.  This West Belt contained scattered deposits of gold in quartz veins within the granitic bedrock. In 1851, after gold was discovered in Ophir and Auburn, Georgian prospectors followed the Auburn Ravine, looking for similar placer gold. They found gold in the ravine near an elevated area they named Gold Hill. In addition to the gravel deposits, the hill itself was developed by two companies, known as the Georgia and the Ohio, using ground sluicing from water in the ravine. The town's civil government was organized in the spring of 1852, with the election of a Justice of the Peace, and a Constable. The population of the mining community peaked in 1856.",
+          "retrievedAt": "2026-10-25T12:08:13.838Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 195.71197811162102,
+      "lateralM": 3316.87298024833,
+      "signedLateralM": -3316.87298024833,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q2835325",
+      "name": "Loomis, California",
+      "lat": 38.81638889,
+      "lon": -121.19277778,
+      "category": "Town",
+      "routeIds": [
+        "cz-sierra"
+      ],
+      "wikipedia": "Loomis, California",
+      "wikidata": "Q2835325",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Loomis%2C_California",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-107849",
+          "title": "Loomis, California",
+          "url": "https://en.wikipedia.org/wiki/Loomis%2C_California",
+          "text": "Loomis (formerly Pine, Pino, Smithville, and Placer) is an incorporated town in Placer County, California, United States. It is part of the Sacramento metropolitan area. The town's population was reported as 6,836 in the 2020 census. It shares borders with the city of Rocklin and the Census-Designated Places Penryn and Granite Bay.\n\n",
+          "retrievedAt": "2026-10-25T12:08:14.838Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 202.62073773242153,
+      "lateralM": 2637.5469914098094,
+      "signedLateralM": 2637.5469914098094,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q984599",
+      "name": "Rocklin, California",
+      "lat": 38.8,
+      "lon": -121.24666667,
+      "category": "Town",
+      "routeIds": [
+        "cz-sierra"
+      ],
+      "wikipedia": "Rocklin, California",
+      "wikidata": "Q984599",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Rocklin%2C_California",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-107852",
+          "title": "Rocklin, California",
+          "url": "https://en.wikipedia.org/wiki/Rocklin%2C_California",
+          "text": "Rocklin is a city in Placer County, California, United States, about 22 miles (35 km) northeast of Sacramento and about 6.1 miles (9.8 km) northeast of Roseville in the Sacramento metropolitan area. Besides Roseville, it borders Granite Bay, Loomis, and Lincoln. As of the 2020 census, Rocklin's population was 71,601.",
+          "retrievedAt": "2026-10-25T12:08:14.838Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 206.1996954601279,
+      "lateralM": 1159.2064902894742,
+      "signedLateralM": -1159.2064902894742,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q6735543",
+      "name": "Maidu Museum & Historic Site",
+      "lat": 38.7386,
+      "lon": -121.2458,
+      "category": "Heritage",
+      "routeIds": [
+        "cz-sierra"
+      ],
+      "wikipedia": "Maidu Museum & Historic Site",
+      "wikidata": "Q6735543",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Maidu_Museum_%26_Historic_Site",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-36608588",
+          "title": "Maidu Museum & Historic Site",
+          "url": "https://en.wikipedia.org/wiki/Maidu_Museum_%26_Historic_Site",
+          "text": "The Maidu Museum & Historic Site is an interpretive center museum dedicated to public education about the Maidu peoples of what is now California. It is operated by the city of Roseville, California and located there.",
+          "retrievedAt": "2026-10-25T12:08:15.752Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 210.82800662716116,
+      "lateralM": 2712.4303537956093,
+      "signedLateralM": 2712.4303537956093
+    },
+    {
+      "id": "wd-Q16948827",
+      "name": "Maidu Regional Park",
+      "lat": 38.7351,
+      "lon": -121.2481,
+      "category": "Nature",
+      "routeIds": [
+        "cz-sierra"
+      ],
+      "wikipedia": "Maidu Regional Park",
+      "wikidata": "Q16948827",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Maidu_Regional_Park",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-40538154",
+          "title": "Maidu Regional Park",
+          "url": "https://en.wikipedia.org/wiki/Maidu_Regional_Park",
+          "text": "The Maidu Regional Park is located in Roseville, California. This 152-acre park has a small museum and historic site. The grounds also consist of the Maidu Community Center, the Maidu Branch Library, and Veterans Memorial Rose Garden. Other features include a four-diamond softball complex, a five-field soccer complex, a skate park, a full basketball court, picnic areas and play equipment, and a bicycle and pedestrian path through the wooded area of the park where multiple artifacts from the Maidu Native American tribe have been found.\n\n",
+          "retrievedAt": "2026-10-25T12:08:15.752Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 210.9168351766557,
+      "lateralM": 2948.5386876255366,
+      "signedLateralM": 2948.5386876255366,
+      "areaKind": "park"
+    }
+  ]
+}

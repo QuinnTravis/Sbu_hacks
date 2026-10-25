@@ -1,0 +1,2363 @@
+{
+  "importedAt": "2026-10-25T12:09:40.453Z",
+  "source": "English Wikipedia via MediaWiki geosearch (coordinates, Wikidata IDs, exact article excerpts)",
+  "license": "Wikipedia excerpts: CC BY-SA 4.0; Wikidata identifiers: CC0.",
+  "corridorM": 5000,
+  "samplingKm": 12,
+  "searchRadiusM": 10000,
+  "coverage": {
+    "routeLengthKm": 610.760428113099,
+    "firstPoiKm": 0,
+    "lastPoiKm": 610.760428113099,
+    "narratableCount": 75,
+    "sampleCount": 52,
+    "failedSamples": [],
+    "gapsOver30Km": [
+      {
+        "startKm": 349.3901685893249,
+        "endKm": 401.6842317373847,
+        "lengthKm": 52.29406314805982
+      },
+      {
+        "startKm": 264.0205091013691,
+        "endKm": 307.23803046119167,
+        "lengthKm": 43.21752135982257
+      },
+      {
+        "startKm": 221.73304837465685,
+        "endKm": 264.0205091013691,
+        "lengthKm": 42.287460726712254
+      },
+      {
+        "startKm": 308.6195104080231,
+        "endKm": 349.3901685893249,
+        "lengthKm": 40.770658181301826
+      }
+    ],
+    "largestGapKm": 52.29406314805982
+  },
+  "places": [
+    {
+      "id": "wd-Q137393015",
+      "name": "Valley View Hospital",
+      "lat": 39.53261667,
+      "lon": -107.32188333,
+      "category": "Nature",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "Valley View Hospital",
+      "wikidata": "Q137393015",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Valley_View_Hospital",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-81381011",
+          "title": "Valley View Hospital",
+          "url": "https://en.wikipedia.org/wiki/Valley_View_Hospital",
+          "text": "Valley View Hospital is an  acute hospital in Glenwood Springs, Colorado, in Garfield County. The hospital is a level III trauma center. It has 78 beds.",
+          "retrievedAt": "2026-10-25T12:06:40.349Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 0,
+      "lateralM": 1734.6485097010927,
+      "signedLateralM": 1734.6485097010927,
+      "areaKind": "valley"
+    },
+    {
+      "id": "wd-Q7620137",
+      "name": "Storm King Mountain (Garfield County, Colorado)",
+      "lat": 39.5894259,
+      "lon": -107.4008876,
+      "category": "Mountain",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "Storm King Mountain (Garfield County, Colorado)",
+      "wikidata": "Q7620137",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Storm_King_Mountain_(Garfield_County%2C_Colorado)",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-16269345",
+          "title": "Storm King Mountain (Garfield County, Colorado)",
+          "url": "https://en.wikipedia.org/wiki/Storm_King_Mountain_(Garfield_County%2C_Colorado)",
+          "text": "Storm King Mountain is a mountain in the White River National Forest of the Rocky Mountains, 5 miles (8.0 km) northwest of Glenwood Springs, Colorado, in northeastern Garfield County. It is on the north side of the Colorado River and Interstate 70 (I-70), between Glenwood Springs and New Castle. A Ski lift at Copper Mountain is named after the mountain.",
+          "retrievedAt": "2026-10-25T12:06:41.198Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 8.245128009980702,
+      "lateralM": 3044.384171301883,
+      "signedLateralM": -3044.384171301883
+    },
+    {
+      "id": "wd-Q5066130",
+      "name": "Chacra, Colorado",
+      "lat": 39.57694444,
+      "lon": -107.45083333,
+      "category": "Town",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "Chacra, Colorado",
+      "wikidata": "Q5066130",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Chacra%2C_Colorado",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-31016943",
+          "title": "Chacra, Colorado",
+          "url": "https://en.wikipedia.org/wiki/Chacra%2C_Colorado",
+          "text": "Chacra is an unincorporated community and a census-designated place (CDP) located in Garfield County, Colorado, United States. The unincorporated community is a part of the Rifle, CO Micropolitan Statistical Area and the Edwards-Rifle, CO Combined Statistical Area. The population of the Chacra CDP was 331 at the United States Census 2020.",
+          "retrievedAt": "2026-10-25T12:06:41.198Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 11.970318963911387,
+      "lateralM": 404.2643436406425,
+      "signedLateralM": -404.2643436406425,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q2076272",
+      "name": "New Castle, Colorado",
+      "lat": 39.5775,
+      "lon": -107.52666667,
+      "category": "Town",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "New Castle, Colorado",
+      "wikidata": "Q2076272",
+      "sourceUrl": "https://en.wikipedia.org/wiki/New_Castle%2C_Colorado",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-108504",
+          "title": "New Castle, Colorado",
+          "url": "https://en.wikipedia.org/wiki/New_Castle%2C_Colorado",
+          "text": "The Town of New Castle is a home rule municipality in Garfield County, Colorado, United States. The population was 4,923 at the 2020 census.\n\n",
+          "retrievedAt": "2026-10-25T12:06:41.198Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 19.067068433520234,
+      "lateralM": 775.014484490119,
+      "signedLateralM": -775.014484490119,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q49902703",
+      "name": "Elk Creek (Colorado River tributary)",
+      "lat": 39.56889167,
+      "lon": -107.539,
+      "category": "River",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "Elk Creek (Colorado River tributary)",
+      "wikidata": "Q49902703",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Elk_Creek_(Colorado_River_tributary)",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-84298821",
+          "title": "Elk Creek (Colorado River tributary)",
+          "url": "https://en.wikipedia.org/wiki/Elk_Creek_(Colorado_River_tributary)",
+          "text": "Elk Creek is a tributary of the Colorado River in Garfield County, Colorado, U.S.",
+          "retrievedAt": "2026-10-25T12:06:41.198Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 20.176602653069054,
+      "lateralM": 162.96928067986406,
+      "signedLateralM": 162.96928067986406,
+      "areaKind": "river"
+    },
+    {
+      "id": "wd-Q2074578",
+      "name": "Silt, Colorado",
+      "lat": 39.54638889,
+      "lon": -107.65194444,
+      "category": "Town",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "Silt, Colorado",
+      "wikidata": "Q2074578",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Silt%2C_Colorado",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-108507",
+          "title": "Silt, Colorado",
+          "url": "https://en.wikipedia.org/wiki/Silt%2C_Colorado",
+          "text": "Silt is a statutory town in Garfield County, Colorado, United States. The population was 3,536 at the 2020 census, up from 2,930 at the 2010 census. The town is part of the Glenwood Springs Micropolitan Area.\n\n",
+          "retrievedAt": "2026-10-25T12:06:41.693Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 30.4698081294477,
+      "lateralM": 81.10471025232893,
+      "signedLateralM": -81.10471025232893,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q24882653",
+      "name": "Antlers, Colorado",
+      "lat": 39.54333333,
+      "lon": -107.72777778,
+      "category": "Town",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "Antlers, Colorado",
+      "wikidata": "Q24882653",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Antlers%2C_Colorado",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-50904172",
+          "title": "Antlers, Colorado",
+          "url": "https://en.wikipedia.org/wiki/Antlers%2C_Colorado",
+          "text": "Antlers is an unincorporated community in Garfield County, Colorado, United States. Antlers is accessible from U.S. Route 6 and is located within Cactus Valley.",
+          "retrievedAt": "2026-10-25T12:06:43.110Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 37.030051365747106,
+      "lateralM": 13.646507856683362,
+      "signedLateralM": -13.646507856683362,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q65056586",
+      "name": "Rifle Bridge",
+      "lat": 39.527841,
+      "lon": -107.781572,
+      "category": "Infrastructure",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "Rifle Bridge",
+      "wikidata": "Q65056586",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Rifle_Bridge",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-60482342",
+          "title": "Rifle Bridge",
+          "url": "https://en.wikipedia.org/wiki/Rifle_Bridge",
+          "text": "The Rifle Bridge, over the Colorado River in Rifle, Colorado, was built in 1909.  It was listed on the National Register of Historic Places in 1985.\nIt is a two-span steel through truss bridge, with one 12-panel Pennsylvania truss span and one 10-panel Parker truss span.  It was assessed to be \"situated poorly on a tight bend in the river and has required periodical maintenance to keep it in place. Despite construction of a concrete jetty in 1922 to divert the main channel, the Colorado continues to work against the pier and north abutment.\"\n\nIn a 1983 survey of Colorado's historic bridges, it was assessed thatThe Rifle Bridge is historically significant as a regionally important crossing of the Colorado River - the most expensive contracted for [or] by Garfield County. Its Pennsylvania through span is the longest among the pinned trusses left in the state and is one of only two of its type in the survey; the Parker through is one of only two and is the longest of its type, and the two combined to form one bridge is unique. Erected by important Colorado bridge contractor C.G. Sheely, the Rifle Bridge is a visually striking long-span truss - one of Colorado's most significant vehicular...",
+          "retrievedAt": "2026-10-25T12:06:43.110Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 42.02356286200854,
+      "lateralM": 78.6392166803331,
+      "signedLateralM": 78.6392166803331
+    },
+    {
+      "id": "wd-Q30302144",
+      "name": "Rifle Creek",
+      "lat": 39.5276,
+      "lon": -107.7899,
+      "category": "River",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "Rifle Creek",
+      "wikidata": "Q30302144",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Rifle_Creek",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-51030051",
+          "title": "Rifle Creek",
+          "url": "https://en.wikipedia.org/wiki/Rifle_Creek",
+          "text": "Rifle Creek is a stream in Garfield County in the U.S. state of Colorado. It is a tributary of the Colorado River.\nRifle Creek starts at the confluence of West Rifle Creek and East Rifle Creek, and the junction is within the waters of the Rifle Gap Reservoir. The stream flows south and enters the Colorado after passing through the city of Rifle.\nThe creek's source is at 39°37′34″N 107°45′37″W, and it flows into the Colorado at 39°31′39″N 107°47′24″W.\nRifle Creek was named from an incident in which a rifle was found along its banks.\n\n",
+          "retrievedAt": "2026-10-25T12:06:43.110Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 42.73830546513307,
+      "lateralM": 72.86408855426333,
+      "signedLateralM": 72.86408855426333,
+      "areaKind": "river"
+    },
+    {
+      "id": "wd-Q22058734",
+      "name": "Rulison, Colorado",
+      "lat": 39.49722222,
+      "lon": -107.94055556,
+      "category": "Town",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "Rulison, Colorado",
+      "wikidata": "Q22058734",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Rulison%2C_Colorado",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-41512624",
+          "title": "Rulison, Colorado",
+          "url": "https://en.wikipedia.org/wiki/Rulison%2C_Colorado",
+          "text": "Rulison is an unincorporated community in Garfield County, Colorado, United States. Rulison is accessible from Interstate 70 and U.S. Route 6.",
+          "retrievedAt": "2026-10-25T12:06:43.990Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 56.57637776088741,
+      "lateralM": 109.19256633510538,
+      "signedLateralM": -109.19256633510538,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q1906807",
+      "name": "Battlement Mesa, Colorado",
+      "lat": 39.45388889,
+      "lon": -107.99305556,
+      "category": "Town",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "Battlement Mesa, Colorado",
+      "wikidata": "Q1906807",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Battlement_Mesa%2C_Colorado",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-108501",
+          "title": "Battlement Mesa, Colorado",
+          "url": "https://en.wikipedia.org/wiki/Battlement_Mesa%2C_Colorado",
+          "text": "Battlement Mesa is an unincorporated community, a census-designated place (CDP), and post office in and governed by Garfield County, Colorado, United States. The CDP is a part of the Glenwood Springs, CO Micropolitan Statistical Area. The Battlement Mesa post office has the ZIP Codes 81635 and 81636 (for post office boxes). At the United States Census 2020, the population of the Battlement Mesa CDP was 5,438. The Battlement Mesa Metropolitan District provides services.\n\n",
+          "retrievedAt": "2026-10-25T12:06:44.465Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 61.552271422616904,
+      "lateralM": 2255.953571865466,
+      "signedLateralM": 2255.953571865466,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q1823495",
+      "name": "Parachute, Colorado",
+      "lat": 39.45166667,
+      "lon": -108.05166667,
+      "category": "Town",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "Parachute, Colorado",
+      "wikidata": "Q1823495",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Parachute%2C_Colorado",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-108505",
+          "title": "Parachute, Colorado",
+          "url": "https://en.wikipedia.org/wiki/Parachute%2C_Colorado",
+          "text": "Parachute is a home rule municipality in Garfield County, Colorado, United States. The population was 1,390 at the 2020 census.\nThe town is the birthplace of Willard Libby, recipient of the 1960 Nobel Prize in Chemistry.",
+          "retrievedAt": "2026-10-25T12:06:44.465Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 67.87009514163543,
+      "lateralM": 59.436170696711116,
+      "signedLateralM": -59.436170696711116,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q14685043",
+      "name": "Parachute Creek",
+      "lat": 39.43972222,
+      "lon": -108.05361111,
+      "category": "River",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "Parachute Creek",
+      "wikidata": "Q14685043",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Parachute_Creek",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-21136654",
+          "title": "Parachute Creek",
+          "url": "https://en.wikipedia.org/wiki/Parachute_Creek",
+          "text": "Parachute Creek is a 14.7-mile-long (23.7 km) tributary of the Colorado River in Garfield County, Colorado. The confluence with the Colorado is just south of the community of Parachute and east of U.S. Route 6.",
+          "retrievedAt": "2026-10-25T12:06:44.465Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 68.99202548549155,
+      "lateralM": 670.637439986117,
+      "signedLateralM": 670.637439986117,
+      "areaKind": "river"
+    },
+    {
+      "id": "wd-Q7531503",
+      "name": "Sisyphus Shelter",
+      "lat": 39.3763,
+      "lon": -108.1613,
+      "category": "Heritage",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "Sisyphus Shelter",
+      "wikidata": "Q7531503",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Sisyphus_Shelter",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-34634394",
+          "title": "Sisyphus Shelter",
+          "url": "https://en.wikipedia.org/wiki/Sisyphus_Shelter",
+          "text": "Sisyphus Shelter is an archaeological site that was uncovered in Colorado when the Colorado Department of Highways was working on I-70. The excavation of this site became a joint project between the Colorado Department of Highways and the Bureau of Land Management. Fieldwork on the site was completed in 1980. Archaeologists John Gooding and Wm. Lane Shields as well as many others completed the excavation and prepared a comprehensive site report. Over the course of the fieldwork on Sisyphus Shelter, twenty-six features of human origin were discovered as well as numerous stone artifacts and two perishable items. The artifacts appeared to be all Late Archaic in origin. Dating indicated a range of occupations from modern times to 4400 B.P. being the oldest sample. Gooding and Shields (1985) suggest that the occupations of the shelter were not consistent and affected by seasonal changes.",
+          "retrievedAt": "2026-10-25T12:06:44.898Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 80.7959911191459,
+      "lateralM": 1310.4961972708904,
+      "signedLateralM": -1310.4961972708904
+    },
+    {
+      "id": "wd-Q5972887",
+      "name": "IOOF Hall (De Beque, Colorado)",
+      "lat": 39.33333333,
+      "lon": -108.21416667,
+      "category": "Landmark",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "IOOF Hall (De Beque, Colorado)",
+      "wikidata": "Q5972887",
+      "sourceUrl": "https://en.wikipedia.org/wiki/IOOF_Hall_(De_Beque%2C_Colorado)",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-29084155",
+          "title": "IOOF Hall (De Beque, Colorado)",
+          "url": "https://en.wikipedia.org/wiki/IOOF_Hall_(De_Beque%2C_Colorado)",
+          "text": "The IOOF Hall, which has also been known as Crest Theatre, is a two-story building in De Beque, Colorado that was built in 1900.  Its second floor's large lodge room served historically as a meeting hall for the Odd Fellows and corresponding Rebekahs groups.  First floor rooms of the building served variously as a theater with stage and orchestra pit for local and travelling shows, a community center, and a dance hall.  A small projection booth above the lobby, accessed by a steep stairway, was added for the Crest Theatre to begin operating in 1917.  Both floors have 15 feet (4.6 m) ceilings and there is a stamped tin lining high on the second floor wall.\n\nIn 1982, when it was nominated for listing on the National Register of Historic Places, the 25 feet (7.6 m) by 93 feet (28 m) building was clad with original, unusual metal siding stamped to resemble stone blocks, which had rusted and had long been unpainted.  A 2013 photo (above) shows the stamped siding along the long South side of the building, painted but with rust streaks running down in a few spots.  Its front facade includes stamped tin engaged columns and stamped tin panels featuring flowery patterns.  At the top is \"IOOF...",
+          "retrievedAt": "2026-10-25T12:06:45.339Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 87.95634003135339,
+      "lateralM": 279.4670762729841,
+      "signedLateralM": -279.4670762729841
+    },
+    {
+      "id": "wd-Q7339743",
+      "name": "Roan Creek (Colorado)",
+      "lat": 39.32805556,
+      "lon": -108.21638889,
+      "category": "River",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "Roan Creek (Colorado)",
+      "wikidata": "Q7339743",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Roan_Creek_(Colorado)",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-30671450",
+          "title": "Roan Creek (Colorado)",
+          "url": "https://en.wikipedia.org/wiki/Roan_Creek_(Colorado)",
+          "text": "Roan Creek is a 45.7-mile-long (73.5 km) tributary of the Colorado River in Garfield and Mesa counties in Colorado, U.S.",
+          "retrievedAt": "2026-10-25T12:06:45.339Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 88.43668091571242,
+      "lateralM": 72.32399899131252,
+      "signedLateralM": 72.32399899131252,
+      "areaKind": "river"
+    },
+    {
+      "id": "wd-Q2415964",
+      "name": "De Beque, Colorado",
+      "lat": 39.31055556,
+      "lon": -108.205,
+      "category": "Town",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "De Beque, Colorado",
+      "wikidata": "Q2415964",
+      "sourceUrl": "https://en.wikipedia.org/wiki/De_Beque%2C_Colorado",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-108580",
+          "title": "De Beque, Colorado",
+          "url": "https://en.wikipedia.org/wiki/De_Beque%2C_Colorado",
+          "text": "De Beque is a statutory town located in Mesa County, Colorado, United States. The population was 493 at the 2020 census. De Beque is a part of the Grand Junction, CO Metropolitan Statistical Area. The town consists of a small grid, including a historic downtown featuring a town hall, a tavern, and several commercial businesses in historic structures. The surrounding streets include houses, several churches, and a school.",
+          "retrievedAt": "2026-10-25T12:06:45.339Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 89.69728353372355,
+      "lateralM": 1883.6931915262076,
+      "signedLateralM": 1883.6931915262076,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q5595216",
+      "name": "Grand Valley Diversion Dam",
+      "lat": 39.18888889,
+      "lon": -108.28194444,
+      "category": "Infrastructure",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "Grand Valley Diversion Dam",
+      "wikidata": "Q5595216",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Grand_Valley_Diversion_Dam",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-36092203",
+          "title": "Grand Valley Diversion Dam",
+          "url": "https://en.wikipedia.org/wiki/Grand_Valley_Diversion_Dam",
+          "text": "The Grand Valley Diversion Dam is a diversion dam in the De Beque Canyon of the Colorado River, about 15 miles (24 km) northeast of Grand Junction, Colorado in the United States. It is a 14-foot (4.3 m) high, 546-foot (166 m) long concrete roller dam with six gates, which were the first and largest of their kind to be installed in the United States.\nThe dam was built between 1913 and 1916 as part of the Grand Valley Project of the U.S. Bureau of Reclamation (USBR) and diverts water into the Government Highline Canal for the full irrigation of 33,368 acres (13,504 ha) and supplemental irrigation to 8,600 acres (3,500 ha) in western Colorado's Grand Valley. A small hydroelectric plant with a capacity of 3,000 kilowatts (KW) was completed in 1933 on the Orchard Mesa Power Canal, a branch of the Government Highline Canal. In 1949, the dam and canal system were transferred to the Grand Valley Water Users Association, while the power plant was consigned to the Orchard Mesa Irrigation District.\nGrand Valley Diversion Dam was listed on the National Register of Historic Places on October 8, 1991.",
+          "retrievedAt": "2026-10-25T12:06:45.776Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 108.78830995938057,
+      "lateralM": 111.82550019214429,
+      "signedLateralM": 111.82550019214429
+    },
+    {
+      "id": "wd-Q7202218",
+      "name": "Plateau Creek (Colorado)",
+      "lat": 39.16722222,
+      "lon": -108.28111111,
+      "category": "River",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "Plateau Creek (Colorado)",
+      "wikidata": "Q7202218",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Plateau_Creek_(Colorado)",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-1854584",
+          "title": "Plateau Creek (Colorado)",
+          "url": "https://en.wikipedia.org/wiki/Plateau_Creek_(Colorado)",
+          "text": "Plateau Creek is a tributary of the Colorado River, approximately 50 miles (80 km) long, in Mesa County, Colorado, United States. It drains a cattle ranching valley, known as Plateau Valley, north of the Grand Mesa and east of Grand Junction.",
+          "retrievedAt": "2026-10-25T12:06:46.233Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 110.28029768025363,
+      "lateralM": 1324.276790629094,
+      "signedLateralM": 1324.276790629094,
+      "areaKind": "river"
+    },
+    {
+      "id": "wd-Q5244247",
+      "name": "De Beque Canyon",
+      "lat": 39.14888889,
+      "lon": -108.31444444,
+      "category": "Canyon",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "De Beque Canyon",
+      "wikidata": "Q5244247",
+      "sourceUrl": "https://en.wikipedia.org/wiki/De_Beque_Canyon",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-1854613",
+          "title": "De Beque Canyon",
+          "url": "https://en.wikipedia.org/wiki/De_Beque_Canyon",
+          "text": "De Beque Canyon is a narrow canyon on the Colorado River in western Colorado in the United States. It is approximately 15 miles (24 km) long, located on the river downstream from the town of De Beque, in eastern Mesa County. The canyon forms a narrow passage where the river passes along the western end of the Grand Mesa. At its lower end, the canyon opens out on the eastern end of the Grand Valley at the town of Palisade, approximately 10 miles (16 km) east of Grand Junction. Interstate 70 follows the river through the canyon.\nGeologically the canyon walls are stairstep cliffs of Mesaverde Group, shoreline sands deposited during the Cretaceous. The sedimentary rock layers contain several low-sulfur coal seams that thicken to as much as 50 feet (15 m) at the Cameo Mine near Mile 46 on Interstate 70.  The coal is typically soft bituminous coal, since it has never been compressed by overlying rocks to the degree required to form harder coal.\n\n",
+          "retrievedAt": "2026-10-25T12:06:46.233Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 114.35355183704284,
+      "lateralM": 179.33388720907524,
+      "signedLateralM": 179.33388720907524,
+      "areaKind": "canyon"
+    },
+    {
+      "id": "wd-Q2009803",
+      "name": "Palisade, Colorado",
+      "lat": 39.10833333,
+      "lon": -108.35722222,
+      "category": "Town",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "Palisade, Colorado",
+      "wikidata": "Q2009803",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Palisade%2C_Colorado",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-108585",
+          "title": "Palisade, Colorado",
+          "url": "https://en.wikipedia.org/wiki/Palisade%2C_Colorado",
+          "text": "Palisade is a statutory town in Mesa County, Colorado, United States. It is part of the Grand Junction Metropolitan Statistical Area. The population was 2,565 at the 2020 census, down from 2,692 in 2010.\nThe community was named for the cliffs near the town site. Palisade is known for its peach orchards and wine vineyards. The climate, a 182-day growing season, and an average 78 percent of sunshine makes Palisade \"The Peach Capital of Colorado\".",
+          "retrievedAt": "2026-10-25T12:06:46.711Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 121.37076509512258,
+      "lateralM": 158.84412014443848,
+      "signedLateralM": 158.84412014443848,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q1542895",
+      "name": "Grand Valley AVA",
+      "lat": 39.1169264,
+      "lon": -108.3621737,
+      "category": "Nature",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "Grand Valley AVA",
+      "wikidata": "Q1542895",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Grand_Valley_AVA",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-15542264",
+          "title": "Grand Valley AVA",
+          "url": "https://en.wikipedia.org/wiki/Grand_Valley_AVA",
+          "text": "Grand Valley is an American Viticultural Area (AVA) within Mesa County, Colorado located in a high-altitude river valley surrounding the county seat of Grand Junction and stretching 24 miles (39 km) east-west between the municipalities of Palisade and Fruita. It lies approximately 200 miles (320 km) west-southwest of Denver along Interstate 70. The river valley encompasses 75,990 acres (118.73 sq mi), with an average elevation between 4,000 and 5,000 feet (1,200–1,500 m) above sea level and is defined by an irrigated agricultural area served by canals in the Grand Valley of the Colorado River. It was established as the nation's 113th and the Centennial State's initial appellation on November 25, 1991 by the Bureau of Alcohol, Tobacco and Firearms (ATF), Treasury after reviewing the petition submitted by Mr. James Seewald of Vintage Colorado Cellars Winery, on behalf of local vintners and wineries, proposing a viticultural area named \"Grand Valley.\" In 2001, the smaller West Elks AVA, located southeast of Grand Valley, became the state's second designated AVA.\n\n",
+          "retrievedAt": "2026-10-25T12:06:46.711Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 121.49962650697648,
+      "lateralM": 879.8498230158726,
+      "signedLateralM": -879.8498230158726,
+      "areaKind": "valley"
+    },
+    {
+      "id": "wd-Q6138539",
+      "name": "James M. Robb – Colorado River State Park",
+      "lat": 39.0575,
+      "lon": -108.46083333,
+      "category": "Nature",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "James M. Robb – Colorado River State Park",
+      "wikidata": "Q6138539",
+      "sourceUrl": "https://en.wikipedia.org/wiki/James_M._Robb_%E2%80%93_Colorado_River_State_Park",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-11500136",
+          "title": "James M. Robb – Colorado River State Park",
+          "url": "https://en.wikipedia.org/wiki/James_M._Robb_%E2%80%93_Colorado_River_State_Park",
+          "text": "The James M. Robb – Colorado River State Park is a Colorado State Park along the Colorado River in Mesa County near Grand Junction, Colorado.  The 890-acre (3.6 km2) park established in 1994 has five distinct sections providing access to the river.  The Island Acres segment has campsites and a swim beach.  The Fruita segment also has campsites. The other three segments, Corn Lake, Connected Lakes and the Colorado River Wildlife Area are for day use only.  Corn Lake, Connected Lakes and Fruita have boat ramps.  The downriver float trip between Corn Lake and Connected Lakes is about 10 miles (16 km), as is the trip between Connected Lakes and Fruita.  Both trips include some class II rapids.",
+          "retrievedAt": "2026-10-25T12:06:47.388Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 131.5751669565995,
+      "lateralM": 2947.662887101203,
+      "signedLateralM": 2947.662887101203,
+      "areaKind": "park"
+    },
+    {
+      "id": "wd-Q5188370",
+      "name": "Cross Orchards Historic Site",
+      "lat": 39.09101,
+      "lon": -108.4836,
+      "category": "Heritage",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "Cross Orchards Historic Site",
+      "wikidata": "Q5188370",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Cross_Orchards_Historic_Site",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-23967234",
+          "title": "Cross Orchards Historic Site",
+          "url": "https://en.wikipedia.org/wiki/Cross_Orchards_Historic_Site",
+          "text": "Cross Orchards Historic Site is a living history museum located in Grand Junction, Colorado. It is part of the Museums of Western Colorado. It was added to the National Register of Historic Places in 1980. The Orchards are known for showing how life was on an orchard at the turn of the twentieth century and is considered living history as it is still worked and cultivated regularly. It features a workers' bunkhouse, blacksmith shop, an apple orchard, and a collection of vintage farming equipment.\nThe site includes farm equipment, implements and tools, a period farmhouse, a recreated train depot and Uintah Railway exhibit with railroad cars, an engine and caboose, and historic horse-drawn road-building equipment. It is also home to the largest collection of Uintah Railway cars on the Colorado western slope.\nAt its peak the orchard produced 22,000 apple trees over a 243-acre (0.98 km2) orchard. It is considered the largest orchard for the time in western Colorado. The only land left today is now a 24-acre (97,000 m2) site. The farm is also known to feature celebrations at harvest time where they show the public how apple cider was made.",
+          "retrievedAt": "2026-10-25T12:06:47.388Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 132.36462026440208,
+      "lateralM": 1190.4355225853728,
+      "signedLateralM": -1190.4355225853728
+    },
+    {
+      "id": "wd-Q60741824",
+      "name": "North Seventh Street Historic Residential District",
+      "lat": 39.07194444,
+      "lon": -108.56027778,
+      "category": "Heritage",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "North Seventh Street Historic Residential District",
+      "wikidata": "Q60741824",
+      "sourceUrl": "https://en.wikipedia.org/wiki/North_Seventh_Street_Historic_Residential_District",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-58343250",
+          "title": "North Seventh Street Historic Residential District",
+          "url": "https://en.wikipedia.org/wiki/North_Seventh_Street_Historic_Residential_District",
+          "text": "The North Seventh Street Historic Residential District, in Grand Junction, Colorado, is a 14.4 acres (5.8 ha) historic district which was listed on the National Register of Historic Places in 1984.  It included 27 contributing buildings.\nIt includes the Lowell School (1925), at 310 North Seventh Street, built under the supervision of local architect Eugene Groves.",
+          "retrievedAt": "2026-10-25T12:06:48.229Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 139.31350262950008,
+      "lateralM": 1099.4850948029946,
+      "signedLateralM": -1099.4850948029946
+    },
+    {
+      "id": "wd-Q989903",
+      "name": "Grand Junction, Colorado",
+      "lat": 39.08777778,
+      "lon": -108.56805556,
+      "category": "Town",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "Grand Junction, Colorado",
+      "wikidata": "Q989903",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Grand_Junction%2C_Colorado",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-108583",
+          "title": "Grand Junction, Colorado",
+          "url": "https://en.wikipedia.org/wiki/Grand_Junction%2C_Colorado",
+          "text": "Grand Junction is a home rule municipality that is the county seat of and the largest city in Mesa County, Colorado, United States. Grand Junction's population was 65,560 at the 2020 United States census, making it the most populous city in western Colorado and the 17th most populous Colorado municipality overall.\nAs western Colorado's largest city, Grand Junction is the economic and cultural center of the Western Slope region. The city is a transportation hub, situated at the convergence of Interstate 70, U.S. Highway 50 and U.S. Highway 6. Grand Junction is also home to Colorado Mesa University, enrolling nearly 10,000 students annually.\nThe city is the anchor of the Grand Junction metropolitan area, home to over 162,000 residents as of 2025. It is located in the heart of the Grand Valley, a large Colorado River valley stretching over 30 miles (48 km) east-to-west and 5 miles (8.0 km) north-to-south. Grand Junction comprises the largest urban center between Denver and Salt Lake City, as well as the most densely populated area and the only metropolitan area in Colorado outside of the Front Range Urban Corridor.\n\n",
+          "retrievedAt": "2026-10-25T12:06:48.229Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 142.53300631536888,
+      "lateralM": 1932.2620236594298,
+      "signedLateralM": -1932.2620236594298,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q1829813",
+      "name": "Redlands, Colorado",
+      "lat": 39.08916667,
+      "lon": -108.65944444,
+      "category": "Town",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "Redlands, Colorado",
+      "wikidata": "Q1829813",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Redlands%2C_Colorado",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-108586",
+          "title": "Redlands, Colorado",
+          "url": "https://en.wikipedia.org/wiki/Redlands%2C_Colorado",
+          "text": "Redlands is an unincorporated community and census-designated place (CDP) located in and governed by Mesa County, Colorado, United States. It is part of the Grand Junction, CO Metropolitan Statistical Area. The population of the Redlands CDP was 9,061 at the 2020 census. The Grand Junction post office (ZIP Code 81507) serves the area.\n\n",
+          "retrievedAt": "2026-10-25T12:06:49.210Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 148.7202093597201,
+      "lateralM": 2582.8628766561624,
+      "signedLateralM": 2582.8628766561624,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q106609842",
+      "name": "Sentinel Spire",
+      "lat": 39.103037,
+      "lon": -108.7262103,
+      "category": "Heritage",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "Sentinel Spire",
+      "wikidata": "Q106609842",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Sentinel_Spire",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-67213959",
+          "title": "Sentinel Spire",
+          "url": "https://en.wikipedia.org/wiki/Sentinel_Spire",
+          "text": "Sentinel Spire is a 5,500-foot-elevation (1,700-meter) sandstone pillar located in Colorado National Monument, in Mesa County of western Colorado, United States. This 200-foot freestanding tower is situated in Wedding Canyon, one-half mile east of the monument's visitor center, and 9 miles (14 km) west of the community of Grand Junction. It is also immediately south of Window Rock, and north of another climbing destination, Pipe Organ, both of which can be seen from viewpoints along Rim Rock Drive. The first ascent of the summit was made May 3, 1960, by Layton Kor, Harvey Carter, and John Auld via the class 5.10 route, Fast Draw. This was the day before the climbers also made the first ascent of nearby Kissing Couple. The first solo ascent was made by Ron Olevsky in March 1976, and the first free ascent was made by Andy Petefish and John Christenson in 1978. Some climbers refer to Sentinel Spire as Watusi Spear.",
+          "retrievedAt": "2026-10-25T12:06:49.210Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 154.3746736349908,
+      "lateralM": 4471.941366289907,
+      "signedLateralM": 4471.941366289907
+    },
+    {
+      "id": "wd-Q5148851",
+      "name": "Colorado National Monument Visitor Center Complex",
+      "lat": 39.10194444,
+      "lon": -108.73055556,
+      "category": "Heritage",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "Colorado National Monument Visitor Center Complex",
+      "wikidata": "Q5148851",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Colorado_National_Monument_Visitor_Center_Complex",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-20687359",
+          "title": "Colorado National Monument Visitor Center Complex",
+          "url": "https://en.wikipedia.org/wiki/Colorado_National_Monument_Visitor_Center_Complex",
+          "text": "The Colorado National Monument Visitor Center Complex is a group of structures in Colorado National Monument in Mesa County, Colorado, United States, that is listed on the National Register of Historic Places.",
+          "retrievedAt": "2026-10-25T12:06:49.210Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 154.62050899913024,
+      "lateralM": 4780.024624691249,
+      "signedLateralM": 4780.024624691249
+    },
+    {
+      "id": "wd-Q60741761",
+      "name": "Fruita Museum",
+      "lat": 39.14972222,
+      "lon": -108.72916667,
+      "category": "Heritage",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "Fruita Museum",
+      "wikidata": "Q60741761",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Fruita_Museum",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-58335188",
+          "title": "Fruita Museum",
+          "url": "https://en.wikipedia.org/wiki/Fruita_Museum",
+          "text": "The Fruita Museum, at 432 E. Aspen in Fruita, Colorado, is a Rustic-style building which was built in 1938-39 as a Works Progress Administration project to serve as a museum.  It was listed on the National Register of Historic Places in 1996.  In 2018, the building serves as home of the Fruita Area Chamber of Commerce and as a visitor center.",
+          "retrievedAt": "2026-10-25T12:06:49.210Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 157.44807052912466,
+      "lateralM": 281.42671979680244,
+      "signedLateralM": 281.42671979680244
+    },
+    {
+      "id": "wd-Q1191112",
+      "name": "Fruita, Colorado",
+      "lat": 39.15472222,
+      "lon": -108.73055556,
+      "category": "Town",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "Fruita, Colorado",
+      "wikidata": "Q1191112",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Fruita%2C_Colorado",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-108581",
+          "title": "Fruita, Colorado",
+          "url": "https://en.wikipedia.org/wiki/Fruita%2C_Colorado",
+          "text": "Fruita () is a home rule municipality located in western Mesa County, Colorado, United States. The city population was 13,395 at the 2020 United States census. Fruita is a part of the Grand Junction, Colorado Metropolitan Statistical Area and lies within the Grand Valley. The geography is identified by the bordering Colorado River (historically known as the Grand River) on the southern edge of the town, the Uncompahgre Plateau known for its pinyon-juniper landscape, and the Book Cliffs range on the northern edge of the Grand Valley. Originally home to the Ute people, farmers settled the town after founder William Pabor in 1884. Ten years later, Fruita was incorporated.\n\n",
+          "retrievedAt": "2026-10-25T12:06:49.210Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 157.85466877423707,
+      "lateralM": 116.2829237369468,
+      "signedLateralM": -116.2829237369468,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q60785219",
+      "name": "Dinosaur Journey Museum",
+      "lat": 39.15153,
+      "lon": -108.739381,
+      "category": "Heritage",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "Dinosaur Journey Museum",
+      "wikidata": "Q60785219",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Dinosaur_Journey_Museum",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-58335877",
+          "title": "Dinosaur Journey Museum",
+          "url": "https://en.wikipedia.org/wiki/Dinosaur_Journey_Museum",
+          "text": "Dinosaur Journey Museum, or Museums of Western Colorado’s Dinosaur Journey, is a museum in Fruita in Mesa County, Colorado.\nThe museum offers an interactive and hands-on experience, showcasing over 15,000 fossil specimens. It features exhibits and displays highlighting regional discoveries, a visible paleontology lab where dinosaur bones are prepared for exhibition, a sandbox for creating your own dinosaur tracks, and a \"quarry site\" where children can excavate real Jurassic dinosaur bones.",
+          "retrievedAt": "2026-10-25T12:06:49.210Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 158.29374115745756,
+      "lateralM": 599.5360493665855,
+      "signedLateralM": 599.5360493665855
+    },
+    {
+      "id": "wd-Q6724166",
+      "name": "Mack, Colorado",
+      "lat": 39.22388889,
+      "lon": -108.865,
+      "category": "Town",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "Mack, Colorado",
+      "wikidata": "Q6724166",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Mack%2C_Colorado",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-569351",
+          "title": "Mack, Colorado",
+          "url": "https://en.wikipedia.org/wiki/Mack%2C_Colorado",
+          "text": "Mack is an unincorporated community that is located approximately ten miles east of the Colorado/Utah border in Mesa County, Colorado, United States. Mack is part of the  Grand Junction Metropolitan Statistical Area.\n\n",
+          "retrievedAt": "2026-10-25T12:06:50.101Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 171.82240606840858,
+      "lateralM": 114.91146528884772,
+      "signedLateralM": -114.91146528884772,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q16894975",
+      "name": "Mee Canyon",
+      "lat": 39.15859,
+      "lon": -108.954,
+      "category": "Canyon",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "Mee Canyon",
+      "wikidata": "Q16894975",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Mee_Canyon",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-10896114",
+          "title": "Mee Canyon",
+          "url": "https://en.wikipedia.org/wiki/Mee_Canyon",
+          "text": "Mee Canyon is a remote scenic area within the Black Ridge Canyons Wilderness which in turn forms the core of the Bureau of Land Management administered McInnis Canyons National Conservation Area in west central Colorado. Limited access and primitive facilities limit visitation and help preserve the wilderness in its natural state.\nMee Canyon is accessed either by boat from the Colorado River, or from a trail head near Glade Park.\n\n",
+          "retrievedAt": "2026-10-25T12:06:50.532Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 184.86282627393044,
+      "lateralM": 326.21048308755053,
+      "signedLateralM": 326.21048308755053,
+      "areaKind": "canyon"
+    },
+    {
+      "id": "wd-Q7278627",
+      "name": "Rabbit Valley (Colorado)",
+      "lat": 39.17165,
+      "lon": -109.02066667,
+      "category": "Nature",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "Rabbit Valley (Colorado)",
+      "wikidata": "Q7278627",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Rabbit_Valley_(Colorado)",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-19449923",
+          "title": "Rabbit Valley (Colorado)",
+          "url": "https://en.wikipedia.org/wiki/Rabbit_Valley_(Colorado)",
+          "text": "Rabbit Valley is a valley located in northwestern Mesa County, Colorado, United States. The site was discovered by a local Colorado couple in 1981 Rabbit Valley contains numerous prehistoric remains from the Late Jurassic Period. Nearly 4,000 bones have been found here, including Apatosaurus, Camarasaurus, Diplodocus, a supersaurid, a diplodocid. Rabbit Valley is accessed by Interstate 70/U.S. Route 6/U.S. Route 50.",
+          "retrievedAt": "2026-10-25T12:06:50.532Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 188.36357743486158,
+      "lateralM": 2726.426978467822,
+      "signedLateralM": -2726.426978467822,
+      "areaKind": "valley"
+    },
+    {
+      "id": "wd-Q7376286",
+      "name": "Ruby Canyon",
+      "lat": 39.1175,
+      "lon": -109.07083333,
+      "category": "Canyon",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "Ruby Canyon",
+      "wikidata": "Q7376286",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Ruby_Canyon",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-2374518",
+          "title": "Ruby Canyon",
+          "url": "https://en.wikipedia.org/wiki/Ruby_Canyon",
+          "text": "Ruby Canyon is a roughly 25 mi (40 km) canyon on the Colorado River located on the border of Colorado and Utah in the western United States, and is a popular destination for rafting and overnight camping (permits required). The canyon takes its name from the ruby-red sandstone cliffs that line its walls.\nThe only access to the canyon outside of rafting is provided by the Union Pacific Railroad (formerly Denver and Rio Grande Western Railroad) between Mack, Colorado and Westwater, Utah. Amtrak's California Zephyr follows this route through Ruby Canyon between Grand Junction, Colorado, and Thompson Springs, Utah. A popular attraction along the route is the words \"Utah | Colorado\" painted on the canyon wall at the border between the two states next to the Utaline Siding.",
+          "retrievedAt": "2026-10-25T12:06:50.981Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 197.53760408581311,
+      "lateralM": 516.5586937511323,
+      "signedLateralM": 516.5586937511323,
+      "areaKind": "canyon"
+    },
+    {
+      "id": "wd-Q14711898",
+      "name": "Westwater Canyon",
+      "lat": 38.97222222,
+      "lon": -109.22777778,
+      "category": "Canyon",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "Westwater Canyon",
+      "wikidata": "Q14711898",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Westwater_Canyon",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-3171339",
+          "title": "Westwater Canyon",
+          "url": "https://en.wikipedia.org/wiki/Westwater_Canyon",
+          "text": "Westwater Canyon is  a canyon located on the Colorado River in Eastern Utah between the Utah/Colorado state line and Cisco, Utah.  The inner gorge of the canyon is made up of black Precambrian rock and contains class III and IV rapids which are sought after by whitewater enthusiasts.  The most notable rapid, called \"Skull\", is the most significant.\nThe Bureau of Land Management (BLM) oversees a permitting system for whitewater travelers for this section of the Colorado River, and boaters must follow special rules and regulations.  Many boaters pack camping equipment in on rafts and make the 17-mile (27 km) trip from Westwater ranger station to Cisco landing over 1–2 days.\nWestwater Canyon runs through a wilderness study area and has been proposed for designation as a wild and scenic river along with Ruby Canyon just upstream.\nThe Westwater Ranger Station put-in to the Rose Ranch takeout is a 17-mile journey. Most whitewater is compacted in the Marble gorge where rescue of swimmers and recovery of capsized vessels is limited by vertical canyon walls.",
+          "retrievedAt": "2026-10-25T12:06:51.892Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 221.73304837465685,
+      "lateralM": 4206.028180764033,
+      "signedLateralM": 4206.028180764033,
+      "areaKind": "canyon"
+    },
+    {
+      "id": "wd-Q6146129",
+      "name": "Thompson Springs, Utah",
+      "lat": 38.96361111,
+      "lon": -109.70361111,
+      "category": "Town",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "Thompson Springs, Utah",
+      "wikidata": "Q6146129",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Thompson_Springs%2C_Utah",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-2344732",
+          "title": "Thompson Springs, Utah",
+          "url": "https://en.wikipedia.org/wiki/Thompson_Springs%2C_Utah",
+          "text": "Thompson Springs, also officially known for a time as just Thompson, is a small census-designated place in central Grand County, Utah, United States. As of the 2020 census, Thompson Springs had a population of 34. The town is just north of the east–west highway route shared by Interstate 70, U.S. Route 6 and U.S. Route 50, between Crescent Junction and Cisco. Moab, the county seat, is 37 miles (60 km) to the south. Thompson Springs is located in high desert country with the Book Cliffs just to the north.",
+          "retrievedAt": "2026-10-25T12:06:53.682Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 264.0205091013691,
+      "lateralM": 545.7908571094355,
+      "signedLateralM": 545.7908571094355,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q483364",
+      "name": "Green River, Utah",
+      "lat": 38.99333333,
+      "lon": -110.15,
+      "category": "Town",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "Green River, Utah",
+      "wikidata": "Q483364",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Green_River%2C_Utah",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-151248",
+          "title": "Green River, Utah",
+          "url": "https://en.wikipedia.org/wiki/Green_River%2C_Utah",
+          "text": "Green River is a city in Emery County, Utah United States. The population was 847 at the 2020 census.",
+          "retrievedAt": "2026-10-25T12:06:54.981Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 307.23803046119167,
+      "lateralM": 907.1020255685954,
+      "signedLateralM": -907.1020255685954,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q5603144",
+      "name": "Green River State Park",
+      "lat": 38.99138889,
+      "lon": -110.15416667,
+      "category": "Nature",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "Green River State Park",
+      "wikidata": "Q5603144",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Green_River_State_Park",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-29169529",
+          "title": "Green River State Park",
+          "url": "https://en.wikipedia.org/wiki/Green_River_State_Park",
+          "text": "Green River State Park is a state park on the west shore of the Green River in Green River, Utah, United States.",
+          "retrievedAt": "2026-10-25T12:06:54.981Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 307.8036828340281,
+      "lateralM": 549.7495516816991,
+      "signedLateralM": -549.7495516816991,
+      "areaKind": "park"
+    },
+    {
+      "id": "wd-Q5603114",
+      "name": "Green River station (Utah)",
+      "lat": 38.99222222,
+      "lon": -110.16527778,
+      "category": "Railroad heritage",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "Green River station (Utah)",
+      "wikidata": "Q5603114",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Green_River_station_(Utah)",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-8988539",
+          "title": "Green River station (Utah)",
+          "url": "https://en.wikipedia.org/wiki/Green_River_station_(Utah)",
+          "text": "Green River station is a train station in Green River, Utah, United States. It is served by Amtrak's  California Zephyr, which runs once daily between Chicago and Emeryville, California, in the San Francisco Bay Area. The station has a platform and bus-stop style shelter and no services.",
+          "retrievedAt": "2026-10-25T12:06:54.981Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 308.6195104080231,
+      "lateralM": 34.792825556109406,
+      "signedLateralM": -34.792825556109406
+    },
+    {
+      "id": "wd-Q2593228",
+      "name": "Woodside, Utah",
+      "lat": 39.26555556,
+      "lon": -110.34888889,
+      "category": "Town",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "Woodside, Utah",
+      "wikidata": "Q2593228",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Woodside%2C_Utah",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-16621040",
+          "title": "Woodside, Utah",
+          "url": "https://en.wikipedia.org/wiki/Woodside%2C_Utah",
+          "text": "Woodside is a ghost town located on the west bank of the shallow Price River in the nearly uninhabited eastern part of Emery County, Utah, United States. Its fenced-in filling station is one of the only signs of human activity along the lonely stretch of U.S. Route 6/191 between Wellington and Green River.",
+          "retrievedAt": "2026-10-25T12:06:56.865Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 349.3901685893249,
+      "lateralM": 119.88548246328938,
+      "signedLateralM": -119.88548246328938,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q482904",
+      "name": "Wellington, Utah",
+      "lat": 39.53055556,
+      "lon": -110.74638889,
+      "category": "Town",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "Wellington, Utah",
+      "wikidata": "Q482904",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Wellington%2C_Utah",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-136964",
+          "title": "Wellington, Utah",
+          "url": "https://en.wikipedia.org/wiki/Wellington%2C_Utah",
+          "text": "Wellington is a city in Carbon County, Utah, United States. The population was 1,605 at the 2020 census. The community was settled in 1878 by a band of thirteen Mormons led by Jefferson Tidwell. The town was named for Justus Wellington Seeley, Jr., of the Emery County Court. Many residents commute to nearby Price for their jobs, or work in one of the various coal mines in the area.",
+          "retrievedAt": "2026-10-25T12:06:58.630Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 401.6842317373847,
+      "lateralM": 1479.896934669039,
+      "signedLateralM": 1479.896934669039,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q4306260",
+      "name": "USU Eastern Prehistoric Museum",
+      "lat": 39.59958333,
+      "lon": -110.80805556,
+      "category": "Heritage",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "USU Eastern Prehistoric Museum",
+      "wikidata": "Q4306260",
+      "sourceUrl": "https://en.wikipedia.org/wiki/USU_Eastern_Prehistoric_Museum",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-17628095",
+          "title": "USU Eastern Prehistoric Museum",
+          "url": "https://en.wikipedia.org/wiki/USU_Eastern_Prehistoric_Museum",
+          "text": "The Prehistoric Museum, USU-Eastern, formerly known as the College of Eastern Utah Prehistoric Museum, is a museum accredited by the American Alliance of Museums located in Price, Utah.  The museum seeks to promote public understanding of prehistory through interpretive exhibits, educational programs, collections, and research. The museum is located near many paleontological and archaeological sites in a region known as Castle Country, notably in the San Rafael Swell and nearby canyons throughout the Book Cliffs area such as Nine Mile Canyon and Range Creek Canyon.\n\n",
+          "retrievedAt": "2026-10-25T12:06:59.187Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 410.3594119895936,
+      "lateralM": 370.62745383950227,
+      "signedLateralM": -370.62745383950227
+    },
+    {
+      "id": "wd-Q85803200",
+      "name": "Star Theatre (Price, Utah)",
+      "lat": 39.59972222,
+      "lon": -110.80944444,
+      "category": "Landmark",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "Star Theatre (Price, Utah)",
+      "wikidata": "Q85803200",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Star_Theatre_(Price%2C_Utah)",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-62214250",
+          "title": "Star Theatre (Price, Utah)",
+          "url": "https://en.wikipedia.org/wiki/Star_Theatre_(Price%2C_Utah)",
+          "text": "The Star Theatre is a historic two-story building in Price, Utah. It was built in 1923-1924 for five brothers who were immigrants from Greece: Pete, Angelo, Charlie, George and Harry Georgedes. The building was designed in the Classical Revival style by architect J.A. Headlund, an immigrant from Sweden, with \"fluted pilasters with Corinthian capitals; bands of round arch windows; an elaborate entablature with modillions on the cornice; egg and dart molding and dentils on the frieze and an architrave; and a parapet.\". It has been listed on the National Register of Historic Places since August 9, 1982.",
+          "retrievedAt": "2026-10-25T12:06:59.187Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 410.466694689197,
+      "lateralM": 316.8656356559423,
+      "signedLateralM": -316.8656356559423
+    },
+    {
+      "id": "wd-Q5038057",
+      "name": "Carbonville, Utah",
+      "lat": 39.6225,
+      "lon": -110.83472222,
+      "category": "Town",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "Carbonville, Utah",
+      "wikidata": "Q5038057",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Carbonville%2C_Utah",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-34470920",
+          "title": "Carbonville, Utah",
+          "url": "https://en.wikipedia.org/wiki/Carbonville%2C_Utah",
+          "text": "Carbonville is a census-designated place in Carbon County, Utah, United States. The population was 1,383 at the 2020 census.",
+          "retrievedAt": "2026-10-25T12:06:59.187Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 413.9343711616751,
+      "lateralM": 229.81249064769654,
+      "signedLateralM": -229.81249064769654,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q5710204",
+      "name": "Helper station",
+      "lat": 39.68388889,
+      "lon": -110.85388889,
+      "category": "Railroad heritage",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "Helper station",
+      "wikidata": "Q5710204",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Helper_station",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-10555905",
+          "title": "Helper station",
+          "url": "https://en.wikipedia.org/wiki/Helper_station",
+          "text": "Helper station is a railroad station in Helper, Utah. It is served by Amtrak's California Zephyr, which runs once daily between Chicago, Illinois, and Emeryville, California, in the San Francisco Bay Area. The station is owned by the Union Pacific Railroad and contains a passenger waiting area; no services are provided (e.g., ticketing, checked baggage, etc.).",
+          "retrievedAt": "2026-10-25T12:07:00.173Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 421.87692476876356,
+      "lateralM": 15.160225636253475,
+      "signedLateralM": 15.160225636253475
+    },
+    {
+      "id": "wd-Q16842330",
+      "name": "Helper Historic District",
+      "lat": 39.685025,
+      "lon": -110.85453889,
+      "category": "Heritage",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "Helper Historic District",
+      "wikidata": "Q16842330",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Helper_Historic_District",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-42056318",
+          "title": "Helper Historic District",
+          "url": "https://en.wikipedia.org/wiki/Helper_Historic_District",
+          "text": "The Helper Historic District is a historic district comprising the center of Helper, Utah, United States, that is listed on the National Register of Historic Places (NRHP).",
+          "retrievedAt": "2026-10-25T12:07:00.173Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 422.0030297998696,
+      "lateralM": 71.28961067969115,
+      "signedLateralM": 71.28961067969115
+    },
+    {
+      "id": "wd-Q7373562",
+      "name": "Royal, Utah",
+      "lat": 39.74611111,
+      "lon": -110.88027778,
+      "category": "Town",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "Royal, Utah",
+      "wikidata": "Q7373562",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Royal%2C_Utah",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-5595992",
+          "title": "Royal, Utah",
+          "url": "https://en.wikipedia.org/wiki/Royal%2C_Utah",
+          "text": "Royal is a ghost town that existed in the early 1900s as a small coal mining town in Carbon County, Utah, United States. Originally called Bear Canyon, the town was renamed Cameron, Rolapp, and finally Royal when the Royal Coal Company purchased it, changing names each time a new owner took over. All that remains of Royal today are some stone walls, a couple of the mines, and a miner's dwelling. These remnants can be seen in Price Canyon.\nThe historian and author Helen Z. Papanikolas was born here in 1917, during which time the town was known as Cameron.",
+          "retrievedAt": "2026-10-25T12:07:01.107Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 429.89046568253053,
+      "lateralM": 98.56493984506832,
+      "signedLateralM": -98.56493984506832,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q62565122",
+      "name": "White River (Price River tributary)",
+      "lat": 39.83856,
+      "lon": -111.0067,
+      "category": "River",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "White River (Price River tributary)",
+      "wikidata": "Q62565122",
+      "sourceUrl": "https://en.wikipedia.org/wiki/White_River_(Price_River_tributary)",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-65741044",
+          "title": "White River (Price River tributary)",
+          "url": "https://en.wikipedia.org/wiki/White_River_(Price_River_tributary)",
+          "text": "The White River is a 8-mile-long (13 km) southeastward flowing river in Wasatch and Utah Counties in eastern Utah. The White River is a tributary to the Price River, which is, in turn, a tributary to the Green River, and then to the Colorado River.",
+          "retrievedAt": "2026-10-25T12:07:02.209Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 449.6541119578479,
+      "lateralM": 53.80888116152623,
+      "signedLateralM": 53.80888116152623,
+      "areaKind": "river"
+    },
+    {
+      "id": "wd-Q5149462",
+      "name": "Colton, Utah",
+      "lat": 39.8525,
+      "lon": -111.01305556,
+      "category": "Town",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "Colton, Utah",
+      "wikidata": "Q5149462",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Colton%2C_Utah",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-16609456",
+          "title": "Colton, Utah",
+          "url": "https://en.wikipedia.org/wiki/Colton%2C_Utah",
+          "text": "Colton is a ghost town located near the southeastern edge of Utah County, Utah, United States, approximately 6 miles (9.7 km) south of Soldier Summit. Formerly a busy railroad junction on the Denver and Rio Grande Western Railroad, Colton is a landmark on U.S. Route 6 between the cities of Spanish Fork and Price.",
+          "retrievedAt": "2026-10-25T12:07:02.209Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 451.1903058777467,
+      "lateralM": 288.22296669403096,
+      "signedLateralM": -288.22296669403096,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q7851046",
+      "name": "Tucker, Utah",
+      "lat": 39.93444444,
+      "lon": -111.19944444,
+      "category": "Town",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "Tucker, Utah",
+      "wikidata": "Q7851046",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Tucker%2C_Utah",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-16575622",
+          "title": "Tucker, Utah",
+          "url": "https://en.wikipedia.org/wiki/Tucker%2C_Utah",
+          "text": "Tucker is a ghost town located near the east end of the Spanish Fork River in Utah County, Utah, United States 7 miles (11 km) below Soldier Summit on U.S. Route 6. It was once an important loading point and construction camp on the Denver and Rio Grande Western Railroad (D&RGW). After the town was abandoned, the state of Utah used the town site for a rest area. In 2009, the site was buried as part of a project to re-align a portion of US-6's western approach to Soldier Summit. To honor the town, the state of Utah built a replacement rest area about 2 miles (3.2 km) downstream from Tucker, called the Tie Fork Rest Area.",
+          "retrievedAt": "2026-10-25T12:07:03.187Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 479.131998599035,
+      "lateralM": 175.34012340134746,
+      "signedLateralM": 175.34012340134746,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q6858315",
+      "name": "Mill Fork, Utah",
+      "lat": 39.96388889,
+      "lon": -111.30805556,
+      "category": "Town",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "Mill Fork, Utah",
+      "wikidata": "Q6858315",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Mill_Fork%2C_Utah",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-17464107",
+          "title": "Mill Fork, Utah",
+          "url": "https://en.wikipedia.org/wiki/Mill_Fork%2C_Utah",
+          "text": "Mill Fork is a ghost town located approximately 12 miles (19 km) east of Thistle in Spanish Fork Canyon in Utah County, Utah, United States. Named for its sawmills, Mill Fork was important in the development of the railroad through the canyon. The arched entrance to the small, well-tended Mill Fork Cemetery is a landmark on U.S. Route 6 between the cities of Spanish Fork and Price.",
+          "retrievedAt": "2026-10-25T12:07:04.178Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 490.74159122170056,
+      "lateralM": 21.359866937980154,
+      "signedLateralM": -21.359866937980154,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q3068253",
+      "name": "Thistle, Utah",
+      "lat": 39.99138889,
+      "lon": -111.49833333,
+      "category": "Town",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "Thistle, Utah",
+      "wikidata": "Q3068253",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Thistle%2C_Utah",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-4327318",
+          "title": "Thistle, Utah",
+          "url": "https://en.wikipedia.org/wiki/Thistle%2C_Utah",
+          "text": "Thistle is a ghost town in Spanish Fork Canyon in southeastern Utah County, Utah, United States. During the era of steam locomotives, the town's primary industry was servicing trains for the Denver and Rio Grande Western Railroad (often shortened to D&RG, D&RGW, or Rio Grande). The fortunes of the town were closely linked with those of the railroad until the changeover to diesel locomotives, when the town started to decline.\nIn April 1983, a massive landslide (specifically a complex earthflow) dammed the Spanish Fork River. The residents were evacuated as nearly 65,000 acre-feet (80,000,000 m3) of water backed up, flooding the town. Thistle was destroyed; only a few structures were left partially standing. Federal and state government agencies have said this was the most costly landslide in United States history, the economic consequences of which affected the entire region. The landslide resulted in the first presidentially declared disaster area in Utah.\nU.S. Route 6 (US‑6), U.S. Route 89 (US‑89) and the railroad (now part of Union Pacific Railroad's Central Corridor) were closed for several months, until they were rebuilt on a higher alignment overlooking the area. The remains of...",
+          "retrievedAt": "2026-10-25T12:07:04.678Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 507.7587706187057,
+      "lateralM": 869.3040902666789,
+      "signedLateralM": 869.3040902666789,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q49076201",
+      "name": "Spanish Fork Peak",
+      "lat": 40.0880375,
+      "lon": -111.5277008,
+      "category": "Mountain",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "Spanish Fork Peak",
+      "wikidata": "Q49076201",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Spanish_Fork_Peak",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-74984078",
+          "title": "Spanish Fork Peak",
+          "url": "https://en.wikipedia.org/wiki/Spanish_Fork_Peak",
+          "text": "Spanish Fork Peak is a 10,192-foot elevation (3,107 m) mountain summit located in Utah County, Utah, United States.",
+          "retrievedAt": "2026-10-25T12:07:05.182Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 516.6114524413247,
+      "lateralM": 4263.6748204054875,
+      "signedLateralM": -4263.6748204054875
+    },
+    {
+      "id": "wd-Q482552",
+      "name": "Spanish Fork, Utah",
+      "lat": 40.115,
+      "lon": -111.63833333,
+      "category": "Town",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "Spanish Fork, Utah",
+      "wikidata": "Q482552",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Spanish_Fork%2C_Utah",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-137168",
+          "title": "Spanish Fork, Utah",
+          "url": "https://en.wikipedia.org/wiki/Spanish_Fork%2C_Utah",
+          "text": "Spanish Fork is a city in Utah County, Utah, United States. It is part of the Provo–Orem metropolitan area. The 2020 census reported a population of 42,602. Spanish Fork is the 20th largest city in Utah based on official 2017 estimates from the US Census Bureau.\nSpanish Fork lies in the Utah Valley, with the Wasatch Range to the east and Utah Lake to the northwest. I-15 passes the northwest side of the city. Payson is approximately six miles to the southwest, Springville lies about four miles to the northeast, and Salem is approximately 4.5 miles to the south.",
+          "retrievedAt": "2026-10-25T12:07:05.628Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 526.7065297655629,
+      "lateralM": 2415.4069135380178,
+      "signedLateralM": 2415.4069135380178,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q482504",
+      "name": "Mapleton, Utah",
+      "lat": 40.13388889,
+      "lon": -111.57444444,
+      "category": "Town",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "Mapleton, Utah",
+      "wikidata": "Q482504",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Mapleton%2C_Utah",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-137161",
+          "title": "Mapleton, Utah",
+          "url": "https://en.wikipedia.org/wiki/Mapleton%2C_Utah",
+          "text": "Mapleton is a city in Utah County, Utah, United States. It is part of the Provo–Orem Metropolitan Statistical Area. The population was 11,365 at the 2020 census.",
+          "retrievedAt": "2026-10-25T12:07:05.628Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 528.9979235648709,
+      "lateralM": 2885.4639076552444,
+      "signedLateralM": -2885.4639076552444,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q8020717",
+      "name": "William and Ann Bringhurst House",
+      "lat": 40.1625,
+      "lon": -111.61361111,
+      "category": "Heritage",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "William and Ann Bringhurst House",
+      "wikidata": "Q8020717",
+      "sourceUrl": "https://en.wikipedia.org/wiki/William_and_Ann_Bringhurst_House",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-36730813",
+          "title": "William and Ann Bringhurst House",
+          "url": "https://en.wikipedia.org/wiki/William_and_Ann_Bringhurst_House",
+          "text": "The William and Ann Bringhurst House, is a historic residence within the Springville Historic District in Springville, Utah, United States, that is listed on the National Register of Historic Places (NRHP).",
+          "retrievedAt": "2026-10-25T12:07:05.628Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 531.4948226012123,
+      "lateralM": 349.14952332996546,
+      "signedLateralM": -349.14952332996546
+    },
+    {
+      "id": "wd-Q7668061",
+      "name": "T. R. Kelly House",
+      "lat": 40.16416667,
+      "lon": -111.61277778,
+      "category": "Heritage",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "T. R. Kelly House",
+      "wikidata": "Q7668061",
+      "sourceUrl": "https://en.wikipedia.org/wiki/T._R._Kelly_House",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-37489132-excerpt",
+          "title": "T. R. Kelly House",
+          "url": "https://en.wikipedia.org/wiki/T._R._Kelly_House",
+          "text": "Kelly House is a historic house within the Springville Historic District in Springville, Utah, United States, that is individually listed on the National Register of Historic Places (NRHP).",
+          "retrievedAt": "2026-10-25T12:07:05.628Z",
+          "license": "CC BY-SA 4.0"
+        },
+        {
+          "id": "wikipedia-37489132",
+          "title": "T. R. Kelly House",
+          "url": "https://en.wikipedia.org/wiki/T._R._Kelly_House",
+          "text": "The T. R. Kelly House is a historic house within the Springville Historic District in Springville, Utah, United States, that is individually listed on the National Register of Historic Places (NRHP).",
+          "retrievedAt": "2026-10-25T12:07:05.628Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 531.6785020070673,
+      "lateralM": 424.1206477982071,
+      "signedLateralM": -424.1206477982071
+    },
+    {
+      "id": "wd-Q7252770",
+      "name": "Provo station (Amtrak)",
+      "lat": 40.22583333,
+      "lon": -111.66388889,
+      "category": "Railroad heritage",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "Provo station (Amtrak)",
+      "wikidata": "Q7252770",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Provo_station_(Amtrak)",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-10555906",
+          "title": "Provo station (Amtrak)",
+          "url": "https://en.wikipedia.org/wiki/Provo_station_(Amtrak)",
+          "text": "Provo station is a train station in Provo, Utah. It is served by Amtrak's California Zephyr, which runs once daily between Chicago and Emeryville, California, in the San Francisco Bay Area.\n\n",
+          "retrievedAt": "2026-10-25T12:07:06.985Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 540.2640914645294,
+      "lateralM": 24.60831851005388,
+      "signedLateralM": -24.60831851005388
+    },
+    {
+      "id": "wd-Q940919",
+      "name": "Utah Valley University",
+      "lat": 40.27777778,
+      "lon": -111.71388889,
+      "category": "Nature",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "Utah Valley University",
+      "wikidata": "Q940919",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Utah_Valley_University",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-819227",
+          "title": "Utah Valley University",
+          "url": "https://en.wikipedia.org/wiki/Utah_Valley_University",
+          "text": "Utah Valley University (UVU) is a public university in Orem, Utah, United States. UVU offers master's, bachelor's, associate degrees, and certificates. Previously called Utah Valley State College, the school attained university status in July 2008. With an enrollment of over 48,000 students as of fall 2025, UVU is the largest university by enrollment in Utah and one of the largest in the Rocky Mountain region of the United States.\n\n",
+          "retrievedAt": "2026-10-25T12:07:08.097Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 547.768880277865,
+      "lateralM": 697.8057821158441,
+      "signedLateralM": -697.8057821158441,
+      "areaKind": "valley"
+    },
+    {
+      "id": "wd-Q52468",
+      "name": "Orem, Utah",
+      "lat": 40.29055556,
+      "lon": -111.72972222,
+      "category": "Town",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "Orem, Utah",
+      "wikidata": "Q52468",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Orem%2C_Utah",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-45186",
+          "title": "Orem, Utah",
+          "url": "https://en.wikipedia.org/wiki/Orem%2C_Utah",
+          "text": "Orem is a city in Utah County, Utah, United States, in the north central part of the state. It is adjacent to Provo, Lindon, and Vineyard and is approximately 45 miles (72 km) south of Salt Lake City.\nOrem is one of the principal cities of the Provo-Orem, Utah Metropolitan Statistical Area, which includes all of Utah and Juab counties. The 2020 population was 98,129, while the 2010 population was 88,328 making it the 5th most populous city in Utah. Utah Valley University is located in Orem.",
+          "retrievedAt": "2026-10-25T12:07:08.097Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 549.6720341987046,
+      "lateralM": 249.86876855737702,
+      "signedLateralM": -249.86876855737702,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q7923642",
+      "name": "Veterans Memorial Building (American Fork, Utah)",
+      "lat": 40.37805556,
+      "lon": -111.79833333,
+      "category": "Heritage",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "Veterans Memorial Building (American Fork, Utah)",
+      "wikidata": "Q7923642",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Veterans_Memorial_Building_(American_Fork%2C_Utah)",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-37712033",
+          "title": "Veterans Memorial Building (American Fork, Utah)",
+          "url": "https://en.wikipedia.org/wiki/Veterans_Memorial_Building_(American_Fork%2C_Utah)",
+          "text": "The Veterans Memorial Building at 53 N. Center in American Fork, Utah was built in 1934.  It has also been known as American Fork Legion Hall and as Legion Memorial Building.   It was listed on the National Register of Historic Places in 1994.",
+          "retrievedAt": "2026-10-25T12:07:09.123Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 560.6605723793322,
+      "lateralM": 964.3214892814522,
+      "signedLateralM": -964.3214892814522
+    },
+    {
+      "id": "wd-Q7710591",
+      "name": "Thanksgiving Point",
+      "lat": 40.4313,
+      "lon": -111.9026,
+      "category": "Heritage",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "Thanksgiving Point",
+      "wikidata": "Q7710591",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Thanksgiving_Point",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-8675207",
+          "title": "Thanksgiving Point",
+          "url": "https://en.wikipedia.org/wiki/Thanksgiving_Point",
+          "text": "Thanksgiving Point is a 501(c)(3) non-profit indoor and outdoor farm, garden, and museum complex in Lehi, Utah, United States. Its five main attractions include Ashton Gardens, Butterfly Biosphere, Farm Country, Museum of Ancient Life, and Museum of Natural Curiosity. It also operates multiple dining options, event spaces, and gift shops. Each year, approximately 2.8 million guests visit Thanksgiving Point .\nOther businesses under separate management but located on Thanksgiving Point's campuses include Brick Canvas Studios, Holdman Studios and Glass Art Institute, Larry H. Miller Megaplex Theatres, and Thanksgiving Point Golf Course.\nThanksgiving Point also serves as an extension location of Utah State University.\n\n",
+          "retrievedAt": "2026-10-25T12:07:10.106Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 571.9886139414945,
+      "lateralM": 15.92277261780125,
+      "signedLateralM": -15.92277261780125
+    },
+    {
+      "id": "wd-Q5027691",
+      "name": "Camp Williams",
+      "lat": 40.4375,
+      "lon": -111.9255,
+      "category": "Heritage",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "Camp Williams",
+      "wikidata": "Q5027691",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Camp_Williams",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-18856548-excerpt",
+          "title": "Camp Williams",
+          "url": "https://en.wikipedia.org/wiki/Camp_Williams",
+          "text": "Williams, commonly known as Camp Williams, also known as Army Garrison Camp Williams, is a National Guard training site operated by the Utah National Guard.",
+          "retrievedAt": "2026-10-25T12:07:10.106Z",
+          "license": "CC BY-SA 4.0"
+        },
+        {
+          "id": "wikipedia-18856548",
+          "title": "Camp Williams",
+          "url": "https://en.wikipedia.org/wiki/Camp_Williams",
+          "text": "Camp W. G. Williams, commonly known as Camp Williams, also known as Army Garrison Camp Williams, is a National Guard training site operated by the Utah National Guard. It is located south of Bluffdale, west of Lehi, and north of Saratoga Springs and Cedar Fort, approximately 25 miles (40 km) south of Salt Lake City, straddling the border between Salt Lake County and Utah County in the western portion of the Traverse Mountains. Camp Williams is also home to the Non-Commissioned Officer's Basic Leader Course, which is taught to Active, National Guard, and Reserve components.\nCamp Williams land comprises about 6 square miles (16 km2) of flat area and 47 square miles (120 km2) of mountainous region.",
+          "retrievedAt": "2026-10-25T12:07:10.106Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 574.1123150187004,
+      "lateralM": 638.8945296900548,
+      "signedLateralM": 638.8945296900548
+    },
+    {
+      "id": "wd-Q14711895",
+      "name": "Utah and Salt Lake Canal",
+      "lat": 40.44305556,
+      "lon": -111.92305556,
+      "category": "Nature",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "Utah and Salt Lake Canal",
+      "wikidata": "Q14711895",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Utah_and_Salt_Lake_Canal",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-37025809",
+          "title": "Utah and Salt Lake Canal",
+          "url": "https://en.wikipedia.org/wiki/Utah_and_Salt_Lake_Canal",
+          "text": "The Utah and Salt Lake Canal is an historic waterway in Salt Lake County, Utah, United States.",
+          "retrievedAt": "2026-10-25T12:07:10.106Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 574.1752301814628,
+      "lateralM": 86.80944792351885,
+      "signedLateralM": 86.80944792351885,
+      "areaKind": "lake"
+    },
+    {
+      "id": "wd-Q482962",
+      "name": "Bluffdale, Utah",
+      "lat": 40.47333333,
+      "lon": -111.94444444,
+      "category": "Town",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "Bluffdale, Utah",
+      "wikidata": "Q482962",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Bluffdale%2C_Utah",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-137049",
+          "title": "Bluffdale, Utah",
+          "url": "https://en.wikipedia.org/wiki/Bluffdale%2C_Utah",
+          "text": "Bluffdale is a city in Salt Lake and Utah counties in the U.S. state of Utah, located about 20 miles (32 km) south of Salt Lake City. As of the 2020 census, the city population was 17,014.",
+          "retrievedAt": "2026-10-25T12:07:10.106Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 577.6131087380388,
+      "lateralM": 1121.1215454297724,
+      "signedLateralM": 1121.1215454297724,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q7836161",
+      "name": "Traverse Mountains",
+      "lat": 40.47189,
+      "lon": -111.88299,
+      "category": "Mountain",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "Traverse Mountains",
+      "wikidata": "Q7836161",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Traverse_Mountains",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-8327175",
+          "title": "Traverse Mountains",
+          "url": "https://en.wikipedia.org/wiki/Traverse_Mountains",
+          "text": "The Traverse Mountains, or sometimes Traverse Range, are an east-trending mountain range that separates Salt Lake Valley and Utah Valley in Salt Lake and Utah counties in the U.S. State of Utah. The mountains have some anomalous features, possibly due to having been created in a vast landslide, and are considered geologically complex.\nPoint of the Mountain is colloquially used to refer to a feature of this range that juts out prominently to the west, marking an informal boundary line separating the metropolitan areas of Salt Lake City and Provo. Point of the Mountain also describes the nearby mountain pass at 40°27′13″N 111°54′38″W, used by the highways and rail arteries that connect the two areas.",
+          "retrievedAt": "2026-10-25T12:07:10.106Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 579.5740826441942,
+      "lateralM": 3601.173647101725,
+      "signedLateralM": -3601.173647101725
+    },
+    {
+      "id": "wd-Q22073377",
+      "name": "Willow Creek (Jordan River tributary)",
+      "lat": 40.55194444,
+      "lon": -111.91222222,
+      "category": "River",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "Willow Creek (Jordan River tributary)",
+      "wikidata": "Q22073377",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Willow_Creek_(Jordan_River_tributary)",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-48428520",
+          "title": "Willow Creek (Jordan River tributary)",
+          "url": "https://en.wikipedia.org/wiki/Willow_Creek_(Jordan_River_tributary)",
+          "text": "Willow Creek is a tributary stream of the Jordan River, in Salt Lake County, Utah.\nIts mouth is at its confluence with the Jordan River, west of Draper at an elevation of 4,318 feet (1,316 m).  Its source is located at an elevation of 4,980 feet (1,520 m) at 40°32′47″N 111°48′42″W, the confluence of Big Willow Creek and Rocky Mouth Canyon that flow down the west slope of 11,253-foot (3,430 m) Lone Peak in the Wasatch Range.",
+          "retrievedAt": "2026-10-25T12:07:12.892Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 587.0693207445686,
+      "lateralM": 862.7587690962099,
+      "signedLateralM": 862.7587690962099,
+      "areaKind": "river"
+    },
+    {
+      "id": "wd-Q482822",
+      "name": "Murray, Utah",
+      "lat": 40.6525,
+      "lon": -111.89333333,
+      "category": "Town",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "Murray, Utah",
+      "wikidata": "Q482822",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Murray%2C_Utah",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-137064",
+          "title": "Murray, Utah",
+          "url": "https://en.wikipedia.org/wiki/Murray%2C_Utah",
+          "text": "Murray () is a city situated on the Wasatch Front in the core of Salt Lake Valley in the U.S. state of Utah. Named for territorial governor Eli Murray, the city had a population of 50,637 as of the 2020 United States Census.\nMurray shares borders with Taylorsville, Holladay, South Salt Lake, Millcreek and West Jordan, Utah. Once teeming with heavy industry, Murray's industry mix has now shifted significantly toward healthcare, retail, and professional, scientific, and technical services. Known for its central location in Salt Lake County, Murray has been called the Hub of Salt Lake County.\nUnlike most of its neighboring communities which use unified civic services, Murray operates its own police, fire, power, water, library, and parks and recreation departments and also has its own school district. While maintaining many of its own services, Murray has one of the lowest city tax rates in the state.\nThousands of people each year visit Murray City Park for organized sports and its wooded areas. Murray is home to the Intermountain Medical Center, a medical campus that is also Murray's largest employer. Murray has been designated a Tree City USA since 1977.",
+          "retrievedAt": "2026-10-25T12:07:13.844Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 598.5825720783831,
+      "lateralM": 486.3387777553052,
+      "signedLateralM": -486.3387777553052,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q5264025",
+      "name": "Desert Star Theater",
+      "lat": 40.66555556,
+      "lon": -111.88805556,
+      "category": "Nature",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "Desert Star Theater",
+      "wikidata": "Q5264025",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Desert_Star_Theater",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-2191383",
+          "title": "Desert Star Theater",
+          "url": "https://en.wikipedia.org/wiki/Desert_Star_Theater",
+          "text": "Desert Star Theater is a dinner theater establishment in Murray, Utah. It started out as a small theater called the Gem, which showed silent movies with a piano for music. It was later closed down and demolished, but rebuilt and expanded into the Iris Theater by owner Tony Duvall. After his retirement, the Iris changed hands several times before being renamed the Vista.\nThe National Register of Historic Places, notes Iris Theater, Apartments and Commercial Building, built in 1930, is significant for its role in the urbanization of Murray City. With its combination of entertainment, retail, and residential space, the building represents an elaborate example of the multi-use commercial block common during the early twentieth-century development of the city's commercial business district. The building was owned by the Duvall family who managed the theater while living in the apartments above the storefronts. The Iris building is also significant as the only commercial building in Murray built in the Art Deco style. Though not a particularly ornate example of the style, the building makes a distinctive contribution to the State Street frontage of the Murray Downtown Historic District. The...",
+          "retrievedAt": "2026-10-25T12:07:13.844Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 599.9058562325021,
+      "lateralM": 651.5161936031488,
+      "signedLateralM": -651.5161936031488,
+      "areaKind": "park"
+    },
+    {
+      "id": "wd-Q7969311",
+      "name": "Warenski-Duvall Commercial Building and Apartments",
+      "lat": 40.66555556,
+      "lon": -111.88805556,
+      "category": "Heritage",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "Warenski-Duvall Commercial Building and Apartments",
+      "wikidata": "Q7969311",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Warenski-Duvall_Commercial_Building_and_Apartments",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-25004214",
+          "title": "Warenski-Duvall Commercial Building and Apartments",
+          "url": "https://en.wikipedia.org/wiki/Warenski-Duvall_Commercial_Building_and_Apartments",
+          "text": "The Warenski-Duvall Commercial Building and Apartments, built in 1915, is a two-story brick, two part commercial block that is listed in National Register of Historic Places. The building is significant for its role in the early urbanization of Murray, Utah. The Warenski-Duvall building represents a building-type common during the early-twentieth century development of Murray's commercial business district and it is also part of the Murray Downtown Historic District. The building's owner was Edward J. Warenski, an early resident of Murray who owned a saloon and grocery store on State Street. Warenski and his family lived just north of the store. In 1923, the Duvall family purchased the building and divided the upper floor into apartments where family members and other workers in downtown Murray lived.\nThe Warenski-Duvall Commercial Building and Apartments is a transitional building in the context of Murray City's development. This building represents the changes brought to the economic and social structure of the community in the first quarter of the twentieth century. Between 1902 and the 1930s, commercial buildings lined State Street from 4700 South to 5000 South. Most of these businesses...",
+          "retrievedAt": "2026-10-25T12:07:13.844Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 599.9058562325021,
+      "lateralM": 651.5161936031488,
+      "signedLateralM": -651.5161936031488
+    },
+    {
+      "id": "wd-Q14711844",
+      "name": "Murray Downtown Historic District",
+      "lat": 40.66777778,
+      "lon": -111.88833333,
+      "category": "Heritage",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "Murray Downtown Historic District",
+      "wikidata": "Q14711844",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Murray_Downtown_Historic_District",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-24775520",
+          "title": "Murray Downtown Historic District",
+          "url": "https://en.wikipedia.org/wiki/Murray_Downtown_Historic_District",
+          "text": "The Murray Downtown Historic District is located in the historic city center of Murray, Salt Lake County, Utah. It was listed on the National Register of Historic Places in 2006.\n\nThe historic district is significant for its association with the development, particularly economic and social, of the community from a rural outpost to an industrialized city with a remarkably urban core in its commercial district. Murray is one of only a few towns in Utah and the only community in the Salt Lake Valley, other than Salt Lake City, to have substantial mixed commercial/residential development with resident population living in the upper floors of commercial buildings. The population of Murray's urban center was remarkable for its integrated mix of Utah-born residents and recent immigrants attracted by the smelter industry. The tight urban streetscape along State Street between approximately 4800 South Street (formerly Murray Boulevard) and Vine Street is a distinctive reminder of the heyday of Murray's commercial importance in the south-central part of the valley. The district is also significant as an urban streetscape and for the architectural variety and quality of the individual buildings...",
+          "retrievedAt": "2026-10-25T12:07:13.844Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 600.1540450072724,
+      "lateralM": 648.1412196835396,
+      "signedLateralM": -648.1412196835396
+    },
+    {
+      "id": "wd-Q7405869",
+      "name": "Salt Lake City Intermodal Hub",
+      "lat": 40.76277778,
+      "lon": -111.90833333,
+      "category": "Nature",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "Salt Lake City Intermodal Hub",
+      "wikidata": "Q7405869",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Salt_Lake_City_Intermodal_Hub",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-17170435-excerpt",
+          "title": "Salt Lake City Intermodal Hub",
+          "url": "https://en.wikipedia.org/wiki/Salt_Lake_City_Intermodal_Hub",
+          "text": "Service at the intermodal hub is also provided by Amtrak (with the California Zephyr), and Greyhound Lines, as well as UTA local bus service.",
+          "retrievedAt": "2026-10-25T12:07:14.803Z",
+          "license": "CC BY-SA 4.0"
+        },
+        {
+          "id": "wikipedia-17170435",
+          "title": "Salt Lake City Intermodal Hub",
+          "url": "https://en.wikipedia.org/wiki/Salt_Lake_City_Intermodal_Hub",
+          "text": "The Salt Lake City Intermodal Hub, also called Salt Lake Central station by the Utah Transit Authority (UTA), is a multi-modal transportation hub in Salt Lake City, Utah, United States served by the Blue Line of UTA's TRAX light rail system that operates in Salt Lake County and by the FrontRunner, UTA's commuter rail train that operates along the Wasatch Front with service from Ogden in  central Weber County through Davis County, Salt Lake City, and Salt Lake County to Provo in central Utah County. Service at the intermodal hub is also provided by Amtrak (with the California Zephyr), and Greyhound Lines, as well as UTA local bus service.\n\n",
+          "retrievedAt": "2026-10-25T12:07:14.803Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 610.760428113099,
+      "lateralM": 154.2648242932282,
+      "signedLateralM": -154.2648242932282,
+      "areaKind": "lake"
+    },
+    {
+      "id": "wd-Q16902900",
+      "name": "Warehouse District (Salt Lake City)",
+      "lat": 40.76305556,
+      "lon": -111.90277778,
+      "category": "Heritage",
+      "routeIds": [
+        "cz-canyons"
+      ],
+      "wikipedia": "Warehouse District (Salt Lake City)",
+      "wikidata": "Q16902900",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Warehouse_District_(Salt_Lake_City)",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-40467910",
+          "title": "Warehouse District (Salt Lake City)",
+          "url": "https://en.wikipedia.org/wiki/Warehouse_District_(Salt_Lake_City)",
+          "text": "The Warehouse District of Salt Lake City, Utah, is a historic district on the city's west side.  The area has been occupied by artists, and worked on by developers. A small portion of its area was added to the National Register of Historic Places in 1982, and the listing was greatly enlarged by a boundary increase in 2016.\n\n",
+          "retrievedAt": "2026-10-25T12:07:14.803Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 610.760428113099,
+      "lateralM": 573.7294879124127,
+      "signedLateralM": -573.7294879124127
+    }
+  ]
+}

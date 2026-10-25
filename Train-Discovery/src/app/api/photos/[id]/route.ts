@@ -39,7 +39,7 @@ async function googlePhoto(request: Request, place: Place, key: string): Promise
             "places.id,places.displayName,places.location,places.photos,places.googleMapsUri",
         },
         body: JSON.stringify({
-          textQuery: place.routeIds.some((id) => id.startsWith("cz-")) ? `${place.name}, Colorado` : `${place.name}, New York`,
+          textQuery: place.routeIds.some((id) => id.startsWith("cz-")) ? place.name : `${place.name}, New York`,
           pageSize: 1,
           locationBias: {
             circle: {

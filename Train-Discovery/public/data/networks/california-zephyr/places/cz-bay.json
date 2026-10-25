@@ -1,0 +1,1137 @@
+{
+  "importedAt": "2026-10-25T12:09:40.555Z",
+  "source": "English Wikipedia via MediaWiki geosearch (coordinates, Wikidata IDs, exact article excerpts)",
+  "license": "Wikipedia excerpts: CC BY-SA 4.0; Wikidata identifiers: CC0.",
+  "corridorM": 5000,
+  "samplingKm": 12,
+  "searchRadiusM": 10000,
+  "coverage": {
+    "routeLengthKm": 163.90825164663914,
+    "firstPoiKm": 0,
+    "lastPoiKm": 163.90825164663914,
+    "narratableCount": 36,
+    "sampleCount": 15,
+    "failedSamples": [],
+    "gapsOver30Km": [],
+    "largestGapKm": 17.825119085165028
+  },
+  "places": [
+    {
+      "id": "wd-Q16948827",
+      "name": "Maidu Regional Park",
+      "lat": 38.7351,
+      "lon": -121.2481,
+      "category": "Nature",
+      "routeIds": [
+        "cz-bay"
+      ],
+      "wikipedia": "Maidu Regional Park",
+      "wikidata": "Q16948827",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Maidu_Regional_Park",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-40538154",
+          "title": "Maidu Regional Park",
+          "url": "https://en.wikipedia.org/wiki/Maidu_Regional_Park",
+          "text": "The Maidu Regional Park is located in Roseville, California. This 152-acre park has a small museum and historic site. The grounds also consist of the Maidu Community Center, the Maidu Branch Library, and Veterans Memorial Rose Garden. Other features include a four-diamond softball complex, a five-field soccer complex, a skate park, a full basketball court, picnic areas and play equipment, and a bicycle and pedestrian path through the wooded area of the park where multiple artifacts from the Maidu Native American tribe have been found.\n\n",
+          "retrievedAt": "2026-10-25T12:08:15.752Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 0,
+      "lateralM": 3651.444031280738,
+      "signedLateralM": 3651.444031280738,
+      "areaKind": "park"
+    },
+    {
+      "id": "wd-Q6735543",
+      "name": "Maidu Museum & Historic Site",
+      "lat": 38.7386,
+      "lon": -121.2458,
+      "category": "Heritage",
+      "routeIds": [
+        "cz-bay"
+      ],
+      "wikipedia": "Maidu Museum & Historic Site",
+      "wikidata": "Q6735543",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Maidu_Museum_%26_Historic_Site",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-36608588",
+          "title": "Maidu Museum & Historic Site",
+          "url": "https://en.wikipedia.org/wiki/Maidu_Museum_%26_Historic_Site",
+          "text": "The Maidu Museum & Historic Site is an interpretive center museum dedicated to public education about the Maidu peoples of what is now California. It is operated by the city of Roseville, California and located there.",
+          "retrievedAt": "2026-10-25T12:08:15.752Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 0,
+      "lateralM": 3683.483682515107,
+      "signedLateralM": 3683.483682515107
+    },
+    {
+      "id": "wd-Q530920",
+      "name": "North Highlands, California",
+      "lat": 38.67305556,
+      "lon": -121.37277778,
+      "category": "Town",
+      "routeIds": [
+        "cz-bay"
+      ],
+      "wikipedia": "North Highlands, California",
+      "wikidata": "Q530920",
+      "sourceUrl": "https://en.wikipedia.org/wiki/North_Highlands%2C_California",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-107969",
+          "title": "North Highlands, California",
+          "url": "https://en.wikipedia.org/wiki/North_Highlands%2C_California",
+          "text": "North Highlands is a census-designated place (CDP) in Sacramento County, California, United States. It is part of the Sacramento metropolitan area. The population was 49,327 at the 2020 census, up from 42,694 at the 2010 census.",
+          "retrievedAt": "2026-10-25T12:08:19.127Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 11.440529437143912,
+      "lateralM": 315.60199194584953,
+      "signedLateralM": -315.60199194584953,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q4688448",
+      "name": "Aerospace Museum of California",
+      "lat": 38.675099,
+      "lon": -121.391029,
+      "category": "Heritage",
+      "routeIds": [
+        "cz-bay"
+      ],
+      "wikipedia": "Aerospace Museum of California",
+      "wikidata": "Q4688448",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Aerospace_Museum_of_California",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-11611370",
+          "title": "Aerospace Museum of California",
+          "url": "https://en.wikipedia.org/wiki/Aerospace_Museum_of_California",
+          "text": "The Aerospace Museum of California is a private non-profit aviation museum located in McClellan, California, outside of Sacramento, California, on the grounds of the former McClellan Air Force Base.",
+          "retrievedAt": "2026-10-25T12:08:19.127Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 12.29003517878496,
+      "lateralM": 1672.2244573590162,
+      "signedLateralM": -1672.2244573590162
+    },
+    {
+      "id": "wd-Q9385088",
+      "name": "McClellan Park, California",
+      "lat": 38.66222222,
+      "lon": -121.40166667,
+      "category": "Town",
+      "routeIds": [
+        "cz-bay"
+      ],
+      "wikipedia": "McClellan Park, California",
+      "wikidata": "Q9385088",
+      "sourceUrl": "https://en.wikipedia.org/wiki/McClellan_Park%2C_California",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-30295466",
+          "title": "McClellan Park, California",
+          "url": "https://en.wikipedia.org/wiki/McClellan_Park%2C_California",
+          "text": "McClellan Park is a census-designated place (CDP) in Sacramento County, California, United States. McClellan Park sits at an elevation of 69 feet (21 m). The 2020 United States census reported that McClellan Park's population was 926. It is the site of the former McClellan Air Force Base, closed by the federal government in 2001. McClellan Air Force Base (currently McClellan Park) was named in honor of test pilot Hezekiah McClellan.",
+          "retrievedAt": "2026-10-25T12:08:19.127Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 13.980144306206327,
+      "lateralM": 1453.1516400751123,
+      "signedLateralM": -1453.1516400751123,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q25238399",
+      "name": "Bushy Lake",
+      "lat": 38.5889,
+      "lon": -121.4345,
+      "category": "Nature",
+      "routeIds": [
+        "cz-bay"
+      ],
+      "wikipedia": "Bushy Lake",
+      "wikidata": "Q25238399",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Bushy_Lake",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-50484350",
+          "title": "Bushy Lake",
+          "url": "https://en.wikipedia.org/wiki/Bushy_Lake",
+          "text": "Bushy Lake is a small lake located in Sacramento, California along the American River Parkway. The area is part of an ongoing restoration project, it also provides habitat to wildlife and offers nearby recreation opportunities.  The area is prone to drought, erosion, species invasion, fire, and groups of transient populations. In the American River Parkway Plan, the lake is designated as a Nature Study Area and further protected by the Bushy Lake Preservation Act.\n\n",
+          "retrievedAt": "2026-10-25T12:08:21.210Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 22.96276377663061,
+      "lateralM": 1385.591146173779,
+      "signedLateralM": 1385.591146173779,
+      "areaKind": "lake"
+    },
+    {
+      "id": "wd-Q116077423",
+      "name": "New Helvetia Cemetery",
+      "lat": 38.57316,
+      "lon": -121.46399,
+      "category": "Heritage",
+      "routeIds": [
+        "cz-bay"
+      ],
+      "wikipedia": "New Helvetia Cemetery",
+      "wikidata": "Q116077423",
+      "sourceUrl": "https://en.wikipedia.org/wiki/New_Helvetia_Cemetery",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-72687179",
+          "title": "New Helvetia Cemetery",
+          "url": "https://en.wikipedia.org/wiki/New_Helvetia_Cemetery",
+          "text": "New Helvetia Cemetery, initially named Sutter Fort Burying Ground, was a cemetery founded in c. 1845 and closed in 1912, formerly located at the northeast corner of Alhambra Boulevard and J Street (present-day 924 Alhambra Boulevard) in the East Sacramento neighborhood of Sacramento, California. It was the first cemetery in the city of Sacramento. \nIn the 1950s, bodies were disinterred and moved to other city cemeteries, and a school was constructed on the site, now Miwok Middle School (formerly Sutter Middle School). \nThe site is listed as a California Historical Landmark (number 592) by the California Office of Historic Preservation since May 22, 1957.",
+          "retrievedAt": "2026-10-25T12:08:21.210Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 24.513119590392233,
+      "lateralM": 986.9094815209811,
+      "signedLateralM": 986.9094815209811
+    },
+    {
+      "id": "wd-Q4949659",
+      "name": "Boulevard Park, Sacramento, California",
+      "lat": 38.58138889,
+      "lon": -121.47555556,
+      "category": "Heritage",
+      "routeIds": [
+        "cz-bay"
+      ],
+      "wikipedia": "Boulevard Park, Sacramento, California",
+      "wikidata": "Q4949659",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Boulevard_Park%2C_Sacramento%2C_California",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-15728016",
+          "title": "Boulevard Park, Sacramento, California",
+          "url": "https://en.wikipedia.org/wiki/Boulevard_Park%2C_Sacramento%2C_California",
+          "text": "Boulevard Park is a historic residential neighborhood in  Sacramento, California. It is also the Boulevard Park Historic District, listed on the National Register of Historic Places.",
+          "retrievedAt": "2026-10-25T12:08:21.210Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 25.7502974873421,
+      "lateralM": 423.8660550950288,
+      "signedLateralM": 423.8660550950288
+    },
+    {
+      "id": "wd-Q2925937",
+      "name": "Broderick, California",
+      "lat": 38.59111111,
+      "lon": -121.51722222,
+      "category": "Town",
+      "routeIds": [
+        "cz-bay"
+      ],
+      "wikipedia": "Broderick, California",
+      "wikidata": "Q2925937",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Broderick%2C_California",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-1973012",
+          "title": "Broderick, California",
+          "url": "https://en.wikipedia.org/wiki/Broderick%2C_California",
+          "text": "Broderick (formerly, Washington) is a former town in Yolo County, California, United States, now forming part of the City of West Sacramento. It is located just west of the Sacramento River in the eastern portion of the county. Broderick's ZIP Code is 95605 and is in area codes 916 and 279. It lies at an elevation of 23 feet (7 m).\n\n",
+          "retrievedAt": "2026-10-25T12:08:22.171Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 29.825987629099064,
+      "lateralM": 387.90699785807635,
+      "signedLateralM": -387.90699785807635,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q5351533",
+      "name": "El Macero, California",
+      "lat": 38.54401944,
+      "lon": -121.68516944,
+      "category": "Town",
+      "routeIds": [
+        "cz-bay"
+      ],
+      "wikipedia": "El Macero, California",
+      "wikidata": "Q5351533",
+      "sourceUrl": "https://en.wikipedia.org/wiki/El_Macero%2C_California",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-5326451",
+          "title": "El Macero, California",
+          "url": "https://en.wikipedia.org/wiki/El_Macero%2C_California",
+          "text": "El Macero is an unincorporated community and census-designated place (CDP) just outside the city limits of Davis, California, United States, in Yolo County. Until 2006 it had a separate ZIP Code, 95618.  In 2006, eastern and southern parts of Davis were added to the 95618 zone. Formerly, a separate post office served El Macero; this is now closed.  El Macero was named for Bruce Mace, on whose land it was built. The community is in area code 530. It lies at an elevation of 36 feet (11 m). A golf course is in the community.\nAs of the 2020 census, El Macero had a population of 1,074.",
+          "retrievedAt": "2026-10-25T12:08:23.235Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 45.28112037715661,
+      "lateralM": 1227.3732893468393,
+      "signedLateralM": 1227.3732893468393,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q108518120",
+      "name": "Gorman Museum of Native American Art",
+      "lat": 38.537691,
+      "lon": -121.746555,
+      "category": "Heritage",
+      "routeIds": [
+        "cz-bay"
+      ],
+      "wikipedia": "Gorman Museum of Native American Art",
+      "wikidata": "Q108518120",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Gorman_Museum_of_Native_American_Art",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-68729536",
+          "title": "Gorman Museum of Native American Art",
+          "url": "https://en.wikipedia.org/wiki/Gorman_Museum_of_Native_American_Art",
+          "text": "Gorman Museum of Native American Art is a museum focused on contemporary Native American and Indigenous artists, founded in 1973 at University of California, Davis (UC Davis) in Davis, California. It was formerly known as the Carl Nelson Gorman Museum, and the C.N. Gorman Museum. The museum moved to a new location in 2023.",
+          "retrievedAt": "2026-10-25T12:08:23.235Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 50.6372083582214,
+      "lateralM": 263.57387363580443,
+      "signedLateralM": -263.57387363580443
+    },
+    {
+      "id": "wd-Q30593651",
+      "name": "Manetti Shrem Museum of Art",
+      "lat": 38.5335,
+      "lon": -121.7478,
+      "category": "Heritage",
+      "routeIds": [
+        "cz-bay"
+      ],
+      "wikipedia": "Manetti Shrem Museum of Art",
+      "wikidata": "Q30593651",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Manetti_Shrem_Museum_of_Art",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-53386997",
+          "title": "Manetti Shrem Museum of Art",
+          "url": "https://en.wikipedia.org/wiki/Manetti_Shrem_Museum_of_Art",
+          "text": "The Manetti Shrem Museum of Art is a fine arts museum located at the University of California, Davis in Davis, California. Its full name is the Jan Shrem and Maria Manetti Shrem Museum of Art.\nThe museum opened on November 13, 2016. According to The New York Times,  the museum includes  \"trailblazing contributions by the school’s renowned art faculty, which contributed to innovations in conceptual, performance and video art in the 1960s and 70s\".",
+          "retrievedAt": "2026-10-25T12:08:24.131Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 51.08182501937749,
+      "lateralM": 86.33906735000305,
+      "signedLateralM": -86.33906735000305
+    },
+    {
+      "id": "wd-Q3641620",
+      "name": "Bohart Museum of Entomology",
+      "lat": 38.5352,
+      "lon": -121.7522,
+      "category": "Heritage",
+      "routeIds": [
+        "cz-bay"
+      ],
+      "wikipedia": "Bohart Museum of Entomology",
+      "wikidata": "Q3641620",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Bohart_Museum_of_Entomology",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-34212805",
+          "title": "Bohart Museum of Entomology",
+          "url": "https://en.wikipedia.org/wiki/Bohart_Museum_of_Entomology",
+          "text": "The Bohart Museum of Entomology was founded in 1946 on the campus of the University of California, Davis. The museum is currently the seventh largest insect collection in North America with more than seven million specimens of terrestrial and freshwater arthropods. At least 90% of these holdings are insects. The collection is worldwide in scope with the Western Hemisphere, Indonesia, and Australasia particularly well represented.",
+          "retrievedAt": "2026-10-25T12:08:24.131Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 51.145239416022925,
+      "lateralM": 508.4543003805916,
+      "signedLateralM": -508.4543003805916
+    },
+    {
+      "id": "wd-Q986903",
+      "name": "Dixon, California",
+      "lat": 38.44916667,
+      "lon": -121.82694444,
+      "category": "Town",
+      "routeIds": [
+        "cz-bay"
+      ],
+      "wikipedia": "Dixon, California",
+      "wikidata": "Q986903",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Dixon%2C_California",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-60864",
+          "title": "Dixon, California",
+          "url": "https://en.wikipedia.org/wiki/Dixon%2C_California",
+          "text": "Dixon is a city in northeastern Solano County, California, United States, located 23 miles (37 km) from the state capital, Sacramento. It has a hot-summer mediterranean climate on the Köppen climate classification scale. Its population was 18,988 at the 2020 United States census. Other nearby cities include Vacaville, Winters, Davis, Woodland, and Rio Vista.",
+          "retrievedAt": "2026-10-25T12:08:24.131Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 62.71701845942856,
+      "lateralM": 382.29646306094065,
+      "signedLateralM": -382.29646306094065,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q4868660",
+      "name": "Batavia, California",
+      "lat": 38.40638889,
+      "lon": -121.85972222,
+      "category": "Town",
+      "routeIds": [
+        "cz-bay"
+      ],
+      "wikipedia": "Batavia, California",
+      "wikidata": "Q4868660",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Batavia%2C_California",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-28985868",
+          "title": "Batavia, California",
+          "url": "https://en.wikipedia.org/wiki/Batavia%2C_California",
+          "text": "Batavia is an unincorporated community in Solano County, California, United States. Batavia is situated along a railroad line, the Union Pacific Martinez Subdivision, approximately 3.5 miles (5.6 km) southwest of Dixon.  It was a California Pacific Railroad station that was named, circa 1870, for the Latin name of The Netherlands. Today, various UP freight and Amtrak passenger trains speed through Batavia daily without stopping. \nBatavia reportedly was platted in 1868 and had several streets laid out, but it primarily consisted of a train depot and a few residences.  The warehouses were destroyed in a fire in 1917.  Batavia declined after highway travel largely replaced rail travel.",
+          "retrievedAt": "2026-10-25T12:08:25.062Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 68.25213203141044,
+      "lateralM": 5.886606718458432,
+      "signedLateralM": -5.886606718458432,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q7397041",
+      "name": "Sacramento Valley National Cemetery",
+      "lat": 38.41388889,
+      "lon": -121.87388889,
+      "category": "Nature",
+      "routeIds": [
+        "cz-bay"
+      ],
+      "wikipedia": "Sacramento Valley National Cemetery",
+      "wikidata": "Q7397041",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Sacramento_Valley_National_Cemetery",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-14620984",
+          "title": "Sacramento Valley National Cemetery",
+          "url": "https://en.wikipedia.org/wiki/Sacramento_Valley_National_Cemetery",
+          "text": "Sacramento Valley National Cemetery is a 561 acres (227 ha) United States National Cemetery located about 3 miles (4.8 km) southwest of Dixon, Solano County, California. The cemetery is intersected by the Union Pacific Railroad in the southeast of the cemetery. Opened for burials in 2006 with an initial 14 acres (5.7 ha) development, the Department of Veterans Affairs intends this site to serve needs for the next 50 years. The cemetery is the seventh national cemetery built in the state, and the 124th national cemetery built in the U.S.\n\n",
+          "retrievedAt": "2026-10-25T12:08:25.062Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 68.27359551371305,
+      "lateralM": 1495.3484361799651,
+      "signedLateralM": -1495.3484361799651,
+      "areaKind": "valley"
+    },
+    {
+      "id": "wd-Q3089304",
+      "name": "Elmira, California",
+      "lat": 38.35,
+      "lon": -121.90805556,
+      "category": "Town",
+      "routeIds": [
+        "cz-bay"
+      ],
+      "wikipedia": "Elmira, California",
+      "wikidata": "Q3089304",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Elmira%2C_California",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-108221",
+          "title": "Elmira, California",
+          "url": "https://en.wikipedia.org/wiki/Elmira%2C_California",
+          "text": "Elmira is a census-designated place (CDP) in Solano County, California, United States. The population was 319 at the 2024 census.\n\n",
+          "retrievedAt": "2026-10-25T12:08:25.062Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 75.80341894992347,
+      "lateralM": 124.09592316480557,
+      "signedLateralM": 124.09592316480557,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q850823",
+      "name": "Vacaville, California",
+      "lat": 38.35388889,
+      "lon": -121.97277778,
+      "category": "Town",
+      "routeIds": [
+        "cz-bay"
+      ],
+      "wikipedia": "Vacaville, California",
+      "wikidata": "Q850823",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Vacaville%2C_California",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-60861",
+          "title": "Vacaville, California",
+          "url": "https://en.wikipedia.org/wiki/Vacaville%2C_California",
+          "text": "Vacaville is a city in Solano County, California, United States. It is located 35 miles (56 km) from Sacramento and 55 miles (89 km) from San Francisco, on the edge of the Sacramento Valley in Northern California. The city was founded in 1851 and is named after Juan Manuel Vaca.\nAs of the 2020 census, Vacaville had a population of 102,386, making it the third-largest city in Solano County.\n\n",
+          "retrievedAt": "2026-10-25T12:08:25.062Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 78.67623774529514,
+      "lateralM": 4752.31868474084,
+      "signedLateralM": -4752.31868474084,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q6200006",
+      "name": "Travis Air Force Base Aviation Museum",
+      "lat": 38.269842,
+      "lon": -121.931516,
+      "category": "Heritage",
+      "routeIds": [
+        "cz-bay"
+      ],
+      "wikipedia": "Travis Air Force Base Aviation Museum",
+      "wikidata": "Q6200006",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Travis_Air_Force_Base_Aviation_Museum",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-32642366",
+          "title": "Travis Air Force Base Aviation Museum",
+          "url": "https://en.wikipedia.org/wiki/Travis_Air_Force_Base_Aviation_Museum",
+          "text": "The Travis Air Force Base Aviation Museum (former names include Travis Air Museum, Jimmy Doolittle Air & Space Museum, and Travis Air Force Base Heritage Center) is an aviation museum located at Travis Air Force Base in Fairfield, California.  The museum houses 35+ aircraft displays and various other informative artifacts.",
+          "retrievedAt": "2026-10-25T12:08:26.012Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 83.66870984109939,
+      "lateralM": 3324.4231613946135,
+      "signedLateralM": 3324.4231613946135
+    },
+    {
+      "id": "wd-Q5430229",
+      "name": "Fairfield–Vacaville station",
+      "lat": 38.285443,
+      "lon": -121.967967,
+      "category": "Railroad heritage",
+      "routeIds": [
+        "cz-bay"
+      ],
+      "wikipedia": "Fairfield–Vacaville station",
+      "wikidata": "Q5430229",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Fairfield%E2%80%93Vacaville_station",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-20524600",
+          "title": "Fairfield–Vacaville station",
+          "url": "https://en.wikipedia.org/wiki/Fairfield%E2%80%93Vacaville_station",
+          "text": "Fairfield–Vacaville station is a train station in Fairfield, California, which provides rail access for the communities of Fairfield and Vacaville. The station is served by Amtrak California's Capitol Corridor rail line and FAST buses.",
+          "retrievedAt": "2026-10-25T12:08:26.012Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 84.76775173535735,
+      "lateralM": 2.834497329646892,
+      "signedLateralM": 2.834497329646892
+    },
+    {
+      "id": "wd-Q204087",
+      "name": "Suisun City, California",
+      "lat": 38.245,
+      "lon": -122.01694444,
+      "category": "Town",
+      "routeIds": [
+        "cz-bay"
+      ],
+      "wikipedia": "Suisun City, California",
+      "wikidata": "Q204087",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Suisun_City%2C_California",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-108224",
+          "title": "Suisun City, California",
+          "url": "https://en.wikipedia.org/wiki/Suisun_City%2C_California",
+          "text": "Suisun City ( soo-SOON; Patwin for \"where the west wind blows\") is a city in Solano County, California, United States. The population was 29,518 at the 2020 census.",
+          "retrievedAt": "2026-10-25T12:08:26.945Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 90.84976250596232,
+      "lateralM": 1231.8669719970944,
+      "signedLateralM": 1231.8669719970944,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q323432",
+      "name": "Fairfield, California",
+      "lat": 38.25777778,
+      "lon": -122.05416667,
+      "category": "Town",
+      "routeIds": [
+        "cz-bay"
+      ],
+      "wikipedia": "Fairfield, California",
+      "wikidata": "Q323432",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Fairfield%2C_California",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-60863",
+          "title": "Fairfield, California",
+          "url": "https://en.wikipedia.org/wiki/Fairfield%2C_California",
+          "text": "Fairfield is a city in and the county seat of Solano County, California, United States, in the North Bay sub-region of the San Francisco Bay Area.\nThe city has a diversified economy, with government, manufacturing, healthcare, retail, professional and commercial construction sectors.\nFairfield was founded in 1856 by clipper ship captain Robert H. Waterman, and named after his former hometown of Fairfield, Connecticut.\nIt is the location of Travis Air Force Base and the headquarters of Jelly Belly. The population was 119,881 at the 2020 census.",
+          "retrievedAt": "2026-10-25T12:08:26.945Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 92.25776445865675,
+      "lateralM": 1899.7560988438422,
+      "signedLateralM": -1899.7560988438422,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q7635532",
+      "name": "Suisun Marsh",
+      "lat": 38.18774,
+      "lon": -122.06463,
+      "category": "Nature",
+      "routeIds": [
+        "cz-bay"
+      ],
+      "wikipedia": "Suisun Marsh",
+      "wikidata": "Q7635532",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Suisun_Marsh",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-3943515",
+          "title": "Suisun Marsh",
+          "url": "https://en.wikipedia.org/wiki/Suisun_Marsh",
+          "text": "Located in northern California, the Suisun Marsh ( soo-SOON) has been referred to as the largest brackish water marsh on west coast of the United States of America. The marsh land is part of a tidal estuary, and subject to tidal ebb and flood. The marsh is home to many species of birds and other wildlife, and is formed by the confluence of the Sacramento and San Joaquin rivers between Martinez and Suisun City, California and several other smaller, local watersheds. Adjacent to Suisun Bay, the marsh is immediately west of the legally defined Sacramento-San Joaquin Delta as well as part of the San Francisco Bay estuary.\nThe Suisun Marsh is named for the Suisunes, a Patwin/Wintun sub-tribe, who inhabited the area around 200 years ago.\n\n",
+          "retrievedAt": "2026-10-25T12:08:26.945Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 99.21304812819135,
+      "lateralM": 505.7226387265936,
+      "signedLateralM": 505.7226387265936,
+      "areaKind": "park"
+    },
+    {
+      "id": "wd-Q817292",
+      "name": "Benicia–Martinez Bridge",
+      "lat": 38.0406,
+      "lon": -122.123,
+      "category": "Infrastructure",
+      "routeIds": [
+        "cz-bay"
+      ],
+      "wikipedia": "Benicia–Martinez Bridge",
+      "wikidata": "Q817292",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Benicia%E2%80%93Martinez_Bridge",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-1518834",
+          "title": "Benicia–Martinez Bridge",
+          "url": "https://en.wikipedia.org/wiki/Benicia%E2%80%93Martinez_Bridge",
+          "text": "The Benicia–Martinez Bridge refers to three parallel bridges which cross the Carquinez Strait just west of Suisun Bay in California. The spans link Benicia on the north side with Martinez on the south. A 1962 truss bridge, officially the George Miller Jr., Memorial Bridge after California state legislator George Miller Jr., carries southbound Interstate 680 traffic, bicycles, and pedestrians. A 2007 segmental bridge, officially the Congressman George Miller Benicia–Martinez Bridge after U.S. Congressman George Miller III, carries northbound Interstate 680 traffic. The middle span is a 1930 vertical-lift railroad drawbridge that carries Union Pacific and BNSF freight trains, as well as Amtrak passenger trains.",
+          "retrievedAt": "2026-10-25T12:08:28.806Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 117.03816721335637,
+      "lateralM": 57.78890615407685,
+      "signedLateralM": -57.78890615407685
+    },
+    {
+      "id": "wd-Q3096992",
+      "name": "Martinez station",
+      "lat": 38.019292,
+      "lon": -122.138754,
+      "category": "Railroad heritage",
+      "routeIds": [
+        "cz-bay"
+      ],
+      "wikipedia": "Martinez station",
+      "wikidata": "Q3096992",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Martinez_station",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-8446022",
+          "title": "Martinez station",
+          "url": "https://en.wikipedia.org/wiki/Martinez_station",
+          "text": "Martinez station is an Amtrak passenger train station in Martinez, California, United States. Located at the west end of downtown Martinez, the station has one side platform and one island platform, which serve three of the four tracks of the Union Pacific Railroad Martinez Subdivision. It is served by the daily California Zephyr and Coast Starlight long-distance trains, five daily round trips of the Gold Runner corridor service, and fifteen daily round trips (eleven on weekends) of the Capitol Corridor service. Martinez is also served by Amtrak Thruway buses plus County Connection, Tri-Delta Transit, and WestCAT local buses.\n\n",
+          "retrievedAt": "2026-10-25T12:08:28.806Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 120.63720059161989,
+      "lateralM": 42.927163306520676,
+      "signedLateralM": 42.927163306520676
+    },
+    {
+      "id": "wd-Q1964856",
+      "name": "Napa River",
+      "lat": 38.07,
+      "lon": -122.24388889,
+      "category": "River",
+      "routeIds": [
+        "cz-bay"
+      ],
+      "wikipedia": "Napa River",
+      "wikidata": "Q1964856",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Napa_River",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-753233",
+          "title": "Napa River",
+          "url": "https://en.wikipedia.org/wiki/Napa_River",
+          "text": "The Napa River is a river approximately 55 miles (89 km) long in the U.S. state of California.  It drains a famous wine-growing region called the Napa Valley, in the mountains north of the San Francisco Bay.  Milliken Creek and Mt. Veeder watersheds are a few of its many tributaries.  The river mouth is at Vallejo, where the intertidal zone of fresh and salt waters flow into the Carquinez Strait and the San Pablo Bay.",
+          "retrievedAt": "2026-10-25T12:08:30.044Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 131.30076628066283,
+      "lateralM": 1373.3380111792526,
+      "signedLateralM": -1373.3380111792526,
+      "areaKind": "river"
+    },
+    {
+      "id": "wd-Q7447541",
+      "name": "Selby, California",
+      "lat": 38.05666667,
+      "lon": -122.24388889,
+      "category": "Town",
+      "routeIds": [
+        "cz-bay"
+      ],
+      "wikipedia": "Selby, California",
+      "wikidata": "Q7447541",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Selby%2C_California",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-6741477",
+          "title": "Selby, California",
+          "url": "https://en.wikipedia.org/wiki/Selby%2C_California",
+          "text": "Selby is an unincorporated community in Contra Costa County, in the East Bay region of the San Francisco Bay Area in northern California, United States.",
+          "retrievedAt": "2026-10-25T12:08:30.044Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 131.62237649639232,
+      "lateralM": 27.57479577843429,
+      "signedLateralM": -27.57479577843429,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q15223699",
+      "name": "Hercules station",
+      "lat": 38.0203,
+      "lon": -122.2869,
+      "category": "Railroad heritage",
+      "routeIds": [
+        "cz-bay"
+      ],
+      "wikipedia": "Hercules station",
+      "wikidata": "Q15223699",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Hercules_station",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-18403526",
+          "title": "Hercules station",
+          "url": "https://en.wikipedia.org/wiki/Hercules_station",
+          "text": "Hercules station (officially the Hercules Regional Intermodal Transit Center) is a proposed intermodal infill train station and ferry terminal in Hercules, California in Contra Costa County. It is to be the first direct Amtrak-to-ferry transit hub in the San Francisco Bay Area and will be constructed in between the existing Richmond and Martinez stations. By July 2018, three of the station's six construction phases had been complete, including street at Bay Trail approaches. However, no proposed opening date has yet been announced by the City of Hercules.",
+          "retrievedAt": "2026-10-25T12:08:31.040Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 137.6786216705853,
+      "lateralM": 30.504823067972005,
+      "signedLateralM": 30.504823067972005
+    },
+    {
+      "id": "wd-Q4874990",
+      "name": "Bayview, Contra Costa County, California",
+      "lat": 38.00694444,
+      "lon": -122.31888889,
+      "category": "Town",
+      "routeIds": [
+        "cz-bay"
+      ],
+      "wikipedia": "Bayview, Contra Costa County, California",
+      "wikidata": "Q4874990",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Bayview%2C_Contra_Costa_County%2C_California",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-22597979",
+          "title": "Bayview, Contra Costa County, California",
+          "url": "https://en.wikipedia.org/wiki/Bayview%2C_Contra_Costa_County%2C_California",
+          "text": "Bayview is a census-designated place in Contra Costa County, California, United States. Bayview sits at an elevation of 36 feet (11 m). The 2020 United States census reported Bayview's population as 1,782.  Prior to 2010, Bayview was part of the Bayview-Montalvin CDP and then separated into the two individual communities of Bayview and Montalvin Manor for the census.",
+          "retrievedAt": "2026-10-25T12:08:31.040Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 141.24334945200738,
+      "lateralM": 185.32621065603817,
+      "signedLateralM": 185.32621065603817,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q5524070",
+      "name": "Garrity Creek",
+      "lat": 38.00305556,
+      "lon": -122.32861111,
+      "category": "River",
+      "routeIds": [
+        "cz-bay"
+      ],
+      "wikipedia": "Garrity Creek",
+      "wikidata": "Q5524070",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Garrity_Creek",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-12457321",
+          "title": "Garrity Creek",
+          "url": "https://en.wikipedia.org/wiki/Garrity_Creek",
+          "text": "Garrity Creek is a 3.0-mile-long (4.8 km) creek in Richmond, California's Hilltop neighborhood. It runs into San Pablo Bay. It is sometimes called Hilltop Creek.\nThe creek is supported by two springs, two separate legs which join into Garrity Creek in El Sobrante, California.  The basin feeding this watershed was, for hundreds of years, a sacred fishing and hunting site for the Huchiun Band of the Native Ohlone at Garrity Creek & Along San Pablo Bay. Garrity Creek was a highly prized and sacred site because it provided food; acorns from tanbark, valley, coast and live oak trees, as well as buckeye trees. The Huchiun also harvested seeds, berries, greens, nuts and roots in the basin and would travel along Garrity Creek to fish for steelhead, salmon and sturgeon that swam up Garrity Creek to spawn.\nMajor sections of the creek have been dramatically, and perhaps irrecoverably altered by development.  Much of waterway to the bay is now underground; in culverts under the Hilltop Green residential development, under highway 80, and under the Hilltop Mall.  Just north of the Hilltop mall, the water is retained in \"Hilltop Lake\".  This man made lake was first created by the Standard Oil company...",
+          "retrievedAt": "2026-10-25T12:08:31.040Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 142.1762904803772,
+      "lateralM": 20.112856720863146,
+      "signedLateralM": -20.112856720863146,
+      "areaKind": "river"
+    },
+    {
+      "id": "wd-Q123766425",
+      "name": "Richmond station (Atchison, Topeka and Santa Fe Railway)",
+      "lat": 37.9364,
+      "lon": -122.3738,
+      "category": "Railroad heritage",
+      "routeIds": [
+        "cz-bay"
+      ],
+      "wikipedia": "Richmond station (Atchison, Topeka and Santa Fe Railway)",
+      "wikidata": "Q123766425",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Richmond_station_(Atchison%2C_Topeka_and_Santa_Fe_Railway)",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-69606949",
+          "title": "Richmond station (Atchison, Topeka and Santa Fe Railway)",
+          "url": "https://en.wikipedia.org/wiki/Richmond_station_(Atchison%2C_Topeka_and_Santa_Fe_Railway)",
+          "text": "Richmond station was an intercity railway station in Richmond, California. The Atchison, Topeka and Santa Fe Railway opened to Richmond in 1900; service ran until 1971, and the station was demolished in the 1990s. It was the railway's western passenger terminal from 1938 until its closure.",
+          "retrievedAt": "2026-10-25T12:08:32.015Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 150.97600410098173,
+      "lateralM": 1611.6523262942812,
+      "signedLateralM": -1611.6523262942812
+    },
+    {
+      "id": "wd-Q495377",
+      "name": "Richmond, California",
+      "lat": 37.93583333,
+      "lon": -122.34777778,
+      "category": "Town",
+      "routeIds": [
+        "cz-bay"
+      ],
+      "wikipedia": "Richmond, California",
+      "wikidata": "Q495377",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Richmond%2C_California",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-60341",
+          "title": "Richmond, California",
+          "url": "https://en.wikipedia.org/wiki/Richmond%2C_California",
+          "text": "Richmond is a city in western Contra Costa County, California, United States. The city was incorporated on August 3, 1905, and has a city council. Located in the San Francisco Bay Area's East Bay region, Richmond borders San Pablo, Albany, El Cerrito and Pinole in addition to the unincorporated communities of North Richmond, Hasford Heights, Kensington, El Sobrante, Bayview-Montalvin Manor, Tara Hills, and East Richmond Heights, and for a short distance San Francisco on Red Rock Island in the San Francisco Bay.\nRichmond is one of two cities, the other being San Rafael, that sits on the shores of both San Francisco Bay and San Pablo Bay. Its population was 116,448 as of the 2020 United States census making it the second largest city in the United States named Richmond after Richmond, Virginia.",
+          "retrievedAt": "2026-10-25T12:08:32.015Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 152.20527415071925,
+      "lateralM": 302.64506932851094,
+      "signedLateralM": 302.64506932851094,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q6348460",
+      "name": "Kaiser Richmond Field Hospital",
+      "lat": 37.9256356,
+      "lon": -122.3566025,
+      "category": "Heritage",
+      "routeIds": [
+        "cz-bay"
+      ],
+      "wikipedia": "Kaiser Richmond Field Hospital",
+      "wikidata": "Q6348460",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Kaiser_Richmond_Field_Hospital",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-13164053-excerpt",
+          "title": "Kaiser Richmond Field Hospital",
+          "url": "https://en.wikipedia.org/wiki/Kaiser_Richmond_Field_Hospital",
+          "text": "The hospital provided health services for surrounding communities until 1995 when it was replaced by the then state-of-the-art Richmond Medical Center in downtown Richmond.",
+          "retrievedAt": "2026-10-25T12:08:32.015Z",
+          "license": "CC BY-SA 4.0"
+        },
+        {
+          "id": "wikipedia-13164053",
+          "title": "Kaiser Richmond Field Hospital",
+          "url": "https://en.wikipedia.org/wiki/Kaiser_Richmond_Field_Hospital",
+          "text": "The Kaiser Richmond Field Hospital was the first Kaiser Permanente Hospital and is a historic site resource of the city of Richmond, California, and a contributing property to Rosie the Riveter/World War II Home Front National Historical Park, listed on the National Register of Historic Places. The hospital provided health services for surrounding communities until 1995 when it was replaced by the then state-of-the-art Richmond Medical Center in downtown Richmond. The field hospital is now closed and remains in its original location in South Richmond along Cutting Boulevard.",
+          "retrievedAt": "2026-10-25T12:08:32.015Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 152.43585055198403,
+      "lateralM": 1050.7718434906171,
+      "signedLateralM": -1050.7718434906171
+    },
+    {
+      "id": "wd-Q499178",
+      "name": "Emeryville, California",
+      "lat": 37.83138889,
+      "lon": -122.28527778,
+      "category": "Town",
+      "routeIds": [
+        "cz-bay"
+      ],
+      "wikipedia": "Emeryville, California",
+      "wikidata": "Q499178",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Emeryville%2C_California",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-107334",
+          "title": "Emeryville, California",
+          "url": "https://en.wikipedia.org/wiki/Emeryville%2C_California",
+          "text": "Emeryville is a city in northwestern Alameda County, California, United States. It lies in a corridor between the cities of Berkeley and Oakland, with a border on the shore of San Francisco Bay. The resident population was 12,905 as of 2020. Its proximity to San Francisco, the Bay Bridge, the University of California, Berkeley, and Silicon Valley has been a catalyst for recent economic growth.\nIt is the home to Pixar Animation Studios, Peet's Coffee, the Center for Investigative Reporting, Alternative Tentacles and Clif Bar. In addition, several well-known tech and software companies are located in Emeryville: LeapFrog, Sendmail, MobiTV, Novartis (formerly Chiron before April 2006), and BigFix (now HCL). Emeryville attracts many weekday commuters due to its position as a regional employment center.\nEmeryville has some features of an edge city; however, it is located within the inner urban core of Oakland/the greater East Bay. It was industrialized before the First World War.\n\n",
+          "retrievedAt": "2026-10-25T12:08:32.881Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 163.90825164663914,
+      "lateralM": 1364.029668683037,
+      "signedLateralM": 1364.029668683037,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q5371016",
+      "name": "Emeryville Shellmound",
+      "lat": 37.834,
+      "lon": -122.29263,
+      "category": "Heritage",
+      "routeIds": [
+        "cz-bay"
+      ],
+      "wikipedia": "Emeryville Shellmound",
+      "wikidata": "Q5371016",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Emeryville_Shellmound",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-2634727-excerpt",
+          "title": "Emeryville Shellmound",
+          "url": "https://en.wikipedia.org/wiki/Emeryville_Shellmound",
+          "text": "It was one of a complex of five or six mounds along the mouth of the perennial Temescal Creek, on the east shore of San Francisco Bay between Oakland and Berkeley.",
+          "retrievedAt": "2026-10-25T12:08:32.881Z",
+          "license": "CC BY-SA 4.0"
+        },
+        {
+          "id": "wikipedia-2634727",
+          "title": "Emeryville Shellmound",
+          "url": "https://en.wikipedia.org/wiki/Emeryville_Shellmound",
+          "text": "The Emeryville Shellmound, in Emeryville, California, is a sacred burial site of the Ohlone people, a once-massive archaeological shell midden deposit  (dark, highly organic soil, temple and burial ground containing a high concentration of human food waste remains, including shellfish). It was one of a complex of five or six mounds along the mouth of the perennial Temescal Creek, on the east shore of San Francisco Bay between Oakland and Berkeley.  It was the largest of the over 425 shellmounds that surrounded San Francisco Bay. The site of the Shellmound is now a California Historical Landmark (#335).",
+          "retrievedAt": "2026-10-25T12:08:32.881Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 163.90825164663914,
+      "lateralM": 901.7407849906116,
+      "signedLateralM": -901.7407849906116
+    },
+    {
+      "id": "wd-Q7698100",
+      "name": "Temescal Creek (Northern California)",
+      "lat": 37.83388889,
+      "lon": -122.295,
+      "category": "River",
+      "routeIds": [
+        "cz-bay"
+      ],
+      "wikipedia": "Temescal Creek (Northern California)",
+      "wikidata": "Q7698100",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Temescal_Creek_(Northern_California)",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-4253169",
+          "title": "Temescal Creek (Northern California)",
+          "url": "https://en.wikipedia.org/wiki/Temescal_Creek_(Northern_California)",
+          "text": "Temescal Creek (Temescal, Mexican Spanish for \"sweat lodge\") is one of the principal watercourses in the city of Oakland, California, United States.\nThe word \"temescal\" is derived from temescalli/temazcalli (variously transliterated), which means \"sweat house\" in the Nahuatl language of Mexico. The name was given to the creek when it became part of the Peralta's Rancho San Antonio. It is surmised that the Peraltas or perhaps one of their ranch hands (vaqueros) had seen local indigenous (Ohlone) structures along the creek similar to those in other parts of New Spain which were called temescalli or \"temazcalli\".\nThree forks begin in the Berkeley Hills in the northeastern section of Oakland (also referred to as the Oakland hills south of the Caldecott Tunnel), part of the Pacific Coast Ranges, coming together in the Temescal district of Oakland, then flowing westerly across Oakland and Emeryville to San Francisco Bay.\nThe north fork of Temescal Creek was renamed \"Harwood's Creek\" in the mid 19th century after an early claimant to grazing lands in the canyon above the Claremont neighborhood, retired sea captain and Oakland wharfinger William Harwood.  It was renamed yet again \"Claremont...",
+          "retrievedAt": "2026-10-25T12:08:32.881Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 163.90825164663914,
+      "lateralM": 933.58219268161,
+      "signedLateralM": -933.58219268161,
+      "areaKind": "river"
+    }
+  ]
+}

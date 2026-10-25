@@ -46,7 +46,6 @@
     "start": "Start ride",
     "routesGroup": "{network} routes",
     "fullExperience": "Full experience",
-    "basicExperience": "Stations only",
     "stops": "{from} to {to}",
     "chooseNetwork": "Network",
     "discoveriesEmpty": "Discoveries appear here during a ride",
@@ -121,7 +120,6 @@
     "pausedUnavailable": "Paused — places didn’t load",
     "pausedEmpty": "Paused — no places in range.",
     "noSourced": "No places in range.",
-    "stationsOnly": "Stations only here. Full experience on The Rockies.",
     "speedSimulated": "{speed} km/h",
     "simulated": "Simulated ride",
     "sensorsPaused": "Sensors paused"

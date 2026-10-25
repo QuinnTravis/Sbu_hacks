@@ -1,0 +1,2314 @@
+{
+  "importedAt": "2026-10-25T12:09:40.493Z",
+  "source": "English Wikipedia via MediaWiki geosearch (coordinates, Wikidata IDs, exact article excerpts)",
+  "license": "Wikipedia excerpts: CC BY-SA 4.0; Wikidata identifiers: CC0.",
+  "corridorM": 5000,
+  "samplingKm": 12,
+  "searchRadiusM": 10000,
+  "coverage": {
+    "routeLengthKm": 925.6647698650922,
+    "firstPoiKm": 0,
+    "lastPoiKm": 925.6647698650922,
+    "narratableCount": 73,
+    "sampleCount": 79,
+    "failedSamples": [],
+    "gapsOver30Km": [
+      {
+        "startKm": 52.03740111763738,
+        "endKm": 101.24896352590703,
+        "lengthKm": 49.21156240826965
+      },
+      {
+        "startKm": 697.4553637244145,
+        "endKm": 745.2898723698452,
+        "lengthKm": 47.834508645430674
+      },
+      {
+        "startKm": 645.5616331553582,
+        "endKm": 691.489463527494,
+        "lengthKm": 45.92783037213576
+      },
+      {
+        "startKm": 811.3494814165144,
+        "endKm": 853.0950757627157,
+        "lengthKm": 41.7455943462013
+      },
+      {
+        "startKm": 209.89502500081318,
+        "endKm": 251.5887143246999,
+        "lengthKm": 41.69368932388673
+      },
+      {
+        "startKm": 581.0448977579767,
+        "endKm": 618.6603749269781,
+        "lengthKm": 37.61547716900134
+      },
+      {
+        "startKm": 437.73788388545023,
+        "endKm": 472.8998870184144,
+        "lengthKm": 35.16200313296417
+      },
+      {
+        "startKm": 101.24896352590703,
+        "endKm": 134.92500042688525,
+        "lengthKm": 33.67603690097822
+      },
+      {
+        "startKm": 280.8984845543691,
+        "endKm": 313.9120856611519,
+        "lengthKm": 33.0136011067828
+      }
+    ],
+    "largestGapKm": 49.21156240826965
+  },
+  "places": [
+    {
+      "id": "wd-Q16902900",
+      "name": "Warehouse District (Salt Lake City)",
+      "lat": 40.76305556,
+      "lon": -111.90277778,
+      "category": "Heritage",
+      "routeIds": [
+        "cz-basin"
+      ],
+      "wikipedia": "Warehouse District (Salt Lake City)",
+      "wikidata": "Q16902900",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Warehouse_District_(Salt_Lake_City)",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-40467910",
+          "title": "Warehouse District (Salt Lake City)",
+          "url": "https://en.wikipedia.org/wiki/Warehouse_District_(Salt_Lake_City)",
+          "text": "The Warehouse District of Salt Lake City, Utah, is a historic district on the city's west side.  The area has been occupied by artists, and worked on by developers. A small portion of its area was added to the National Register of Historic Places in 1982, and the listing was greatly enlarged by a boundary increase in 2016.\n\n",
+          "retrievedAt": "2026-10-25T12:07:14.803Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 0,
+      "lateralM": 573.7294879124127,
+      "signedLateralM": -573.7294879124127
+    },
+    {
+      "id": "wd-Q7405869",
+      "name": "Salt Lake City Intermodal Hub",
+      "lat": 40.76277778,
+      "lon": -111.90833333,
+      "category": "Nature",
+      "routeIds": [
+        "cz-basin"
+      ],
+      "wikipedia": "Salt Lake City Intermodal Hub",
+      "wikidata": "Q7405869",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Salt_Lake_City_Intermodal_Hub",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-17170435-excerpt",
+          "title": "Salt Lake City Intermodal Hub",
+          "url": "https://en.wikipedia.org/wiki/Salt_Lake_City_Intermodal_Hub",
+          "text": "Service at the intermodal hub is also provided by Amtrak (with the California Zephyr), and Greyhound Lines, as well as UTA local bus service.",
+          "retrievedAt": "2026-10-25T12:07:14.803Z",
+          "license": "CC BY-SA 4.0"
+        },
+        {
+          "id": "wikipedia-17170435",
+          "title": "Salt Lake City Intermodal Hub",
+          "url": "https://en.wikipedia.org/wiki/Salt_Lake_City_Intermodal_Hub",
+          "text": "The Salt Lake City Intermodal Hub, also called Salt Lake Central station by the Utah Transit Authority (UTA), is a multi-modal transportation hub in Salt Lake City, Utah, United States served by the Blue Line of UTA's TRAX light rail system that operates in Salt Lake County and by the FrontRunner, UTA's commuter rail train that operates along the Wasatch Front with service from Ogden in  central Weber County through Davis County, Salt Lake City, and Salt Lake County to Provo in central Utah County. Service at the intermodal hub is also provided by Amtrak (with the California Zephyr), and Greyhound Lines, as well as UTA local bus service.\n\n",
+          "retrievedAt": "2026-10-25T12:07:14.803Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 0.09880278747382396,
+      "lateralM": 118.4718688517442,
+      "signedLateralM": -118.4718688517442,
+      "areaKind": "lake"
+    },
+    {
+      "id": "wd-Q5281910",
+      "name": "Discovery Gateway",
+      "lat": 40.76777778,
+      "lon": -111.90388889,
+      "category": "Heritage",
+      "routeIds": [
+        "cz-basin"
+      ],
+      "wikipedia": "Discovery Gateway",
+      "wikidata": "Q5281910",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Discovery_Gateway",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-12798087",
+          "title": "Discovery Gateway",
+          "url": "https://en.wikipedia.org/wiki/Discovery_Gateway",
+          "text": "Discovery Gateway, formerly the Children's Museum of Utah, is an interactive, hands-on children's museum located in downtown Salt Lake City, Utah, United States. Comprising over 60,000 square feet (6,000 m2) of exhibit space, Discovery Gateway is located at 444 West 100 South in The Gateway.",
+          "retrievedAt": "2026-10-25T12:07:14.803Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 0.5144292109314185,
+      "lateralM": 644.2591293200503,
+      "signedLateralM": -644.2591293200503
+    },
+    {
+      "id": "wd-Q255187",
+      "name": "Magna, Utah",
+      "lat": 40.72222222,
+      "lon": -112.07666667,
+      "category": "Town",
+      "routeIds": [
+        "cz-basin"
+      ],
+      "wikipedia": "Magna, Utah",
+      "wikidata": "Q255187",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Magna%2C_Utah",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-137060",
+          "title": "Magna, Utah",
+          "url": "https://en.wikipedia.org/wiki/Magna%2C_Utah",
+          "text": "Magna ( MAG-nə) is a city in Salt Lake County, Utah, United States. The population of the city stands at 29,251 according to the 2020 census, a 10.4% increase over 26,505 in 2010.",
+          "retrievedAt": "2026-10-25T12:07:15.889Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 14.676132023845057,
+      "lateralM": 3341.598422635877,
+      "signedLateralM": 3341.598422635877,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q3364058",
+      "name": "Great Salt Lake State Park",
+      "lat": 40.73361111,
+      "lon": -112.21,
+      "category": "Nature",
+      "routeIds": [
+        "cz-basin"
+      ],
+      "wikipedia": "Great Salt Lake State Park",
+      "wikidata": "Q3364058",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Great_Salt_Lake_State_Park",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-20285054",
+          "title": "Great Salt Lake State Park",
+          "url": "https://en.wikipedia.org/wiki/Great_Salt_Lake_State_Park",
+          "text": "The Great Salt Lake State Park is a state park on the south short of the Great Salt Lake in Magna, Utah, United States. It is home to the Great Salt Lake Yacht Club.",
+          "retrievedAt": "2026-10-25T12:07:16.946Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 29.39175390432319,
+      "lateralM": 839.350856153871,
+      "signedLateralM": -839.350856153871,
+      "areaKind": "lake"
+    },
+    {
+      "id": "wd-Q14711766",
+      "name": "Lake Point, Utah",
+      "lat": 40.68194444,
+      "lon": -112.26305556,
+      "category": "Town",
+      "routeIds": [
+        "cz-basin"
+      ],
+      "wikipedia": "Lake Point, Utah",
+      "wikidata": "Q14711766",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Lake_Point%2C_Utah",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-23867396",
+          "title": "Lake Point, Utah",
+          "url": "https://en.wikipedia.org/wiki/Lake_Point%2C_Utah",
+          "text": "Lake Point is a city on the eastern edge of northern Tooele County, Utah, United States.\nThe community was originally settled in 1854 under the name of E.T. City, in honor of Ezra T. Benson. It was renamed Lake Point in 1923.\nA 2021 feasibility study for the proposed Lake Point incorporation area indicated an estimated population of 2,599. During the 2021 United States elections, the residents of Lake Point voted to become a city with a five-member council; the first city council was then elected the following year.",
+          "retrievedAt": "2026-10-25T12:07:17.898Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 35.76787715077325,
+      "lateralM": 2155.5905614462704,
+      "signedLateralM": 2155.5905614462704,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q116980736",
+      "name": "Adobe Rock",
+      "lat": 40.660056,
+      "lon": -112.288444,
+      "category": "Heritage",
+      "routeIds": [
+        "cz-basin"
+      ],
+      "wikipedia": "Adobe Rock",
+      "wikidata": "Q116980736",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Adobe_Rock",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-73211199",
+          "title": "Adobe Rock",
+          "url": "https://en.wikipedia.org/wiki/Adobe_Rock",
+          "text": "Adobe Rock is described by the USGS as a pediment at Lake Point, Utah. The large rock outcropping sits adjacent to SR-36 just north of SR-138 at Mills Junction. Because of its distance from the steep incline of the Oquirrh Mountains and its prominent location on the edge of a hill, Adobe Rock has served as a natural landmark in Tooele Valley ever since the first pioneers traversed the Hastings Cutoff trail. Though not officially a national monument like its nearby peer Black Rock (Great Salt Lake), it has equal significance as a navigating landmark and cultural significance as a monument with businesses using the Adobe Rock name, books using its images on their covers, and Lake Point, Utah depicting its likeness as their city logo.",
+          "retrievedAt": "2026-10-25T12:07:17.898Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 38.730696309003335,
+      "lateralM": 3468.244854461897,
+      "signedLateralM": 3468.244854461897
+    },
+    {
+      "id": "wd-Q4999466",
+      "name": "Burmester, Utah",
+      "lat": 40.69111111,
+      "lon": -112.45222222,
+      "category": "Town",
+      "routeIds": [
+        "cz-basin"
+      ],
+      "wikipedia": "Burmester, Utah",
+      "wikidata": "Q4999466",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Burmester%2C_Utah",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-23867328",
+          "title": "Burmester, Utah",
+          "url": "https://en.wikipedia.org/wiki/Burmester%2C_Utah",
+          "text": "Burmester is a ghost town in northeastern Tooele County, Utah, United States.",
+          "retrievedAt": "2026-10-25T12:07:19.009Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 52.03740111763738,
+      "lateralM": 3.0337425091394596,
+      "signedLateralM": -3.0337425091394596,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q14711791",
+      "name": "Low, Utah",
+      "lat": 40.78555556,
+      "lon": -112.94055556,
+      "category": "Town",
+      "routeIds": [
+        "cz-basin"
+      ],
+      "wikipedia": "Low, Utah",
+      "wikidata": "Q14711791",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Low%2C_Utah",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-39786263",
+          "title": "Low, Utah",
+          "url": "https://en.wikipedia.org/wiki/Low%2C_Utah",
+          "text": "Low is a ghost town in northern Tooele County, Utah, United States.\nLow was established in 1880 as a construction and maintenance camp on a siding of the Western Pacific Railroad.  Its name may have derived from its location on a low pass between the Cedar Mountains to the south, and the Grassy Mountains to the north. Local water was unavailable so the camp was abandoned in 1955. A scattering of ruins remain. The Low Flight Strip is an abandoned military airfield located approximately 13 miles (21 km) west of Low.\nInterstate 80 runs west of Low, and Exit 62 is known as the \"Low Interchange\".\nThe \"Low Transportation Corridor\" or \"Low Rail Corridor\" both refer to a proposed rail line to carry spent nuclear fuel from the Union Pacific mainline at the junction of Interstate 80 near the Low Interchange, to the Skull Valley Indian Reservation, across 1,593 acres (645 ha) of Bureau of Land Management land within the Skull Valley.",
+          "retrievedAt": "2026-10-25T12:07:20.775Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 101.24896352590703,
+      "lateralM": 29.16471953389581,
+      "signedLateralM": 29.16471953389581,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q15238674",
+      "name": "Knolls, Utah",
+      "lat": 40.72305556,
+      "lon": -113.28972222,
+      "category": "Town",
+      "routeIds": [
+        "cz-basin"
+      ],
+      "wikipedia": "Knolls, Utah",
+      "wikidata": "Q15238674",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Knolls%2C_Utah",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-37684993",
+          "title": "Knolls, Utah",
+          "url": "https://en.wikipedia.org/wiki/Knolls%2C_Utah",
+          "text": "Knolls is an unincorporated community in north-central Tooele County, Utah, United States.",
+          "retrievedAt": "2026-10-25T12:07:22.117Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 134.92500042688525,
+      "lateralM": 121.22497075565062,
+      "signedLateralM": -121.22497075565062,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q107462815",
+      "name": "Barro, Utah",
+      "lat": 40.72694444,
+      "lon": -113.48888889,
+      "category": "Town",
+      "routeIds": [
+        "cz-basin"
+      ],
+      "wikipedia": "Barro, Utah",
+      "wikidata": "Q107462815",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Barro%2C_Utah",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-68038094",
+          "title": "Barro, Utah",
+          "url": "https://en.wikipedia.org/wiki/Barro%2C_Utah",
+          "text": "Barro is a ghost town and railroad siding in Tooele County, Utah, United States. It is located along the Central Corridor Union Pacific Railroad rail line and the Wendover Cut-off (Old U.S. Route 40) and south of Interstate 80 in the Great Salt Lake Desert.\nThe Metaphor: The Tree of Utah artwork is located nearby and is about 3.5 mi (5.6 km) west of Barro.",
+          "retrievedAt": "2026-10-25T12:07:22.535Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 151.71390313362284,
+      "lateralM": 17.619991455396452,
+      "signedLateralM": -17.619991455396452,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q6823109",
+      "name": "Metaphor: The Tree of Utah",
+      "lat": 40.73322,
+      "lon": -113.55086,
+      "category": "Landmark",
+      "routeIds": [
+        "cz-basin"
+      ],
+      "wikipedia": "Metaphor: The Tree of Utah",
+      "wikidata": "Q6823109",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Metaphor%3A_The_Tree_of_Utah",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-3781102",
+          "title": "Metaphor: The Tree of Utah",
+          "url": "https://en.wikipedia.org/wiki/Metaphor%3A_The_Tree_of_Utah",
+          "text": "Metaphor: The Tree of Utah, sometimes called the Tree of Life, is an 87-foot-tall (27 m) sculpture that was created by the Swedish artist Karl Momen in the 1980s and dedicated in 1986. It is located in the desolate Great Salt Lake Desert of Utah on the west bound side of Interstate 80, about 25 miles (40 km) east of Wendover and midway between the former railroad communities of Arinosa and Barro. The sculpture, which is constructed mainly of concrete, consists of a squarish \"trunk\" holding up six spheres that are coated with natural rock and minerals native to Utah. There are also several hollow sphere segments on the ground around the base. The sculpture currently has a fence surrounding the base to protect people from falling tiles.\nInscribed on the plaque are the words from Ode to Joy by Friedrich Schiller, also used as the chorus of Beethoven's Ninth Symphony. It has been said that Momen was moved to create the 87-foot-tall (27 m) tree after having a vision of a tree while driving across the desolate Bonneville Salt Flats.\nFollowing the dedication of this work of art, Momen donated the sculpture to the State of Utah and returned to Sweden. However, in 2011 he proposed creating a...",
+          "retrievedAt": "2026-10-25T12:07:22.952Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 156.95579010686572,
+      "lateralM": 548.3576215436123,
+      "signedLateralM": -548.3576215436123
+    },
+    {
+      "id": "wd-Q16868976",
+      "name": "Arinosa, Utah",
+      "lat": 40.73111111,
+      "lon": -113.67166667,
+      "category": "Town",
+      "routeIds": [
+        "cz-basin"
+      ],
+      "wikipedia": "Arinosa, Utah",
+      "wikidata": "Q16868976",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Arinosa%2C_Utah",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-41516348",
+          "title": "Arinosa, Utah",
+          "url": "https://en.wikipedia.org/wiki/Arinosa%2C_Utah",
+          "text": "Arinosa is a ghost town located in Tooele County, Utah, United States. Arinosa is 19 miles east of Wendover and 100 miles west of Salt Lake City, in the middle of the Great Salt Lake Desert. Although it lies along the route of the current Interstate 80, there is no exit providing access to the area.\nArinosa began in the early 1880s as a rail maintenance community, and was on the route of the Western Pacific in the early twentieth century, between the stops of Salduro and Barro. The town also lay along the historic route of U.S. 40, which paralleled the Western Pacific line through western Utah. In the 1920s, a chlorine production company built processing facilities there. In the 1950s the settlement was abandoned due to dearth of available water and shifting transportation patterns.\nNo buildings survive the settlement, although Metaphor: The Tree of Utah is only a few miles east of the former site of Arinosa.",
+          "retrievedAt": "2026-10-25T12:07:23.373Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 167.12265863810745,
+      "lateralM": 14.810446420499368,
+      "signedLateralM": -14.810446420499368,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q23808245",
+      "name": "Salduro, Utah",
+      "lat": 40.735,
+      "lon": -113.85638889,
+      "category": "Town",
+      "routeIds": [
+        "cz-basin"
+      ],
+      "wikipedia": "Salduro, Utah",
+      "wikidata": "Q23808245",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Salduro%2C_Utah",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-47750624",
+          "title": "Salduro, Utah",
+          "url": "https://en.wikipedia.org/wiki/Salduro%2C_Utah",
+          "text": "Salduro (also Salduro Siding) is a ghost town located in Tooele County, Utah, United States.",
+          "retrievedAt": "2026-10-25T12:07:23.820Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 182.6929593219175,
+      "lateralM": 23.75990005851721,
+      "signedLateralM": -23.75990005851721,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q5215997",
+      "name": "Danger Cave",
+      "lat": 40.75194444,
+      "lon": -114.01583333,
+      "category": "Heritage",
+      "routeIds": [
+        "cz-basin"
+      ],
+      "wikipedia": "Danger Cave",
+      "wikidata": "Q5215997",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Danger_Cave",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-16720350",
+          "title": "Danger Cave",
+          "url": "https://en.wikipedia.org/wiki/Danger_Cave",
+          "text": "Danger Cave is a North American archaeological site located in the Bonneville Basin of western Utah around the Great Salt Lakes region, that features artifacts of the Desert Culture from c. 9000 BC until c. 500 AD.  Through carbon-14 dating, it has been determined that there is very little evidence of human life in the Danger Cave area c. 11,000 BP [9000 BC], but there is much evidence of human life by 9000 BP [7000 BC].\nDanger cave was first investigated in the 1930s by Elmer Smith, and excavated in the 1950s under the supervision of Jesse D. Jennings, professor at the University of Utah. Jennings' work at the site was considered ground-breaking due to his exacting standards in excavation and data analysis. Though Jenning's findings eventually gained widespread acceptance, his publications garnered both criticism and support at first.  Relating the archaeological evidence from Danger Cave to an ethnographic model, Jennings framed a view of the little-known Great Basin Desert culture which was unknown at the time.\nThe extremely dry cave had created an ideal storage condition that preserved a variety of artifacts from beetle wings to textiles and human paleofeces. They also found leather...",
+          "retrievedAt": "2026-10-25T12:07:24.240Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 196.17370264364877,
+      "lateralM": 1541.812402216959,
+      "signedLateralM": -1541.812402216959
+    },
+    {
+      "id": "wd-Q255781",
+      "name": "Wendover, Utah",
+      "lat": 40.74027778,
+      "lon": -114.02472222,
+      "category": "Town",
+      "routeIds": [
+        "cz-basin"
+      ],
+      "wikipedia": "Wendover, Utah",
+      "wikidata": "Q255781",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Wendover%2C_Utah",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-137133",
+          "title": "Wendover, Utah",
+          "url": "https://en.wikipedia.org/wiki/Wendover%2C_Utah",
+          "text": "Wendover is a city on the western edge of Tooele County, Utah, United States. The population was 1,115 at the 2020 census.",
+          "retrievedAt": "2026-10-25T12:07:24.240Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 196.836167860426,
+      "lateralM": 337.1817105353742,
+      "signedLateralM": -337.1817105353742,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q124518366",
+      "name": "Historic Wendover Airfield",
+      "lat": 40.728,
+      "lon": -114.0377,
+      "category": "Heritage",
+      "routeIds": [
+        "cz-basin"
+      ],
+      "wikipedia": "Historic Wendover Airfield",
+      "wikidata": "Q124518366",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Historic_Wendover_Airfield",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-75952838",
+          "title": "Historic Wendover Airfield",
+          "url": "https://en.wikipedia.org/wiki/Historic_Wendover_Airfield",
+          "text": "The Historic Wendover Airfield is an aviation museum located at Wendover Airport in Wendover, Utah focused on the history of Wendover Air Force Base.",
+          "retrievedAt": "2026-10-25T12:07:24.240Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 198.2964946920168,
+      "lateralM": 516.781408785777,
+      "signedLateralM": 516.781408785777
+    },
+    {
+      "id": "wd-Q20714537",
+      "name": "Ola, Nevada",
+      "lat": 40.72138889,
+      "lon": -114.14666667,
+      "category": "Town",
+      "routeIds": [
+        "cz-basin"
+      ],
+      "wikipedia": "Ola, Nevada",
+      "wikidata": "Q20714537",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Ola%2C_Nevada",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-44696407",
+          "title": "Ola, Nevada",
+          "url": "https://en.wikipedia.org/wiki/Ola%2C_Nevada",
+          "text": "Ola is a ghost town and railroad siding in eastern Elko County, Nevada, United States.",
+          "retrievedAt": "2026-10-25T12:07:26.430Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 209.89502500081318,
+      "lateralM": 25.21547152626111,
+      "signedLateralM": 25.21547152626111,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q54959619",
+      "name": "Silver Zone, Nevada",
+      "lat": 40.92027778,
+      "lon": -114.35333333,
+      "category": "Town",
+      "routeIds": [
+        "cz-basin"
+      ],
+      "wikipedia": "Silver Zone, Nevada",
+      "wikidata": "Q54959619",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Silver_Zone%2C_Nevada",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-57114994",
+          "title": "Silver Zone, Nevada",
+          "url": "https://en.wikipedia.org/wiki/Silver_Zone%2C_Nevada",
+          "text": "Silver Zone is a ghost town in Elko County, in the U.S. state of Nevada.  The GNIS classifies it as a populated place. The town was located at the mountain pass where the Feather River Route (today known as the Shafter Subdivision) and Interstate 80 cross the Toano Range.",
+          "retrievedAt": "2026-10-25T12:07:28.665Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 251.5887143246999,
+      "lateralM": 70.05409198925517,
+      "signedLateralM": -70.05409198925517,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q6547547",
+      "name": "Shafter, Nevada",
+      "lat": 40.85472222,
+      "lon": -114.44472222,
+      "category": "Town",
+      "routeIds": [
+        "cz-basin"
+      ],
+      "wikipedia": "Shafter, Nevada",
+      "wikidata": "Q6547547",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Shafter%2C_Nevada",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-38734226",
+          "title": "Shafter, Nevada",
+          "url": "https://en.wikipedia.org/wiki/Shafter%2C_Nevada",
+          "text": "Shafter is a ghost town in Elko County, Nevada, United States.",
+          "retrievedAt": "2026-10-25T12:07:29.694Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 262.2960912418727,
+      "lateralM": 80.35755670551498,
+      "signedLateralM": -80.35755670551498,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q49187455",
+      "name": "Flowery Lake",
+      "lat": 40.7291699,
+      "lon": -114.5225853,
+      "category": "Nature",
+      "routeIds": [
+        "cz-basin"
+      ],
+      "wikipedia": "Flowery Lake",
+      "wikidata": "Q49187455",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Flowery_Lake",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-57094500",
+          "title": "Flowery Lake",
+          "url": "https://en.wikipedia.org/wiki/Flowery_Lake",
+          "text": "Flowery Lake is a swamp in the Elko County of the U.S. state of Nevada. Flowery Lake was named for the flowers lining its perimeter.\n\n",
+          "retrievedAt": "2026-10-25T12:07:30.126Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 278.971270960238,
+      "lateralM": 3608.8347196481404,
+      "signedLateralM": 3608.8347196481404,
+      "areaKind": "lake"
+    },
+    {
+      "id": "wd-Q7166600",
+      "name": "Pequop Mountains",
+      "lat": 40.73,
+      "lon": -114.581,
+      "category": "Mountain",
+      "routeIds": [
+        "cz-basin"
+      ],
+      "wikipedia": "Pequop Mountains",
+      "wikidata": "Q7166600",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Pequop_Mountains",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-5157704",
+          "title": "Pequop Mountains",
+          "url": "https://en.wikipedia.org/wiki/Pequop_Mountains",
+          "text": "The Pequop Mountains are a mountain range located in eastern Elko County, Nevada, United States.   The range runs generally north-south for approximately 51 miles (82 km) The high point of the range is an unnamed peak (at an elevation of 9,249 feet [2,819 m]) located at 40°55.46'N and 114°35.38'W.",
+          "retrievedAt": "2026-10-25T12:07:30.126Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 280.8984845543691,
+      "lateralM": 252.5030662070089,
+      "signedLateralM": 252.5030662070089
+    },
+    {
+      "id": "wd-Q5135918",
+      "name": "Clover Valley (Nevada)",
+      "lat": 40.89638889,
+      "lon": -114.89027778,
+      "category": "Nature",
+      "routeIds": [
+        "cz-basin"
+      ],
+      "wikipedia": "Clover Valley (Nevada)",
+      "wikidata": "Q5135918",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Clover_Valley_(Nevada)",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-34499238",
+          "title": "Clover Valley (Nevada)",
+          "url": "https://en.wikipedia.org/wiki/Clover_Valley_(Nevada)",
+          "text": "The Clover Valley of Nevada, is a 37-mile (60 km) long valley located in central-southeast Elko County. Wells, Nevada, lies at its north end, on I-80.\nClover Valley lies at the east flank of the mostly north-trending East Humboldt Range, which supplies numerous creeks to the north valley; the mountain forests supplying the water are a section of the Humboldt-Toiyabe National Forest. A slough exists in the north which drains south to intermittent Snow Water Lake.",
+          "retrievedAt": "2026-10-25T12:07:31.515Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 313.9120856611519,
+      "lateralM": 25.488547600093177,
+      "signedLateralM": -25.488547600093177,
+      "areaKind": "valley"
+    },
+    {
+      "id": "wd-Q2076290",
+      "name": "Wells, Nevada",
+      "lat": 41.12,
+      "lon": -114.96722222,
+      "category": "Town",
+      "routeIds": [
+        "cz-basin"
+      ],
+      "wikipedia": "Wells, Nevada",
+      "wikidata": "Q2076290",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Wells%2C_Nevada",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-124423",
+          "title": "Wells, Nevada",
+          "url": "https://en.wikipedia.org/wiki/Wells%2C_Nevada",
+          "text": "Wells is a small city in Elko County, in northeast Nevada in the western United States. As of the 2020 census, Wells had a population of 1,237. Wells is located at the junction of Interstate 80 and U.S. Route 93, approximately 50 miles (80 km) east of Elko and is part of the Elko micropolitan area.",
+          "retrievedAt": "2026-10-25T12:07:32.565Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 341.1611782558501,
+      "lateralM": 663.8586037162406,
+      "signedLateralM": -663.8586037162406,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q1827214",
+      "name": "Deeth, Nevada",
+      "lat": 41.06555556,
+      "lon": -115.27472222,
+      "category": "Town",
+      "routeIds": [
+        "cz-basin"
+      ],
+      "wikipedia": "Deeth, Nevada",
+      "wikidata": "Q1827214",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Deeth%2C_Nevada",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-5041305",
+          "title": "Deeth, Nevada",
+          "url": "https://en.wikipedia.org/wiki/Deeth%2C_Nevada",
+          "text": "Deeth (Shoshoni: Teai)  is an unincorporated community and census-designated place near the intersection of Interstate 80 and Nevada State Route 230 in Elko County, Nevada, United States.",
+          "retrievedAt": "2026-10-25T12:07:34.004Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 368.8248019958923,
+      "lateralM": 6.474132190822307,
+      "signedLateralM": -6.474132190822307,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q55622340",
+      "name": "Marys River (Nevada)",
+      "lat": 41.05333333,
+      "lon": -115.28361111,
+      "category": "River",
+      "routeIds": [
+        "cz-basin"
+      ],
+      "wikipedia": "Marys River (Nevada)",
+      "wikidata": "Q55622340",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Marys_River_(Nevada)",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-57100262",
+          "title": "Marys River (Nevada)",
+          "url": "https://en.wikipedia.org/wiki/Marys_River_(Nevada)",
+          "text": "Marys River is a stream in the U.S. state of Nevada. It is a tributary to the Humboldt River.\nMarys River was named by a pioneer citizen after his Native American wife.",
+          "retrievedAt": "2026-10-25T12:07:34.004Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 369.98394664299695,
+      "lateralM": 976.133701962342,
+      "signedLateralM": 976.133701962342,
+      "areaKind": "river"
+    },
+    {
+      "id": "wd-Q4845785",
+      "name": "Halleck, Nevada",
+      "lat": 40.95083333,
+      "lon": -115.45277778,
+      "category": "Town",
+      "routeIds": [
+        "cz-basin"
+      ],
+      "wikipedia": "Halleck, Nevada",
+      "wikidata": "Q4845785",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Halleck%2C_Nevada",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-15987042",
+          "title": "Halleck, Nevada",
+          "url": "https://en.wikipedia.org/wiki/Halleck%2C_Nevada",
+          "text": "Halleck is an unincorporated community in central Elko County, Nevada, United States.",
+          "retrievedAt": "2026-10-25T12:07:34.450Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 389.4271120406179,
+      "lateralM": 120.72997248595206,
+      "signedLateralM": 120.72997248595206,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q39078947",
+      "name": "Rabbit Creek (Nevada)",
+      "lat": 40.92944444,
+      "lon": -115.44388889,
+      "category": "River",
+      "routeIds": [
+        "cz-basin"
+      ],
+      "wikipedia": "Rabbit Creek (Nevada)",
+      "wikidata": "Q39078947",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Rabbit_Creek_(Nevada)",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-54714886",
+          "title": "Rabbit Creek (Nevada)",
+          "url": "https://en.wikipedia.org/wiki/Rabbit_Creek_(Nevada)",
+          "text": "Rabbit Creek is a tributary to the Humboldt River located in Elko County, Nevada.\nThe creek was originally named Seitz Creek after two brothers (George and Edward Seitz) who settled near present-day Pleasant Valley in 1862 after leaving Pennsylvania.  The creek flows from early April to August.  The creek is used to irrigate over 3,000 acres of harvest crop and 206 acres of diversified pasture.  The earliest water rights on the creek have a priority of 1862. Major users of the creek include Ruby Dome Ranch, Sarman Ranch, Woodbury Ranch, and Boyd Reservoir. Rabbit Creek begins at what is termed Seitz Lake (17 acres) within Seitz Canyon at an altitude of 8,915 feet.",
+          "retrievedAt": "2026-10-25T12:07:34.949Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 390.5229680162552,
+      "lateralM": 2017.9020254992834,
+      "signedLateralM": 2017.9020254992834,
+      "areaKind": "river"
+    },
+    {
+      "id": "wd-Q19461566",
+      "name": "Elburz, Nevada",
+      "lat": 40.92861111,
+      "lon": -115.50138889,
+      "category": "Town",
+      "routeIds": [
+        "cz-basin"
+      ],
+      "wikipedia": "Elburz, Nevada",
+      "wikidata": "Q19461566",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Elburz%2C_Nevada",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-44695971",
+          "title": "Elburz, Nevada",
+          "url": "https://en.wikipedia.org/wiki/Elburz%2C_Nevada",
+          "text": "Elburz is an unincorporated community in Elko County, Nevada, United States. It is located along Interstate 80 between Elko and Wells.\nThe first permanent settlement at Elburz was made before 1910. The community received its name from the railroad.",
+          "retrievedAt": "2026-10-25T12:07:34.949Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 394.37299224720704,
+      "lateralM": 135.08270661526728,
+      "signedLateralM": 135.08270661526728,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q49027045",
+      "name": "East Peak (Elko County, Nevada)",
+      "lat": 40.91222222,
+      "lon": -115.58277778,
+      "category": "Mountain",
+      "routeIds": [
+        "cz-basin"
+      ],
+      "wikipedia": "East Peak (Elko County, Nevada)",
+      "wikidata": "Q49027045",
+      "sourceUrl": "https://en.wikipedia.org/wiki/East_Peak_(Elko_County%2C_Nevada)",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-57086339",
+          "title": "East Peak (Elko County, Nevada)",
+          "url": "https://en.wikipedia.org/wiki/East_Peak_(Elko_County%2C_Nevada)",
+          "text": "East Peak is a summit in Elko County in the U.S. state of Nevada. The elevation is 6,194 feet (1,888 m). The peak rises above the Humboldt River valley and the community of Ryndon about two miles to the north and the main peak of Elko Mountain is about two miles to the west-southwest.\nEast Peak was named for the fact is east of other nearby summits.",
+          "retrievedAt": "2026-10-25T12:07:34.949Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 400.40594375170696,
+      "lateralM": 2668.855513016762,
+      "signedLateralM": 2668.855513016762
+    },
+    {
+      "id": "wd-Q7385219",
+      "name": "Ryndon, Nevada",
+      "lat": 40.94194444,
+      "lon": -115.59555556,
+      "category": "Town",
+      "routeIds": [
+        "cz-basin"
+      ],
+      "wikipedia": "Ryndon, Nevada",
+      "wikidata": "Q7385219",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Ryndon%2C_Nevada",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-23853135",
+          "title": "Ryndon, Nevada",
+          "url": "https://en.wikipedia.org/wiki/Ryndon%2C_Nevada",
+          "text": "Ryndon is an unincorporated community in central Elko County, Nevada, United States. It is part of the Elko micropolitan area.",
+          "retrievedAt": "2026-10-25T12:07:35.382Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 402.55316243782386,
+      "lateralM": 62.85112838322816,
+      "signedLateralM": -62.85112838322816,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q19880410",
+      "name": "Elko Mountain",
+      "lat": 40.894461,
+      "lon": -115.630181,
+      "category": "Mountain",
+      "routeIds": [
+        "cz-basin"
+      ],
+      "wikipedia": "Elko Mountain",
+      "wikidata": "Q19880410",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Elko_Mountain",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-46505020",
+          "title": "Elko Mountain",
+          "url": "https://en.wikipedia.org/wiki/Elko_Mountain",
+          "text": "Elko Mountain is the tallest mountain in the Elko Hills of Elko County, in Nevada, United States. The summit contains several radio towers.",
+          "retrievedAt": "2026-10-25T12:07:35.382Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 406.79315385480464,
+      "lateralM": 4872.905158207926,
+      "signedLateralM": 4872.905158207926
+    },
+    {
+      "id": "wd-Q54888684",
+      "name": "Coin, Nevada",
+      "lat": 40.88305556,
+      "lon": -115.71555556,
+      "category": "Town",
+      "routeIds": [
+        "cz-basin"
+      ],
+      "wikipedia": "Coin, Nevada",
+      "wikidata": "Q54888684",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Coin%2C_Nevada",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-57085540",
+          "title": "Coin, Nevada",
+          "url": "https://en.wikipedia.org/wiki/Coin%2C_Nevada",
+          "text": "Coin is an unincorporated community in Elko County, in the U.S. state of Nevada.\n\n",
+          "retrievedAt": "2026-10-25T12:07:35.893Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 415.5187973419609,
+      "lateralM": 173.05799621022348,
+      "signedLateralM": -173.05799621022348,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q945084",
+      "name": "Elko, Nevada",
+      "lat": 40.83888889,
+      "lon": -115.74027778,
+      "category": "Town",
+      "routeIds": [
+        "cz-basin"
+      ],
+      "wikipedia": "Elko, Nevada",
+      "wikidata": "Q945084",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Elko%2C_Nevada",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-124417",
+          "title": "Elko, Nevada",
+          "url": "https://en.wikipedia.org/wiki/Elko%2C_Nevada",
+          "text": "Elko is a city in and the county seat of Elko County, Nevada, United States. As of the 2020 census, Elko had a population of 20,564. Elko serves as the center of the Ruby Valley, a region with a population of over 55,000. \nElko is 21 miles (34 km) from Lamoille Canyon and the Ruby Mountains, providing year-round access to recreation, including hiking, skiing, hunting, and more than 20 alpine lakes.\n The city straddles the Humboldt River.  Spring Creek, Nevada, serves as a bedroom community 6 miles (10 km) from the city with a population of 13,805.\nElko is the principal city of the Elko Micropolitan Statistical Area, a micropolitan area that covers Elko and Eureka counties. Although a small city, Elko is the largest city for over 130 miles (210 km) in each direction until Twin Falls, Idaho; the city motto states it is \"The Heart of Northeast Nevada.\"\nElko is home to Great Basin College, as well as to the National Weather Service Weather Forecast Office, serving most of northern and central Nevada.\n\n",
+          "retrievedAt": "2026-10-25T12:07:35.893Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 420.8815379584617,
+      "lateralM": 641.9000271657511,
+      "signedLateralM": 641.9000271657511,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q14705271",
+      "name": "Ruby Valley Pony Express Station",
+      "lat": 40.8425,
+      "lon": -115.75111111,
+      "category": "Nature",
+      "routeIds": [
+        "cz-basin"
+      ],
+      "wikipedia": "Ruby Valley Pony Express Station",
+      "wikidata": "Q14705271",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Ruby_Valley_Pony_Express_Station",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-39128819",
+          "title": "Ruby Valley Pony Express Station",
+          "url": "https://en.wikipedia.org/wiki/Ruby_Valley_Pony_Express_Station",
+          "text": "The Ruby Valley Pony Express Station, located at 1515 Idaho St. in Elko, Nevada, was built in 1860 in Ruby Valley, Nevada.  It was moved in 1960 approximately 60 miles (97 km) to Elko, during the centennial anniversary year for the Pony Express, and then restored, and is listed on the National Register of Historic Places.  The building is significant as one of only two surviving Pony Express buildings in Nevada, out of 43 stations in Nevada.\nThe building was used as Pony Express stop during April 1860 to October 1861, and before and after that was used as a stagecoach stop.  It was located on the Raymond and Sally Gardner Ranch in Ruby Valley.  It is an 11-by-18-foot (3.4 m × 5.5 m) log building with a stone fireplace; sod originally covered its roof.  In its move, all logs and stones were numbered and charted so that it could be reconstructed in Elko in pretty much unaltered form.\nIt was listed on the National Register of Historic Places in 1975.\nThe original Ruby Valley Pony Express station was located at Station Spring at the southern end of Ruby Valley.  Ruby Lake NWR has extended its southern boundary to include Fort Ruby and this Pony Express Station.  A Historical Marker was...",
+          "retrievedAt": "2026-10-25T12:07:35.893Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 420.94204611088736,
+      "lateralM": 352.1326339418614,
+      "signedLateralM": -352.1326339418614,
+      "areaKind": "valley"
+    },
+    {
+      "id": "wd-Q5364355",
+      "name": "Elko station",
+      "lat": 40.8364,
+      "lon": -115.7502,
+      "category": "Railroad heritage",
+      "routeIds": [
+        "cz-basin"
+      ],
+      "wikipedia": "Elko station",
+      "wikidata": "Q5364355",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Elko_station",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-10180244",
+          "title": "Elko station",
+          "url": "https://en.wikipedia.org/wiki/Elko_station",
+          "text": "Elko station is a train station in Elko, Nevada. It is served by Amtrak's California Zephyr.\nThe westbound platform is accessed from Water Street via 11th Street and the eastbound platform is accessed from Sharp Access Road via 12th Street (Water Street cannot be accessed directly from 12th Street). The station is owned by the Union Pacific Railroad and contains two enclosed shelters on two platforms, one on each side of the pair of tracks for each direction of travel. There are no services provided at the station (e.g., ticketing, restrooms, lounge, etc.).",
+          "retrievedAt": "2026-10-25T12:07:35.893Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 421.5098894729301,
+      "lateralM": 26.68710705094375,
+      "signedLateralM": 26.68710705094375
+    },
+    {
+      "id": "wd-Q7567280",
+      "name": "South Fork Humboldt River",
+      "lat": 40.77166667,
+      "lon": -115.88833333,
+      "category": "River",
+      "routeIds": [
+        "cz-basin"
+      ],
+      "wikipedia": "South Fork Humboldt River",
+      "wikidata": "Q7567280",
+      "sourceUrl": "https://en.wikipedia.org/wiki/South_Fork_Humboldt_River",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-4867489",
+          "title": "South Fork Humboldt River",
+          "url": "https://en.wikipedia.org/wiki/South_Fork_Humboldt_River",
+          "text": "The South Fork Humboldt River is a river in Elko County, Nevada, United States.",
+          "retrievedAt": "2026-10-25T12:07:36.786Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 435.3587759545982,
+      "lateralM": 650.9122278809459,
+      "signedLateralM": 650.9122278809459,
+      "areaKind": "river"
+    },
+    {
+      "id": "wd-Q5251500",
+      "name": "Hunter, Nevada",
+      "lat": 40.75277778,
+      "lon": -115.90333333,
+      "category": "Town",
+      "routeIds": [
+        "cz-basin"
+      ],
+      "wikipedia": "Hunter, Nevada",
+      "wikidata": "Q5251500",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Hunter%2C_Nevada",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-38564696",
+          "title": "Hunter, Nevada",
+          "url": "https://en.wikipedia.org/wiki/Hunter%2C_Nevada",
+          "text": "Hunter is a ghost town along the Humboldt River in Elko County, Nevada, United States.",
+          "retrievedAt": "2026-10-25T12:07:37.698Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 437.73788388545023,
+      "lateralM": 1994.6515883217546,
+      "signedLateralM": 1994.6515883217546,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q55630025",
+      "name": "Pine Creek (Humboldt River tributary)",
+      "lat": 40.60055556,
+      "lon": -116.19416667,
+      "category": "River",
+      "routeIds": [
+        "cz-basin"
+      ],
+      "wikipedia": "Pine Creek (Humboldt River tributary)",
+      "wikidata": "Q55630025",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Pine_Creek_(Humboldt_River_tributary)",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-57134361",
+          "title": "Pine Creek (Humboldt River tributary)",
+          "url": "https://en.wikipedia.org/wiki/Pine_Creek_(Humboldt_River_tributary)",
+          "text": "Pine Creek is a stream in the U.S. state of Nevada. It is a tributary to the Humboldt River.\nPine Creek was so named on account of pine timber near its course.",
+          "retrievedAt": "2026-10-25T12:07:38.577Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 472.8998870184144,
+      "lateralM": 580.4664098101041,
+      "signedLateralM": 580.4664098101041,
+      "areaKind": "river"
+    },
+    {
+      "id": "wd-Q7127579",
+      "name": "Palisade Canyon",
+      "lat": 40.58083333,
+      "lon": -116.32,
+      "category": "Canyon",
+      "routeIds": [
+        "cz-basin"
+      ],
+      "wikipedia": "Palisade Canyon",
+      "wikidata": "Q7127579",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Palisade_Canyon",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-29887882",
+          "title": "Palisade Canyon",
+          "url": "https://en.wikipedia.org/wiki/Palisade_Canyon",
+          "text": "Palisade Canyon is a canyon along the Humboldt River in northern Eureka County, Nevada, United States.",
+          "retrievedAt": "2026-10-25T12:07:39.060Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 484.94551208176875,
+      "lateralM": 172.06899317464237,
+      "signedLateralM": -172.06899317464237,
+      "areaKind": "canyon"
+    },
+    {
+      "id": "wd-Q3495751",
+      "name": "Beowawe, Nevada",
+      "lat": 40.59277778,
+      "lon": -116.47722222,
+      "category": "Town",
+      "routeIds": [
+        "cz-basin"
+      ],
+      "wikipedia": "Beowawe, Nevada",
+      "wikidata": "Q3495751",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Beowawe%2C_Nevada",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-569225",
+          "title": "Beowawe, Nevada",
+          "url": "https://en.wikipedia.org/wiki/Beowawe%2C_Nevada",
+          "text": "Beowawe ( bay-ə-WAH-wee) is a small town in Eureka County, Nevada, United States.",
+          "retrievedAt": "2026-10-25T12:07:39.969Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 499.5080444028838,
+      "lateralM": 6.4026701016026575,
+      "signedLateralM": 6.4026701016026575,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q17374547",
+      "name": "Argenta, Nevada",
+      "lat": 40.67444444,
+      "lon": -116.70555556,
+      "category": "Town",
+      "routeIds": [
+        "cz-basin"
+      ],
+      "wikipedia": "Argenta, Nevada",
+      "wikidata": "Q17374547",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Argenta%2C_Nevada",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-43276326",
+          "title": "Argenta, Nevada",
+          "url": "https://en.wikipedia.org/wiki/Argenta%2C_Nevada",
+          "text": "Argenta is a ghost town in Lander County, Nevada, in the United States.",
+          "retrievedAt": "2026-10-25T12:07:40.780Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 528.3428499887208,
+      "lateralM": 58.72549233612073,
+      "signedLateralM": -58.72549233612073,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q49783444",
+      "name": "Buffalo Valley (Nevada)",
+      "lat": 40.65194444,
+      "lon": -116.86,
+      "category": "Nature",
+      "routeIds": [
+        "cz-basin"
+      ],
+      "wikipedia": "Buffalo Valley (Nevada)",
+      "wikidata": "Q49783444",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Buffalo_Valley_(Nevada)",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-57135674",
+          "title": "Buffalo Valley (Nevada)",
+          "url": "https://en.wikipedia.org/wiki/Buffalo_Valley_(Nevada)",
+          "text": "Buffalo Valley is a valley in the U.S. state of Nevada.\nBuffalo Valley was so named on account of buffalo grass in the area. There is a giant concrete arrow, a remainder of over 1500 built in the USA during the 1920s to enable US postal service aircraft navigate more easily prior to the addition of in-craft radio.",
+          "retrievedAt": "2026-10-25T12:07:41.226Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 544.4440086901834,
+      "lateralM": 4207.478157862849,
+      "signedLateralM": -4207.478157862849,
+      "areaKind": "valley"
+    },
+    {
+      "id": "wd-Q7307003",
+      "name": "Reese River",
+      "lat": 40.79944444,
+      "lon": -117.06111111,
+      "category": "River",
+      "routeIds": [
+        "cz-basin"
+      ],
+      "wikipedia": "Reese River",
+      "wikidata": "Q7307003",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Reese_River",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-797432",
+          "title": "Reese River",
+          "url": "https://en.wikipedia.org/wiki/Reese_River",
+          "text": "The Reese River is a 181-mile-long (291 km) tributary of the Humboldt River, located in central Nevada in the western United States.\n\nThe Reese rises in the southern section of the Toiyabe Range, on the flanks of Arc Dome. In its upper reaches, the Reese River is a fast-flowing mountain stream surrounded by relatively lush growth, including Aspen groves and cottonwood trees. It then flows north between the Toiyabe Range and the Shoshone Mountains for approximately half its length. The river then passes through a low point in the Shoshone Mountains and continues north between that range and the Fish Creek Mountains. Once it exits the Toiyabe Range, it becomes a slow, muddy stream, and its waters are used for irrigation by scattered farms and ranches along its lower reaches. Although considered a tributary of the Humboldt, in most years, the Reese dwindles into a chain of shallow pools long before it reaches the main stem. Only during infrequent floods does the Reese contribute water to the Humboldt, entering near Battle Mountain. Nevada State Route 305 parallels the lower, usually dry portion of the channel from the Austin area to Battle Mountain.\nThe river is named after John Reese...",
+          "retrievedAt": "2026-10-25T12:07:42.691Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 571.4939861223368,
+      "lateralM": 4440.10679330148,
+      "signedLateralM": -4440.10679330148,
+      "areaKind": "river"
+    },
+    {
+      "id": "wd-Q7912515",
+      "name": "Valmy, Nevada",
+      "lat": 40.79277778,
+      "lon": -117.12666667,
+      "category": "Town",
+      "routeIds": [
+        "cz-basin"
+      ],
+      "wikipedia": "Valmy, Nevada",
+      "wikidata": "Q7912515",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Valmy%2C_Nevada",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-5791354",
+          "title": "Valmy, Nevada",
+          "url": "https://en.wikipedia.org/wiki/Valmy%2C_Nevada",
+          "text": "Valmy is a census-designated place in Humboldt County, Nevada, United States, named after the Battle of Valmy in France. The Lone Tree gold-mining complex is located adjacent to I-80; mining ended there in 2007, though a small gold resource remains in place there. In 2021, Nevada Gold Mines sold the mine to i-80 Gold, who hope to process ore there.\nThe Marigold mine is located further south of I-80 and has been in production since 1989.\nValmy is also home to the North Valmy Generating Station, jointly owned by NV Energy and Idaho Power.\nValmy has a post office with the ZIP code 89438. As of the 2020 census, Valmy had a population of 26.",
+          "retrievedAt": "2026-10-25T12:07:42.691Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 574.794731126896,
+      "lateralM": 45.17059710945439,
+      "signedLateralM": 45.17059710945439,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q3458409",
+      "name": "Stone House, Nevada",
+      "lat": 40.83722222,
+      "lon": -117.17194444,
+      "category": "Town",
+      "routeIds": [
+        "cz-basin"
+      ],
+      "wikipedia": "Stone House, Nevada",
+      "wikidata": "Q3458409",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Stone_House%2C_Nevada",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-5791367",
+          "title": "Stone House, Nevada",
+          "url": "https://en.wikipedia.org/wiki/Stone_House%2C_Nevada",
+          "text": "Stone House is a ghost town in Humboldt County, Nevada, United States.\nA. Woodward, one of the signers of the 1851 \"Washoe Code\" that dealt with early land claims, was killed near this location in the autumn of 1851.  Woodward had partnered with George Chorpenning on a monthly mail contract.  Woodward was killed while fulfilling that contract.\nA post office was located in Stone House from 26 November 1890 to 24 March 1915, when it was moved to Valmy, Nevada.\nNote that there are at least two other locations named Stone House in Nevada.  One in Nye County and another located in the Osgood Mountains of Humboldt County.  In addition, there is Stonehouse located in White Pine County and Stonehouse Canyon, located near Farrell, Nevada in Pershing County.",
+          "retrievedAt": "2026-10-25T12:07:43.139Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 581.0448977579767,
+      "lateralM": 15.089320984672854,
+      "signedLateralM": -15.089320984672854,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q3478491",
+      "name": "Golconda, Nevada",
+      "lat": 40.95333333,
+      "lon": -117.48916667,
+      "category": "Town",
+      "routeIds": [
+        "cz-basin"
+      ],
+      "wikipedia": "Golconda, Nevada",
+      "wikidata": "Q3478491",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Golconda%2C_Nevada",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-4653348",
+          "title": "Golconda, Nevada",
+          "url": "https://en.wikipedia.org/wiki/Golconda%2C_Nevada",
+          "text": "Golconda is a census-designated place in southeastern Humboldt County, Nevada, United States. As of the 2020 census it has a population of 182. It is located along Interstate 80 on the Humboldt River in the northwestern part of the state. Golconda has a post office, which has been in operation since 1869.\n\n",
+          "retrievedAt": "2026-10-25T12:07:44.449Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 618.6603749269781,
+      "lateralM": 350.25598852442357,
+      "signedLateralM": 350.25598852442357,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q51704243",
+      "name": "Tule, Nevada",
+      "lat": 41.02416667,
+      "lon": -117.65,
+      "category": "Town",
+      "routeIds": [
+        "cz-basin"
+      ],
+      "wikipedia": "Tule, Nevada",
+      "wikidata": "Q51704243",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Tule%2C_Nevada",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-57082198",
+          "title": "Tule, Nevada",
+          "url": "https://en.wikipedia.org/wiki/Tule%2C_Nevada",
+          "text": "Tule is an unincorporated community in Humboldt County, Nevada, United States.\nTule was a station east of Weso on the Southern Pacific Railroad with the first reference from a 1881 map.  The name comes from the Nahuatl word \"tollin\", which means bullrush.\nAn 1890 book includes Tule in a list of towns and settlements in Humboldt County.",
+          "retrievedAt": "2026-10-25T12:07:44.940Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 635.8657992547961,
+      "lateralM": 4.746351929440991,
+      "signedLateralM": 4.746351929440991,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q6650381",
+      "name": "Little Humboldt River",
+      "lat": 41.0336,
+      "lon": -117.6802,
+      "category": "River",
+      "routeIds": [
+        "cz-basin"
+      ],
+      "wikipedia": "Little Humboldt River",
+      "wikidata": "Q6650381",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Little_Humboldt_River",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-739271",
+          "title": "Little Humboldt River",
+          "url": "https://en.wikipedia.org/wiki/Little_Humboldt_River",
+          "text": "The Little Humboldt River is a tributary of the Humboldt River, approximately 60 miles (97 km) long, in northern Nevada in the western United States.  It flows through Paradise Valley and drains into the Humboldt River northeast of Winnemucca.  It is an intermittent stream draining a rugged area on the edge of the Owyhee Desert in the Great Basin.\nIt rises in two forks in northern Nevada.  The North Fork 40 miles (64 km) rises in northeastern Humboldt County, on the northeast end of the Santa Rosa Range, and flows intermittently to the ESE along the southeast edge of the Owyhee Desert.  The South Fork (40 mi/64 km) rises in extreme western Elko County north of Jake Creek Mountain and generally flows WNW.  The two forks join in eastern Humboldt County 70 miles (110 km) northeast of Winnemucca, with the combined stream flowing southwest along the east side of the Santa Rosa Range to join the Humboldt approximately 5 miles (8.0 km) northeast of Winnemucca.  However, the surface waters of the Little Humboldt rarely reach the Humboldt River.\nIt is impounded to form Chimney Reservoir near the confluence of its forks in eastern Humboldt County.  The river has recently been the subject of environmental...",
+          "retrievedAt": "2026-10-25T12:07:44.940Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 637.800597039259,
+      "lateralM": 1364.1404785343896,
+      "signedLateralM": -1364.1404785343896,
+      "areaKind": "river"
+    },
+    {
+      "id": "wd-Q69406058",
+      "name": "Weso, Nevada",
+      "lat": 41.01138889,
+      "lon": -117.69138889,
+      "category": "Town",
+      "routeIds": [
+        "cz-basin"
+      ],
+      "wikipedia": "Weso, Nevada",
+      "wikidata": "Q69406058",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Weso%2C_Nevada",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-68484658",
+          "title": "Weso, Nevada",
+          "url": "https://en.wikipedia.org/wiki/Weso%2C_Nevada",
+          "text": "Weso is an unincorporated community and railroad siding in Humboldt County, Nevada, United States located northeast of Winnemucca at the junction of the Winnemucca, Nevada and Elko Subdivisions of the Union Pacific Railroad.\nLocated nearby across the railroads is the Winnemucca Trap Club shooting range.",
+          "retrievedAt": "2026-10-25T12:07:45.480Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 639.8022561682703,
+      "lateralM": 41.49086779030011,
+      "signedLateralM": -41.49086779030011,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q8025572",
+      "name": "Winnemucca station",
+      "lat": 40.96944444,
+      "lon": -117.73138889,
+      "category": "Railroad heritage",
+      "routeIds": [
+        "cz-basin"
+      ],
+      "wikipedia": "Winnemucca station",
+      "wikidata": "Q8025572",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Winnemucca_station",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-10559868",
+          "title": "Winnemucca station",
+          "url": "https://en.wikipedia.org/wiki/Winnemucca_station",
+          "text": "Winnemucca station is an Amtrak train station in Winnemucca, Nevada. It is served by one daily train in each direction on the California Zephyr.",
+          "retrievedAt": "2026-10-25T12:07:45.480Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 645.5616331553582,
+      "lateralM": 16.098442924865694,
+      "signedLateralM": 16.098442924865694
+    },
+    {
+      "id": "wd-Q6858199",
+      "name": "Mill City, Nevada",
+      "lat": 40.68361111,
+      "lon": -118.07055556,
+      "category": "Town",
+      "routeIds": [
+        "cz-basin"
+      ],
+      "wikipedia": "Mill City, Nevada",
+      "wikidata": "Q6858199",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Mill_City%2C_Nevada",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-6306900",
+          "title": "Mill City, Nevada",
+          "url": "https://en.wikipedia.org/wiki/Mill_City%2C_Nevada",
+          "text": "Mill City is an unincorporated community in Pershing County, Nevada, United States.  The ZIP Code of Mill City is 89418.\nMill City had its start as a mining community. The community was named for a quartz mill near the original town site. A post office called Mill City was in operation from 1864 until 1948.\nThe community is four miles (6.4 km) north of Imlay on Interstate 80. The Humboldt River is to the northwest and the northern end of the Humboldt Range lies to the east. State Route 400 passes through the town, continuing south towards Unionville. The Midway truck stop is located in Mill City, offering services to visitors and the dwindling population.",
+          "retrievedAt": "2026-10-25T12:07:48.239Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 691.489463527494,
+      "lateralM": 12.822046297836454,
+      "signedLateralM": -12.822046297836454,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q7798999",
+      "name": "Thunder Mountain Monument",
+      "lat": 40.66004,
+      "lon": -118.1335032,
+      "category": "Heritage",
+      "routeIds": [
+        "cz-basin"
+      ],
+      "wikipedia": "Thunder Mountain Monument",
+      "wikidata": "Q7798999",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Thunder_Mountain_Monument",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-34185968",
+          "title": "Thunder Mountain Monument",
+          "url": "https://en.wikipedia.org/wiki/Thunder_Mountain_Monument",
+          "text": "The Thunder Mountain Monument is a series of outsider art sculptures and architectural forms that were assembled by Frank Van Zant starting in 1969 upon his arrival in Imlay, Nevada; it is located on a shoulder of Interstate 80.\nA World War II veteran from Oklahoma, Frank Van Zant had served with the 7th Armored Division, fought in several campaigns in Europe, and been badly burned in a tank battle outside Leipzig.  Born on an Indian Reservation in Okmulgee, Oklahoma, on November 11, 1921, he was the son of Sydney Grove Van Zant and grandson of Alexander Grove Van Zant and due to his upbringing he identified himself as Creek Indian, although his father became disenchanted with the sovereignty of the Creek Nation and became an individual he took the Native American name Rolling Mountain Thunder after experiencing an epiphany. He took on the twin but related tasks of both building shelters from the presumed coming apocalypse, and making a de facto spiritual haven for spiritual seekers of the hippie era. (There is no Thunder Mountain in the vicinity.)\nThe site covers five acres on the south side of a 1,000-foot (305 m) stretch of Interstate 80. There were originally seven buildings, including...",
+          "retrievedAt": "2026-10-25T12:07:48.239Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 697.4553637244145,
+      "lateralM": 776.5424908975561,
+      "signedLateralM": 776.5424908975561
+    },
+    {
+      "id": "wd-Q96419104",
+      "name": "Oreana, Nevada",
+      "lat": 40.31083333,
+      "lon": -118.37055556,
+      "category": "Town",
+      "routeIds": [
+        "cz-basin"
+      ],
+      "wikipedia": "Oreana, Nevada",
+      "wikidata": "Q96419104",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Oreana%2C_Nevada",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-63422410",
+          "title": "Oreana, Nevada",
+          "url": "https://en.wikipedia.org/wiki/Oreana%2C_Nevada",
+          "text": "Oreana is a ghost town in Pershing County, Nevada, United States.\nOreana was a milling town from 1865-1885 and should not be confused with Oreana Station located 3 miles to the northeast on what was initially the Central Pacific Railway.\nThe Montezuma Smelting Works was built at Oreana in 1857 to smelt ores from the Arabia and Trinity mining districts.  The Montezuma smelter was the first lead smelter in the U.S. to ship lead commercially.  Other lead smelters shipped their output locally.\nAt one time, Oreana was larger than what was then known as \"Lovelock's\" (today known as Lovelock).  However, Lovelock's became larger after Lovelock's successful bid for a Central Pacific station.  Oreana only got a full station in early 1913 when the narrow-gauge Nevada Short Line Railway connected from Oreana to Rochester.\nThe Post Office in Oreana operated from February 1867 until July 1869 and then from February 1870 until September 1873 and finally from October 1873 until March 1883.\nThe name Oreana may come from the \"ore\" plus the Greek \"ana\", which means \"greatly\" or \"excessively\".  The name could also be a corruption of the Spanish \"orejano\", meaning \"unbranded\".\nThe population was 68 in 1940.",
+          "retrievedAt": "2026-10-25T12:07:50.139Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 745.2898723698452,
+      "lateralM": 1950.7444026428605,
+      "signedLateralM": -1950.7444026428605,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q5061581",
+      "name": "Lovelock station",
+      "lat": 40.17972222,
+      "lon": -118.47277778,
+      "category": "Railroad heritage",
+      "routeIds": [
+        "cz-basin"
+      ],
+      "wikipedia": "Lovelock station",
+      "wikidata": "Q5061581",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Lovelock_station",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-22862563",
+          "title": "Lovelock station",
+          "url": "https://en.wikipedia.org/wiki/Lovelock_station",
+          "text": "The Central Pacific Railroad Depot in Lovelock, Nevada was erected in 1880 in the Stick style or Eastlake style, functioning as the principal point of access to the town in the late 19th and early 20th centuries. The building was originally located on the northeast corner of West Broadway Avenue and Main Street, but was moved by the town in 1999 to its present site across Broadway Avenue.\nThe building consists of two wood frame sections; a 1½ story section to the south comprising the baggage room, and a two-story section to the north containing the passenger waiting room, agent's office and agent's quarters. Both portions are extensively detailed with finials, braces, brackets and flat board trim. The depot was built to the Central Pacific Railroad's \"Combination Depot #2\" design, the only example of its type in Nevada, but one of six built on the Central Pacific system. None of the other five examples is known to have survived.\nThe station was a regular stop for transcontinental train traffic, and was expanded in 1917. The Amtrak California Zephyr stopped at the station until May 11, 1997. When what was now the Union Pacific Railroad announced plans to tear the depot down in 1998 the...",
+          "retrievedAt": "2026-10-25T12:07:51.109Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 762.623850464509,
+      "lateralM": 7.281698949759143,
+      "signedLateralM": 7.281698949759143
+    },
+    {
+      "id": "wd-Q22060850",
+      "name": "Toulon, Nevada",
+      "lat": 40.06277778,
+      "lon": -118.645,
+      "category": "Railroad heritage",
+      "routeIds": [
+        "cz-basin"
+      ],
+      "wikipedia": "Toulon, Nevada",
+      "wikidata": "Q22060850",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Toulon%2C_Nevada",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-46613561",
+          "title": "Toulon, Nevada",
+          "url": "https://en.wikipedia.org/wiki/Toulon%2C_Nevada",
+          "text": "Toulon is a former non-agency railroad station in Pershing County, Nevada, United States.\nCarlson states that the name may commemorate Toulon, France.\nToulon is visible from Interstate 80.",
+          "retrievedAt": "2026-10-25T12:07:52.084Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 782.7128164192463,
+      "lateralM": 2.893495203622903,
+      "signedLateralM": 2.893495203622903
+    },
+    {
+      "id": "wd-Q6476241",
+      "name": "Lake Humboldt",
+      "lat": 40.0008,
+      "lon": -118.6242,
+      "category": "Nature",
+      "routeIds": [
+        "cz-basin"
+      ],
+      "wikipedia": "Lake Humboldt",
+      "wikidata": "Q6476241",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Lake_Humboldt",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-19255085",
+          "title": "Lake Humboldt",
+          "url": "https://en.wikipedia.org/wiki/Lake_Humboldt",
+          "text": "Lake Humboldt or Humboldt Lake is an endorheic basin lake in northern Churchill County and southern Pershing County in the state of Nevada in the United States. The lake has the name of Alexander von Humboldt, a German natural scientist.\nThe lake receives the Humboldt River from the north but has no outlet. Humboldt Sink, an intermittent extension of the lake to the south, crosses into northern Churchill County. Since the lake is fed by a freshwater source but has no outlet, its water varies between brackish and extremely salt-laden depending on its distance from the inlet.",
+          "retrievedAt": "2026-10-25T12:07:52.084Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 789.1516447455474,
+      "lateralM": 4456.709647967479,
+      "signedLateralM": 4456.709647967479,
+      "areaKind": "lake"
+    },
+    {
+      "id": "wd-Q5940290",
+      "name": "Humboldt Cave",
+      "lat": 39.88166667,
+      "lon": -118.72222222,
+      "category": "Heritage",
+      "routeIds": [
+        "cz-basin"
+      ],
+      "wikipedia": "Humboldt Cave",
+      "wikidata": "Q5940290",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Humboldt_Cave",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-36616408",
+          "title": "Humboldt Cave",
+          "url": "https://en.wikipedia.org/wiki/Humboldt_Cave",
+          "text": "Humboldt Cave is an archaeological site in Churchill County, Nevada. Thirty-one caches were excavated from the cave, but there is only one radiocarbon date of 1953±175 14C BP (~2000 years ago) from the cave, which suggests that Humboldt Cave may have only been a single cultural component. In other words, the caches from the cave may have only been deposited once and at the same time.\n\n",
+          "retrievedAt": "2026-10-25T12:07:52.535Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 803.4468253510383,
+      "lateralM": 2954.174899045983,
+      "signedLateralM": 2954.174899045983
+    },
+    {
+      "id": "wd-Q5910465",
+      "name": "Hot Springs Mountains",
+      "lat": 39.83333333,
+      "lon": -118.83333333,
+      "category": "Mountain",
+      "routeIds": [
+        "cz-basin"
+      ],
+      "wikipedia": "Hot Springs Mountains",
+      "wikidata": "Q5910465",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Hot_Springs_Mountains",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-11578614",
+          "title": "Hot Springs Mountains",
+          "url": "https://en.wikipedia.org/wiki/Hot_Springs_Mountains",
+          "text": "The Hot Springs Mountains are a range of rocky hills located in Northern Nevada, in Churchill County, between the cities of Fallon, Lovelock, and Fernley.  The area was recently volcanically active (in geological terms), is underlain by hot rocks, and is the site of several geothermal electric power plants.  It is an arid, rough terrain, uninhabited.   These mountains are adjacent to the Lahontan Valley, which contains the Forty Mile Desert, a daunting section of the 19th century California emigrant trail.  During the Pleistocene epoch this range of mountains was an island in the now extinct Lake Lahontan.\n\n",
+          "retrievedAt": "2026-10-25T12:07:53.013Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 811.3494814165144,
+      "lateralM": 4846.319388096098,
+      "signedLateralM": -4846.319388096098
+    },
+    {
+      "id": "wd-Q5688225",
+      "name": "Hazen, Nevada",
+      "lat": 39.56527778,
+      "lon": -119.04638889,
+      "category": "Town",
+      "routeIds": [
+        "cz-basin"
+      ],
+      "wikipedia": "Hazen, Nevada",
+      "wikidata": "Q5688225",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Hazen%2C_Nevada",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-32123847",
+          "title": "Hazen, Nevada",
+          "url": "https://en.wikipedia.org/wiki/Hazen%2C_Nevada",
+          "text": "Hazen is an unincorporated community in Churchill County, Nevada, United States. The community is approximately 12 miles (19 km) southeast of Fernley and 16 miles (26 km) northwest of Fallon, on U.S. Route 50 Alternate.\n\n",
+          "retrievedAt": "2026-10-25T12:07:54.825Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 853.0950757627157,
+      "lateralM": 29.391262337798622,
+      "signedLateralM": 29.391262337798622,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q1948662",
+      "name": "Fernley, Nevada",
+      "lat": 39.59861111,
+      "lon": -119.215,
+      "category": "Town",
+      "routeIds": [
+        "cz-basin"
+      ],
+      "wikipedia": "Fernley, Nevada",
+      "wikidata": "Q1948662",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Fernley%2C_Nevada",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-124441",
+          "title": "Fernley, Nevada",
+          "url": "https://en.wikipedia.org/wiki/Fernley%2C_Nevada",
+          "text": "Fernley is a city in Lyon County, Nevada, United States, and part of the Reno–Tahoe–Sparks metropolitan area CSA. The city was incorporated in 2001. The population of the city was 22,895 at the 2020 census, making it the 7th most populous city in Nevada.\nFernley was home to the historic and one of the first Amazon.com centers in the world, which has since relocated within the metro area. Naval Air Station (TOPGUN), the U.S. Navy's Naval Strike and Air Warfare Center & TOPGUN training program since 1996, was moved nearby, to Fallon, from Naval Air Station Miramar. The city is home to the Reno-Fernley Raceway. The world's first Tesla Gigafactory, that produces battery packs, energy storage and electric vehicle components is nearby 15 miles west at the Tahoe Reno Industrial Center, and also there as of 2024 an under-construction lithium processing plant.",
+          "retrievedAt": "2026-10-25T12:07:55.241Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 869.0789380246871,
+      "lateralM": 437.41948812630875,
+      "signedLateralM": 437.41948812630875,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q28134514",
+      "name": "Northern Nevada Veterans Memorial Cemetery",
+      "lat": 39.6192,
+      "lon": -119.2302,
+      "category": "Heritage",
+      "routeIds": [
+        "cz-basin"
+      ],
+      "wikipedia": "Northern Nevada Veterans Memorial Cemetery",
+      "wikidata": "Q28134514",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Northern_Nevada_Veterans_Memorial_Cemetery",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-51445569",
+          "title": "Northern Nevada Veterans Memorial Cemetery",
+          "url": "https://en.wikipedia.org/wiki/Northern_Nevada_Veterans_Memorial_Cemetery",
+          "text": "The Northern Nevada Veterans Memorial Cemetery opened in 1990 under the administration of the Nevada Office of Veterans Services. The Northern Nevada Veterans Cemetery is funded by the State of Nevada and the National Cemetery Association. The cemetery is 35 miles east of Reno and is adjacent to Interstate 80, in Fernley, Nevada.",
+          "retrievedAt": "2026-10-25T12:07:55.241Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 870.8948186603924,
+      "lateralM": 1470.344829469362,
+      "signedLateralM": -1470.344829469362
+    },
+    {
+      "id": "wd-Q14705098",
+      "name": "Fernley station",
+      "lat": 39.6055,
+      "lon": -119.2376,
+      "category": "Railroad heritage",
+      "routeIds": [
+        "cz-basin"
+      ],
+      "wikipedia": "Fernley station",
+      "wikidata": "Q14705098",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Fernley_station",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-39997818",
+          "title": "Fernley station",
+          "url": "https://en.wikipedia.org/wiki/Fernley_station",
+          "text": "The Fernley and Lassen Railway Depot in Fernley, Nevada was built in 1914, and was the eastern end of the Fernley and Lassen Railway line of the Southern Pacific Railroad, 30 miles from Reno. Also known as the Southern Pacific Railroad Depot, it was listed on the National Register of Historic Places in 2005.\nThe station is a 187-by-26-foot (57.0 m × 7.9 m) wood-frame building of the Southern Pacific Railroad Company's \"Common Standard Station Plan #22\" and is significant as a good surviving example of railroad pattern book architecture, and the only example of that specific plan surviving in Nevada. It was a passenger and goods depot, with accommodation for the station master on the second floor. It was part of 112-mile Fernley and Lassen Railway, which joined the Red River Lumber Company in Westwood with the main line of the Southern Pacific Railroad Company, unifying the Southern Pacific Railroad's system in Oregon, Nevada, and California and providing rail transportation to farming and ranching communities in northeastern California and northwestern Nevada.\nFernley station was used until 1985. In 1986, the Fernley Preservation Society bought the building from the Southern Pacific...",
+          "retrievedAt": "2026-10-25T12:07:55.241Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 871.1425448595571,
+      "lateralM": 160.93493217633218,
+      "signedLateralM": 160.93493217633218
+    },
+    {
+      "id": "wd-Q5261452",
+      "name": "Derby Dam",
+      "lat": 39.58583333,
+      "lon": -119.44694444,
+      "category": "Infrastructure",
+      "routeIds": [
+        "cz-basin"
+      ],
+      "wikipedia": "Derby Dam",
+      "wikidata": "Q5261452",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Derby_Dam",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-398057",
+          "title": "Derby Dam",
+          "url": "https://en.wikipedia.org/wiki/Derby_Dam",
+          "text": "Derby Dam is a diversion dam built from 1903 to 1905 on the Truckee River, located about 20 miles (32 km) east of Reno in Storey and Washoe counties in Nevada, United States. It diverts water into the Truckee Canal that would otherwise enter  Pyramid Lake. The canal feeds Lahontan Reservoir in the Carson River watershed, where it is used for irrigation.\nIt was the first project of the newly organized U.S. Reclamation Service (known today as the U.S. Bureau of Reclamation), organized by the Reclamation Act of 1902.\nAs a result of the diversion, Winnemucca Lake lost inflow and dried up, and Pyramid Lake lost more than 80 feet (24 m) in elevation, resulting in the near-extinction of the Lahontan cutthroat trout.\nThe dam is operated by the Truckee-Carson Irrigation District. It was named after the Derby Southern Pacific Railroad station.",
+          "retrievedAt": "2026-10-25T12:07:56.135Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 890.0018479283004,
+      "lateralM": 352.7152592515635,
+      "signedLateralM": 352.7152592515635
+    },
+    {
+      "id": "wd-Q16920620",
+      "name": "Clark, Nevada",
+      "lat": 39.56416667,
+      "lon": -119.48166667,
+      "category": "Town",
+      "routeIds": [
+        "cz-basin"
+      ],
+      "wikipedia": "Clark, Nevada",
+      "wikidata": "Q16920620",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Clark%2C_Nevada",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-40709391",
+          "title": "Clark, Nevada",
+          "url": "https://en.wikipedia.org/wiki/Clark%2C_Nevada",
+          "text": "Clark is an unincorporated community on the Truckee River in Storey and Washoe counties in Nevada, United States, about 17 miles (27 km) east of Reno and Sparks.",
+          "retrievedAt": "2026-10-25T12:07:56.135Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 894.7785677094367,
+      "lateralM": 23.956036078906926,
+      "signedLateralM": 23.956036078906926,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q54959685",
+      "name": "Old Bridge Ranch",
+      "lat": 39.5093261,
+      "lon": -119.632547,
+      "category": "Infrastructure",
+      "routeIds": [
+        "cz-basin"
+      ],
+      "wikipedia": "Old Bridge Ranch",
+      "wikidata": "Q54959685",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Old_Bridge_Ranch",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-57434113",
+          "title": "Old Bridge Ranch",
+          "url": "https://en.wikipedia.org/wiki/Old_Bridge_Ranch",
+          "text": "The Old Bridge Ranch was a legal brothel near Sparks, operating east of the city, in Storey County, Nevada, United States, that was open from 1967 to the summer of 2008.",
+          "retrievedAt": "2026-10-25T12:07:56.737Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 909.5927228255008,
+      "lateralM": 576.1376809970817,
+      "signedLateralM": 576.1376809970817
+    },
+    {
+      "id": "wd-Q15242605",
+      "name": "Lockwood, Nevada",
+      "lat": 39.50722222,
+      "lon": -119.64666667,
+      "category": "Town",
+      "routeIds": [
+        "cz-basin"
+      ],
+      "wikipedia": "Lockwood, Nevada",
+      "wikidata": "Q15242605",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Lockwood%2C_Nevada",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-40672104",
+          "title": "Lockwood, Nevada",
+          "url": "https://en.wikipedia.org/wiki/Lockwood%2C_Nevada",
+          "text": "Lockwood is an unincorporated community on the northern edge of Storey County, Nevada, United States, about 10 miles (16 km) east of Reno and Sparks. Lockwood is part of the Reno-Sparks Metropolitan Area.",
+          "retrievedAt": "2026-10-25T12:07:56.737Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 910.8849753786667,
+      "lateralM": 569.8023054185167,
+      "signedLateralM": 569.8023054185167,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q141633693",
+      "name": "Hidden Valley Regional Park",
+      "lat": 39.48333333,
+      "lon": -119.70833333,
+      "category": "Nature",
+      "routeIds": [
+        "cz-basin"
+      ],
+      "wikipedia": "Hidden Valley Regional Park",
+      "wikidata": "Q141633693",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Hidden_Valley_Regional_Park",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-84270949",
+          "title": "Hidden Valley Regional Park",
+          "url": "https://en.wikipedia.org/wiki/Hidden_Valley_Regional_Park",
+          "text": "Hidden Valley Regional Park is a county park in southeast Reno, Nevada. It covers 480 acres (190 ha), including 65 acres (26 ha) of developed land. The rest of the park has open land and trails.",
+          "retrievedAt": "2026-10-25T12:07:57.199Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 913.8178394977282,
+      "lateralM": 4179.277580891463,
+      "signedLateralM": 4179.277580891463,
+      "areaKind": "valley"
+    },
+    {
+      "id": "wd-Q211629",
+      "name": "Sparks, Nevada",
+      "lat": 39.55444444,
+      "lon": -119.73555556,
+      "category": "Town",
+      "routeIds": [
+        "cz-basin"
+      ],
+      "wikipedia": "Sparks, Nevada",
+      "wikidata": "Q211629",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Sparks%2C_Nevada",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-124463",
+          "title": "Sparks, Nevada",
+          "url": "https://en.wikipedia.org/wiki/Sparks%2C_Nevada",
+          "text": "Sparks is a city in Washoe County, Nevada, United States. It was founded in 1904, incorporated on March 15, 1905, and is located just east of Reno. As of the 2020 census, Sparks had a population of 108,445. It is the fifth most populous city in Nevada. It is named after John Sparks, Nevada governor (1903–1908), and a member of the Silver Party.\nSparks is located within the Reno–Sparks metropolitan area.\n\n",
+          "retrievedAt": "2026-10-25T12:07:57.199Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 919.3537834215576,
+      "lateralM": 2727.8051429188463,
+      "signedLateralM": -2727.8051429188463,
+      "areaKind": "town"
+    },
+    {
+      "id": "wd-Q7573701",
+      "name": "Sparks station",
+      "lat": 39.5316,
+      "lon": -119.7519,
+      "category": "Railroad heritage",
+      "routeIds": [
+        "cz-basin"
+      ],
+      "wikipedia": "Sparks station",
+      "wikidata": "Q7573701",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Sparks_station",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-11135872",
+          "title": "Sparks station",
+          "url": "https://en.wikipedia.org/wiki/Sparks_station",
+          "text": "The Sparks station is a former passenger train station in Sparks, Nevada. The city of Sparks was established to furnish the Southern Pacific shops which were established at the site. Passenger service to the station lasted from 1904 to 2009.\n\n",
+          "retrievedAt": "2026-10-25T12:07:57.199Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 920.4116310559683,
+      "lateralM": 26.356068247262545,
+      "signedLateralM": -26.356068247262545
+    },
+    {
+      "id": "wd-Q7003326",
+      "name": "Reno station (Nevada–California–Oregon Railway)",
+      "lat": 39.53111111,
+      "lon": -119.80944444,
+      "category": "Railroad heritage",
+      "routeIds": [
+        "cz-basin"
+      ],
+      "wikipedia": "Reno station (Nevada–California–Oregon Railway)",
+      "wikidata": "Q7003326",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Reno_station_(Nevada%E2%80%93California%E2%80%93Oregon_Railway)",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-22657917",
+          "title": "Reno station (Nevada–California–Oregon Railway)",
+          "url": "https://en.wikipedia.org/wiki/Reno_station_(Nevada%E2%80%93California%E2%80%93Oregon_Railway)",
+          "text": "The Nevada-California-Oregon Railroad Depot was built by the Nevada-California-Oregon Railway (NCO) in 1910 in Reno, Nevada. It is Nevada Historical Marker number 210. It is also listed in the National Register of Historic Places. The building today is used for a restaurant and microbrewery called The Depot Craft Brewery Distillery",
+          "retrievedAt": "2026-10-25T12:07:58.068Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 925.3733962793218,
+      "lateralM": 194.52103361645237,
+      "signedLateralM": -194.52103361645237
+    },
+    {
+      "id": "wd-Q7313369",
+      "name": "Reno station",
+      "lat": 39.5287,
+      "lon": -119.8116,
+      "category": "Railroad heritage",
+      "routeIds": [
+        "cz-basin"
+      ],
+      "wikipedia": "Reno station",
+      "wikidata": "Q7313369",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Reno_station",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-11135926",
+          "title": "Reno station",
+          "url": "https://en.wikipedia.org/wiki/Reno_station",
+          "text": "Reno station is an Amtrak intercity train station in Reno, Nevada, served by the California Zephyr train. It is also serviced by five times per weekday, and twice on weekends, by Amtrak Thruway routes to Sacramento.",
+          "retrievedAt": "2026-10-25T12:07:58.068Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 925.6162866891298,
+      "lateralM": 22.4099233268536,
+      "signedLateralM": 22.4099233268536
+    },
+    {
+      "id": "wd-Q49225",
+      "name": "Reno, Nevada",
+      "lat": 39.52611111,
+      "lon": -119.8125,
+      "category": "Town",
+      "routeIds": [
+        "cz-basin"
+      ],
+      "wikipedia": "Reno, Nevada",
+      "wikidata": "Q49225",
+      "sourceUrl": "https://en.wikipedia.org/wiki/Reno%2C_Nevada",
+      "tags": {
+        "importer": "mediawiki-geosearch"
+      },
+      "evidence": [
+        {
+          "id": "wikipedia-26388",
+          "title": "Reno, Nevada",
+          "url": "https://en.wikipedia.org/wiki/Reno%2C_Nevada",
+          "text": "Reno (, REE-noh) is a city in the northwest section of the U.S. state of Nevada, along the Nevada–California border. It is the county seat and most populous city of Washoe County. Sitting in the High Eastern Sierra foothills, in the Truckee River valley, on the eastern side of the Sierra Nevada, it is about 23 miles (37 km) northeast of Lake Tahoe. Reno is the 78th most populous city in the United States, the third most populous city in Nevada, and the most populous in Nevada outside the Las Vegas Valley. It is known as \"The Biggest Little City in the World\" and had a population of 264,165 at the 2020 census.\nThe city is named after Civil War Union major general Jesse L. Reno, who was killed in action during the American Civil War at the Battle of South Mountain, on Fox's Gap.\nThe downtowns of Reno and neighboring city Sparks reside in a valley known as the Truckee Meadows, which is sometimes colloquially used as a name for the entire metro area. However, the Reno–Sparks metropolitan area (MSA), the second-largest in Nevada, comprises all of Washoe, Lyon and Storey Counties. In addition, Reno is part of a combined statistical area that includes Carson City, Douglas County and parts...",
+          "retrievedAt": "2026-10-25T12:07:58.068Z",
+          "license": "CC BY-SA 4.0"
+        }
+      ],
+      "kind": "poi",
+      "routeKm": 925.6647698650922,
+      "lateralM": 299.24133990761476,
+      "signedLateralM": 299.24133990761476,
+      "areaKind": "town"
+    }
+  ]
+}

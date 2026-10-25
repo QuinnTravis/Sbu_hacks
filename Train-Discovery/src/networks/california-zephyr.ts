@@ -29,12 +29,12 @@ export const californiaZephyr: NetworkConfig = {
     ],
   },
   segments: [
-    { id: "cz-plains", name: "The Plains", fromStopId: "CHI", toStopId: "DEN", experience: "basic" },
+    { id: "cz-plains", name: "The Plains", fromStopId: "CHI", toStopId: "DEN", experience: "full" },
     { id: "cz-rockies", name: "The Rockies", fromStopId: "DEN", toStopId: "GSC", experience: "full" },
-    { id: "cz-canyons", name: "Canyon Country", fromStopId: "GSC", toStopId: "SLC", experience: "basic" },
-    { id: "cz-basin", name: "The Great Basin", fromStopId: "SLC", toStopId: "RNO", experience: "basic" },
-    { id: "cz-sierra", name: "The Sierra", fromStopId: "RNO", toStopId: "RSV", experience: "basic" },
-    { id: "cz-bay", name: "To the Bay", fromStopId: "RSV", toStopId: "EMY", experience: "basic" },
+    { id: "cz-canyons", name: "Canyon Country", fromStopId: "GSC", toStopId: "SLC", experience: "full" },
+    { id: "cz-basin", name: "The Great Basin", fromStopId: "SLC", toStopId: "RNO", experience: "full" },
+    { id: "cz-sierra", name: "The Sierra", fromStopId: "RNO", toStopId: "RSV", experience: "full" },
+    { id: "cz-bay", name: "To the Bay", fromStopId: "RSV", toStopId: "EMY", experience: "full" },
   ],
   map: {
     bounds: { minLat: 37.4, maxLat: 42.3, minLon: -122.9, maxLon: -87.1 },
