@@ -21,8 +21,10 @@ import type { Place, Position } from "./types";
 export const PODCAST_INTRO_KEY = "podcast:intro";
 export const PODCAST_AUTO_GAP_MS = 7_000;
 export const PODCAST_BREATH_MS = 900;
+export const PODCAST_AREA_GAP_MS = 45_000;
 
 const MAX_NEARBY_METERS = 1_100;
+const MAX_AREA_METERS = 5_000;
 /** An unverified source excerpt is narrated unprompted only beside the line. */
 export const AUTO_EXCERPT_METERS = 300;
 /** Same-topic preference: less than one checked detail (50) or ~22 m of closeness. */
@@ -33,6 +35,7 @@ const MAX_FIX_ACCURACY_METERS = 150;
 
 export type PodcastCandidate = {
   moment: AudioMoment;
+  mode?: "area";
   /** Optional editorial theme; otherwise the catalog category is used. */
   topic?: string | null;
   /** A selection timestamp; lets a pointed clip use the truthful lead-in. */
@@ -50,6 +53,7 @@ export type PodcastDirectorInput = {
   now: number;
   candidates: readonly PodcastCandidate[];
   geography: { routeId: string | null; position: Position | null };
+  approachingPlaceIds?: ReadonlySet<string>;
   playedKeys: ReadonlySet<string>;
   /** Values from narrationFact(place), for different places telling the same fact. */
   playedFacts?: ReadonlySet<string>;
@@ -73,7 +77,7 @@ export type PodcastDirectorInput = {
 
 export type RankedPodcastItem = {
   moment: AudioMoment;
-  priority: "station" | "pointed" | "nearby";
+  priority: "station" | "pointed" | "nearby" | "area";
   reason: string;
   score: number;
   topic: string | null;
@@ -192,9 +196,12 @@ function candidateItem(input: PodcastDirectorInput, entry: PodcastCandidate, pos
 
   const explicit = input.pointedPlaceId === place.id || Number.isFinite(entry.selectedAt);
   const replay = input.replayPlaceId === place.id;
-  if (!explicit && !replay && (!positioned ||
-      (routeId !== null && !place.routeIds.includes(routeId)) ||
-      distance(positioned, place) > MAX_NEARBY_METERS)) return null;
+  const area = entry.mode === "area";
+  const meters = positioned ? distance(positioned, place) : Infinity;
+  if (area && (!positioned || !routeId || !place.routeIds.includes(routeId) ||
+      meters <= MAX_NEARBY_METERS || meters > MAX_AREA_METERS || !placeAnnouncement(place, "area"))) return null;
+  if (!explicit && !replay && !area && (!positioned ||
+      (routeId !== null && !place.routeIds.includes(routeId)) || meters > MAX_NEARBY_METERS)) return null;
 
   const fact = narrationFact(place);
   const siteKey = podcastSiteKey(place);
@@ -203,7 +210,9 @@ function candidateItem(input: PodcastDirectorInput, entry: PodcastCandidate, pos
     (fact && input.playedFacts?.has(fact)))) return null;
 
   const selectedAt = Number.isFinite(entry.selectedAt) ? entry.selectedAt : input.pointedAt;
-  const context = replay ? "replay" : explicit
+  const approaching = !explicit && !replay && !area &&
+    moment.request.context === "approaching" && input.approachingPlaceIds?.has(place.id);
+  const context = area ? "area" : approaching ? "approaching" : replay ? "replay" : explicit
     ? typeof selectedAt === "number" && Number.isFinite(selectedAt) &&
       selectedAt <= input.now && selectedAt >= 0
       ? pointingContext(selectedAt, input.now) : "pointed-earlier"
@@ -215,21 +224,23 @@ function candidateItem(input: PodcastDirectorInput, entry: PodcastCandidate, pos
     !script.sources.every((source) => source.title.trim() && source.license.trim() && validLink(source.url))) return null;
 
   const topic = cleanTopic(entry.topic ?? place.category);
-  const nearbyDistance = positioned ? distance(positioned, place) : MAX_NEARBY_METERS;
+  const nearbyDistance = positioned ? meters : MAX_NEARBY_METERS;
   const pointed = explicit || replay;
   // Excerpts the rider did not ask for stay quiet unless the place is right there.
-  if (!pointed && !meetsAutomaticFloor(place, script.kind, nearbyDistance)) return null;
+  if (!pointed && !area && !meetsAutomaticFloor(place, script.kind, nearbyDistance)) return null;
   const supportedDetails = supportedDetailsOf(place, script.kind);
   const depth = supportedDetails >= 2 ? "deep" : "brief";
-  const score = (pointed ? 5_000 : 1_000) +
-    closeAndInteresting(nearbyDistance, script.kind, supportedDetails) +
-    (topic && topic === cleanTopic(input.previousTopic) ? TOPIC_NUDGE : 0);
+  const score = area
+    ? 100 + 100 * (1 - nearbyDistance / MAX_AREA_METERS)
+    : (pointed ? 5_000 : 1_000) +
+      closeAndInteresting(nearbyDistance, script.kind, supportedDetails) +
+      (topic && topic === cleanTopic(input.previousTopic) ? TOPIC_NUDGE : 0);
   return {
     moment: { ...moment, name: place.name, fallback: script,
       request: { type: "place", placeId: place.id, context } },
-    priority: pointed ? "pointed" : "nearby",
-    reason: pointed ? replay ? "explicit replay" : depth === "deep" ? "user chose a multi-fact deep dive" : "user chose this place" :
-      script.kind === "verified" ? "nearby verified story" : "nearby attributed source excerpt",
+    priority: pointed ? "pointed" : area ? "area" : "nearby",
+    reason: area ? "broader area context" : pointed ? replay ? "explicit replay" : depth === "deep" ? "user chose a multi-fact deep dive" : "user chose this place" :
+      approaching ? "approaching verified story" : script.kind === "verified" ? "nearby verified story" : "nearby attributed source excerpt",
     score, topic, depth, supportedDetails, siteKey, factKey: fact,
   };
 }
@@ -259,6 +270,8 @@ export function podcastCandidatesFromJourney(input: {
   now: number;
   selected: readonly SelectedStory[];
   nearby: readonly Place[];
+  area?: readonly Place[];
+  approachingPlaceIds?: ReadonlySet<string>;
   stations: readonly PendingStation[];
 }): PodcastCandidate[] {
   const candidates: PodcastCandidate[] = [];
@@ -271,10 +284,21 @@ export function podcastCandidatesFromJourney(input: {
         fallback: placeAnnouncement(item.place, context) },
     });
   }
-  for (const place of input.nearby) candidates.push({
+  for (const place of input.nearby) {
+    const approaching = Boolean(input.approachingPlaceIds?.has(place.id) && place.story?.funFact &&
+      placeAnnouncement(place, "approaching"));
+    const context = approaching ? "approaching" : "nearby";
+    candidates.push({
+      moment: { key: `place:${place.id}`, name: place.name, place,
+        request: { type: "place", placeId: place.id, context },
+        fallback: placeAnnouncement(place, context) },
+    });
+  }
+  for (const place of input.area ?? []) candidates.push({
+    mode: "area",
     moment: { key: `place:${place.id}`, name: place.name, place,
-      request: { type: "place", placeId: place.id, context: "nearby" },
-      fallback: placeAnnouncement(place, "nearby") },
+      request: { type: "place", placeId: place.id, context: "area" },
+      fallback: placeAnnouncement(place, "area") },
   });
   for (const station of input.stations) candidates.push({
     moment: { key: station.key, name: station.station.name, station: station.station,
@@ -314,7 +338,9 @@ export function planPodcast(input: PodcastDirectorInput): PodcastPlan {
   const endedAt = input.lastPlayback?.endedAt;
   const elapsed = typeof endedAt === "number" && Number.isFinite(endedAt)
     ? input.now - endedAt : Infinity;
-  const pauseMs = input.lastPlayback?.kind === "story" ? PODCAST_AUTO_GAP_MS : PODCAST_BREATH_MS;
+  const pauseMs = next.priority === "area"
+    ? PODCAST_AREA_GAP_MS
+    : input.lastPlayback?.kind === "story" ? PODCAST_AUTO_GAP_MS : PODCAST_BREATH_MS;
   if (!explicit && elapsed >= 0 && elapsed < pauseMs) {
     return { action: "quiet", reason: "breathing-room", ranked,
       until: endedAt! + pauseMs };

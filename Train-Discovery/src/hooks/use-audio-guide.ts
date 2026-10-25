@@ -72,7 +72,7 @@ function delay(ms: number, signal: AbortSignal) {
 }
 
 export function useAudioGuide(
-  nearby: Place[], dismissed: string[] | undefined,
+  nearby: Place[], area: Place[], dismissed: string[] | undefined,
   rideId: number | null, journey: JourneyContext,
 ) {
   const [status, setStatus] = useState<GuideStatus>("off");
@@ -99,9 +99,11 @@ export function useAudioGuide(
   const active = useRef<Playback | null>(null);
   const player = useRef<HTMLAudioElement | null>(null);
   const around = useRef(nearby);
+  const regional = useRef(area);
   const hidden = useRef(dismissed);
   const context = useRef(journey);
   const stations = useRef(new Map<string, AudioMoment>());
+  const approaching = useRef(new Map<string, number>());
   const prepared = useRef(new Map<string, { audioUrl: string; script: AudioScript }>());
   const inflight = useRef(new Map<string, AbortController>());
   const previousPosition = useRef<Position | null>(null);
@@ -142,7 +144,28 @@ export function useAudioGuide(
 
   const collectStations = useCallback(() => {
     const { routeId, position, stops } = context.current;
-    if (!enabled.current || !position) { previousPosition.current = null; return; }
+    if (!enabled.current || !position) {
+      previousPosition.current = null;
+      approaching.current.clear();
+      return;
+    }
+    const previous = previousPosition.current;
+    if (previous && position.timestamp > previous.timestamp) {
+      const elapsed = position.timestamp - previous.timestamp;
+      if (elapsed > 15_000) approaching.current.clear();
+      else {
+        const activeIds = new Set(around.current.map((place) => place.id));
+        for (const place of around.current) {
+          const closing = distance(previous, place) - distance(position, place);
+          const threshold = Math.max(30, (previous.accuracy + position.accuracy) * 0.45);
+          if (closing >= threshold) approaching.current.set(place.id, position.timestamp + 15_000);
+          else if (closing < -threshold) approaching.current.delete(place.id);
+        }
+        for (const [id, expiresAt] of approaching.current) {
+          if (!activeIds.has(id) || expiresAt < position.timestamp) approaching.current.delete(id);
+        }
+      }
+    }
     for (const stop of stops ?? []) {
       if (!stop) continue;
       const key = `station:${stop.id}`;
@@ -163,7 +186,8 @@ export function useAudioGuide(
     const forcedId = forcedKey?.startsWith("place:") ? forcedKey.slice("place:".length) : null;
     const selectedAt = selected.find((item) => item.place.id === forcedId)?.selectedAt;
     const candidates = podcastCandidatesFromJourney({
-      now, selected, nearby: around.current, stations: pendingStations(),
+      now, selected, nearby: around.current, area: regional.current,
+      approachingPlaceIds: new Set(approaching.current.keys()), stations: pendingStations(),
     }).filter((candidate) => candidate.moment.key !== occupiedKey &&
       (!forcedId || candidate.moment.place?.id === forcedId));
     return planPodcast({
@@ -213,11 +237,16 @@ export function useAudioGuide(
 
   const prepareUpcoming = useCallback((activeId: string | null) => {
     const selected = selectedStories().filter((item) => !item.replay).map((item) => item.place);
-    const order = preparationOrder(selected, around.current,
-      new Set([...spoken.current, ...skipped.current]), activeId);
+    const alreadyHeard = new Set([...spoken.current, ...skipped.current]);
+    const nearbyUnheard = around.current.some((place) => place.id !== activeId &&
+      !alreadyHeard.has(`place:${place.id}`));
+    const background = nearbyUnheard ? around.current : regional.current;
+    const order = preparationOrder(selected, background, alreadyHeard, activeId);
     prefetch(order.map((place) => {
       const item = selectedStories().find((entry) => entry.place.id === place.id && !entry.replay);
-      const placeContext: PlaceAudioContext = item ? pointingContext(item.selectedAt, Date.now()) : "nearby";
+      const placeContext: PlaceAudioContext = item ? pointingContext(item.selectedAt, Date.now())
+        : approaching.current.has(place.id) && place.story?.funFact ? "approaching"
+          : regional.current.some((entry) => entry.id === place.id) ? "area" : "nearby";
       return { place, context: placeContext };
     }));
   }, [prefetch, selectedStories]);
@@ -580,11 +609,11 @@ export function useAudioGuide(
     spoken.current.clear(); facts.current.clear(); sites.current.clear(); skipped.current.clear();
     introductionStarted.current = false; lastPlayback.current = null; previousTopic.current = null;
     explicit.current = []; stations.current.clear();
-    previousPosition.current = null; nextDue.current = 0; dropPrefetch(); clearPlayback();
+    previousPosition.current = null; approaching.current.clear(); nextDue.current = 0; dropPrefetch(); clearPlayback();
     queueMicrotask(() => { clearCurrent(); setNextName(null); setQueued(null); setUnavailable(null); setStatus("off"); });
   }, [rideId, clearPlayback, clearCurrent, dropPrefetch]);
   useEffect(() => {
-    around.current = nearby; hidden.current = dismissed; context.current = journey;
+    around.current = nearby; regional.current = area; hidden.current = dismissed; context.current = journey;
     collectStations();
     for (const station of pendingStations()) {
       if (station.expiresAt <= Date.now() || (journey.position && distance(journey.position, station.station) > 1200))
@@ -597,7 +626,7 @@ export function useAudioGuide(
     if (unavailable && dismissed?.includes(unavailable.id)) queueMicrotask(() => setUnavailable(null));
     if (enabled.current) prepareUpcoming(active.current?.moment.place?.id ?? null);
     if (enabled.current && !paused.current && !active.current) queueMicrotask(playNext);
-  }, [nearby, dismissed, journey, collectStations, clearPlayback, clearCurrent, pendingStations, playNext, prepareUpcoming, queued, unavailable]);
+  }, [nearby, area, dismissed, journey, collectStations, clearPlayback, clearCurrent, pendingStations, playNext, prepareUpcoming, queued, unavailable]);
   useEffect(() => {
     if (!("mediaSession" in navigator)) return;
     const session = navigator.mediaSession;

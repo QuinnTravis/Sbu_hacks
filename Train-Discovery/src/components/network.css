@@ -3,6 +3,21 @@
   overflow: visible;
 }
 
+.train-network-geography {
+  pointer-events: none;
+}
+
+.train-network-land {
+  fill: var(--canvas, #eaedf3);
+}
+
+.train-network-coast {
+  fill: none;
+  stroke: var(--line, #cdd1db);
+  stroke-width: 1.15px;
+  vector-effect: non-scaling-stroke;
+}
+
 .train-network-map .train-network-route {
   outline: none;
   filter: none;

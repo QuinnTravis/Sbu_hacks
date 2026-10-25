@@ -1685,6 +1685,7 @@ h3 {
 
 /* Route selection: geographic rail map with a Waymo-style floating route sheet. */
 .route-select-shell {
+  --route-map-water: var(--soft);
   --home-gutter: 18px;
   --home-sheet-bottom: calc(var(--nav-gap) + var(--nav-bar) + 12px);
   --home-sheet-collapsed: 100px;
@@ -1710,6 +1711,7 @@ h3 {
   position: absolute;
   inset: 0;
   overflow: hidden;
+  background: var(--route-map-water);
 }
 .map-topline {
   position: absolute;
@@ -1756,7 +1758,7 @@ h3 {
   width: min(100%, 1160px);
   padding: 0 14px;
   border-radius: 0;
-  background: transparent;
+  background: var(--route-map-water);
 }
 .selection-map .station-label text {
   stroke: var(--canvas);

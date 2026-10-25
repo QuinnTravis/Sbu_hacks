@@ -8,7 +8,7 @@ const headers = { "Cache-Control": "private, no-store" };
 const routeIdSchema = z.string().refine((id) => rail.routes.some((route) => route.id === id));
 const inputSchema = z.discriminatedUnion("type", [
   z.object({ type: z.literal("place"), placeId: placeIdSchema,
-    context: z.enum(["pointed", "pointed-earlier", "nearby", "replay"]).default("nearby") }).strict(),
+    context: z.enum(["pointed", "pointed-earlier", "nearby", "replay", "approaching", "area"]).default("nearby") }).strict(),
   z.object({ type: z.literal("station"), routeId: z.string().regex(/^(?:[1-9]|1[0-3])$/), stationId: z.string().regex(/^\d{1,8}$/) }).strict(),
   z.object({
     type: z.literal("journey"), routeId: routeIdSchema, simulation: z.boolean(),

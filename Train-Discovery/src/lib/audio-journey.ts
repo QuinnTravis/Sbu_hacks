@@ -1,10 +1,10 @@
 import { distance, segmentDistance } from "./geo";
-import { audioEvidence, audioNarration } from "./narration";
+import { audioEvidence, audioNarration, narrationClaimSupported } from "./narration";
 import { createJourneyIntroduction } from "./journey-context";
 import type { Coordinate, Evidence, Place, Position, RailRoute, Story } from "./types";
 
 export type RailStop = RailRoute["stops"][number];
-export type PlaceAudioContext = "pointed" | "pointed-earlier" | "nearby" | "replay";
+export type PlaceAudioContext = "pointed" | "pointed-earlier" | "nearby" | "replay" | "approaching" | "area";
 export const POINTED_TIMELY_MS = 45_000;
 export const STATION_TIMELY_MS = 90_000;
 export type AudioRequest =
@@ -108,6 +108,10 @@ function pointedNoun(category: string): string {
 
 function placeLead(place: Place, context: PlaceAudioContext): string {
   switch (context) {
+    case "approaching":
+      return `Oh, and we're getting closer to ${place.name}.`;
+    case "area":
+      return `A little context for this stretch of the line: ${place.name}.`;
     case "pointed":
       return `You just pointed at ${place.name}.`;
     case "pointed-earlier":
@@ -123,11 +127,19 @@ function placeLead(place: Place, context: PlaceAudioContext): string {
 export function placeAnnouncement(place: Place, context: PlaceAudioContext = "nearby"): AudioScript | null {
   const story = storyBody(place);
   if (!story) return null;
+  const teaser = context === "approaching" ? place.story?.funFact : undefined;
+  if (context === "approaching" &&
+    (!teaser || story.narration.kind !== "verified" || !narrationClaimSupported(place, teaser))) return null;
+  const normalizeFact = (value: string) => value.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+  if (teaser && place.story?.claims.some((claim) => normalizeFact(claim.text) === normalizeFact(teaser.text))) return null;
+  const claimIds = new Set(place.story?.claims.filter((claim) => narrationClaimSupported(place, claim))
+    .map((claim) => claim.evidenceId) ?? []);
+  if (teaser) claimIds.add(teaser.evidenceId);
   return {
     name: place.name,
-    text: `${placeLead(place, context)} ${story.body}`,
+    text: `${placeLead(place, context)} ${teaser ? `${teaser.text.trim()} ` : ""}${story.body}`,
     kind: story.narration.kind,
-    sources: place.evidence.filter((source) => !place.story || place.story.claims.some((claim) => claim.evidenceId === source.id))
+    sources: place.evidence.filter((source) => !place.story || claimIds.has(source.id))
       .map(({ title, url, license }) => ({ title, url, license })),
     ...(place.story && story.narration.kind === "verified" ? { story: place.story, evidence: place.evidence } : {}),
   };

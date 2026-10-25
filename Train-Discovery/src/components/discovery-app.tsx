@@ -30,6 +30,7 @@ import {
 import { useSensors } from "@/hooks/use-sensors";
 import { useAudioGuide } from "@/hooks/use-audio-guide";
 import { nearbyNarrationScore } from "@/lib/podcast-director";
+import { placeAnnouncement } from "@/lib/audio-journey";
 import {
   POINTING_RADIUS_M,
   bearing,
@@ -314,6 +315,21 @@ export function DiscoveryApp({ rail }: { rail: RailData }) {
       .sort((a, b) => b.score - a.score)
       .map(({ place }) => place);
   }, [position, gpsFresh, offRoute, ride, places, placesById]);
+  const areaAudioPlaces = useMemo(() => {
+    if (!position || !gpsFresh || offRoute || !ride) return [];
+    const nearbyIds = new Set(nearbyAudioPlaces.map((place) => place.id));
+    return places
+      .filter((place) => {
+        const meters = distance(position, place);
+        return !nearbyIds.has(place.id) &&
+          place.routeIds.includes(ride.routeId) &&
+          meters > 1100 && meters <= 5000 &&
+          Boolean(placeAnnouncement(place, "area")) &&
+          !isDismissed(place, ride, placesById);
+      })
+      .sort((a, b) => distance(position, a) - distance(position, b))
+      .slice(0, 3);
+  }, [position, gpsFresh, offRoute, ride, places, placesById, nearbyAudioPlaces]);
   const rememberNarration = useCallback((narratedPlace: Place) => {
     if (!narratedPlace?.story) return;
     // Keep the spoken, checked claims and their exact passages on the saved
@@ -338,6 +354,7 @@ export function DiscoveryApp({ rail }: { rail: RailData }) {
   }, []);
   const audioGuide = useAudioGuide(
     nearbyAudioPlaces,
+    areaAudioPlaces,
     ride?.dismissed,
     ride?.startedAt ?? null,
     {
