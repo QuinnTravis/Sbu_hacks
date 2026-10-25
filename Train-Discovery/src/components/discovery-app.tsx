@@ -1,11 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
-import dynamic from "next/dynamic";
 import {
   ArrowRight,
-  ArrowUpRight,
-  History,
   Binoculars,
   ChevronRight,
   Compass as CompassIcon,
@@ -77,12 +74,6 @@ import { BookmarksScreen } from "./bookmarks-screen";
 import { SettingsScreen } from "./settings-screen";
 import "./gaze.css";
 import "./ride-screen.css";
-import "./time-portal.css";
-
-const TimePortal = dynamic(
-  () => import("./time-portal").then((module) => module.TimePortal),
-  { ssr: false },
-);
 
 const EMPTY_RAIL: RailData = { source: "", importedAt: "", version: "", routes: [] };
 
@@ -131,7 +122,6 @@ export function DiscoveryApp({ rail: defaultRail }: { rail: RailData }) {
   const [poiExpanded, setPoiExpanded] = useState(false);
   const [poiSnapshot, setPoiSnapshot] = useState<PointingCandidate[]>([]);
   const [activePoiId, setActivePoiId] = useState<string | null>(null);
-  const [timePortalPlace, setTimePortalPlace] = useState<Place | null>(null);
   const [dismissedPoiKey, setDismissedPoiKey] = useState("");
   const savedRef = useRef(saved);
   const placesRef = useRef(places);
@@ -898,18 +888,6 @@ export function DiscoveryApp({ rail: defaultRail }: { rail: RailData }) {
     tracking.direction ? sideOf(place, tracking.direction, settings.facing) : null;
   const routeTitle = route?.name.replace(" Branch", "") ?? "";
 
-  const portalAction = (place: Place) => features.models3d ? (
-    <button
-      type="button"
-      className="time-portal-launch"
-      onClick={() => setTimePortalPlace(place)}
-      aria-haspopup="dialog"
-    >
-      <span><History size={18} aria-hidden="true" />{t("portal.open")}</span>
-      <ArrowUpRight size={17} aria-hidden="true" />
-    </button>
-  ) : null;
-
   const renderBookmarkCard = (entry: SavedEntry, index: number) => {
     const queued = ride?.queue.find((item) => sameDiscoverySite(item.place, entry.place));
     return (
@@ -925,7 +903,6 @@ export function DiscoveryApp({ rail: defaultRail }: { rail: RailData }) {
         content={journey?.content?.[entry.place.id]}
         history={historyFor(entry.place.id)}
         side={sideFor(entry.place)}
-        extra={portalAction(entry.place)}
       />
     );
   };
@@ -1280,7 +1257,6 @@ export function DiscoveryApp({ rail: defaultRail }: { rail: RailData }) {
                           content={journey?.content?.[activePoi.place.id]}
                           history={historyFor(activePoi.place.id)}
                           side={sideFor(activePoi.place)}
-                          extra={portalAction(activePoi.place)}
                         />
                         <button
                           className="text-button poi-discard"
@@ -1330,7 +1306,6 @@ export function DiscoveryApp({ rail: defaultRail }: { rail: RailData }) {
                         content={journey?.content?.[currentEntry.place.id]}
                         history={historyFor(currentEntry.place.id)}
                         side={sideFor(currentEntry.place)}
-                        extra={portalAction(currentEntry.place)}
                       />
                       {ride.queue.length > 1 && (
                         <div className="queue-strip">
@@ -1449,9 +1424,6 @@ export function DiscoveryApp({ rail: defaultRail }: { rail: RailData }) {
         discoveries={queueCount}
         bookmarks={saved.length}
       />
-      {features.models3d && timePortalPlace && (
-        <TimePortal place={timePortalPlace} onClose={() => setTimePortalPlace(null)} />
-      )}
     </div>
   );
 }

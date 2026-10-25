@@ -561,28 +561,5 @@
   "sheet": {
     "collapse": "收起面板",
     "expand": "展开面板"
-  },
-  "portal": {
-    "open": "时光之门",
-    "title": "时光之门",
-    "today": "今天",
-    "close": "关闭时光之门",
-    "reset": "重置视角",
-    "panoramaLabel": "历史全景。拖动或使用方向键环顾四周。",
-    "building": "正在重现 {year}",
-    "addingDepth": "正在添加景深",
-    "depthView": "景深视图",
-    "panoramaView": "全景视图",
-    "chooseYear": "选择历史年份",
-    "years": "历史年份",
-    "references": "图片搜索参考",
-    "referencesTitle": "本场景使用的 Google 图片搜索参考",
-    "noReferences": "此场景暂无搜索参考。",
-    "disclosure": "AI 生成的历史想象场景，细节可能不准确。",
-    "errorBudget": "共享图片生成预算已用完。",
-    "errorQuota": "Gemini 暂时已达到生成限额。",
-    "errorConfig": "此应用尚未配置图片生成功能。",
-    "errorPlace": "此地点已不可用。",
-    "errorScene": "无法生成此场景。"
   }
 }

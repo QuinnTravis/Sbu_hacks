@@ -4,9 +4,6 @@ const nextConfig: NextConfig = {
   /* config options here */
   cacheComponents: true,
   partialPrefetching: true,
-  outputFileTracingIncludes: {
-    "/api/time-portal": ["./public/history/**/*"],
-  },
   turbopack: {
     rules: {
       "*.css": {

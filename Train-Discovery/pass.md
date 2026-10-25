@@ -288,3 +288,9 @@ Discovery and bookmark cards now open the historical Time Portal under the exist
 The Three.js panorama adds relative-depth geometry and shallow camera parallax. Quantized Depth Anything V2 Small runs in a module worker, probes for a usable GPU adapter, and uses WASM when unavailable. GPU failures restart in a fresh WASM worker to avoid a rejected ONNX runtime chain. Rendering runs on demand, and the device retains up to 12 depth maps.
 
 Verification: production build/TypeScript and targeted ESLint passed. One focused browser flow against the production Zephyr app used a local historical-image fixture instead of Gemini, while running the actual depth model. It completed real WASM inference, changed the rendered image on drag, switched 1920 → 1880 without losing WebGL, fit phone and short-landscape viewports, and reused cached depth after closing/reopening without more model requests. The expected photo-endpoint 404 came from the fixture's explicit provider block. Screenshots: `/tmp/gaze-time-portal-mobile.png` and `/tmp/gaze-time-portal-landscape.png`. The server trace includes 16 historical assets. Live cache metadata showed zero provider attempts, RLS/private storage enabled and anonymous RPC access denied. No unit tests or paid generation requests were run. Actual Gemini output quality and seam fidelity remain unmeasured.
+
+### Remove experimental Time Portal
+
+The user retired the 3D experiment. Removed its discovery/bookmark launch controls, viewer, depth worker, generation endpoint, feature flag, translations, provider-specific tracing and dependencies. Existing historical photo comparisons and the merged California Zephyr app remain. The already-applied database migration remains as migration history; no destructive database cleanup or provider requests were performed.
+
+Validation: production build and TypeScript passed after removal.
