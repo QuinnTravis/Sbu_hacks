@@ -26,11 +26,11 @@ export const features = {
   /** F8: push-to-talk questions and commands. */
   voice: flag(process.env.NEXT_PUBLIC_FEATURE_VOICE, true),
   /**
-   * Generate narrator audio live through ElevenLabs for static-network places
-   * that have no pre-generated clip. Off by default to protect the character
-   * budget (DECISIONS D13); the device voice covers those places instead.
+   * Generate narrator audio live through ElevenLabs for static-network lines
+   * that have no pre-generated clip (DECISIONS D13). Generated clips are cached
+   * and capped by ELEVENLABS_MONTHLY_CHARACTER_LIMIT; set to 0 for device voice.
    */
-  liveNarration: flag(process.env.NEXT_PUBLIC_FEATURE_LIVE_NARRATION, false),
+  liveNarration: flag(process.env.NEXT_PUBLIC_FEATURE_LIVE_NARRATION, true),
   /** F9: movable 3D models of approaching places. */
   models3d: flag(process.env.NEXT_PUBLIC_FEATURE_MODELS_3D, true),
 } as const;

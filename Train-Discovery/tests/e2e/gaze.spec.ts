@@ -1,4 +1,4 @@
-import { expect, test, type Page } from "@playwright/test";
+import { expect, test, type Page } from "./fixtures";
 
 // Three highlights beside the straight stretch north of Denver (km 1–5.6 of
 // the Rockies segment). Geometry is fixed so sides and counts are known.
@@ -43,12 +43,10 @@ test("the Zephyr is the default network and The Rockies is the full experience",
   await page.goto("/");
   await expect(page.getByRole("heading", { name: "California Zephyr", level: 1 })).toBeVisible();
   await expect(page.getByRole("group", { name: "Interactive California Zephyr route map" })).toBeVisible();
-  await expect(page.getByText("Amtrak", { exact: true })).toBeVisible();
   await page.getByRole("button", { name: "Expand route list" }).click();
   await page.getByRole("button", { name: "All routes" }).click();
   await expect(page.locator(".route-row")).toHaveCount(6);
   const rockies = page.locator(".route-row").filter({ hasText: "The Rockies" });
-  await expect(rockies).toContainText("Denver to Glenwood Springs");
   await expect(rockies).toContainText("Full experience");
   await expect(page.locator(".route-row").filter({ hasText: "The Sierra" })).toContainText("Stations only");
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
@@ -70,7 +68,7 @@ test("best side to sit counts highlights per side and flips for a backward seat"
   await sheet.getByRole("button", { name: "Start ride" }).click();
   await expect(sheet).toHaveCount(0);
   await expect(page.getByRole("heading", { name: "The Rockies", level: 1 })).toBeVisible();
-  await expect(page.getByText("Replay", { exact: true })).toBeVisible();
+  await expect(page.locator(".ride-heading p")).toContainText("Simulated");
 });
 
 test("a look-ahead pill names the side, and a bookmarked upcoming place persists", async ({ page }) => {
@@ -92,6 +90,24 @@ test("a look-ahead pill names the side, and a bookmarked upcoming place persists
   await page.getByRole("button", { name: "Open Fixture Depot" }).click();
   await expect(page.getByRole("heading", { name: "Fixture Depot" })).toBeVisible();
   await expect(page.getByText("Basic info")).toBeVisible();
+});
+
+test("a story checked on demand replaces basic info on the card", async ({ page }) => {
+  const text = "Fixture Depot was built in 1906 for the Denver railway.";
+  const evidence = [{ id: "web-a", title: "Depot history", url: "https://example.org/depot", text, retrievedAt: "2026-10-25T00:00:00Z", license: "example.org" }];
+  const story = {
+    summary: text, claims: [{ text, evidenceId: "web-a", quote: text }],
+    verifiedAt: "2026-10-25T00:00:00Z", generator: "test", verifier: "agreement:2-sites", evidenceHash: "test",
+  };
+  await page.route("**/api/story/wd-Q9000001", (route) => route.fulfill({ json: { story, evidence } }));
+  const sheet = await openAdvisor(page);
+  await sheet.getByRole("button", { name: "Start ride" }).click();
+  const pill = page.getByRole("region", { name: "Coming up" });
+  await expect(pill).toContainText("Fixture Depot", { timeout: 10000 });
+  await page.getByRole("button", { name: "Pause replay" }).click();
+  await pill.getByRole("button", { name: /^Open Fixture Depot/ }).click();
+  await expect(page.locator(".story-summary").first()).toContainText("built in 1906");
+  await expect(page.getByText("Basic info")).toHaveCount(0);
 });
 
 test("the interface switches to Spanish and Chinese and remembers the choice", async ({ page }) => {

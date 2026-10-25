@@ -97,7 +97,10 @@ async function main() {
 
   const jobs: { text: string; language: string; label: string }[] = [];
   const segment = { network: californiaZephyr.name, segment: route.name };
-  for (const locale of LOCALES) jobs.push({ text: journeyOpening(route.name, true, locale.code, segment), language: locale.code, label: `opening (${locale.code})` });
+  for (const locale of LOCALES)
+    for (const simulation of [true, false])
+      jobs.push({ text: journeyOpening(route.name, simulation, locale.code, segment), language: locale.code, label: `opening (${locale.code}${simulation ? "" : ", live"})` });
+  jobs.push({ text: translate("en", "narration.transition"), language: "en", label: "transition" });
   for (const stop of route.stops) jobs.push({ text: translate("en", "narration.station", { name: stop.name }), language: "en", label: `station ${stop.id}` });
   for (const name of DEMO_STORIES) {
     const place = places.find((p) => p.name === name);

@@ -106,7 +106,7 @@ export function audioNarration(place: Place): Narration | null {
   const excerpt = sourceExcerpt(place, Infinity);
   if (excerpt) {
     return {
-      text: `${place.name}. From Wikipedia: ${excerpt.text}`,
+      text: `${place.name}. ${excerpt.text}`,
       kind: "source",
     };
   }

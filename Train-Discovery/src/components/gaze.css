@@ -86,8 +86,10 @@
   padding: 0;
   width: 44px;
 }
-.bookmark-button:hover {
-  background: #eceef3;
+@media (hover: hover) {
+  .bookmark-button:hover {
+    background: #eceef3;
+  }
 }
 .bookmark-button.is-on {
   color: var(--accent);
@@ -109,8 +111,7 @@
 
 /* Route sheet: experience labels */
 .experience-badge {
-  align-self: flex-start;
-  margin-top: 4px;
+  flex-shrink: 0;
   padding: 2px 9px;
   border-radius: 12px;
   background: var(--soft);
@@ -118,9 +119,6 @@
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 0;
-}
-.experience-basic {
-  font-size: 12px;
 }
 .network-loading {
   display: grid;
@@ -524,7 +522,7 @@
 .route-select-shell .bookmarks-screen,
 .route-select-shell .settings-screen {
   position: absolute;
-  inset: 88px 18px max(114px, calc(env(safe-area-inset-bottom) + 108px));
+  inset: 88px var(--home-gutter) var(--home-sheet-bottom);
   width: auto;
   max-width: 660px;
   margin: 0 auto;
@@ -541,19 +539,30 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  margin: 6px 0 14px;
+  margin: 0 0 20px;
 }
 .screen-heading h1 {
-  font-size: 31px;
-  font-weight: 600;
-  letter-spacing: -0.025em;
-}
-.bookmarks-screen .home-discoveries-card {
-  margin: 0 auto;
-}
-.bookmarks-screen .home-discoveries-card h2 {
   font-size: 24px;
   font-weight: 500;
+  letter-spacing: -0.02em;
+}
+.route-select-shell .home-discoveries {
+  display: block;
+  place-items: normal;
+  max-width: 660px;
+  margin: 0 auto;
+}
+.route-select-shell .home-discoveries-card {
+  width: 100%;
+}
+.home-discoveries-card h2 {
+  font-size: clamp(22px, 5vw, 24px);
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+}
+.home-discoveries-card h2:not(:last-child) {
+  margin-bottom: 24px;
 }
 .bookmark-group {
   margin-bottom: 14px;
@@ -589,8 +598,10 @@
   padding: 8px;
   text-align: left;
 }
-.bookmark-open:hover {
-  background: #f2f4f8;
+@media (hover: hover) {
+  .bookmark-open:hover {
+    background: #f2f4f8;
+  }
 }
 .bookmark-thumb {
   flex-shrink: 0;
@@ -661,8 +672,8 @@
   padding-left: 0;
 }
 .settings-group {
-  margin: 0 0 14px;
-  padding: 14px;
+  margin: 0 0 12px;
+  padding: 16px 20px;
   border: 0;
   border-radius: 22px;
   background: var(--paper);
@@ -764,13 +775,15 @@
   align-items: center;
   justify-content: space-between;
   min-height: 52px;
-  padding: 0 12px;
+  padding: 0 16px;
   text-decoration: none;
   border-radius: 16px;
   font-size: 15px;
 }
-.settings-links a:hover {
-  background: #f2f4f8;
+@media (hover: hover) {
+  .settings-links a:hover {
+    background: #f2f4f8;
+  }
 }
 
 /* Discovery card additions */
@@ -794,12 +807,8 @@
   .look-ahead-name {
     font-size: 15px;
   }
-  .route-select-shell .bookmarks-screen,
-  .route-select-shell .settings-screen {
-    inset: 76px 18px max(108px, calc(env(safe-area-inset-bottom) + 100px));
-  }
   .screen-heading h1 {
-    font-size: 27px;
+    font-size: 23px;
   }
 }
 @media (max-height: 720px) {
@@ -866,10 +875,13 @@
   max-height: max(96px, calc(100dvh - 340px));
 }
 @media (max-height: 540px) and (min-width: 600px) {
-  /* The map box overhangs the viewport by 9% a side; anchor the pill under the title. */
-  .route-select-shell .map-demo-label {
-    top: calc(max(12px, env(safe-area-inset-top)) + 76px);
-    bottom: auto;
-    left: calc(7.6% + max(24px, env(safe-area-inset-left)));
+  .route-select-shell .bookmarks-screen,
+  .route-select-shell .settings-screen {
+    top: 68px;
   }
+}
+
+/* Category leads; distance and side read as one group on the right. */
+.place-meta > :first-child {
+  margin-right: auto;
 }

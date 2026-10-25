@@ -78,11 +78,6 @@ export function HomeScreen({
     selectionPosition && nearby.length && !allRoutes && !search ? nearby : ranked
   ).filter((r) => r.route.name.toLowerCase().includes(search.toLowerCase()));
   const route = routes.find((r) => r.id === selected);
-  const selectedDistance = ranked.find((r) => r.route.id === selected)?.distance;
-  const stopsLabel = (item: RailRoute) =>
-    network.segments.length && item.stops.length > 1
-      ? t("home.stops", { from: item.stops[0].name, to: item.stops[item.stops.length - 1].name })
-      : null;
   const shortName = (name: string) => name.replace(" Branch", "");
 
   return (
@@ -191,17 +186,16 @@ export function HomeScreen({
                   <span className="route-icon">
                     <TrainFront size={22} strokeWidth={1.8} />
                   </span>
-                  <span className="route-name">
-                    {shortName(item.name)}
-                    {stopsLabel(item) && <small>{stopsLabel(item)}</small>}
-                    {Number.isFinite(meters) && !network.segments.length && (
-                      <small>{t("home.away", { distance: distance(meters) })}</small>
-                    )}
-                    {item.experience === "full" && network.segments.length > 0 && (
-                      <span className="experience-badge">{t("home.fullExperience")}</span>
-                    )}
-                    {item.experience === "basic" && <small className="experience-basic">{t("home.basicExperience")}</small>}
-                  </span>
+                  <span className="route-name">{shortName(item.name)}</span>
+                  {item.experience === "full" && network.segments.length > 0 && (
+                    <span className="experience-badge">{t("home.fullExperience")}</span>
+                  )}
+                  {item.experience === "basic" && (
+                    <span className="route-distance">{t("home.basicExperience")}</span>
+                  )}
+                  {Number.isFinite(meters) && !network.segments.length && (
+                    <span className="route-distance">{distance(meters)}</span>
+                  )}
                   {selected === item.id ? (
                     <span className="route-check">
                       <Check size={17} />
@@ -215,15 +209,6 @@ export function HomeScreen({
                 <p className="no-results">{t("home.noMatch", { query: search })}</p>
               )}
             </div>
-            {selected && route && (
-              <div className="sheet-selected-route">
-                <span className="route-color" style={{ background: route.color }} />
-                <span>{shortName(route.name)}</span>
-                {selectedDistance !== undefined && selectedDistance > 3000 && Number.isFinite(selectedDistance) && (
-                  <small>{t("home.notNearby")}</small>
-                )}
-              </div>
-            )}
             <button
               className="primary-button start-button sheet-start"
               disabled={!selected || !hydrated}

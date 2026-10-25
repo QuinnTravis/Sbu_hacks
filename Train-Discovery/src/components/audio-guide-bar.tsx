@@ -24,11 +24,7 @@ export function AudioGuideBar({ guide, onToggleBookmark, bookmarked, soundOff = 
     : null;
   const title = guide.status === "paused" ? t("audio.paused")
     : guide.status === "preparing" ? t("audio.preparing", { name: guide.currentName ?? "" })
-    : guide.currentName
-      ? guide.currentKind === "source" ? t("audio.sourceExcerpt", { name: guide.currentName })
-      : guide.currentKind === "basic" ? t("audio.basicInfo", { name: guide.currentName })
-      : guide.currentName
-    : t("audio.waiting");
+    : guide.currentName ?? t("audio.waiting");
 
   return (
     <div className="audio-companion train-audio-guide">
@@ -52,7 +48,7 @@ export function AudioGuideBar({ guide, onToggleBookmark, bookmarked, soundOff = 
       ) : (
         <>
           <div className="audio-now">
-            <span className="audio-indicator" aria-hidden="true"><span /><span /><span /></span>
+            <Headphones className="audio-now-icon" size={19} strokeWidth={1.8} aria-hidden="true" />
             <span className="audio-title" role="status">{title}</span>
             <div className="audio-controls">
               {guide.currentPlace && (

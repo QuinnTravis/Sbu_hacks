@@ -113,7 +113,6 @@ export function BookmarksScreen({
     <section className="bookmarks-screen" aria-labelledby="bookmarks-title">
       <div className="screen-heading">
         <h1 id="bookmarks-title">{t("bookmarks.title")}</h1>
-        {entries.length > 0 && <span className="count-badge">{entries.length}</span>}
       </div>
       {entries.length === 0 ? (
         <div className="home-discoveries-card">
@@ -121,7 +120,6 @@ export function BookmarksScreen({
             <Bookmark size={31} strokeWidth={1.5} />
           </span>
           <h2>{t("bookmarks.empty")}</h2>
-          <p>{t("bookmarks.emptyHint")}</p>
         </div>
       ) : (
         <>

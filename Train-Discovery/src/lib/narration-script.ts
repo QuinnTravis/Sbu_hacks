@@ -97,6 +97,25 @@ export function leadLine(
   }
 }
 
+/** Pronunciation guides and native-name glosses garble a narrator; units and dates stay. */
+export function speakable(text: string): string {
+  return text
+    .replace(/\s*\[[^\]]*\]/g, "")
+    .replace(/\s*\(([^()]*)\)/g, (group, inner: string) =>
+      /[^\u0000-\u024F‘’“”–—]|\b(?:lit\.|pronounced|listen)|^[A-Z][\w-]*:/u.test(inner) ? "" : group)
+    .replace(/\s+([,.;:!?])/g, "$1")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+/** Spoken look-ahead cue, e.g. "Coming up on your left in about 2 minutes: Gore Canyon." */
+export function cueLine(code: string, input: { name: string; side: Side | null; minutes: number; saved?: boolean }): string {
+  const eta = new Intl.NumberFormat(code, { style: "unit", unit: "minute", unitDisplay: "long" })
+    .format(Math.max(1, Math.round(input.minutes)));
+  const line = translate(code, `narration.cue.${input.side ?? "unknown"}`, { eta, name: input.name });
+  return input.saved ? `${line} ${translate(code, "narration.cueSaved")}` : line;
+}
+
 export function lookForLine(thing: string, side: Side | null, code: string): string {
   return translate(code, `narration.lookFor.${side ?? "unknown"}`, { thing });
 }
@@ -134,13 +153,13 @@ export function composePlaceScript(input: {
     ];
     return { parts, kind: "verified", language, sources: storySources };
   }
-  // An unverified excerpt is read verbatim and only in its own language.
+  // A source excerpt is read verbatim and only in its own language.
   const excerpt = !place.story && code === "en" ? sourceExcerpt(place, Infinity) : null;
   if (excerpt) {
     return {
       parts: [
         { part: "lead", text: leadLine(place, context, "en", { side, introIndex: input.introIndex, sideInLead: true }) },
-        { part: "body", text: `${translate("en", "narration.fromWikipedia")} ${excerpt.text}` },
+        { part: "body", text: speakable(excerpt.text) },
       ],
       kind: "source",
       language: "en",

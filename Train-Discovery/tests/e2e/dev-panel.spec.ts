@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./fixtures";
 
 test("dev panel controls movement, joystick detection, tilt, and phone mode", async ({
   page,

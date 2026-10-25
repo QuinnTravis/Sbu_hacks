@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ChevronRight, Languages } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { features } from "@/lib/features";
 import { useI18n } from "@/lib/i18n";
 import { useSettings } from "@/lib/settings";
@@ -16,10 +16,7 @@ export function SettingsScreen() {
       </div>
       {features.i18n && (
         <fieldset className="settings-group">
-          <legend>
-            <Languages size={16} aria-hidden="true" />
-            {t("settings.language")}
-          </legend>
+          <legend>{t("settings.language")}</legend>
           <div className="segmented is-wrap" role="radiogroup" aria-label={t("settings.language")}>
             {locales.map((locale) => (
               <button
@@ -51,13 +48,11 @@ export function SettingsScreen() {
             </button>
           ))}
         </div>
-        <p className="settings-hint">{t("settings.facingHint")}</p>
       </fieldset>
       <div className="settings-group settings-toggles">
         <label className="toggle-row">
           <span>
             <strong>{t("settings.sound")}</strong>
-            <small>{t("settings.soundHint")}</small>
           </span>
           <input
             type="checkbox"

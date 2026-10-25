@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./fixtures";
 import rail from "../../public/data/lirr.json";
 import { demoPath } from "../../src/lib/demo";
 import { destination, pointingConeRing } from "../../src/lib/geo";

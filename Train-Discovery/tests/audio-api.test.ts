@@ -4,7 +4,10 @@ import type { AudioScript } from "../src/lib/audio-journey";
 
 vi.mock("server-only", () => ({}));
 vi.mock("../src/lib/supabase", () => ({ database: vi.fn() }));
-vi.mock("../src/lib/verification", () => ({ verifyPlace: vi.fn() }));
+vi.mock("../src/lib/verification", async (original) => ({
+  ...(await original<typeof import("../src/lib/verification")>()),
+  verifyPlace: vi.fn(),
+}));
 vi.mock("../src/lib/journey-context", async (original) => ({
   ...(await original<typeof import("../src/lib/journey-context")>()),
   getJourneyContext: vi.fn(),

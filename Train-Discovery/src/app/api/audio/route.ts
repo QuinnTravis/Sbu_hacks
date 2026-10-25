@@ -11,6 +11,9 @@ const localeSchema = z.enum(LOCALES.map((locale) => locale.code) as [string, ...
 const inputSchema = z.discriminatedUnion("type", [
   z.object({ type: z.literal("place"), placeId: placeIdSchema,
     context: z.enum(["pointed", "pointed-earlier", "nearby", "replay"]).default("nearby"), locale: localeSchema }).strict(),
+  z.object({ type: z.literal("announcement"), locale: localeSchema,
+    cue: z.object({ placeId: placeIdSchema, side: z.enum(["left", "right", "ahead", "both"]).nullable(),
+      minutes: z.number().int().min(1).max(120), saved: z.boolean() }).strict() }).strict(),
   z.object({ type: z.literal("station"), routeId: routeIdSchema, stationId: z.string().regex(/^[A-Za-z0-9]{1,8}$/), locale: localeSchema }).strict(),
   z.object({
     type: z.literal("journey"), routeId: routeIdSchema, simulation: z.boolean(),

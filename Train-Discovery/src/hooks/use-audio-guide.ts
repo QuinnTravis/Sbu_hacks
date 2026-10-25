@@ -21,6 +21,7 @@ import {
   PODCAST_INTRO_KEY,
 } from "@/lib/podcast-director";
 import type { PlaceComposer, PodcastPlayback, RankedPodcastItem } from "@/lib/podcast-director";
+import { captionChunks, chunkAtChar, chunkAtFraction } from "@/lib/captions";
 import { clipKey } from "@/lib/clip-key";
 import { localeInfo } from "@/lib/i18n-core";
 import { distance } from "@/lib/geo";
@@ -110,6 +111,8 @@ export function useAudioGuide(
   const [script, setScript] = useState<AudioScript | null>(null);
   const [provider, setProvider] = useState<"elevenlabs" | "device" | null>(null);
   const [notice, setNotice] = useState<GuideNotice | null>(null);
+  /** The words being spoken right now, for on-screen captions. */
+  const [caption, setCaption] = useState<string | null>(null);
   const enabled = useRef(false);
   const paused = useRef(false);
   const spoken = useRef(new Set<string>());
@@ -159,13 +162,25 @@ export function useAudioGuide(
     nextTimer.current = null;
     const audio = player.current;
     if (audio) {
-      audio.onended = null; audio.onerror = null; audio.onplay = null;
+      audio.onended = null; audio.onerror = null; audio.onplay = null; audio.ontimeupdate = null;
       audio.pause(); audio.removeAttribute("src"); audio.load();
     }
     if (nativeAvailable()) window.speechSynthesis.cancel();
   }, [nativeAvailable]);
   const clearCurrent = useCallback(() => {
-    setCurrentName(null); setCurrentPlace(null); setScript(null); setProvider(null); setNotice(null);
+    setCurrentName(null); setCurrentPlace(null); setScript(null); setProvider(null); setNotice(null); setCaption(null);
+  }, []);
+  const captionAudio = useCallback((audio: HTMLAudioElement, text: string, isCurrent: () => boolean) => {
+    const chunks = captionChunks(text);
+    setCaption(chunks[0] ?? null);
+    audio.ontimeupdate = () => {
+      if (isCurrent()) setCaption(chunkAtFraction(chunks, audio.currentTime / audio.duration));
+    };
+  }, []);
+  const captionSpeech = useCallback((utterance: SpeechSynthesisUtterance, isCurrent: () => boolean) => {
+    const chunks = captionChunks(utterance.text);
+    setCaption(chunks[0] ?? null);
+    utterance.onboundary = (event) => { if (isCurrent()) setCaption(chunkAtChar(chunks, event.charIndex)); };
   }, []);
   const dropPrefetch = useCallback(() => {
     for (const controller of inflight.current.values()) controller.abort();
@@ -239,9 +254,11 @@ export function useAudioGuide(
       if (prepared.current.has(key) || inflight.current.has(key)) continue;
       const controller = new AbortController();
       inflight.current.set(key, controller);
+      const { compose, language } = context.current;
       void fetch("/api/audio", {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ type: "place", placeId: job.place.id, context: job.context }),
+        body: JSON.stringify({ type: "place", placeId: job.place.id, context: job.context,
+          ...(compose && language && language !== "en" ? { locale: language } : {}) }),
         signal: controller.signal,
       }).then(async (response) => {
         if (controller.signal.aborted || !response.ok) return;
@@ -358,7 +375,7 @@ export function useAudioGuide(
     const momentLanguage = chosen.fallback?.language ?? "en";
     const languageNotice: GuideNotice | null = momentLanguage !== riderLanguage && kind === "story" ? "other-language" : null;
     setCurrentName(chosen.name); setCurrentPlace(chosen.place ?? null);
-    setScript(chosen.fallback); setProvider(null); setNotice(languageNotice); setStatus("preparing");
+    setScript(chosen.fallback); setProvider(null); setNotice(languageNotice); setCaption(null); setStatus("preparing");
     const isCurrent = () => isActivePlayback(token, active.current?.token ?? null) && enabled.current;
     const finish = () => {
       if (!isCurrent()) return;
@@ -410,6 +427,7 @@ export function useAudioGuide(
             const announcement = new SpeechSynthesisUtterance(stationText);
             playback.utterance = announcement;
             announcement.lang = speechLang(stationMoment.fallback?.language); announcement.rate = 0.94;
+            captionSpeech(announcement, isCurrent);
             announcement.onend = () => {
               if (!isCurrent()) return;
               spoken.current.add(stationMoment.key);
@@ -433,6 +451,7 @@ export function useAudioGuide(
         const utterance = new SpeechSynthesisUtterance(segment);
         playback.utterance = utterance;
         utterance.lang = speechLang(momentLanguage); utterance.rate = 0.94;
+        captionSpeech(utterance, isCurrent);
         utterance.onend = () => {
           if (!isCurrent()) return;
           if (index + 1 >= segments.length) { finish(); return; }
@@ -466,6 +485,7 @@ export function useAudioGuide(
         const utterance = new SpeechSynthesisUtterance(text);
         playback.utterance = utterance;
         utterance.lang = speechLang(momentLanguage); utterance.rate = 0.94;
+        captionSpeech(utterance, isCurrent);
         utterance.onend = () => { if (isCurrent()) playback.segmentTimer = setTimeout(done, PART_GAP_MS); };
         utterance.onerror = () => { if (isCurrent()) done(); };
         try {
@@ -484,6 +504,7 @@ export function useAudioGuide(
         audio.onended = () => { if (isCurrent()) playback.segmentTimer = setTimeout(done, PART_GAP_MS); };
         audio.onerror = () => { if (isCurrent()) speakPart(text, done); };
         audio.onplay = () => { if (isCurrent()) setStatus("speaking"); };
+        captionAudio(audio, text, isCurrent);
         audio.src = source;
         if (paused.current) { setStatus("paused"); return; }
         try { await audio.play(); }
@@ -523,6 +544,7 @@ export function useAudioGuide(
       let source = result.audioUrl;
       try { source = (await context.current.resolveClip?.(result.audioUrl)) ?? result.audioUrl; } catch { /* Network URL. */ }
       if (!isCurrent()) return;
+      captionAudio(audio, narration.text, isCurrent);
       audio.src = source; playback.ready = true; setProvider("elevenlabs");
       if (paused.current) { setStatus("paused"); return; }
       try { await audio.play(); }
@@ -534,23 +556,27 @@ export function useAudioGuide(
       }
     };
     void (async () => {
-      if (chosen.parts?.length) { playParts(chosen.parts); return; }
-      if (directSpeech) { deviceVoice(chosen.fallback?.text ?? ""); return; }
+      const parts = chosen.parts?.length ? chosen.parts : null;
+      // A story voiced end to end by clips plays them; otherwise the server voices it whole.
+      if (parts && (parts.every((part) => part.clip) || context.current.liveAudio === false)) { playParts(parts); return; }
       const narration = chosen.fallback;
       // A pre-generated clip for these exact words plays without asking the server.
       const staticClip = narration ? clipFor(narration.text, narration.language) : undefined;
       if (staticClip && narration) { await playCloud({ audioUrl: staticClip, script: narration }); return; }
+      const liveCue = chosen.request.type === "announcement" && Boolean(chosen.request.cue);
+      if (directSpeech && !liveCue) { deviceVoice(chosen.fallback?.text ?? ""); return; }
       const placeContext = chosen.request.type === "place" ? chosen.request.context ?? "nearby" : null;
       const cacheKey = chosen.place && placeContext ? `${chosen.place.id}:${placeContext}` : null;
       const cached = cacheKey ? prepared.current.get(cacheKey) : undefined;
+      // A cue is only useful before its place passes, so it waits briefly for the narrator.
       const timeout = setTimeout(() => playback.controller.abort(),
-        chosen.request.type === "journey" ? 18000 : 90000);
+        liveCue ? 8000 : chosen.request.type === "journey" ? 18000 : 90000);
       try {
         if (cached) { await playCloud(cached); return; }
         if (context.current.liveAudio === false) throw new Error("device_fallback");
         if (!navigator.onLine || Date.now() < cloudRetryAt.current) throw new Error("device_fallback");
         let result: { audioUrl: string; script: AudioScript } | null = null;
-        for (let attempt = 0; attempt < (chosen.request.type === "journey" ? 4 : 35); attempt++) {
+        for (let attempt = 0; attempt < (liveCue ? 3 : chosen.request.type === "journey" ? 4 : 35); attempt++) {
           const response = await fetch("/api/audio", { method: "POST", headers: { "Content-Type": "application/json" },
             body: JSON.stringify(chosen.request), signal: playback.controller.signal });
           if (response.status === 202) { await delay(2000, playback.controller.signal); continue; }
@@ -566,13 +592,14 @@ export function useAudioGuide(
         await playCloud(result);
       } catch {
         if (isCurrent()) {
-          if (narration && (!chosen.place || narration.kind !== "announcement")) deviceVoice(narration.text);
+          if (parts) playParts(parts);
+          else if (narration && (!chosen.place || narration.kind !== "announcement")) deviceVoice(narration.text);
           else showUnavailable();
         }
       }
       finally { clearTimeout(timeout); }
     })();
-  }, [clearCurrent, clearPlayback, clipFor, collectStations, editorialPlan, nativeAvailable, pendingStations, prepareUpcoming, rememberAhead, unavailable]);
+  }, [captionAudio, captionSpeech, clearCurrent, clearPlayback, clipFor, collectStations, editorialPlan, nativeAvailable, pendingStations, prepareUpcoming, rememberAhead, unavailable]);
 
   const unlock = useCallback(() => {
     if (!player.current) player.current = new Audio();
@@ -736,7 +763,7 @@ export function useAudioGuide(
 
   return {
     status, currentName, nextName, queuedName: queued?.name ?? null, unavailableName: unavailable?.name ?? null,
-    currentPlace, currentKind: script?.kind ?? null, script, provider, notice,
+    currentPlace, currentKind: script?.kind ?? null, script, provider, notice, caption,
     start, stop, togglePause, skip, replay, playNow, schedule, retryStory, announce, withdraw,
   };
 }

@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { audioEvidence, audioNarration, narrationText } from "../src/lib/narration";
+import { cueLine, speakable } from "../src/lib/narration-script";
 import type { Place } from "../src/lib/types";
 
 const source = {
@@ -66,7 +67,7 @@ describe("audio narration", () => {
     expect(narrationText(mixed)).toBe("Old station. The building opened in 1901.");
   });
 
-  it("reads a matched Wikipedia introduction as an explicitly unverified source excerpt", () => {
+  it("reads a matched Wikipedia introduction plainly when no story exists", () => {
     const unverified: Place = {
       ...place,
       name: "King Manor Museum",
@@ -80,7 +81,7 @@ describe("audio narration", () => {
     };
     expect(audioNarration(unverified)).toEqual({
       kind: "source",
-      text: "King Manor Museum. From Wikipedia: King Manor is a historic house in Queens. It was preserved as a museum in the twentieth century.",
+      text: "King Manor Museum. King Manor is a historic house in Queens. It was preserved as a museum in the twentieth century.",
     });
   });
 
@@ -101,5 +102,21 @@ describe("audio narration", () => {
       kind: "verified",
       text: "Old station. The building opened in 1901.",
     });
+  });
+});
+
+describe("speakable", () => {
+  it("drops pronunciation guides and native-name glosses but keeps units", () => {
+    expect(speakable("The South Platte River (Sioux: Wašíŋ-Wakpá [waˈʃĩ wakˈpa] lit. “bison tallow river”) is one of the two principal tributaries of the Platte River."))
+      .toBe("The South Platte River is one of the two principal tributaries of the Platte River.");
+    expect(speakable("Glenwood Canyon is a rugged scenic 12.5 mi (20 km) canyon."))
+      .toBe("Glenwood Canyon is a rugged scenic 12.5 mi (20 km) canyon.");
+  });
+});
+
+describe("cueLine", () => {
+  it("templates the spoken look-ahead cue in whole minutes", () => {
+    expect(cueLine("en", { name: "Gore Canyon", side: "left", minutes: 1.6 })).toBe("Coming up on your left in about 2 minutes: Gore Canyon.");
+    expect(cueLine("en", { name: "Berkley", side: null, minutes: 0.2, saved: true })).toBe("Coming up in about 1 minute: Berkley. You saved this one.");
   });
 });

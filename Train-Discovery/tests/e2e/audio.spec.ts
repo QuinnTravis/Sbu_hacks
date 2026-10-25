@@ -1,4 +1,4 @@
-import { test, expect, type Page } from "@playwright/test";
+import { test, expect, type Page } from "./fixtures";
 import rail from "../../public/data/lirr.json";
 
 const jamaica = rail.routes.flatMap((route) => route.stops).find((stop) => stop.name === "Jamaica")!;

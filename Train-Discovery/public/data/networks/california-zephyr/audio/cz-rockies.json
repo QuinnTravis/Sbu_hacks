@@ -126,13 +126,6 @@
    "text": "South Platte River.",
    "language": "en"
   },
-  "61e60e2afce9e482": {
-   "url": "/audio/demo/9717b26b7ee550af.mp3",
-   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
-   "durationS": 12,
-   "text": "From Wikipedia: The South Platte River (Sioux: Wašíŋ-Wakpá [waˈʃĩ wakˈpa] lit. “bison tallow river”) is one of the two principal tributaries of the Platte River.",
-   "language": "en"
-  },
   "e9a46e4be28de27c": {
    "url": "/audio/demo/02bc98794a46942c.mp3",
    "voiceId": "JBFqnCBsd6RMkjVDRZzb",
@@ -371,13 +364,6 @@
    "text": "Gore Canyon.",
    "language": "en"
   },
-  "97367b539f0a71eb": {
-   "url": "/audio/demo/6c01693091189f47.mp3",
-   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
-   "durationS": 26,
-   "text": "From Wikipedia: Gore Canyon, elevation 6,985 feet (2,129 m), is a short isolated canyon on the upper Colorado River in southwestern Grand County, Colorado in the United States. Steep and rugged, the approximately 3-mile-long (4.8 km) gorge was carved by the river as it passed the northern end of the Gore Range southwest of Kremmling.",
-   "language": "en"
-  },
   "9c012e01063ff76f": {
    "url": "/audio/demo/30c7dd1dc4c8bcfe.mp3",
    "voiceId": "JBFqnCBsd6RMkjVDRZzb",
@@ -453,13 +439,6 @@
    "voiceId": "JBFqnCBsd6RMkjVDRZzb",
    "durationS": 1,
    "text": "Glenwood Canyon.",
-   "language": "en"
-  },
-  "95df462bf4dd439f": {
-   "url": "/audio/demo/bf1e8ef256ec5019.mp3",
-   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
-   "durationS": 16,
-   "text": "From Wikipedia: Glenwood Canyon is a rugged scenic 12.5 mi (20 km) canyon in western Colorado in the United States. Its walls climb as high as 1,300 feet (400 m) above the Colorado River.",
    "language": "en"
   },
   "8492005b2edc3b33": {
@@ -539,13 +518,6 @@
    "text": "Hotel Colorado.",
    "language": "en"
   },
-  "3a038522c217745f": {
-   "url": "/audio/demo/f364a9ed18508d8b.mp3",
-   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
-   "durationS": 11,
-   "text": "From Wikipedia: Hotel Colorado is an 1893 Italianate structure in Glenwood Springs, Colorado, United States, and one of the oldest hotels in Colorado.",
-   "language": "en"
-  },
   "5d50194147545832": {
    "url": "/audio/demo/95b212efffd34ca2.mp3",
    "voiceId": "JBFqnCBsd6RMkjVDRZzb",
@@ -621,6 +593,62 @@
    "voiceId": "JBFqnCBsd6RMkjVDRZzb",
    "durationS": 3,
    "text": "Glenwood Hot Springs Pool, a spring.",
+   "language": "en"
+  },
+  "64f9ac8025d63778": {
+   "url": "/audio/demo/8275f7bf38a1664f.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 4,
+   "text": "The South Platte River is one of the two principal tributaries of the Platte River.",
+   "language": "en"
+  },
+  "22e545586ae09af6": {
+   "url": "/audio/demo/58181ee3ed03d64c.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 24,
+   "text": "Gore Canyon, elevation 6,985 feet (2,129 m), is a short isolated canyon on the upper Colorado River in southwestern Grand County, Colorado in the United States. Steep and rugged, the approximately 3-mile-long (4.8 km) gorge was carved by the river as it passed the northern end of the Gore Range southwest of Kremmling.",
+   "language": "en"
+  },
+  "39528e740cddab7a": {
+   "url": "/audio/demo/052fd7351c6d9924.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 15,
+   "text": "Glenwood Canyon is a rugged scenic 12.5 mi (20 km) canyon in western Colorado in the United States. Its walls climb as high as 1,300 feet (400 m) above the Colorado River.",
+   "language": "en"
+  },
+  "b3cbddb777dc2156": {
+   "url": "/audio/demo/95c8870f38726662.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 10,
+   "text": "Hotel Colorado is an 1893 Italianate structure in Glenwood Springs, Colorado, United States, and one of the oldest hotels in Colorado.",
+   "language": "en"
+  },
+  "e4a0eabddced7af9": {
+   "url": "/audio/demo/3d9ba88b65bfd39f.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 15,
+   "text": "The tracks set the rhythm. The world outside supplies the stories. Welcome aboard. We're riding the California Zephyr. This stretch: The Rockies. As we travel, we'll discover the stories behind places along the way.",
+   "language": "en"
+  },
+  "919e86743ea2972d": {
+   "url": "/audio/demo/e23400ba152bfec6.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 16,
+   "text": "Las vías marcan el ritmo. El mundo de fuera pone las historias. Te damos la bienvenida a bordo. Viajamos en el California Zephyr. Este tramo: The Rockies. Por el camino descubriremos las historias de los lugares que pasamos.",
+   "language": "es"
+  },
+  "94e37a02c6b36c8f": {
+   "url": "/audio/demo/18b48632177784ca.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 14,
+   "text": "铁轨打着节拍，窗外的世界讲着故事。 欢迎上车。 我们乘坐的是California Zephyr。本段路程：The Rockies。 一路上，我们将发现沿途地点背后的故事。",
+   "language": "zh-CN"
+  },
+  "2b9cd7aa0b2383af": {
+   "url": "/audio/demo/26d04181610e1b01.mp3",
+   "voiceId": "JBFqnCBsd6RMkjVDRZzb",
+   "durationS": 2,
+   "text": "Let's follow a different thread.",
    "language": "en"
   }
  }

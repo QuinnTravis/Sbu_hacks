@@ -1,9 +1,7 @@
 /**
- * Write and check stories for a static route package (F2). Each story has a
- * summary, an interesting fact, and a spoken script (hook, detail, why, and
- * an optional look-for phrase); every sentence carries an exact quote that a
- * second model verifies. Unsupported sentences are dropped; a place with no
- * supported summary keeps no story and is narrated from basic facts or not at all.
+ * Precompute stories for a static route package, with the same check the app
+ * runs on demand: one search, one draft, and only the sentences that two
+ * sites agree on. A place with no matching search result keeps no story.
  *
  *   npm run content:network -- --limit=30
  *   npm run content:network -- --id=wd-Q3318219 --force
@@ -39,7 +37,6 @@ async function main() {
     return index >= 0 ? index : DEMO_FIRST.length + (place.kind === "poi" ? 0 : 100) - Math.min(50, place.fame ?? 0);
   };
   const pending = catalog.places
-    .filter((place) => place.evidence.length > 0)
     .filter((place) => (only ? place.id === only : true))
     .filter((place) => force || !place.story?.narration || place.story.evidenceHash !== evidenceHash(place.evidence))
     .sort((a, b) => rank(a) - rank(b))
@@ -50,8 +47,9 @@ async function main() {
   for (const place of pending) {
     for (let attempt = 0; attempt < 3; attempt++) {
       try {
-        const story = await verifyPlace(place, 90_000, { narration: true });
+        const { story, evidence } = await verifyPlace(place, 90_000);
         place.story = story;
+        place.evidence = evidence;
         done += 1;
         await writeFile(`${FILE}.tmp`, JSON.stringify(catalog));
         await rename(`${FILE}.tmp`, FILE);

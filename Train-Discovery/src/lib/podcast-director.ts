@@ -262,7 +262,8 @@ export function podcastCandidatesFromJourney(input: {
       ...(selectedAt !== undefined ? { selectedAt } : {}),
       ...(input.compose ? { script: composed?.script ?? null } : {}),
       moment: { key: `place:${place.id}`, name: place.name, place,
-        request: { type: "place", placeId: place.id, context },
+        request: { type: "place", placeId: place.id, context,
+          ...(input.compose && input.language && input.language !== "en" ? { locale: input.language } : {}) },
         fallback: composed ? composed.script : input.compose ? null : placeAnnouncement(place, context),
         ...(composed?.parts ? { parts: composed.parts } : {}) },
     };

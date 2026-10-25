@@ -96,12 +96,9 @@
 
 @media (max-width: 600px) {
   .train-network-wrap.train-network-wrap.train-network-wrap {
-    /* The external map canvas bleeds beyond the phone. Its content must not. */
-    width: calc(100% / 1.2);
+    width: 100%;
     max-width: 100vw;
-    padding: 16px 12px;
-    /* Keep the western stations above the floating Jamaica demo control. */
-    transform: translateY(-48px);
+    padding: 0 4px;
   }
 
   .train-network-map .train-network-station text {

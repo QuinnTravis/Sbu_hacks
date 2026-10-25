@@ -1,17 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { Info, SlidersHorizontal, WifiOff } from "lucide-react";
+import { SlidersHorizontal, WifiOff } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import { BrandMark } from "./brand-mark";
 
 export function AppHeader({
-  badge,
   online,
   devOpen,
   onToggleDev,
 }: {
-  badge: string;
   online: boolean;
   devOpen: boolean;
   onToggleDev: () => void;
@@ -35,17 +33,12 @@ export function AppHeader({
         >
           <SlidersHorizontal size={19} />
         </button>
-        <span className="rail-badge">{badge}</span>
         {!online && (
           <span className="offline-label">
             <WifiOff size={14} aria-hidden="true" />
             {t("header.offline")}
           </span>
         )}
-        <Link className="header-link" href="/about">
-          <Info size={22} aria-hidden="true" />
-          <span className="sr-only">{t("header.about")}</span>
-        </Link>
       </div>
     </header>
   );

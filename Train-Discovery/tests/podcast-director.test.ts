@@ -156,7 +156,7 @@ describe("pure podcast planning", () => {
       .toMatchObject({ action: "quiet", ranked: [] });
   });
 
-  it("permits an attributed Wikipedia excerpt with explicit source status", () => {
+  it("permits a matched Wikipedia excerpt and keeps its source", () => {
     const p = place("excerpt", { story: undefined, evidence: [{
       id: "wiki", title: "Museum excerpt", url: "https://en.wikipedia.org/wiki/Museum_excerpt",
       text: "Museum excerpt served as an educational landmark in the district. It housed a collection of books and maps.",
@@ -166,7 +166,7 @@ describe("pure podcast planning", () => {
     expect(decision.action).toBe("story");
     if (decision.action === "story") {
       expect(decision.item.moment.fallback?.kind).toBe("source");
-      expect(decision.item.moment.fallback?.text).toContain("From Wikipedia:");
+      expect(decision.item.moment.fallback?.text).not.toContain("From Wikipedia");
       expect(decision.item.moment.fallback?.sources[0].url).toBe(p.evidence[0].url);
     }
   });

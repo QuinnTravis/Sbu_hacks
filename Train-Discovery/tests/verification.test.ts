@@ -1,93 +1,68 @@
 import { describe, expect, it } from "vitest";
 import {
+  agreeingSites,
   compileSummary,
   evidenceHash,
-  mergeEvidence,
-  validateCitations,
+  selectClaims,
+  sourceAgrees,
 } from "../src/lib/verification";
 import type { Evidence } from "../src/lib/types";
 
-const evidence: Evidence[] = [
-  {
-    id: "source-1",
-    title: "Station archive",
-    url: "https://example.org/archive",
-    text: "The station opened in 1873. It serves the village.",
-    retrievedAt: "2026-10-24",
-    license: "CC BY-SA 4.0",
-  },
+const source = (id: string, url: string, text: string): Evidence => ({
+  id, url, text, title: id, retrievedAt: "2026-10-25", license: "test",
+});
+const sources = [
+  source("wiki", "https://en.wikipedia.org/wiki/Moffat_Station", "Moffat Station was built in 1906 as the Denver terminus of the Denver, Northwestern and Pacific Railway."),
+  source("loc", "https://www.loc.gov/item/moffat", "Built in 1906, Moffat Station served the Denver, Northwestern and Pacific Railway."),
+  source("loc-2", "https://loc.gov/item/other", "The station was built in 1906 for the Denver, Northwestern and Pacific Railway."),
+  source("blog", "https://example.org/moffat", "Moffat Station is one of only two original railroad stations left in Denver."),
 ];
-describe("evidence verification gates", () => {
-  it("rejects fabricated citations and missing source IDs", () => {
-    const claims = [
-      {
-        text: "The station opened in 1873.",
-        evidenceId: "source-1",
-        quote: "The station opened in 1873.",
-      },
-      {
-        text: "The station opened in 1900.",
-        evidenceId: "source-1",
-        quote: "The station opened in 1900.",
-      },
-      {
-        text: "The station opened in 1873.",
-        evidenceId: "invented",
-        quote: "The station opened in 1873.",
-      },
-    ];
-    expect(validateCitations(claims, evidence)).toEqual([claims[0]]);
+
+describe("agreement check", () => {
+  it("requires a source to state the sentence's numbers and names", () => {
+    expect(sourceAgrees("Moffat Station was built in 1906.", sources[0].text, "Moffat Station")).toBe(true);
+    expect(sourceAgrees("Moffat Station was built in 1907.", sources[0].text, "Moffat Station")).toBe(false);
+    expect(sourceAgrees("Moffat Station served the Union Pacific.", sources[1].text, "Moffat Station")).toBe(false);
   });
-  it("invalidates verification when source text changes but not on a retrieval date change", () => {
-    expect(evidenceHash(evidence)).not.toBe(
-      evidenceHash([{ ...evidence[0], text: "The station opened in 1874." }]),
-    );
-    expect(evidenceHash(evidence)).toBe(
-      evidenceHash([{ ...evidence[0], retrievedAt: "2026-10-25" }]),
-    );
+
+  it("counts each site once", () => {
+    const support = agreeingSites("Moffat Station was built in 1906 for the Denver, Northwestern and Pacific Railway.", sources, "Moffat Station");
+    expect(support.map((item) => item.id)).toEqual(["wiki", "loc"]);
   });
-  it("accepts a quote that differs only by curly punctuation", () => {
-    expect(
-      validateCitations(
-        [
-          {
-            text: "The station opened in 1873.",
-            evidenceId: "source-1",
-            quote: 'The station "opened" in 1873.',
-          },
-        ],
-        [
-          {
-            ...evidence[0],
-            text: "The station “opened” in 1873. It serves the village.",
-          },
-        ],
-      ),
-    ).toHaveLength(1);
+
+  it("keeps sentences two sites agree on and drops the rest", () => {
+    const selected = selectClaims({
+      summary: [
+        "Moffat Station was built in 1906 for the Denver, Northwestern and Pacific Railway.",
+        "Moffat Station is one of only two original railroad stations left in Denver.",
+      ],
+      funFact: "Moffat Station was designed by Frank Edbrooke in 1907.",
+    }, sources, "Moffat Station");
+    expect(selected?.sites).toBe(2);
+    expect(selected?.claims.map((claim) => claim.evidenceId)).toEqual(["wiki"]);
+    expect(selected?.funFact).toBeUndefined();
+    expect(selected?.evidence.map((item) => item.id)).toEqual(["wiki", "loc"]);
   });
-  it("compiles a summary only from the sentences that survived", () => {
-    const claims = [
-      {
-        text: "The station opened in 1873.",
-        evidenceId: "source-1",
-        quote: "The station opened in 1873.",
-      },
-      {
-        text: "It serves the village.",
-        evidenceId: "source-1",
-        quote: "It serves the village.",
-      },
-    ];
-    expect(compileSummary(claims)).toBe(
-      "The station opened in 1873. It serves the village.",
-    );
-    expect(mergeEvidence(evidence, evidence)).toEqual(evidence);
-    expect(
-      mergeEvidence(evidence, [
-        evidence[0],
-        { ...evidence[0], id: "source-2", url: "https://example.org/other" },
-        { ...evidence[0], id: "source-3", url: "https://example.org/third" },
-      ]),
-    ).toHaveLength(2);
+
+  it("falls back to single-site sentences when nothing has two", () => {
+    const selected = selectClaims({
+      summary: ["It is one of only two original railroad stations left in Denver."],
+    }, sources, "Moffat Station");
+    expect(selected?.sites).toBe(1);
+    expect(selected?.claims[0].text).toBe("Moffat Station is one of only two original railroad stations left in Denver.");
+    expect(selected?.claims[0].quote).toBe(sources[3].text);
+  });
+
+  it("rejects a draft no source supports", () => {
+    expect(selectClaims({ summary: ["Moffat Station opened in 1950 as an airport."] }, sources, "Moffat Station")).toBeNull();
+  });
+
+  it("compiles the summary and hashes only source identity and text", () => {
+    expect(compileSummary([
+      { text: "One.", evidenceId: "a", quote: "One." },
+      { text: "Two.", evidenceId: "a", quote: "Two." },
+    ])).toBe("One. Two.");
+    expect(evidenceHash(sources)).toBe(evidenceHash(sources.map((item) => ({ ...item, retrievedAt: "2026-10-26" }))));
+    expect(evidenceHash(sources)).not.toBe(evidenceHash([{ ...sources[0], text: "Changed." }, ...sources.slice(1)]));
   });
 });

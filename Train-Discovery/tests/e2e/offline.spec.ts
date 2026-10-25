@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./fixtures";
 
 test("installed shell and downloaded journey reopen offline", async ({
   browser,
