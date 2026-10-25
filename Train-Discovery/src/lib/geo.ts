@@ -106,10 +106,11 @@ export function destination(
   return { lat: (lat2 * 180) / Math.PI, lon };
 }
 
-/** Closed ring: rider, then the 1200 m arc from heading−22° to heading+22°. */
+/** Closed ring: rider, then the arc (1200 m by default) from heading−22° to heading+22°. */
 export function pointingConeRing(
   origin: Coordinate,
   heading: number,
+  radius = POINTING_RADIUS_M,
 ): Coordinate[] {
   const ring: Coordinate[] = [origin];
   for (let step = 0; step <= CONE_ARC_STEPS; step += 1) {
@@ -117,7 +118,7 @@ export function pointingConeRing(
       heading -
       POINTING_HALF_ANGLE_DEG +
       (2 * POINTING_HALF_ANGLE_DEG * step) / CONE_ARC_STEPS;
-    ring.push(destination(origin, edge, POINTING_RADIUS_M));
+    ring.push(destination(origin, edge, radius));
   }
   ring.push(origin);
   return ring;
@@ -126,8 +127,9 @@ export function pointingConeRing(
 export function pointingConeLngLats(
   origin: Coordinate,
   heading: number,
+  radius = POINTING_RADIUS_M,
 ): [number, number][] {
-  return pointingConeRing(origin, heading).map((point) => [point.lon, point.lat]);
+  return pointingConeRing(origin, heading, radius).map((point) => [point.lon, point.lat]);
 }
 
 function localMeters(origin: Coordinate, point: Coordinate): [number, number] {
@@ -142,9 +144,10 @@ export function pointingConeContains(
   origin: Coordinate,
   heading: number,
   place: Coordinate,
+  radius = POINTING_RADIUS_M,
 ): boolean {
   if (!Number.isFinite(heading)) return false;
-  const polygon = pointingConeRing(origin, heading).map((point) =>
+  const polygon = pointingConeRing(origin, heading, radius).map((point) =>
     localMeters(origin, point),
   );
   const [x, y] = localMeters(origin, place);
@@ -160,16 +163,16 @@ export function pointingConeContains(
   return inside;
 }
 
-/** Zoom so the 1200 m arc reaches the nearer edge of the ride map, with a small margin. */
-export function pointingConeZoom(latitude: number, viewportPx: number): number {
+/** Zoom so the cone's arc reaches the nearer edge of the ride map, with a small margin. */
+export function pointingConeZoom(latitude: number, viewportPx: number, radius = POINTING_RADIUS_M): number {
   const half = Math.max(48, viewportPx / 2);
-  const metersPerPixel = POINTING_RADIUS_M / (half * 0.86);
+  const metersPerPixel = radius / (half * 0.86);
   const latitudeRad = rad(Math.min(80, Math.max(-80, latitude)));
   const zoom = Math.log2(
     (156543.03392 * Math.cos(latitudeRad)) / metersPerPixel,
   );
   if (!Number.isFinite(zoom)) return 13;
-  return Math.min(15.5, Math.max(10, zoom));
+  return Math.min(15.5, Math.max(8, zoom));
 }
 
 // Heading of the rear camera's optical axis projected onto the earth plane.

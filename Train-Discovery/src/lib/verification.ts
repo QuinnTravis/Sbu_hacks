@@ -7,6 +7,7 @@ import { DynamicStructuredTool } from "@langchain/core/tools";
 import { z } from "zod";
 import type { Claim, Evidence, Place, Story } from "./types";
 import { STORYTELLER_PROMPT } from "./audio-prompts";
+import { normalizeQuote } from "./quote";
 
 export const claimSchema = z.object({
   text: z.string().min(12).max(350),
@@ -151,15 +152,7 @@ async function searchSerperEvidence(place: Place): Promise<Evidence[]> {
   return [...found.values()].slice(0, Math.max(0, 2 - place.evidence.length));
 }
 
-/** Fold whitespace and typographic punctuation so a copied quote still matches. */
-export function normalizeQuote(value: string): string {
-  return value
-    .replace(/[“”]/g, '"')
-    .replace(/[‘’]/g, "'")
-    .replace(/[–—]/g, "-")
-    .replace(/\s+/g, " ")
-    .trim();
-}
+export { normalizeQuote };
 
 export function validateCitations(
   claims: Claim[],

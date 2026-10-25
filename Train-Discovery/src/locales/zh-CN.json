@@ -1,0 +1,564 @@
+{
+  "app": {
+    "name": "Gaze",
+    "tagline": "指向。发现。收藏。",
+    "skip": "跳到主要内容",
+    "home": "Gaze 首页",
+    "loading": "正在加载…",
+    "retry": "重试",
+    "close": "关闭",
+    "simulated": "模拟",
+    "estimated": "估计"
+  },
+  "header": {
+    "openDev": "打开开发者面板",
+    "closeDev": "关闭开发者面板",
+    "devTitle": "开发者面板（`）",
+    "offline": "离线",
+    "about": "关于"
+  },
+  "nav": {
+    "label": "主导航",
+    "ride": "旅程",
+    "discoveries": "发现",
+    "bookmarks": "收藏",
+    "settings": "设置"
+  },
+  "home": {
+    "demoStart": "从{place}开始演示旅程",
+    "demoLabel": "{place}演示",
+    "useDemo": "使用{place}演示",
+    "findNearMe": "查找我附近的线路",
+    "mapLabel": "{network}交互式线路图",
+    "collapse": "收起线路列表",
+    "expand": "展开线路列表",
+    "routesNear": "{place}附近的线路",
+    "routesNearYou": "你附近的线路",
+    "chooseRoute": "选择线路",
+    "allRoutes": "全部线路",
+    "nearby": "附近",
+    "search": "搜索线路",
+    "searchLabel": "搜索{network}线路",
+    "clearSearch": "清除搜索",
+    "noMatch": "没有与“{query}”匹配的线路。",
+    "away": "距离 {distance}",
+    "notNearby": "不在附近",
+    "start": "开始旅程",
+    "routesGroup": "{network}线路",
+    "fullExperience": "完整体验",
+    "basicExperience": "仅播报车站",
+    "stops": "{from}至{to}",
+    "chooseNetwork": "线网",
+    "discoveriesEmpty": "旅途中的发现会显示在这里",
+    "discoveriesEmptyHint": "指向一个地点或收听它的故事即可加入。收藏在旅程结束后仍会保留。",
+    "startDiscovering": "开始发现",
+    "openBookmarks": "打开收藏"
+  },
+  "gps": {
+    "denied": "位置权限已被阻止。请在浏览器设置中开启，然后重试。",
+    "inaccurate": "GPS 不够精确。信号改善后将继续发现。",
+    "requesting": "正在定位你的列车…",
+    "unavailable": "无法获取位置。请靠近车窗后重试。",
+    "idle": "开启位置和指南针即可开始发现。",
+    "lost": "GPS 信号丢失。正在等待新的位置。"
+  },
+  "compass": {
+    "denied": "指南针权限已被阻止。请在浏览器设置中开启“运动与方向”。",
+    "flat": "请竖起手机，将背面对准一个地标。",
+    "inaccurate": "检测到指南针干扰。请让手机远离金属。",
+    "unavailable": "此浏览器没有可用的指南针。请尝试 iPhone 上的 Safari 或 Android 上的 Chrome。",
+    "waitingReading": "正在等待绝对方向读数。请竖起手机。",
+    "waiting": "指南针等待中",
+    "phone": "手机方向",
+    "simulated": "模拟方向",
+    "waitingPhone": "正在等待手机指南针",
+    "phoneLabel": "手机指向 {degrees} 度",
+    "simulatedLabel": "模拟方向 {degrees} 度",
+    "holdUpright": "请竖起手机",
+    "simulatedAim": "模拟指向",
+    "cardinal": {
+      "N": "北",
+      "NE": "东北",
+      "E": "东",
+      "SE": "东南",
+      "S": "南",
+      "SW": "西南",
+      "W": "西",
+      "NW": "西北"
+    }
+  },
+  "ride": {
+    "replay": "模拟",
+    "discovering": "发现中",
+    "paused": "已暂停",
+    "near": "靠近{station}",
+    "waitingLocation": "正在等待位置",
+    "endConfirm": "要清除本次旅程及其列表吗？",
+    "end": "结束旅程",
+    "keepRiding": "继续旅程",
+    "catalogFailed": "无法加载地点。",
+    "pointPanel": "用手机指向",
+    "simPhone": "模拟列车 · 手机指南针",
+    "simJoystick": "模拟列车 · 摇杆",
+    "simAuto": "模拟位置与方向",
+    "pauseReplay": "暂停模拟",
+    "playReplay": "继续模拟",
+    "enableSensors": "开启传感器",
+    "retrySensors": "重试传感器",
+    "sensorsActive": "位置与指南针已开启",
+    "flatSim": "模拟手机处于平放状态。请增大倾角以指向外面。",
+    "gpsJoystick": "真实 GPS · 摇杆模拟方向",
+    "offRoute": "你似乎离这条线路很远。请检查所选线路。",
+    "loadingPlaces": "正在加载地点…",
+    "placesUnavailable": "地点不可用",
+    "placesNearby": {
+      "other": "附近有 {count} 个地点"
+    },
+    "cached": "已缓存",
+    "pausedLoading": "已暂停：正在加载地点…",
+    "pausedUnavailable": "已暂停：地点未能加载",
+    "pausedEmpty": "已暂停：范围内没有带来源的地点。",
+    "noSourced": "范围内没有带来源的地点。",
+    "stationsOnly": "此路段仅播报车站。落基山脉路段提供完整体验。",
+    "speedSimulated": "{speed} 公里/小时"
+  },
+  "chooser": {
+    "label": "这个方向上的地点",
+    "empty": "这个方向上没有地点。",
+    "row": "{name}，{distance}"
+  },
+  "queue": {
+    "title": "我的发现",
+    "thisRide": "本次旅程",
+    "saved": "收藏",
+    "queueLabel": "你的发现列表",
+    "savedLabel": "已收藏的地点",
+    "failed": "地点未能加载",
+    "loading": "正在加载地点…",
+    "emptyTitle": "下一个发现就在窗外。",
+    "emptyHint": "用手机指向附近的地点。它的故事会一直留在这里，直到你删除。",
+    "stayHint": "发现会一直留在这里，直到你删除。",
+    "nothingSaved": "还没有收藏。",
+    "live": {
+      "other": "列表中有 {count} 个发现。最新：{name}。"
+    },
+    "liveEmpty": "还没有发现。"
+  },
+  "storage": {
+    "failed": "设备存储已满或被阻止。请保持此标签页打开，以保留你的列表和收藏。"
+  },
+  "card": {
+    "loadingPhoto": "正在加载照片",
+    "photoUnavailable": "照片不可用",
+    "discard": "删除{name}",
+    "whenFound": "发现时相距 {distance}",
+    "evidenceChecked": "来源已核查",
+    "playStory": "播放故事",
+    "listenTo": "收听{name}",
+    "summary": "摘要",
+    "noSummary": "暂无带来源的摘要。",
+    "claimSource": "第 {index} 条陈述的来源",
+    "interestingFact": "趣闻",
+    "factSource": "趣闻的来源",
+    "excerptLabel": "维基百科摘录 · 未核查",
+    "readSource": "阅读来源",
+    "listenSource": "收听来源",
+    "listenSourceFor": "收听{name}的来源",
+    "basicInfo": "基本信息",
+    "basicHint": "来自地图和维基数据记录，并非经过核查的故事。",
+    "elevation": "海拔",
+    "population": "人口",
+    "detail": {
+      "start_date": "记录日期",
+      "architect": "建筑师",
+      "operator": "运营方"
+    },
+    "sources": "来源与致谢",
+    "searchExcerpt": "Google 搜索摘录 · 附来源页面链接",
+    "retrieved": "{license} · 检索于 {date}",
+    "osm": "OpenStreetMap 贡献者 · ODbL",
+    "aiCheck": "AI 来源核查 · {date}。有来源支持并不保证历史准确。",
+    "previous": "上一个",
+    "next": "下一个",
+    "position": "第 {index} 个，共 {total} 个",
+    "lookFor": "留意",
+    "localized": "译自经过核查的英文来源。",
+    "englishOnly": "此故事仅有英文版本。",
+    "routeKm": "旅程第 {km} 公里",
+    "side": "方位"
+  },
+  "categories": {
+    "Heritage": "历史遗产",
+    "Nature": "自然",
+    "Landmark": "地标",
+    "Former use": "旧址",
+    "Railway history": "铁路历史",
+    "Station": "车站",
+    "Infrastructure": "基础设施",
+    "History": "历史",
+    "Railroad heritage": "铁路遗产",
+    "Canyon": "峡谷",
+    "River": "河流",
+    "Mountain": "山岭",
+    "Town": "城镇"
+  },
+  "audio": {
+    "label": "语音导览",
+    "start": "开始语音导览",
+    "unsupported": "此浏览器不支持音频。",
+    "error": "音频已停止。请重试。",
+    "paused": "已暂停",
+    "preparing": "正在准备{name}",
+    "sourceExcerpt": "{name} · 来源摘录",
+    "basicInfo": "{name} · 基本信息",
+    "waiting": "正在等待附近的故事",
+    "save": "收藏{name}",
+    "resume": "继续语音导览",
+    "pause": "暂停语音导览",
+    "skip": "跳过故事",
+    "stop": "关闭语音导览",
+    "queued": "已排队",
+    "next": "下一个 ·",
+    "playNow": "立即播放",
+    "unavailable": "{name}暂时没有带来源的故事。",
+    "deviceVoice": "正在使用设备语音",
+    "tapToContinue": "点按播放以继续",
+    "transcript": "文字稿与来源",
+    "englishFallback": "以英文讲述；这个故事还没有{language}译文。",
+    "offlineCached": "正在播放离线下载内容"
+  },
+  "narration": {
+    "station": "即将到站：{name}。",
+    "lead": {
+      "pointed": "你刚刚指向了{name}。",
+      "pointedEarlier": "你之前指向的那个地方，{name}。",
+      "replay": "再听一次，{name}。",
+      "nearby": "{name}。"
+    },
+    "noun": {
+      "building": "建筑",
+      "landmark": "地标",
+      "station": "车站",
+      "place": "地方"
+    },
+    "fromWikipedia": "据维基百科：",
+    "journey": {
+      "rhythm": "铁轨打着节拍，窗外的世界讲着故事。",
+      "simulated": "这是一次模拟旅程。",
+      "welcome": "欢迎上车。",
+      "route": "我们正在探索{route}路段。",
+      "segment": "我们乘坐的是{network}。本段路程：{segment}。",
+      "close": "一路上，我们将发现沿途地点背后的故事。"
+    },
+    "transition": "我们换一个话题。",
+    "welcome": "欢迎上车。一路上，我们一起发现沿途的故事。",
+    "intro": {
+      "0": "{name}。",
+      "1": "接下来是{name}。",
+      "2": "这里是{name}。",
+      "3": "现在说说{name}。",
+      "4": "即将经过{name}。"
+    },
+    "introSide": {
+      "left": "在你左侧，{name}。",
+      "right": "在你右侧，{name}。",
+      "ahead": "就在前方，{name}。",
+      "both": "就在我们周围，{name}。"
+    },
+    "context": {
+      "afterTunnel": "我们刚刚驶出隧道。"
+    },
+    "callback": {
+      "distance": "我们已经离开{place} {distance}。",
+      "count": "本次旅程已经讲了 {count} 个故事。"
+    },
+    "lookFor": {
+      "left": "请看左侧：{thing}。",
+      "right": "请看右侧：{thing}。",
+      "ahead": "请看前方：{thing}。",
+      "both": "请看两侧：{thing}。",
+      "unknown": "请留意：{thing}。"
+    },
+    "basic": {
+      "lead": "{name}，{type}。",
+      "elevation": "海拔 {value}。",
+      "population": "人口 {value}。"
+    },
+    "cue": {
+      "left": "大约 {eta} 后，在你左侧：{name}。",
+      "right": "大约 {eta} 后，在你右侧：{name}。",
+      "ahead": "大约 {eta} 后，在前方：{name}。",
+      "both": "大约 {eta} 后，在两侧：{name}。",
+      "unknown": "大约 {eta} 后：{name}。"
+    },
+    "cueSaved": "这是你收藏的地点。",
+    "deadZone": "预计约 {eta} 后进入无信号路段，持续约 {duration}，位于{area}附近。",
+    "air": "前方空气质量：{category}，AQI {aqi}，约 {eta} 后到达。"
+  },
+  "basicType": {
+    "town": "一座小镇",
+    "city": "一座城市",
+    "peak": "一座山峰",
+    "pass": "一处山口",
+    "ridge": "一道山脊",
+    "cliff": "一处悬崖",
+    "arch": "一座天然石拱",
+    "rock": "一处岩石地貌",
+    "river": "一条河流",
+    "canyon": "一座峡谷",
+    "lake": "一座湖泊",
+    "spring": "一处泉水",
+    "tunnel": "一条铁路隧道",
+    "station": "一座车站",
+    "railroad": "一处铁路遗址",
+    "bridge": "一座铁路桥",
+    "dam": "一座水坝",
+    "park": "一处保护区",
+    "baths": "一处浴场",
+    "museum": "一座博物馆",
+    "historic": "一处历史遗址",
+    "hotel": "一座历史酒店",
+    "building": "一座建筑",
+    "viewpoint": "一处观景点"
+  },
+  "side": {
+    "left": "在你左侧",
+    "right": "在你右侧",
+    "ahead": "前方",
+    "both": "两侧",
+    "unknown": "沿线",
+    "short": {
+      "left": "左",
+      "right": "右",
+      "ahead": "前方",
+      "both": "两侧"
+    }
+  },
+  "lookAhead": {
+    "region": "即将经过",
+    "eta": "约 {eta} 后",
+    "now": "现在",
+    "whenMoving": "列车开动后",
+    "saved": "你收藏了这里",
+    "open": "打开{name}",
+    "announce": "约 {eta} 后{side}：{name}",
+    "announceNow": "现在{side}：{name}"
+  },
+  "advisor": {
+    "title": "坐哪一侧更好",
+    "open": "坐哪一侧更好",
+    "better": {
+      "left": "左侧",
+      "right": "右侧",
+      "even": "两侧都行"
+    },
+    "highlights": {
+      "other": "{count} 个亮点"
+    },
+    "versus": "{side}：{count}",
+    "evenHint": "两侧的亮点数量相当。",
+    "direction": "方向",
+    "toward": "开往{stop}",
+    "facingNote": "根据行驶方向判断。如果你背对行驶方向而坐，左右会对调。",
+    "facing": "座位朝向",
+    "timeIn": "出发后约 {time}",
+    "atStart": "出发时",
+    "byTimetable": "时间依据 Amtrak 时刻表。",
+    "unknownDirection": "行驶方向未知。列车开动后会显示左右。",
+    "balance": "沿途哪一侧更精彩",
+    "nextWindow": "接下来 30 分钟：{side}",
+    "nextWindowEven": "接下来 30 分钟：两侧都行",
+    "start": "开始旅程",
+    "none": "这段路程没有亮点。"
+  },
+  "bookmarks": {
+    "title": "收藏",
+    "add": "收藏{name}",
+    "remove": "取消收藏{name}",
+    "bookmark": "收藏",
+    "bookmarked": "已收藏",
+    "empty": "还没有收藏",
+    "emptyHint": "可以在地点卡片上收藏，也可以在到达之前收藏。",
+    "status": {
+      "upcoming": "即将经过",
+      "passed": "已经过",
+      "discovered": "已发现"
+    },
+    "in": "约 {eta} 后",
+    "export": "导出",
+    "copy": "复制为文本",
+    "download": "下载 JSON",
+    "copied": "已复制",
+    "copyFailed": "无法复制。请改用下载。",
+    "removeAction": "移除",
+    "open": "打开{name}",
+    "otherNetwork": "其他线路",
+    "kmMark": "第 {km} 公里",
+    "count": {
+      "other": "{count} 个收藏"
+    }
+  },
+  "settings": {
+    "title": "设置",
+    "language": "语言",
+    "facing": "座位朝向",
+    "forward": "面向前方",
+    "backward": "背向前方",
+    "facingHint": "背向行驶方向时，左右提示会对调。",
+    "sound": "讲解",
+    "soundHint": "旅途中播放故事和提示。",
+    "voice": "语音提问",
+    "voiceHint": "旅途中显示按住说话按钮。",
+    "strips": "线路信息条",
+    "on": "开",
+    "off": "关",
+    "about": "关于与隐私",
+    "credits": "致谢与许可",
+    "offline": "离线下载",
+    "offlineReady": {
+      "other": "{count} 个地点可离线使用"
+    },
+    "clearOffline": "清除下载"
+  },
+  "history": {
+    "title": "今昔对比",
+    "past": "过去",
+    "present": "今天",
+    "showPast": "查看过去",
+    "showPresent": "查看今天",
+    "slider": "对比 {year} 与今天",
+    "pastOnly": "历史照片",
+    "credit": "{credit} · {license}",
+    "source": "来源",
+    "circa": "约 {year} 年"
+  },
+  "connectivity": {
+    "warning": "预计约 {eta} 后无信号，持续约 {duration}",
+    "now": "预计约 {duration} 内无信号",
+    "area": "{area}一带",
+    "estimated": "估计",
+    "confidence": {
+      "high": "可信度高",
+      "medium": "可信度中",
+      "low": "可信度低"
+    },
+    "reason": {
+      "tunnel": "隧道",
+      "canyon": "峡谷",
+      "remote": "偏远路段",
+      "observed": "此处曾丢失信号"
+    },
+    "places": {
+      "other": "此路段有 {count} 个地点"
+    },
+    "passWithoutSignal": "你将在无信号的情况下经过这些地点：",
+    "download": "下载接下来 2 小时的内容",
+    "downloading": "正在下载 {done}/{total}",
+    "downloaded": "可离线使用：{done}/{total}",
+    "ready": "可离线使用",
+    "needsSignal": "需要信号",
+    "strip": "信号",
+    "estimatedPosition": "估计位置",
+    "lowStorage": "存储空间不足，已跳过 3D 模型。",
+    "failed": "部分下载失败，有信号时会重试。"
+  },
+  "air": {
+    "title": "空气质量",
+    "aqi": "AQI {value}",
+    "category": {
+      "good": "良好",
+      "moderate": "中等",
+      "usg": "对敏感人群不健康",
+      "unhealthy": "不健康",
+      "veryUnhealthy": "非常不健康",
+      "hazardous": "危险"
+    },
+    "pollutant": {
+      "pm2_5": "PM2.5",
+      "pm10": "PM10",
+      "ozone": "臭氧",
+      "us_aqi": "综合"
+    },
+    "mostly": "主要污染物：{pollutant}",
+    "asOf": "{time} 的数据",
+    "alert": "前方空气质量：{category}（AQI {aqi}），约 {eta} 后到达",
+    "simulated": "模拟",
+    "simulatedScenario": "模拟烟雾场景",
+    "disclaimer": "仅供参考。",
+    "airnow": "查看 AirNow",
+    "source": "数据：Open-Meteo（CAMS）",
+    "unavailable": "空气质量不可用",
+    "strip": "空气"
+  },
+  "layers": {
+    "label": "线路信息条",
+    "pois": "地点",
+    "air": "空气",
+    "signal": "信号"
+  },
+  "progress": {
+    "label": "旅程进度",
+    "position": "{done} / {total}",
+    "you": "你在这里"
+  },
+  "voice": {
+    "ask": "提问",
+    "open": "提一个问题",
+    "close": "关闭提问",
+    "hold": "按住说话",
+    "tap": "点按说话",
+    "stopRecording": "停止并发送",
+    "listening": "正在聆听…",
+    "thinking": "正在思考…",
+    "speaking": "正在讲述…",
+    "placeholder": "问问窗外有什么",
+    "send": "发送",
+    "notice": "你的录音会发送给语音服务商进行转写，不会被保存。",
+    "needsSignal": "需要信号。你的问题已保存，信号恢复后会发送。",
+    "queued": "等待信号：{question}",
+    "noAnswer": "我没有找到有来源支持的答案。",
+    "offerBookmark": "改为收藏这个地点",
+    "sources": "来源",
+    "micDenied": "麦克风权限已被阻止。请输入你的问题。",
+    "unavailable": "语音输入不可用。请输入你的问题。",
+    "you": "你",
+    "reply": {
+      "paused": "已暂停。",
+      "resumed": "继续播放。",
+      "skipped": "已跳过。",
+      "replay": "再播放一次。",
+      "stopped": "讲解已关闭。",
+      "bookmarked": "已收藏{name}。",
+      "nothingToBookmark": "现在没有可以收藏的内容。",
+      "comingUp": "即将经过：{name}，{side}，约 {eta} 后。",
+      "comingUpNoEta": "即将经过：{name}，{side}。",
+      "nothingAhead": "前方暂时没有亮点。",
+      "side": "从这里开始，{side}的亮点更多：{count} 对 {other}。",
+      "sideEven": "从这里开始，两侧不相上下。",
+      "deadZone": "下一段无信号路段约 {eta} 后开始，持续约 {duration}。",
+      "noDeadZone": "前方预计没有无信号路段。",
+      "language": "已切换为{language}。"
+    }
+  },
+  "models": {
+    "chip": "3D",
+    "explore": "3D 浏览",
+    "reset": "重置视角",
+    "close": "关闭 3D 视图",
+    "procedural": "根据地图数据生成的简化模型",
+    "illustrative": "示意性复原",
+    "credit": "模型：{author} · {license}",
+    "streetView": "在街景中打开",
+    "hint": "拖动旋转，双指或滚轮缩放。方向键旋转，+ 和 − 缩放。",
+    "loading": "正在加载 3D 模型…",
+    "unavailable": "3D 模型不可用",
+    "label": "{name}的 3D 模型"
+  },
+  "credits": {
+    "title": "致谢与许可",
+    "back": "返回"
+  },
+  "dev": {
+    "panel": "开发者控制"
+  }
+}

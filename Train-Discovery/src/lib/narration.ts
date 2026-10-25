@@ -1,15 +1,8 @@
+import { normalizeQuote } from "./quote";
 import type { Evidence, Place } from "./types";
 
 // A quote must still exist in its attributed passage before it is read aloud.
-// This mirrors the publication gate, including typographic punctuation.
-function normalizeQuote(value: string) {
-  return value
-    .replace(/[“”]/g, '"')
-    .replace(/[‘’]/g, "'")
-    .replace(/[–—]/g, "-")
-    .replace(/\s+/g, " ")
-    .trim();
-}
+// normalizeQuote mirrors the publication gate, including typographic punctuation.
 
 export function narrationText(place: Place): string | null {
   if (!place.story?.claims.length) return null;

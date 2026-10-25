@@ -11,6 +11,7 @@
     "test:e2e": "playwright test",
     "data:routes": "python3 scripts/import-lirr.py",
     "data:places": "python3 scripts/import-places.py",
+    "data:network": "node --import tsx scripts/import-network.ts",
     "content:verify": "node --env-file-if-exists=.env --env-file-if-exists=.env.local --import tsx scripts/verify-content.ts",
     "content:verify:place": "node --env-file-if-exists=.env --env-file-if-exists=.env.local --import tsx scripts/verify-place.ts",
     "content:publish": "node --env-file-if-exists=.env.local --import tsx scripts/publish.ts"

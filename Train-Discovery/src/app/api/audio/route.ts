@@ -1,19 +1,22 @@
 import { z } from "zod";
 import { AudioError, journeyAudio } from "../../../lib/audio-server";
+import { findRoute } from "../../../lib/network-data";
 import { placeIdSchema } from "../../../lib/validation";
-import rail from "../../../../public/data/lirr.json";
+import { LOCALES } from "../../../locales";
 
 export const maxDuration = 120;
 const headers = { "Cache-Control": "private, no-store" };
-const routeIdSchema = z.string().refine((id) => rail.routes.some((route) => route.id === id));
+const routeIdSchema = z.string().max(24).refine((id) => findRoute(id) !== null);
+const localeSchema = z.enum(LOCALES.map((locale) => locale.code) as [string, ...string[]]).optional();
 const inputSchema = z.discriminatedUnion("type", [
   z.object({ type: z.literal("place"), placeId: placeIdSchema,
-    context: z.enum(["pointed", "pointed-earlier", "nearby", "replay"]).default("nearby") }).strict(),
-  z.object({ type: z.literal("station"), routeId: z.string().regex(/^(?:[1-9]|1[0-3])$/), stationId: z.string().regex(/^\d{1,8}$/) }).strict(),
+    context: z.enum(["pointed", "pointed-earlier", "nearby", "replay"]).default("nearby"), locale: localeSchema }).strict(),
+  z.object({ type: z.literal("station"), routeId: routeIdSchema, stationId: z.string().regex(/^[A-Za-z0-9]{1,8}$/), locale: localeSchema }).strict(),
   z.object({
     type: z.literal("journey"), routeId: routeIdSchema, simulation: z.boolean(),
     lat: z.number().finite().min(-90).max(90).optional(),
     lon: z.number().finite().min(-180).max(180).optional(),
+    locale: localeSchema,
   }).strict().refine(({ lat, lon }) => (lat === undefined) === (lon === undefined)),
 ]);
 

@@ -1,6 +1,7 @@
 import { distance, segmentDistance } from "./geo";
 import { audioEvidence, audioNarration } from "./narration";
 import { createJourneyIntroduction } from "./journey-context";
+import { translate } from "./i18n-core";
 import type { Coordinate, Evidence, Place, Position, RailRoute, Story } from "./types";
 
 export type RailStop = RailRoute["stops"][number];
@@ -8,18 +9,25 @@ export type PlaceAudioContext = "pointed" | "pointed-earlier" | "nearby" | "repl
 export const POINTED_TIMELY_MS = 45_000;
 export const STATION_TIMELY_MS = 90_000;
 export type AudioRequest =
-  | { type: "place"; placeId: string; context?: PlaceAudioContext }
-  | { type: "station"; routeId: string; stationId: string }
-  | { type: "journey"; routeId: string; simulation: boolean; lat?: number; lon?: number };
+  | { type: "place"; placeId: string; context?: PlaceAudioContext; locale?: string }
+  | { type: "station"; routeId: string; stationId: string; locale?: string }
+  | { type: "journey"; routeId: string; simulation: boolean; lat?: number; lon?: number; locale?: string }
+  /** Look-ahead cues and warnings: templated lines spoken on the device, never sent to the server. */
+  | { type: "announcement" };
 
 export type AudioScript = {
   name: string;
   text: string;
-  kind: "verified" | "source" | "announcement";
+  kind: "verified" | "source" | "announcement" | "basic";
   sources: { title: string; url: string; license: string }[];
   story?: Story;
   evidence?: Evidence[];
+  /** Language of `text`, for the device voice. English when absent. */
+  language?: string;
 };
+
+/** One spoken piece of a moment. With a clip, the narrator recording plays instead of the device voice. */
+export type AudioPart = { text: string; clip?: string };
 
 export type AudioMoment = {
   key: string;
@@ -29,6 +37,10 @@ export type AudioMoment = {
   place?: Place;
   station?: RailStop;
   expiresAt?: number;
+  /** Spoken in order. Moments without parts use the server clip or `fallback.text`. */
+  parts?: AudioPart[];
+  /** Announcements only: higher plays first. */
+  priority?: number;
 };
 
 /** A GPS observation, not a timetable prediction or proof this train will stop. */
@@ -49,8 +61,35 @@ export function reachedStation(
   );
 }
 
-export function stationAnnouncement(stop: RailStop): AudioScript {
-  return { name: stop.name, text: `Station approaching: ${stop.name}.`, kind: "announcement", sources: [] };
+export function stationAnnouncement(stop: RailStop, code = "en"): AudioScript {
+  return {
+    name: stop.name,
+    text: translate(code, "narration.station", { name: stop.name }),
+    kind: "announcement",
+    sources: [],
+    language: code,
+  };
+}
+
+/** The ride opening in a language. English branch routes keep the original wording. */
+export function journeyOpening(
+  routeName: string,
+  simulation: boolean,
+  code = "en",
+  segment?: { network: string; segment: string },
+): string {
+  const t = (key: string, vars?: Record<string, string>) => translate(code, key, vars);
+  if (code === "en" && !segment) {
+    const opening = createJourneyIntroduction({ routeName });
+    return `${t("narration.journey.rhythm")} ${simulation ? `${t("narration.journey.simulated")} ` : ""}${opening.text}`;
+  }
+  return [
+    t("narration.journey.rhythm"),
+    simulation ? t("narration.journey.simulated") : "",
+    t("narration.journey.welcome"),
+    segment ? t("narration.journey.segment", segment) : t("narration.journey.route", { route: routeName }),
+    t("narration.journey.close"),
+  ].filter(Boolean).join(" ");
 }
 
 /** One opening per route and mode. The device fallback never claims live weather. */
@@ -59,20 +98,23 @@ export function journeyMoment(
   routeName: string,
   simulation: boolean,
   position: Coordinate | null,
+  code = "en",
+  segment?: { network: string; segment: string },
 ): AudioMoment {
-  const opening = createJourneyIntroduction({ routeName });
   return {
     key: `journey:${routeId}:${simulation ? "simulation" : "live"}`,
     name: `Welcome to ${routeName}`,
     request: {
       type: "journey", routeId, simulation,
       ...(position ? { lat: position.lat, lon: position.lon } : {}),
+      ...(code !== "en" ? { locale: code } : {}),
     },
     fallback: {
       name: `Welcome to ${routeName}`,
-      text: `The tracks set the rhythm. The world outside supplies the stories. ${simulation ? "This is a simulated ride. " : ""}${opening.text}`,
+      text: journeyOpening(routeName, simulation, code, segment),
       kind: "announcement",
       sources: [],
+      language: code,
     },
   };
 }

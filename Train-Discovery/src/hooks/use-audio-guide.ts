@@ -15,16 +15,21 @@ import {
   deviceSpeechResume,
   sentenceGapElapsed,
 } from "@/lib/audio-journey";
-import type { AudioMoment, AudioScript, PendingStation, PlaceAudioContext, RailStop, SelectedStory } from "@/lib/audio-journey";
+import type { AudioMoment, AudioPart, AudioScript, PendingStation, PlaceAudioContext, RailStop, SelectedStory } from "@/lib/audio-journey";
 import {
   planPodcast, podcastCandidatesFromJourney, PODCAST_BREATH_MS,
   PODCAST_INTRO_KEY,
 } from "@/lib/podcast-director";
-import type { PodcastPlayback, RankedPodcastItem } from "@/lib/podcast-director";
+import type { PlaceComposer, PodcastPlayback, RankedPodcastItem } from "@/lib/podcast-director";
+import { clipKey } from "@/lib/clip-key";
+import { localeInfo } from "@/lib/i18n-core";
 import { distance } from "@/lib/geo";
+import type { NarratorClip } from "@/lib/package-types";
 import type { Place, Position, QueueEntry } from "@/lib/types";
 
 type GuideStatus = "off" | "waiting" | "preparing" | "speaking" | "paused" | "unsupported" | "error";
+/** Localized by the audio bar. */
+export type GuideNotice = "device-voice" | "tap-to-continue" | "other-language" | "offline-clip";
 type Playback = {
   moment: AudioMoment;
   controller: AbortController;
@@ -47,9 +52,24 @@ type JourneyContext = {
   simulation: boolean;
   livePosition: Position | null;
   onNarrated?: (place: Place) => void;
+  /** Rider's language. Stations, intros, and composed stories use it. */
+  language?: string;
+  /** How far away a nearby story may be. */
+  nearbyMeters?: number;
+  /** Static networks compose their own scripts and parts (narration-script.ts). */
+  compose?: PlaceComposer | null;
+  /** Pre-generated narrator clips by clipKey(text, language). */
+  clips?: Record<string, NarratorClip>;
+  /** Whether /api/audio may be asked for speech. False for static networks by default. */
+  liveAudio?: boolean;
+  /** Turns a clip URL into a playable one, e.g. from the offline cache. */
+  resolveClip?: (url: string) => Promise<string>;
+  /** Segment rides open with the network and stretch instead of a branch name. */
+  segment?: { network: string; segment: string };
 };
 
 const BREATH_MS = PODCAST_BREATH_MS;
+const PART_GAP_MS = 250;
 
 function gatherSelected(entries: QueueEntry[] | undefined, explicit: SelectedStory[], now: number): SelectedStory[] {
   const merged = new Map<string, SelectedStory>();
@@ -75,6 +95,8 @@ function delay(ms: number, signal: AbortSignal) {
   });
 }
 
+const speechLang = (language: string | undefined) => localeInfo(language ?? "en").speechSynthesisLang;
+
 export function useAudioGuide(
   entries: QueueEntry[] | undefined, nearby: Place[], dismissed: string[] | undefined,
   rideId: number | null, journey: JourneyContext,
@@ -87,7 +109,7 @@ export function useAudioGuide(
   const [currentPlace, setCurrentPlace] = useState<Place | null>(null);
   const [script, setScript] = useState<AudioScript | null>(null);
   const [provider, setProvider] = useState<"elevenlabs" | "device" | null>(null);
-  const [notice, setNotice] = useState<string | null>(null);
+  const [notice, setNotice] = useState<GuideNotice | null>(null);
   const enabled = useRef(false);
   const paused = useRef(false);
   const spoken = useRef(new Set<string>());
@@ -107,6 +129,7 @@ export function useAudioGuide(
   const hidden = useRef(dismissed);
   const context = useRef(journey);
   const stations = useRef(new Map<string, AudioMoment>());
+  const announcements = useRef(new Map<string, AudioMoment>());
   const prepared = useRef(new Map<string, { audioUrl: string; script: AudioScript }>());
   const inflight = useRef(new Map<string, AbortController>());
   const previousPosition = useRef<Position | null>(null);
@@ -121,6 +144,11 @@ export function useAudioGuide(
     moment.station && moment.request.type === "station" ? [{
       key: moment.key, station: moment.station, routeId: moment.request.routeId, expiresAt: moment.expiresAt ?? 0,
     }] : []), []);
+  const pendingAnnouncements = useCallback((): AudioMoment[] => {
+    const now = Date.now();
+    for (const [key, moment] of announcements.current) if ((moment.expiresAt ?? 0) <= now) announcements.current.delete(key);
+    return [...announcements.current.values()];
+  }, []);
 
   const clearPlayback = useCallback(() => {
     const playback = active.current;
@@ -146,7 +174,7 @@ export function useAudioGuide(
   }, []);
 
   const collectStations = useCallback(() => {
-    const { routeId, position, stops } = context.current;
+    const { routeId, position, stops, language } = context.current;
     if (!enabled.current || !position) { previousPosition.current = null; return; }
     for (const stop of stops ?? []) {
       if (!stop) continue;
@@ -154,8 +182,9 @@ export function useAudioGuide(
       if (spoken.current.has(key) || skipped.current.has(key) || stations.current.has(key) ||
         active.current?.moment.key === key) continue;
       if (reachedStation(stop, position, previousPosition.current)) stations.current.set(key, {
-        key, name: stop.name, station: stop, fallback: stationAnnouncement(stop),
-        request: { type: "station", routeId, stationId: stop.id }, expiresAt: Date.now() + 90_000,
+        key, name: stop.name, station: stop, fallback: stationAnnouncement(stop, language ?? "en"),
+        request: { type: "station", routeId, stationId: stop.id, ...(language && language !== "en" ? { locale: language } : {}) },
+        expiresAt: Date.now() + 90_000,
       });
     }
     previousPosition.current = position;
@@ -169,11 +198,18 @@ export function useAudioGuide(
     const selectedAt = selected.find((item) => item.place.id === forcedId)?.selectedAt;
     const candidates = podcastCandidatesFromJourney({
       now, selected, nearby: around.current, stations: pendingStations(),
+      announcements: forcedId ? [] : pendingAnnouncements(),
+      compose: context.current.compose ?? null,
+      language: context.current.language,
     }).filter((candidate) => candidate.moment.key !== occupiedKey &&
       (!forcedId || candidate.moment.place?.id === forcedId));
     return planPodcast({
       now, candidates,
-      geography: { routeId: context.current.routeId || null, position: context.current.position },
+      geography: {
+        routeId: context.current.routeId || null, position: context.current.position,
+        nearbyMeters: context.current.nearbyMeters,
+      },
+      language: context.current.language,
       // The route-specific journey opening replaces the director's generic welcome.
       playedKeys: new Set([...spoken.current, ...skipped.current, PODCAST_INTRO_KEY]),
       playedFacts: facts.current, playedSiteKeys: sites.current,
@@ -183,7 +219,7 @@ export function useAudioGuide(
       lastPlayback: lastPlayback.current, previousTopic: previousTopic.current,
       current,
     });
-  }, [pendingStations, selectedStories]);
+  }, [pendingAnnouncements, pendingStations, selectedStories]);
 
   const rememberAhead = useCallback((chosen: AudioMoment | null) => {
     const plan = editorialPlan(null, chosen?.key ?? null);
@@ -195,6 +231,7 @@ export function useAudioGuide(
 
   const prefetch = useCallback((jobs: { place: Place; context: PlaceAudioContext }[]) => {
     if (!enabled.current || typeof navigator === "undefined" || !navigator.onLine) return;
+    if (context.current.liveAudio === false) return;
     for (const job of jobs) {
       // The provider must never receive a place without a locally sourced story.
       if (!placeAnnouncement(job.place, job.context)) continue;
@@ -226,6 +263,10 @@ export function useAudioGuide(
       return { place, context: placeContext };
     }));
   }, [prefetch, selectedStories]);
+
+  /** A pre-generated clip for these exact words, if one exists. */
+  const clipFor = useCallback((text: string, language: string | undefined) =>
+    context.current.clips?.[clipKey(text, language ?? "en")]?.url, []);
 
   const playNext = useCallback(function next() {
     if (!enabled.current || paused.current || active.current) return;
@@ -261,7 +302,8 @@ export function useAudioGuide(
     if (!introductionStarted.current) {
       introductionStarted.current = true;
       chosen = journeyMoment(context.current.routeId, context.current.routeName,
-        context.current.simulation, context.current.livePosition);
+        context.current.simulation, context.current.livePosition, context.current.language ?? "en",
+        context.current.segment);
       kind = "intro";
     } else if (decision.action === "quiet") {
       if (decision.until && decision.until > Date.now()) {
@@ -285,6 +327,12 @@ export function useAudioGuide(
       };
       kind = "transition";
       directSpeech = true;
+    } else if (decision.action === "announcement") {
+      // Look-ahead cues and warnings: templated, spoken on the device (DECISIONS D10).
+      editorial = decision.item;
+      chosen = editorial.moment;
+      kind = "announcement";
+      directSpeech = true;
     } else if (decision.action === "story" || decision.action === "station") {
       editorial = decision.item;
       chosen = editorial.moment;
@@ -306,8 +354,11 @@ export function useAudioGuide(
       token, editorial, kind, directSpeech,
     };
     active.current = playback;
+    const riderLanguage = context.current.language ?? "en";
+    const momentLanguage = chosen.fallback?.language ?? "en";
+    const languageNotice: GuideNotice | null = momentLanguage !== riderLanguage && kind === "story" ? "other-language" : null;
     setCurrentName(chosen.name); setCurrentPlace(chosen.place ?? null);
-    setScript(chosen.fallback); setProvider(null); setNotice(null); setStatus("preparing");
+    setScript(chosen.fallback); setProvider(null); setNotice(languageNotice); setStatus("preparing");
     const isCurrent = () => isActivePlayback(token, active.current?.token ?? null) && enabled.current;
     const finish = () => {
       if (!isCurrent()) return;
@@ -319,9 +370,11 @@ export function useAudioGuide(
       if (chosen.place) explicit.current = explicit.current.filter((item) =>
         !(item.replay && item.place.id === chosen.place?.id));
       if (chosen.station) stations.current.delete(chosen.key);
+      if (kind === "announcement") announcements.current.delete(chosen.key);
       if (kind === "story") previousTopic.current = editorial?.topic ?? null;
       lastPlayback.current = { key: chosen.key, kind, endedAt, topic: editorial?.topic };
-      clearPlayback(); clearCurrent(); nextDue.current = Date.now() + BREATH_MS;
+      if (chosen.place && kind === "story") context.current.onNarrated?.(chosen.place);
+      clearPlayback(); clearCurrent(); nextDue.current = Date.now() + (kind === "announcement" ? 600 : BREATH_MS);
       setStatus(paused.current ? "paused" : "waiting"); next();
     };
     const showUnavailable = () => {
@@ -341,7 +394,7 @@ export function useAudioGuide(
       if (!nativeAvailable()) { enabled.current = false; clearPlayback(); setStatus("unsupported"); return; }
       if (player.current) { player.current.onended = null; player.current.onerror = null; player.current.onplay = null; player.current.pause(); }
       playback.device = true; playback.ready = true;
-      setProvider("device"); setNotice("Using device voice");
+      setProvider("device"); setNotice((current) => current ?? "device-voice");
       const segments = playbackSegments(text, pendingStations().some((station) =>
         !spoken.current.has(station.key) && !skipped.current.has(station.key)));
       const speakAt = (index: number) => {
@@ -356,7 +409,7 @@ export function useAudioGuide(
             const stationText = stationMoment.fallback?.text ?? "";
             const announcement = new SpeechSynthesisUtterance(stationText);
             playback.utterance = announcement;
-            announcement.lang = "en-US"; announcement.rate = 0.94;
+            announcement.lang = speechLang(stationMoment.fallback?.language); announcement.rate = 0.94;
             announcement.onend = () => {
               if (!isCurrent()) return;
               spoken.current.add(stationMoment.key);
@@ -379,7 +432,7 @@ export function useAudioGuide(
         if (!segment) { finish(); return; }
         const utterance = new SpeechSynthesisUtterance(segment);
         playback.utterance = utterance;
-        utterance.lang = "en-US"; utterance.rate = 0.94;
+        utterance.lang = speechLang(momentLanguage); utterance.rate = 0.94;
         utterance.onend = () => {
           if (!isCurrent()) return;
           if (index + 1 >= segments.length) { finish(); return; }
@@ -403,6 +456,53 @@ export function useAudioGuide(
       playback.continueSentence = speakAt;
       speakAt(0);
     };
+    /** Play the parts of a composed moment in order: narrator clips where they exist, the device voice elsewhere. */
+    const playParts = (parts: AudioPart[]) => {
+      let index = 0;
+      const speakPart = (text: string, done: () => void) => {
+        if (!nativeAvailable()) { done(); return; }
+        playback.device = true; playback.ready = true;
+        setProvider((current) => current ?? "device");
+        const utterance = new SpeechSynthesisUtterance(text);
+        playback.utterance = utterance;
+        utterance.lang = speechLang(momentLanguage); utterance.rate = 0.94;
+        utterance.onend = () => { if (isCurrent()) playback.segmentTimer = setTimeout(done, PART_GAP_MS); };
+        utterance.onerror = () => { if (isCurrent()) done(); };
+        try {
+          window.speechSynthesis.speak(utterance);
+          if (paused.current) { window.speechSynthesis.pause(); setStatus("paused"); }
+          else setStatus("speaking");
+        } catch { if (isCurrent()) done(); }
+      };
+      const playClip = async (url: string, text: string, done: () => void) => {
+        const audio = player.current;
+        if (!audio) { speakPart(text, done); return; }
+        let source = url;
+        try { source = (await context.current.resolveClip?.(url)) ?? url; } catch { /* Network URL. */ }
+        if (!isCurrent()) return;
+        playback.device = false; playback.ready = true; setProvider("elevenlabs");
+        audio.onended = () => { if (isCurrent()) playback.segmentTimer = setTimeout(done, PART_GAP_MS); };
+        audio.onerror = () => { if (isCurrent()) speakPart(text, done); };
+        audio.onplay = () => { if (isCurrent()) setStatus("speaking"); };
+        audio.src = source;
+        if (paused.current) { setStatus("paused"); return; }
+        try { await audio.play(); }
+        catch (error) {
+          if (!isCurrent()) return;
+          if (error instanceof DOMException && error.name === "NotAllowedError") {
+            paused.current = true; setStatus("paused"); setNotice("tap-to-continue");
+          } else speakPart(text, done);
+        }
+      };
+      const step = () => {
+        if (!isCurrent()) return;
+        const part = parts[index++];
+        if (!part) { finish(); return; }
+        if (part.clip) void playClip(part.clip, part.text, step);
+        else speakPart(part.text, step);
+      };
+      step();
+    };
     const playCloud = async (result: { audioUrl: string; script: AudioScript }) => {
       if (!isCurrent()) return;
       const narration = result.script;
@@ -420,26 +520,34 @@ export function useAudioGuide(
       if (!audio) throw new Error("device_fallback");
       audio.onended = finish; audio.onerror = () => deviceVoice(narration.text);
       audio.onplay = () => { if (isCurrent()) setStatus("speaking"); };
-      audio.src = result.audioUrl; playback.ready = true; setProvider("elevenlabs");
+      let source = result.audioUrl;
+      try { source = (await context.current.resolveClip?.(result.audioUrl)) ?? result.audioUrl; } catch { /* Network URL. */ }
+      if (!isCurrent()) return;
+      audio.src = source; playback.ready = true; setProvider("elevenlabs");
       if (paused.current) { setStatus("paused"); return; }
       try { await audio.play(); }
       catch (error) {
         if (!isCurrent()) return;
         if (error instanceof DOMException && error.name === "NotAllowedError") {
-          paused.current = true; setStatus("paused"); setNotice("Tap play to continue");
+          paused.current = true; setStatus("paused"); setNotice("tap-to-continue");
         } else deviceVoice(narration.text);
       }
     };
     void (async () => {
+      if (chosen.parts?.length) { playParts(chosen.parts); return; }
       if (directSpeech) { deviceVoice(chosen.fallback?.text ?? ""); return; }
+      const narration = chosen.fallback;
+      // A pre-generated clip for these exact words plays without asking the server.
+      const staticClip = narration ? clipFor(narration.text, narration.language) : undefined;
+      if (staticClip && narration) { await playCloud({ audioUrl: staticClip, script: narration }); return; }
       const placeContext = chosen.request.type === "place" ? chosen.request.context ?? "nearby" : null;
       const cacheKey = chosen.place && placeContext ? `${chosen.place.id}:${placeContext}` : null;
       const cached = cacheKey ? prepared.current.get(cacheKey) : undefined;
-      const narration = chosen.fallback;
       const timeout = setTimeout(() => playback.controller.abort(),
         chosen.request.type === "journey" ? 18000 : 90000);
       try {
         if (cached) { await playCloud(cached); return; }
+        if (context.current.liveAudio === false) throw new Error("device_fallback");
         if (!navigator.onLine || Date.now() < cloudRetryAt.current) throw new Error("device_fallback");
         let result: { audioUrl: string; script: AudioScript } | null = null;
         for (let attempt = 0; attempt < (chosen.request.type === "journey" ? 4 : 35); attempt++) {
@@ -464,7 +572,7 @@ export function useAudioGuide(
       }
       finally { clearTimeout(timeout); }
     })();
-  }, [clearCurrent, clearPlayback, collectStations, editorialPlan, nativeAvailable, pendingStations, prepareUpcoming, rememberAhead, unavailable]);
+  }, [clearCurrent, clearPlayback, clipFor, collectStations, editorialPlan, nativeAvailable, pendingStations, prepareUpcoming, rememberAhead, unavailable]);
 
   const unlock = useCallback(() => {
     if (!player.current) player.current = new Audio();
@@ -484,7 +592,7 @@ export function useAudioGuide(
   const togglePause = useCallback(() => {
     if (!enabled.current) return;
     if (paused.current) {
-      paused.current = false; setNotice(active.current?.device ? "Using device voice" : null);
+      paused.current = false; setNotice(active.current?.device ? "device-voice" : null);
       const playback = active.current;
       if (playback?.device) {
         const next = deviceSpeechResume(playback.heldSentence ?? null, Boolean(window.speechSynthesis.speaking));
@@ -501,7 +609,7 @@ export function useAudioGuide(
       }
       else if (playback?.ready && player.current) void player.current.play().catch(() => {
         if (active.current !== playback) return;
-        paused.current = true; setStatus("paused"); setNotice("Tap play to continue");
+        paused.current = true; setStatus("paused"); setNotice("tap-to-continue");
       });
       else if (playback) setStatus("preparing");
       else playNext();
@@ -517,6 +625,7 @@ export function useAudioGuide(
     if (skippedMoment) {
       skipped.current.add(skippedMoment.key);
       if (skippedMoment.station) stations.current.delete(skippedMoment.key);
+      announcements.current.delete(skippedMoment.key);
       if (skippedMoment.place) explicit.current = explicit.current.filter((item) =>
         !(item.replay && item.place.id === skippedMoment.place?.id));
     }
@@ -561,6 +670,16 @@ export function useAudioGuide(
       nextDue.current = 0; playNext();
     } else prepareUpcoming(active.current?.moment.place?.id ?? null);
   }, [playNext, prepareUpcoming, rememberAhead]);
+  /** Queue a templated, time-sensitive line (look-ahead cue, warning). Ignored while the guide is off. */
+  const announce = useCallback((moment: AudioMoment) => {
+    if (!enabled.current || spoken.current.has(moment.key) || skipped.current.has(moment.key)) return;
+    announcements.current.set(moment.key, moment);
+    if (!paused.current && !active.current) { nextDue.current = Math.min(nextDue.current, Date.now()); playNext(); }
+  }, [playNext]);
+  /** Drop a queued announcement that no longer applies (its place passed). */
+  const withdraw = useCallback((key: string) => {
+    announcements.current.delete(key);
+  }, []);
   const retryStory = useCallback(() => {
     if (!unavailable) return;
     spoken.current.delete(`place:${unavailable.id}`);
@@ -579,7 +698,7 @@ export function useAudioGuide(
     enabled.current = false; paused.current = false; interrupt.current = null;
     spoken.current.clear(); facts.current.clear(); sites.current.clear(); skipped.current.clear();
     introductionStarted.current = false; lastPlayback.current = null; previousTopic.current = null;
-    explicit.current = []; stations.current.clear();
+    explicit.current = []; stations.current.clear(); announcements.current.clear();
     previousPosition.current = null; nextDue.current = 0; dropPrefetch(); clearPlayback();
     queueMicrotask(() => { clearCurrent(); setNextName(null); setQueued(null); setUnavailable(null); setStatus("off"); });
   }, [rideId, clearPlayback, clearCurrent, dropPrefetch]);
@@ -601,7 +720,7 @@ export function useAudioGuide(
   useEffect(() => {
     if (!("mediaSession" in navigator)) return;
     const session = navigator.mediaSession;
-    session.metadata = currentName ? new MediaMetadata({ title: currentName, artist: "Train Discovery", album: "Your LIRR ride" }) : null;
+    session.metadata = currentName ? new MediaMetadata({ title: currentName, artist: "Gaze", album: context.current.routeName || "Gaze" }) : null;
     session.playbackState = status === "speaking" ? "playing" : status === "paused" ? "paused" : "none";
     const actions: [MediaSessionAction, () => void][] = [
       ["play", () => paused.current ? togglePause() : start()], ["pause", () => { if (!paused.current) togglePause(); }],
@@ -618,6 +737,6 @@ export function useAudioGuide(
   return {
     status, currentName, nextName, queuedName: queued?.name ?? null, unavailableName: unavailable?.name ?? null,
     currentPlace, currentKind: script?.kind ?? null, script, provider, notice,
-    start, stop, togglePause, skip, replay, playNow, schedule, retryStory,
+    start, stop, togglePause, skip, replay, playNow, schedule, retryStory, announce, withdraw,
   };
 }

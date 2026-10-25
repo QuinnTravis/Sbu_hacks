@@ -1,0 +1,570 @@
+{
+  "app": {
+    "name": "Gaze",
+    "tagline": "Apunta. Descubre. Guarda.",
+    "skip": "Saltar al contenido",
+    "home": "Inicio de Gaze",
+    "loading": "Cargando…",
+    "retry": "Reintentar",
+    "close": "Cerrar",
+    "simulated": "Simulado",
+    "estimated": "Estimado"
+  },
+  "header": {
+    "openDev": "Abrir panel de desarrollo",
+    "closeDev": "Cerrar panel de desarrollo",
+    "devTitle": "Panel de desarrollo (`)",
+    "offline": "Sin conexión",
+    "about": "Acerca de"
+  },
+  "nav": {
+    "label": "Navegación principal",
+    "ride": "Viaje",
+    "discoveries": "Descubrimientos",
+    "bookmarks": "Marcadores",
+    "settings": "Ajustes"
+  },
+  "home": {
+    "demoStart": "Iniciar viaje de demostración desde {place}",
+    "demoLabel": "Demo de {place}",
+    "useDemo": "Usar la demo de {place}",
+    "findNearMe": "Buscar rutas cerca de mí",
+    "mapLabel": "Mapa interactivo de rutas de {network}",
+    "collapse": "Contraer la lista de rutas",
+    "expand": "Ampliar la lista de rutas",
+    "routesNear": "Rutas cerca de {place}",
+    "routesNearYou": "Rutas cerca de ti",
+    "chooseRoute": "Elige una ruta",
+    "allRoutes": "Todas las rutas",
+    "nearby": "Cercanas",
+    "search": "Buscar rutas",
+    "searchLabel": "Buscar rutas de {network}",
+    "clearSearch": "Borrar la búsqueda",
+    "noMatch": "Ninguna ruta coincide con «{query}».",
+    "away": "a {distance}",
+    "notNearby": "No está cerca",
+    "start": "Iniciar viaje",
+    "routesGroup": "Rutas de {network}",
+    "fullExperience": "Experiencia completa",
+    "basicExperience": "Solo estaciones",
+    "stops": "De {from} a {to}",
+    "chooseNetwork": "Red",
+    "discoveriesEmpty": "Tus descubrimientos aparecen aquí durante el viaje",
+    "discoveriesEmptyHint": "Apunta a un lugar o escucha su historia para añadirlo. Los marcadores se conservan después del viaje.",
+    "startDiscovering": "Empezar a descubrir",
+    "openBookmarks": "Abrir marcadores"
+  },
+  "gps": {
+    "denied": "La ubicación está bloqueada. Actívala en los ajustes del navegador y vuelve a intentarlo.",
+    "inaccurate": "El GPS es impreciso. El descubrimiento se reanudará cuando mejore la señal.",
+    "requesting": "Buscando tu tren…",
+    "unavailable": "Ubicación no disponible. Acércate a una ventana y vuelve a intentarlo.",
+    "idle": "Activa la ubicación y la brújula para descubrir.",
+    "lost": "Se perdió la señal GPS. Esperando una ubicación actualizada."
+  },
+  "compass": {
+    "denied": "El acceso a la brújula está bloqueado. Activa Movimiento y orientación en los ajustes del navegador.",
+    "flat": "Sostén el teléfono en vertical y apunta su parte trasera hacia un lugar.",
+    "inaccurate": "Hay interferencias en la brújula. Aleja el teléfono del metal.",
+    "unavailable": "Este navegador no tiene una brújula utilizable. Prueba Safari en iPhone o Chrome en Android.",
+    "waitingReading": "Esperando una lectura de brújula absoluta. Sostén el teléfono en vertical.",
+    "waiting": "Brújula en espera",
+    "phone": "Dirección del teléfono",
+    "simulated": "Rumbo simulado",
+    "waitingPhone": "Esperando la brújula del teléfono",
+    "phoneLabel": "El teléfono apunta a {degrees} grados",
+    "simulatedLabel": "Rumbo simulado de {degrees} grados",
+    "holdUpright": "Sostén el teléfono en vertical",
+    "simulatedAim": "Puntería simulada",
+    "cardinal": {
+      "N": "N",
+      "NE": "NE",
+      "E": "E",
+      "SE": "SE",
+      "S": "S",
+      "SW": "SO",
+      "W": "O",
+      "NW": "NO"
+    }
+  },
+  "ride": {
+    "replay": "Simulación",
+    "discovering": "Descubriendo",
+    "paused": "En pausa",
+    "near": "Cerca de {station}",
+    "waitingLocation": "Esperando la ubicación",
+    "endConfirm": "¿Borrar este viaje y su lista?",
+    "end": "Terminar viaje",
+    "keepRiding": "Seguir viajando",
+    "catalogFailed": "No se pudieron cargar los lugares.",
+    "pointPanel": "Apunta con tu teléfono",
+    "simPhone": "Tren simulado · brújula del teléfono",
+    "simJoystick": "Tren simulado · joystick",
+    "simAuto": "Ubicación y rumbo simulados",
+    "pauseReplay": "Pausar la simulación",
+    "playReplay": "Reanudar la simulación",
+    "enableSensors": "Activar sensores",
+    "retrySensors": "Reintentar sensores",
+    "sensorsActive": "Ubicación y brújula activas",
+    "flatSim": "El teléfono simulado está plano. Aumenta la inclinación para apuntar hacia fuera.",
+    "gpsJoystick": "GPS real · rumbo simulado con joystick",
+    "offRoute": "Parece que estás lejos de esta ruta. Revisa la ruta elegida.",
+    "loadingPlaces": "Cargando lugares…",
+    "placesUnavailable": "Lugares no disponibles",
+    "placesNearby": {
+      "one": "{count} lugar cerca",
+      "other": "{count} lugares cerca"
+    },
+    "cached": "En caché",
+    "pausedLoading": "En pausa: cargando lugares…",
+    "pausedUnavailable": "En pausa: no se cargaron los lugares",
+    "pausedEmpty": "En pausa: no hay lugares con fuentes al alcance.",
+    "noSourced": "No hay lugares con fuentes al alcance.",
+    "stationsOnly": "En este tramo solo se anuncian estaciones. Las Rocosas tienen la experiencia completa.",
+    "speedSimulated": "{speed} km/h"
+  },
+  "chooser": {
+    "label": "Lugares en esta dirección",
+    "empty": "No hay nada en esta dirección.",
+    "row": "{name}, {distance}"
+  },
+  "queue": {
+    "title": "Mis descubrimientos",
+    "thisRide": "Este viaje",
+    "saved": "Marcadores",
+    "queueLabel": "Tu lista de descubrimientos",
+    "savedLabel": "Lugares marcados",
+    "failed": "No se cargaron los lugares",
+    "loading": "Cargando lugares…",
+    "emptyTitle": "Tu próximo descubrimiento está ahí fuera.",
+    "emptyHint": "Apunta tu teléfono a un lugar cercano. Su historia se queda aquí hasta que la descartes.",
+    "stayHint": "Los descubrimientos se quedan aquí hasta que los descartes.",
+    "nothingSaved": "Todavía no hay marcadores.",
+    "live": {
+      "one": "{count} descubrimiento en tu lista. El último: {name}.",
+      "other": "{count} descubrimientos en tu lista. El último: {name}."
+    },
+    "liveEmpty": "Todavía no hay descubrimientos."
+  },
+  "storage": {
+    "failed": "El almacenamiento del dispositivo está lleno o bloqueado. Mantén esta pestaña abierta para conservar tu lista y tus marcadores."
+  },
+  "card": {
+    "loadingPhoto": "Cargando foto",
+    "photoUnavailable": "Foto no disponible",
+    "discard": "Descartar {name}",
+    "whenFound": "a {distance} al encontrarlo",
+    "evidenceChecked": "Fuentes comprobadas",
+    "playStory": "Escuchar historia",
+    "listenTo": "Escuchar {name}",
+    "summary": "Resumen",
+    "noSummary": "Todavía no hay un resumen con fuentes.",
+    "claimSource": "Fuente de la afirmación {index}",
+    "interestingFact": "Dato curioso",
+    "factSource": "Fuente del dato curioso",
+    "excerptLabel": "Fragmento de Wikipedia · sin verificar",
+    "readSource": "Leer la fuente",
+    "listenSource": "Escuchar la fuente",
+    "listenSourceFor": "Escuchar la fuente de {name}",
+    "basicInfo": "Información básica",
+    "basicHint": "De registros del mapa y de Wikidata, no es una historia comprobada.",
+    "elevation": "Altitud",
+    "population": "Población",
+    "detail": {
+      "start_date": "Fecha registrada",
+      "architect": "Arquitecto",
+      "operator": "Operador"
+    },
+    "sources": "Fuentes y créditos",
+    "searchExcerpt": "Fragmento de búsqueda de Google · enlace a la página de origen",
+    "retrieved": "{license} · consultado el {date}",
+    "osm": "Colaboradores de OpenStreetMap · ODbL",
+    "aiCheck": "Comprobación automática de fuentes · {date}. Que una fuente lo respalde no garantiza la exactitud histórica.",
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "position": "{index} de {total}",
+    "lookFor": "Busca",
+    "localized": "Traducido de fuentes en inglés comprobadas.",
+    "englishOnly": "Historia disponible solo en inglés.",
+    "routeKm": "Km {km} del viaje",
+    "side": "Lado"
+  },
+  "categories": {
+    "Heritage": "Patrimonio",
+    "Nature": "Naturaleza",
+    "Landmark": "Punto de interés",
+    "Former use": "Uso antiguo",
+    "Railway history": "Historia ferroviaria",
+    "Station": "Estación",
+    "Infrastructure": "Infraestructura",
+    "History": "Historia",
+    "Railroad heritage": "Patrimonio ferroviario",
+    "Canyon": "Cañón",
+    "River": "Río",
+    "Mountain": "Montaña",
+    "Town": "Pueblo"
+  },
+  "audio": {
+    "label": "Guía de audio",
+    "start": "Iniciar audioguía",
+    "unsupported": "Este navegador no admite audio.",
+    "error": "El audio se detuvo. Vuelve a intentarlo.",
+    "paused": "En pausa",
+    "preparing": "Preparando {name}",
+    "sourceExcerpt": "{name} · fragmento de la fuente",
+    "basicInfo": "{name} · información básica",
+    "waiting": "Esperando una historia cercana",
+    "save": "Marcar {name}",
+    "resume": "Reanudar la audioguía",
+    "pause": "Pausar la audioguía",
+    "skip": "Saltar historia",
+    "stop": "Apagar la audioguía",
+    "queued": "en cola",
+    "next": "Siguiente ·",
+    "playNow": "Reproducir ya",
+    "unavailable": "Todavía no hay una historia con fuentes para {name}.",
+    "deviceVoice": "Usando la voz del dispositivo",
+    "tapToContinue": "Toca reproducir para continuar",
+    "transcript": "Transcripción y fuentes",
+    "englishFallback": "Narración en inglés; esta historia aún no tiene traducción al {language}.",
+    "offlineCached": "Reproduciendo la descarga sin conexión"
+  },
+  "narration": {
+    "station": "Próxima estación: {name}.",
+    "lead": {
+      "pointed": "Acabas de apuntar a {name}.",
+      "pointedEarlier": "Ese lugar al que apuntaste antes, {name}.",
+      "replay": "Otra vez, {name}.",
+      "nearby": "{name}."
+    },
+    "noun": {
+      "building": "edificio",
+      "landmark": "lugar",
+      "station": "estación",
+      "place": "lugar"
+    },
+    "fromWikipedia": "Según Wikipedia:",
+    "journey": {
+      "rhythm": "Las vías marcan el ritmo. El mundo de fuera pone las historias.",
+      "simulated": "Este es un viaje simulado.",
+      "welcome": "Te damos la bienvenida a bordo.",
+      "route": "Exploramos la ruta {route}.",
+      "segment": "Viajamos en el {network}. Este tramo: {segment}.",
+      "close": "Por el camino descubriremos las historias de los lugares que pasamos."
+    },
+    "transition": "Sigamos otro hilo.",
+    "welcome": "Te damos la bienvenida a bordo. Por el camino descubriremos algunas historias.",
+    "intro": {
+      "0": "{name}.",
+      "1": "A continuación, {name}.",
+      "2": "Aquí está {name}.",
+      "3": "Ahora, {name}.",
+      "4": "Llega {name}."
+    },
+    "introSide": {
+      "left": "A tu izquierda, {name}.",
+      "right": "A tu derecha, {name}.",
+      "ahead": "Justo delante, {name}.",
+      "both": "A nuestro alrededor, {name}."
+    },
+    "context": {
+      "afterTunnel": "Ya salimos del túnel."
+    },
+    "callback": {
+      "distance": "Llevamos {distance} desde {place}.",
+      "count": "Ya van {count} historias en este viaje."
+    },
+    "lookFor": {
+      "left": "Mira a tu izquierda: {thing}.",
+      "right": "Mira a tu derecha: {thing}.",
+      "ahead": "Mira hacia delante: {thing}.",
+      "both": "Mira a ambos lados: {thing}.",
+      "unknown": "Busca {thing}."
+    },
+    "basic": {
+      "lead": "{name}, {type}.",
+      "elevation": "Altitud: {value}.",
+      "population": "Población: {value}."
+    },
+    "cue": {
+      "left": "A tu izquierda en unos {eta}: {name}.",
+      "right": "A tu derecha en unos {eta}: {name}.",
+      "ahead": "Delante en unos {eta}: {name}.",
+      "both": "A ambos lados en unos {eta}: {name}.",
+      "unknown": "En unos {eta}: {name}."
+    },
+    "cueSaved": "Lo guardaste en marcadores.",
+    "deadZone": "Se espera que no haya señal en unos {eta}, durante unos {duration}, cerca de {area}.",
+    "air": "Calidad del aire más adelante: {category}, AQI {aqi}, en unos {eta}."
+  },
+  "basicType": {
+    "town": "un pueblo",
+    "city": "una ciudad",
+    "peak": "una cumbre",
+    "pass": "un puerto de montaña",
+    "ridge": "una cresta",
+    "cliff": "un acantilado",
+    "arch": "un arco de roca",
+    "rock": "una formación rocosa",
+    "river": "un río",
+    "canyon": "un cañón",
+    "lake": "un lago",
+    "spring": "un manantial",
+    "tunnel": "un túnel ferroviario",
+    "station": "una estación",
+    "railroad": "un lugar ferroviario",
+    "bridge": "un puente ferroviario",
+    "dam": "una presa",
+    "park": "un área protegida",
+    "baths": "unos baños",
+    "museum": "un museo",
+    "historic": "un sitio histórico",
+    "hotel": "un hotel histórico",
+    "building": "un edificio",
+    "viewpoint": "un mirador"
+  },
+  "side": {
+    "left": "A tu izquierda",
+    "right": "A tu derecha",
+    "ahead": "Delante",
+    "both": "A ambos lados",
+    "unknown": "Junto a la vía",
+    "short": {
+      "left": "Izquierda",
+      "right": "Derecha",
+      "ahead": "Delante",
+      "both": "Ambos"
+    }
+  },
+  "lookAhead": {
+    "region": "Próximamente",
+    "eta": "En unos {eta}",
+    "now": "Ahora",
+    "whenMoving": "Cuando avancemos",
+    "saved": "Lo guardaste",
+    "open": "Abrir {name}",
+    "announce": "{side} en unos {eta}: {name}",
+    "announceNow": "Ahora {side}: {name}"
+  },
+  "advisor": {
+    "title": "El mejor lado para sentarte",
+    "open": "El mejor lado para sentarte",
+    "better": {
+      "left": "Lado izquierdo",
+      "right": "Lado derecho",
+      "even": "Cualquier lado"
+    },
+    "highlights": {
+      "one": "{count} punto destacado",
+      "other": "{count} puntos destacados"
+    },
+    "versus": "{side}: {count}",
+    "evenHint": "Los puntos destacados están repartidos por igual.",
+    "direction": "Sentido",
+    "toward": "Hacia {stop}",
+    "facingNote": "Según el sentido de la marcha. Si viajas de espaldas, los lados se invierten.",
+    "facing": "Asiento",
+    "timeIn": "a {time} del inicio",
+    "atStart": "al principio",
+    "byTimetable": "Los tiempos siguen el horario de Amtrak.",
+    "unknownDirection": "No se conoce el sentido de la marcha. Los lados aparecerán cuando el tren avance.",
+    "balance": "Lado con más interés a lo largo del viaje",
+    "nextWindow": "Próximos 30 min: {side}",
+    "nextWindowEven": "Próximos 30 min: cualquier lado",
+    "start": "Iniciar viaje",
+    "none": "No hay puntos destacados en este tramo."
+  },
+  "bookmarks": {
+    "title": "Marcadores",
+    "add": "Marcar {name}",
+    "remove": "Quitar el marcador de {name}",
+    "bookmark": "Marcar",
+    "bookmarked": "Marcado",
+    "empty": "Todavía no hay marcadores",
+    "emptyHint": "Marca un lugar desde su ficha, o antes de llegar.",
+    "status": {
+      "upcoming": "Próximo",
+      "passed": "Pasado",
+      "discovered": "Descubierto"
+    },
+    "in": "en unos {eta}",
+    "export": "Exportar",
+    "copy": "Copiar como texto",
+    "download": "Descargar JSON",
+    "copied": "Copiado",
+    "copyFailed": "No se pudo copiar. Usa Descargar.",
+    "removeAction": "Quitar",
+    "open": "Abrir {name}",
+    "otherNetwork": "Otras rutas",
+    "kmMark": "Km {km}",
+    "count": {
+      "one": "{count} marcador",
+      "other": "{count} marcadores"
+    }
+  },
+  "settings": {
+    "title": "Ajustes",
+    "language": "Idioma",
+    "facing": "Orientación del asiento",
+    "forward": "Mirando hacia delante",
+    "backward": "Mirando hacia atrás",
+    "facingHint": "Las indicaciones de izquierda y derecha se invierten si viajas de espaldas.",
+    "sound": "Narración",
+    "soundHint": "Contar historias y avisos durante el viaje.",
+    "voice": "Preguntas por voz",
+    "voiceHint": "Mostrar el botón de pulsar para hablar durante el viaje.",
+    "strips": "Franjas de la ruta",
+    "on": "Sí",
+    "off": "No",
+    "about": "Acerca de y privacidad",
+    "credits": "Créditos y licencias",
+    "offline": "Descargas sin conexión",
+    "offlineReady": {
+      "one": "{count} lugar listo sin conexión",
+      "other": "{count} lugares listos sin conexión"
+    },
+    "clearOffline": "Borrar descargas"
+  },
+  "history": {
+    "title": "Antes y ahora",
+    "past": "Antes",
+    "present": "Hoy",
+    "showPast": "Ver antes",
+    "showPresent": "Ver hoy",
+    "slider": "Comparar {year} con hoy",
+    "pastOnly": "Foto histórica",
+    "credit": "{credit} · {license}",
+    "source": "Fuente",
+    "circa": "c. {year}"
+  },
+  "connectivity": {
+    "warning": "Se espera que no haya señal en unos {eta}, durante unos {duration}",
+    "now": "Se espera que no haya señal durante unos {duration}",
+    "area": "Zona de {area}",
+    "estimated": "Estimado",
+    "confidence": {
+      "high": "Confianza alta",
+      "medium": "Confianza media",
+      "low": "Confianza baja"
+    },
+    "reason": {
+      "tunnel": "Túnel",
+      "canyon": "Cañón",
+      "remote": "Tramo remoto",
+      "observed": "Aquí se perdió la señal"
+    },
+    "places": {
+      "one": "{count} lugar en este tramo",
+      "other": "{count} lugares en este tramo"
+    },
+    "passWithoutSignal": "Pasarás por estos lugares sin señal:",
+    "download": "Descargar las próximas 2 horas",
+    "downloading": "Descargando {done} de {total}",
+    "downloaded": "Listo sin conexión: {done} de {total}",
+    "ready": "Listo sin conexión",
+    "needsSignal": "Necesita señal",
+    "strip": "Señal",
+    "estimatedPosition": "Posición estimada",
+    "lowStorage": "Queda poco espacio; se omiten los modelos 3D.",
+    "failed": "Algunas descargas fallaron. Se reintentarán con señal."
+  },
+  "air": {
+    "title": "Calidad del aire",
+    "aqi": "AQI {value}",
+    "category": {
+      "good": "Buena",
+      "moderate": "Moderada",
+      "usg": "Dañina para grupos sensibles",
+      "unhealthy": "Dañina",
+      "veryUnhealthy": "Muy dañina",
+      "hazardous": "Peligrosa"
+    },
+    "pollutant": {
+      "pm2_5": "PM2,5",
+      "pm10": "PM10",
+      "ozone": "Ozono",
+      "us_aqi": "Mixto"
+    },
+    "mostly": "Sobre todo {pollutant}",
+    "asOf": "a las {time}",
+    "alert": "Calidad del aire más adelante: {category} (AQI {aqi}) en unos {eta}",
+    "simulated": "Simulado",
+    "simulatedScenario": "Escenario de humo simulado",
+    "disclaimer": "Solo informativo.",
+    "airnow": "Consulta AirNow",
+    "source": "Datos: Open-Meteo (CAMS)",
+    "unavailable": "Calidad del aire no disponible",
+    "strip": "Aire"
+  },
+  "layers": {
+    "label": "Franjas de la ruta",
+    "pois": "Lugares",
+    "air": "Aire",
+    "signal": "Señal"
+  },
+  "progress": {
+    "label": "Progreso del viaje",
+    "position": "{done} de {total}",
+    "you": "Estás aquí"
+  },
+  "voice": {
+    "ask": "Preguntar",
+    "open": "Hacer una pregunta",
+    "close": "Cerrar preguntas",
+    "hold": "Mantén pulsado para hablar",
+    "tap": "Toca para hablar",
+    "stopRecording": "Detener y enviar",
+    "listening": "Escuchando…",
+    "thinking": "Pensando…",
+    "speaking": "Hablando…",
+    "placeholder": "Pregunta por lo que hay fuera",
+    "send": "Enviar",
+    "notice": "Tu grabación se envía al proveedor de voz para transcribirla y no se guarda.",
+    "needsSignal": "Necesita señal. Tu pregunta se guarda y se enviará cuando vuelva la señal.",
+    "queued": "Esperando señal: {question}",
+    "noAnswer": "No encontré una respuesta con fuentes para eso.",
+    "offerBookmark": "Marcar este lugar en su lugar",
+    "sources": "Fuentes",
+    "micDenied": "El micrófono está bloqueado. Escribe tu pregunta.",
+    "unavailable": "La entrada de voz no está disponible. Escribe tu pregunta.",
+    "you": "Tú",
+    "reply": {
+      "paused": "En pausa.",
+      "resumed": "Seguimos.",
+      "skipped": "Saltada.",
+      "replay": "Lo repito.",
+      "stopped": "Narración apagada.",
+      "bookmarked": "{name} marcado.",
+      "nothingToBookmark": "Ahora no hay nada que marcar.",
+      "comingUp": "Próximamente: {name}, {side}, en unos {eta}.",
+      "comingUpNoEta": "Próximamente: {name}, {side}.",
+      "nothingAhead": "Ahora no hay nada destacado por delante.",
+      "side": "Desde aquí, {side} tiene más puntos destacados: {count} frente a {other}.",
+      "sideEven": "Desde aquí, los dos lados están igualados.",
+      "deadZone": "El próximo tramo sin señal empieza en unos {eta} y dura unos {duration}.",
+      "noDeadZone": "No se esperan tramos sin señal más adelante.",
+      "language": "Cambiado a {language}."
+    }
+  },
+  "models": {
+    "chip": "3D",
+    "explore": "Explorar en 3D",
+    "reset": "Restablecer vista",
+    "close": "Cerrar la vista 3D",
+    "procedural": "Modelo simplificado a partir de datos del mapa",
+    "illustrative": "Reconstrucción ilustrativa",
+    "credit": "Modelo: {author} · {license}",
+    "streetView": "Abrir en Street View",
+    "hint": "Arrastra para girar; pellizca o desplaza para acercar. Las flechas giran; + y − acercan.",
+    "loading": "Cargando modelo 3D…",
+    "unavailable": "Modelo 3D no disponible",
+    "label": "Modelo 3D de {name}"
+  },
+  "credits": {
+    "title": "Créditos y licencias",
+    "back": "Volver"
+  },
+  "dev": {
+    "panel": "Controles de desarrollo"
+  }
+}

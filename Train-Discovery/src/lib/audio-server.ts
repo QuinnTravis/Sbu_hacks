@@ -1,16 +1,19 @@
 import "server-only";
 import { createHash, createHmac, randomBytes } from "node:crypto";
-import rail from "../../public/data/lirr.json";
 import { database } from "./supabase";
+import { findRoute, railFor, staticPackageFiles, staticPlace } from "./network-data";
+import { localeInfo } from "./i18n-core";
+import { englishBody } from "./narration-script";
 import { audioEvidence, audioNarration } from "./narration";
 import { verifyPlace } from "./verification";
-import { placeAnnouncement, stationAnnouncement } from "./audio-journey";
+import { journeyOpening, placeAnnouncement, stationAnnouncement } from "./audio-journey";
 import { createJourneyIntroduction, getJourneyContext } from "./journey-context";
 import type { JourneyContextInput, JourneyIntroduction } from "./journey-context";
 import {
   AUDIO_REVISION, DEFAULT_TTS_MODEL, DEFAULT_VOICE_ID, STORY_VOICE_SETTINGS,
 } from "./audio-prompts";
 import type { AudioRequest, AudioScript, PlaceAudioContext } from "./audio-journey";
+import type { PoiContent } from "./package-types";
 import type { Place } from "./types";
 
 const BUCKET = "journey-audio";
@@ -79,20 +82,54 @@ async function cachedIntroduction(
   finally { weatherPending.delete(windowKey); }
 }
 
-function journeyScript(routeName: string, simulation: boolean, intro: JourneyIntroduction): AudioScript {
+function journeyScript(
+  routeName: string,
+  simulation: boolean,
+  intro: JourneyIntroduction,
+  railSource: { title: string; url: string; license: string },
+  locale: string,
+): AudioScript {
   return {
     name: `Welcome to ${routeName}`,
-    text: `The tracks set the rhythm. The world outside supplies the stories. ${simulation ? "This is a simulated ride. " : ""}${intro.text}`,
+    // Weather comes from an English forecast, so other languages use the plain opening.
+    text: locale === "en"
+      ? `The tracks set the rhythm. The world outside supplies the stories. ${simulation ? "This is a simulated ride. " : ""}${intro.text}`
+      : journeyOpening(routeName, simulation, locale),
     kind: "announcement",
     sources: [
-      { title: "MTA Long Island Rail Road GTFS", url: rail.source, license: "MTA published transit data" },
-      ...intro.sources.map(({ title, url }) => ({ title, url, license: "U.S. government forecast" })),
+      railSource,
+      ...(locale === "en" ? intro.sources.map(({ title, url }) => ({ title, url, license: "U.S. government forecast" })) : []),
     ],
+    language: locale,
+  };
+}
+
+/** Static networks: the verified story body alone, in the requested language. */
+function storyBodyScript(place: Place, locale: string, content: PoiContent | undefined): AudioScript {
+  const english = englishBody(place);
+  const text = locale !== "en" && content?.transcript ? content.transcript : english?.text;
+  if (!text) throw new AudioError("story_unavailable", 422);
+  return {
+    name: place.name,
+    text,
+    kind: "verified",
+    sources: place.evidence.map(({ title, url, license }) => ({ title, url, license })),
+    language: locale !== "en" && content?.transcript ? locale : "en",
   };
 }
 
 async function resolve(input: AudioRequest) {
+  if (input.type === "announcement") throw new AudioError("invalid_request", 400);
+  const locale = localeInfo(input.locale ?? "en").code;
   if (input.type === "place") {
+    const fromPackage = staticPlace(input.placeId);
+    if (fromPackage) {
+      const content = staticPackageFiles(fromPackage.routeId)?.content[locale]?.[input.placeId];
+      return {
+        revision: [fromPackage.place, "story-body", locale, content?.transcript ?? null],
+        script: async () => storyBodyScript(fromPackage.place, locale, content),
+      };
+    }
     const { data, error } = await database().from("places").select("data").eq("id", input.placeId).single();
     if (error || !data) throw new AudioError("place_not_found", 404);
     const place = data.data as Place;
@@ -100,38 +137,44 @@ async function resolve(input: AudioRequest) {
     return { revision: [place, context], script: () => placeScript(place, context) };
   }
   if (input.type === "journey") {
-    const route = rail.routes.find((candidate) => candidate.id === input.routeId);
-    if (!route) throw new AudioError("route_not_found", 404);
+    const found = findRoute(input.routeId);
+    if (!found) throw new AudioError("route_not_found", 404);
+    const { route, networkId } = found;
+    const rail = railFor(networkId);
     // This defense also applies to direct server calls which bypass the route schema.
     if (typeof input.simulation !== "boolean" ||
       (input.lat === undefined) !== (input.lon === undefined) ||
       (input.lat !== undefined && (!Number.isFinite(input.lat) || input.lat < -90 || input.lat > 90)) ||
       (input.lon !== undefined && (!Number.isFinite(input.lon) || input.lon < -180 || input.lon > 180)))
       throw new AudioError("invalid_request", 400);
-    const windowKey = weatherWindow(input);
+    const windowKey = locale === "en" ? weatherWindow(input) : null;
     const context: JourneyContextInput = {
       routeName: route.name,
       includeWeather: Boolean(windowKey),
       coordinates: windowKey ? { lat: input.lat!, lon: input.lon! } : null,
     };
+    const railSource = networkId === "lirr"
+      ? { title: "MTA Long Island Rail Road GTFS", url: rail.source, license: "MTA published transit data" }
+      : { title: "Amtrak GTFS", url: rail.source, license: "Published by Amtrak" };
     return {
-      revision: [rail.version, route.id, input.simulation, windowKey],
-      script: async () => journeyScript(route.name, input.simulation, await cachedIntroduction(context, windowKey)),
+      revision: [rail.version, route.id, input.simulation, windowKey, locale],
+      script: async () => journeyScript(route.name, input.simulation, await cachedIntroduction(context, windowKey), railSource, locale),
     };
   }
-  const route = rail.routes.find((route) => route.id === input.routeId);
-  const stop = route?.stops.find((stop) => stop.id === input.stationId);
-  if (!stop) throw new AudioError("station_not_found", 404);
+  const found = findRoute(input.routeId);
+  const stop = found?.route.stops.find((stop) => stop.id === input.stationId);
+  if (!found || !stop) throw new AudioError("station_not_found", 404);
   return {
-    revision: [rail.version, stop],
-    script: async (): Promise<AudioScript> => stationAnnouncement(stop),
+    revision: [railFor(found.networkId).version, stop, locale],
+    script: async (): Promise<AudioScript> => stationAnnouncement(stop, locale),
   };
 }
 
 export async function journeyAudio(input: AudioRequest, request: Request) {
   if (!process.env.ELEVENLABS_API_KEY || !process.env.SUPABASE_SECRET_KEY)
     throw new AudioError("audio_not_configured", 503);
-  const voice = process.env.ELEVENLABS_VOICE_ID || DEFAULT_VOICE_ID;
+  const voice = (input.type !== "announcement" && localeInfo(input.locale ?? "en").ttsVoiceId) ||
+    process.env.ELEVENLABS_VOICE_ID || DEFAULT_VOICE_ID;
   const model = process.env.ELEVENLABS_MODEL || DEFAULT_TTS_MODEL;
   const content = await resolve(input);
   const key = createHash("sha256").update(JSON.stringify([

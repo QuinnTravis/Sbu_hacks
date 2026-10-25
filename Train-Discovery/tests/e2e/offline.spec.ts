@@ -13,7 +13,7 @@ test("installed shell and downloaded journey reopen offline", async ({
     viewport: { width: 390, height: 844 },
   });
   const page = await context.newPage();
-  await page.goto("/");
+  await page.goto("/?network=lirr");
   await page.evaluate(async () => {
     await navigator.serviceWorker.ready;
   });
@@ -25,7 +25,7 @@ test("installed shell and downloaded journey reopen offline", async ({
   await expect
     .poll(async () =>
       page.evaluate(async () =>
-        (await caches.open("train-discovery-v2-journeys"))
+        (await caches.open("gaze-v4-journeys"))
           .keys()
           .then((keys) => keys.length),
       ),

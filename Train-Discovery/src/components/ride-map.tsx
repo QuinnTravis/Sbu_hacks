@@ -274,18 +274,20 @@ function RideMapCanvas({
   paths,
   color,
   label,
+  radius,
 }: {
   position: Coordinate;
   heading: number | null;
   paths: [number, number][][];
   color?: string;
   label: string;
+  radius?: number;
 }) {
   const frame = useRef<HTMLDivElement>(null);
   const credit = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MapLibreMap | null>(null);
   const basemap = useQuietBasemap();
-  const [zoom, setZoom] = useState(() => pointingConeZoom(position.lat, 320));
+  const [zoom, setZoom] = useState(() => pointingConeZoom(position.lat, 320, radius));
   const [unavailable, setUnavailable] = useState(false);
   useEffect(() => {
     const node = frame.current;
@@ -295,14 +297,14 @@ function RideMapCanvas({
       const rect = node.getBoundingClientRect();
       const span = Math.min(rect.width, rect.height);
       if (span < 8) return;
-      const next = pointingConeZoom(position.lat, span);
+      const next = pointingConeZoom(position.lat, span, radius);
       setZoom((current) => (Math.abs(current - next) < 0.02 ? current : next));
     };
     apply();
     const observer = new ResizeObserver(apply);
     observer.observe(node);
     return () => observer.disconnect();
-  }, [position.lat, basemap]);
+  }, [position.lat, basemap, radius]);
   useEffect(() => {
     const canvas = frame.current;
     const slot = credit.current;
@@ -320,7 +322,7 @@ function RideMapCanvas({
 
   const cone =
     heading !== null && Number.isFinite(heading)
-      ? pointingConeLngLats(position, heading)
+      ? pointingConeLngLats(position, heading, radius)
       : null;
   const track = trackData(paths);
   const trackColor = color || MUTED;
@@ -452,12 +454,14 @@ export function RideMap({
   paths = [],
   color,
   label,
+  radius,
 }: {
   position: Coordinate;
   heading: number | null;
   paths?: [number, number][][];
   color?: string;
   label: string;
+  radius?: number;
 }) {
   return (
     <RideMapBoundary label={label}>
@@ -467,6 +471,7 @@ export function RideMap({
         paths={paths}
         color={color}
         label={label}
+        radius={radius}
       />
     </RideMapBoundary>
   );

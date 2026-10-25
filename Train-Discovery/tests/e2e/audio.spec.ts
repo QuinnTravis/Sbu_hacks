@@ -39,7 +39,7 @@ async function finishClip(page: Page) {
 }
 
 async function startLiveRide(page: Page) {
-  await page.goto("/");
+  await page.goto("/?network=lirr");
   await page.getByRole("button", { name: "Find routes near me" }).click();
   await page.getByRole("button", { name: /Port Jefferson/ }).last().click();
   await page.getByRole("button", { name: "Start ride", exact: true }).click();
@@ -240,7 +240,7 @@ test("a POI with no source stays queued and is never sent to the narration provi
       : route.fulfill({ json: announcement(input) });
   });
 
-  await page.goto("/");
+  await page.goto("/?network=lirr");
   await page.getByRole("button", { name: "Start audio tour" }).click();
   await expect.poll(() => clips(page)).toContain("https://example.org/test-clip-journey.mp3");
   await finishClip(page);
@@ -259,7 +259,7 @@ test("demo ride explicitly labels its simulation and identifies the journey as s
     return route.fulfill({ json: announcement(input) });
   });
 
-  await page.goto("/");
+  await page.goto("/?network=lirr");
   await page.getByRole("button", { name: "Start Jamaica demo ride" }).click();
   await expect(page.getByText("Simulated location & heading", { exact: true })).toBeVisible();
   await page.getByRole("button", { name: "Pause replay" }).click();

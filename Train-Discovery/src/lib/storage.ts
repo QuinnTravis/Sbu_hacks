@@ -17,6 +17,7 @@ const evidence = z.object({
   license: z.string(),
   sourceType: z.enum(["search-snippet"]).optional(),
 });
+const claim = z.object({ text: z.string(), evidenceId: z.string(), quote: z.string() });
 export const placeSchema = z.object({
   id: z.string(),
   name: z.string().max(500),
@@ -32,20 +33,14 @@ export const placeSchema = z.object({
   story: z
     .object({
       summary: z.string().max(1200).default(""),
-      claims: z
-        .array(
-          z.object({
-            text: z.string(),
-            evidenceId: z.string(),
-            quote: z.string(),
-          }),
-        )
-        .max(4),
-      funFact: z
+      claims: z.array(claim).max(4),
+      funFact: claim.optional(),
+      narration: z
         .object({
-          text: z.string(),
-          evidenceId: z.string(),
-          quote: z.string(),
+          hook: claim.optional(),
+          detail: claim.optional(),
+          why: claim.optional(),
+          lookFor: claim.optional(),
         })
         .optional(),
       verifiedAt: z.string(),
@@ -54,9 +49,25 @@ export const placeSchema = z.object({
       evidenceHash: z.string(),
     })
     .optional(),
+  kind: z.enum(["poi", "place"]).optional(),
+  routeKm: z.number().optional(),
+  lateralM: z.number().optional(),
+  signedLateralM: z.number().optional(),
+  extentKm: z.tuple([z.number(), z.number()]).optional(),
+  areaKind: z.string().max(40).optional(),
+  fame: z.number().optional(),
+  basic: z
+    .object({
+      type: z.string().max(40),
+      elevationM: z.number().optional(),
+      population: z.number().optional(),
+      sources: z.array(z.object({ title: z.string(), url: z.string(), license: z.string() })).max(4),
+    })
+    .optional(),
 });
 const rideSchema = z.object({
   routeId: z.string(),
+  networkId: z.string().optional(),
   startedAt: z.number(),
   replay: z.boolean(),
   dismissed: z.array(z.string()).max(10000),
@@ -65,14 +76,45 @@ const rideSchema = z.object({
     .array(z.object({ place: placeSchema, foundAt: z.number(), distance: z.number() }))
     .max(2000),
 });
-export const STORAGE_KEY = "train-discovery:ride:v1";
-export const SAVED_KEY = "train-discovery:saved:v1";
-const savedSchema = z.array(z.object({ savedAt: z.number(), place: placeSchema })).max(500);
+
+export const STORAGE_KEY = "gaze:ride:v1";
+/** Bookmarks. Saved discoveries from before the rename are migrated into it. */
+export const SAVED_KEY = "gaze:bookmarks:v1";
+export const LEGACY_RIDE_KEY = "train-discovery:ride:v1";
+export const LEGACY_SAVED_KEY = "train-discovery:saved:v1";
+
+const savedSchema = z
+  .array(
+    z.object({
+      savedAt: z.number(),
+      place: placeSchema,
+      routeId: z.string().optional(),
+      networkId: z.string().optional(),
+      note: z.string().max(500).optional(),
+      discoveredAt: z.number().optional(),
+    }),
+  )
+  .max(500);
+
+/** Read `key`, or move the value from `legacy` to `key` once. */
+function readMigrating(key: string, legacy: string, limit: number): string | null {
+  const current = localStorage.getItem(key);
+  if (current !== null) return current.length > limit ? null : current;
+  const old = localStorage.getItem(legacy);
+  if (old === null || old.length > limit) return null;
+  try {
+    localStorage.setItem(key, old);
+    localStorage.removeItem(legacy);
+  } catch {
+    // Keep reading the legacy key until storage frees up.
+  }
+  return old;
+}
 
 export function readRide(): Ride | null {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw || raw.length > 15_000_000) return null;
+    const raw = readMigrating(STORAGE_KEY, LEGACY_RIDE_KEY, 15_000_000);
+    if (!raw) return null;
     const parsed = rideSchema.safeParse(JSON.parse(raw));
     return parsed.success ? parsed.data : null;
   } catch {
@@ -91,10 +133,16 @@ export function writeRide(ride: Ride | null): boolean {
 
 export function readSaved(): SavedEntry[] {
   try {
-    const raw = localStorage.getItem(SAVED_KEY);
-    if (!raw || raw.length > 8_000_000) return [];
+    const raw = readMigrating(SAVED_KEY, LEGACY_SAVED_KEY, 8_000_000);
+    if (!raw) return [];
     const parsed = savedSchema.safeParse(JSON.parse(raw));
-    return parsed.success ? parsed.data : [];
+    if (!parsed.success) return [];
+    // Entries saved before networks existed came from LIRR rides.
+    return parsed.data.map((entry) => ({
+      ...entry,
+      networkId: entry.networkId ?? (entry.place.routeIds.some((id) => /^cz-/.test(id)) ? "california-zephyr" : "lirr"),
+      routeId: entry.routeId ?? entry.place.routeIds[0],
+    }));
   } catch {
     return [];
   }
@@ -116,3 +164,6 @@ export function writeSaved(entries: SavedEntry[]): boolean {
     return false;
   }
 }
+
+export const readBookmarks = readSaved;
+export const writeBookmarks = writeSaved;

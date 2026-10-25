@@ -49,7 +49,7 @@ export function alreadyDiscovered(
 /** Automated demo should point to something with worthwhile, attributable content. */
 export function replayPriority(place: Place): number {
   if (narrationText(place)) return 3;
-  if (!sourceExcerpt(place)) return 0;
+  if (!sourceExcerpt(place)) return place.kind === "poi" && place.basic ? 1 : 0;
   if (place.category === "Infrastructure") return 0;
   if (place.category === "Railway history" || place.category === "Station") return 1;
   return 2;
@@ -60,10 +60,11 @@ export function chooseReplayTarget(
   ride: Ride,
   position: Coordinate,
   byId: Map<string, Place>,
+  radius = POINTING_RADIUS_M,
 ): Place | null {
   return places
     .filter((place) =>
-      distance(position, place) <= POINTING_RADIUS_M &&
+      distance(position, place) <= radius &&
       replayPriority(place) > 0 &&
       !alreadyDiscovered(place, ride, byId),
     )
@@ -90,10 +91,11 @@ export function rankPointingCandidates(
   ride: Ride,
   byId: Map<string, Place>,
   limit = 4,
+  radius = POINTING_RADIUS_M,
 ): PointingCandidate[] {
   if (heading === null || !Number.isFinite(heading)) return [];
   const matched = places.flatMap((place) => {
-    if (!isPointedAt(position, heading, place) || alreadyDiscovered(place, ride, byId)) return [];
+    if (!isPointedAt(position, heading, place, radius) || alreadyDiscovered(place, ride, byId)) return [];
     return [{
       place,
       meters: distance(position, place),

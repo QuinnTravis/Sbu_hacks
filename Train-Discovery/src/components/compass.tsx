@@ -1,7 +1,9 @@
 "use client";
 
+import type { ReactNode } from "react";
 import dynamic from "next/dynamic";
 import { Compass as CompassIcon } from "lucide-react";
+import { useI18n } from "@/lib/i18n";
 import type { Coordinate } from "@/lib/types";
 import "./compass.css";
 
@@ -13,6 +15,8 @@ const RideMap = dynamic(
   },
 );
 
+const CARDINALS = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"] as const;
+
 export function Compass({
   heading,
   position,
@@ -22,6 +26,8 @@ export function Compass({
   idleLabel,
   settling = false,
   note,
+  radius,
+  overlay,
 }: {
   heading: number | null;
   position: Coordinate | null;
@@ -31,25 +37,28 @@ export function Compass({
   idleLabel?: string;
   settling?: boolean;
   note?: string;
+  radius?: number;
+  /** Floats over the top of the map, e.g. the look-ahead pill. */
+  overlay?: ReactNode;
 }) {
+  const { t } = useI18n();
   const direction =
     heading === null
       ? "—"
-      : ["N", "NE", "E", "SE", "S", "SW", "W", "NW"][
-          Math.round(heading / 45) % 8
-        ];
+      : t(`compass.cardinal.${CARDINALS[Math.round(heading / 45) % 8]}`);
+  const degrees = heading === null ? 0 : Math.round(heading);
   const status =
     heading === null
-      ? idleLabel ?? "Compass waiting"
+      ? idleLabel ?? t("compass.waiting")
       : liveHeading
-        ? "Phone direction"
-        : "Simulated heading";
+        ? t("compass.phone")
+        : t("compass.simulated");
   const label =
     heading === null
-      ? idleLabel ?? "Waiting for phone compass"
+      ? idleLabel ?? t("compass.waitingPhone")
       : liveHeading
-        ? `Phone pointing ${Math.round(heading)} degrees`
-        : `Simulated heading ${Math.round(heading)} degrees`;
+        ? t("compass.phoneLabel", { degrees })
+        : t("compass.simulatedLabel", { degrees });
   return (
     <div
       className={`compass-instrument train-compass ${heading === null ? "compass-idle" : "compass-aimed"}${settling ? " compass-settling" : ""}`}
@@ -58,7 +67,7 @@ export function Compass({
         <CompassIcon size={17} />
         <span className={heading === null && idleLabel ? "aim-label" : undefined}>
           {status}
-          <strong>{heading === null ? "—" : `${Math.round(heading)}°`}</strong>
+          <strong>{heading === null ? "—" : `${degrees}°`}</strong>
         </span>
         <span className="direction-letter">{direction}</span>
       </div>
@@ -68,6 +77,7 @@ export function Compass({
         </p>
       ) : null}
       <div className="compass-stage">
+        {overlay ? <div className="compass-overlay">{overlay}</div> : null}
         {position ? (
           <RideMap
             position={position}
@@ -75,6 +85,7 @@ export function Compass({
             paths={paths}
             color={color}
             label={label}
+            radius={radius}
           />
         ) : (
           <div className="ride-map ride-map-waiting" role="group" aria-label={label} />
@@ -82,9 +93,7 @@ export function Compass({
       </div>
       {heading !== null || !idleLabel ? (
         <p className="pointing-instruction">
-          {heading === null
-            ? "Hold your phone upright"
-            : "Point. Discover. Keep."}
+          {heading === null ? t("compass.holdUpright") : t("app.tagline")}
         </p>
       ) : null}
     </div>

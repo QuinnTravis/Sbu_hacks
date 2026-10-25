@@ -115,7 +115,7 @@ async function startHeldGuide(page: Page) {
 }
 
 async function startRide(page: Page, branch = "Port Jefferson") {
-  await page.goto("/");
+  await page.goto("/?network=lirr");
   if (branch === "Babylon") {
     await page.getByRole("button", { name: "Expand route list", exact: true }).click();
     await page.locator(".route-row").filter({ hasText: "Babylon" }).click();
@@ -149,7 +149,7 @@ for (const viewport of [{ width: 360, height: 740 }, { width: 1366, height: 768 
     await expectVisibleTextFragment(page.locator(".audio-next-name"), "King");
     await expectReachable(page.getByRole("button", { name: "Play now", exact: true }));
     await page.screenshot({ path: info.outputPath("babylon-selected-queued.png") });
-    await page.getByRole("button", { name: "Discover", exact: true }).click();
+    await page.getByRole("button", { name: "Ride", exact: true }).click();
     await expectReachable(page.locator(".candidate-row").last());
     await expectNoRideIntersections(page);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
@@ -252,7 +252,7 @@ for (const viewport of [
       await row.click();
       await expect(page.getByRole("heading", { name: place.name, exact: true })).toBeVisible();
       await expect(page.locator(".place-photo")).toBeVisible();
-      await page.getByRole("button", { name: "Discover", exact: true }).click();
+      await page.getByRole("button", { name: "Ride", exact: true }).click();
     }
     await expect(page.locator(".nav-count")).toHaveText("4");
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
@@ -284,7 +284,7 @@ for (const viewport of [
     await expect(page.locator(".sources")).toContainText(LONG_NAME);
     await expectReachable(page.getByRole("button", { name: `Discard ${LONG_NAME}`, exact: true }));
     await page.screenshot({ path: info.outputPath("selected-card-reachable.png") });
-    await page.getByRole("button", { name: "Discover", exact: true }).click();
+    await page.getByRole("button", { name: "Ride", exact: true }).click();
     await page.locator(".pointing-instruction").evaluate((element) => element.scrollIntoView({ block: "center" }));
     await expect(page.locator(".pointing-instruction")).toBeInViewport({ ratio: 1 });
     await expectNoRideIntersections(page);

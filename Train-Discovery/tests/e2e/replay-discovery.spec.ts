@@ -47,18 +47,19 @@ test("Jamaica replay lists aimed candidates and saves only the selected place", 
     ] } }),
   );
 
-  await page.goto("/");
+  await page.goto("/?network=lirr");
   await page.getByRole("button", { name: "Start Jamaica demo ride" }).click();
   await page.getByRole("button", { name: "Pause replay" }).click();
   const jamaica = page.getByRole("button", { name: /^Jamaica,/ });
   await expect(jamaica).toBeVisible({ timeout: 10000 });
-  await expect(jamaica.locator("img")).toHaveAttribute("src", /^data:image\/gif/);
+  // The chooser is name and distance only (DESIGN.md); photos are on the card.
+  await expect(jamaica.locator("img")).toHaveCount(0);
   await expect(jamaica.locator(".candidate-summary")).toHaveCount(0);
   await expect(jamaica).not.toContainText("major rail transit hub");
   await expect(jamaica).not.toContainText("No sourced summary yet");
   const manor = page.getByRole("button", { name: /King Manor Museum,/ });
   await expect(manor).toBeVisible();
-  await expect(manor.locator("img")).toHaveAttribute("src", /^data:image\/gif/);
+  await expect(manor.locator("img")).toHaveCount(0);
   await expect(manor.locator(".candidate-summary")).toHaveCount(0);
   await expect(manor).not.toContainText("historic house");
   await expect(manor).not.toContainText("No sourced summary yet");
@@ -93,7 +94,7 @@ test("replay shows loading, then stays empty when nothing nearby is sourced", as
     });
   });
 
-  await page.goto("/");
+  await page.goto("/?network=lirr");
   await page.getByRole("button", { name: "Start Jamaica demo ride" }).click();
   await expect(page.locator(".nearby-status")).toContainText("Loading places");
   await expect(page.getByText("Simulated aim")).toBeVisible();
@@ -110,7 +111,7 @@ test("replay shows loading, then stays empty when nothing nearby is sourced", as
   await expect(page.locator(".nav-count")).toHaveText("0");
   await expect(page.getByRole("heading", { name: "Johnson Yard" })).toHaveCount(0);
 
-  await page.getByRole("button", { name: /My discoveries/ }).click();
+  await page.getByRole("navigation", { name: "Main navigation" }).getByRole("button", { name: "Discoveries" }).click();
   await expect(page.getByRole("heading", { name: "No sourced place in range." })).toBeVisible();
   await expect(page.locator(".nav-count")).toHaveText("0");
   expect(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth)).toBe(false);
@@ -154,7 +155,7 @@ test("a failed replay catalog retries into a sourced discovery", async ({ page }
     });
   });
 
-  await page.goto("/");
+  await page.goto("/?network=lirr");
   await page.getByRole("button", { name: "Start Jamaica demo ride" }).click();
   const failure = page.getByRole("alert").filter({ hasText: "Couldn’t load places" });
   await expect(failure).toBeVisible();
@@ -165,10 +166,10 @@ test("a failed replay catalog retries into a sourced discovery", async ({ page }
   await expect(panel.getByText("Paused — check sensors / tilt")).toHaveCount(0);
   await panel.getByRole("button", { name: "Close dev panel", exact: true }).click();
   await expect(page.locator(".nav-count")).toHaveText("0");
-  await page.getByRole("button", { name: /My discoveries/ }).click();
+  await page.getByRole("navigation", { name: "Main navigation" }).getByRole("button", { name: "Discoveries" }).click();
   await expect(page.getByRole("heading", { name: "Places didn’t load" })).toBeVisible();
   await failure.getByRole("button", { name: "Retry" }).click();
-  await page.getByRole("button", { name: "Discover", exact: true }).click();
+  await page.getByRole("button", { name: "Ride", exact: true }).click();
   await page.getByRole("button", { name: /^Jamaica,/ }).click();
   await expect(page.getByRole("heading", { name: "Jamaica", exact: true })).toBeVisible({ timeout: 10000 });
   await expect(page.locator(".story-summary")).toContainText("major rail transit hub");
@@ -205,16 +206,19 @@ test("simulated ride selects one candidate and keeps it after skip", async ({ pa
   await page.route("**/api/audio", async (route) => {
     const input = route.request().postDataJSON();
     const station = input.type === "station";
+    const journey = input.type === "journey";
     await route.fulfill({
       json: {
         audioUrl: `https://example.org/test-clip-${input.type}.mp3`,
         provider: "elevenlabs",
         script: {
-          name: station ? "Jamaica" : "King Manor Museum",
-          text: station
-            ? "Station approaching: Jamaica."
-            : "You just pointed at King Manor Museum. It houses a museum devoted to local history.",
-          kind: station ? "announcement" : "verified",
+          name: journey ? "Welcome aboard" : station ? "Jamaica" : "King Manor Museum",
+          text: journey
+            ? "Welcome aboard. This is a simulated ride."
+            : station
+              ? "Station approaching: Jamaica."
+              : "You just pointed at King Manor Museum. It houses a museum devoted to local history.",
+          kind: journey || station ? "announcement" : "verified",
           sources: [],
         },
       },
@@ -250,10 +254,14 @@ test("simulated ride selects one candidate and keeps it after skip", async ({ pa
     }),
   );
 
-  await page.goto("/");
+  await page.goto("/?network=lirr");
   await page.getByRole("button", { name: "Start Jamaica demo ride" }).click();
   await page.getByRole("button", { name: "Pause replay" }).click();
   await page.getByRole("button", { name: "Start audio tour" }).click();
+  // The ride opening always plays first; finish it so the station can follow.
+  await expect.poll(() => page.evaluate(() => (window as unknown as { __clips: string[] }).__clips), { timeout: 10000 })
+    .toEqual(["https://example.org/test-clip-journey.mp3"]);
+  await page.evaluate(() => (window as unknown as { __finishClip: () => void }).__finishClip());
   await expect(page.locator(".audio-title")).toHaveText("Jamaica", { timeout: 10000 });
   await expect(page.getByRole("button", { name: /^Jamaica,/ })).toBeVisible();
   await expect(page.getByRole("button", { name: /King Manor Museum,/ })).toBeVisible();
@@ -261,7 +269,8 @@ test("simulated ride selects one candidate and keeps it after skip", async ({ pa
   await expect(page.getByRole("heading", { name: "King Manor Museum" })).toBeVisible();
   await expect(page.locator(".nav-count")).toHaveText("1");
   await expect(page.getByText("King Manor Museum queued")).toBeVisible();
-  expect(await page.evaluate(() => (window as unknown as { __clips: string[] }).__clips)).toHaveLength(1);
+  // The opening and the station clip; the selected story waits for the station to end.
+  expect(await page.evaluate(() => (window as unknown as { __clips: string[] }).__clips)).toHaveLength(2);
   await page.getByRole("button", { name: "Skip story" }).click();
   await expect(page.getByRole("heading", { name: "King Manor Museum" })).toBeVisible();
   await expect(page.locator(".nav-count")).toHaveText("1");
